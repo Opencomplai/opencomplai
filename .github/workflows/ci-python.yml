@@ -11,7 +11,7 @@ jobs:
     name: Lint / Python
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -23,7 +23,7 @@ jobs:
     name: Test / core
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -34,7 +34,7 @@ jobs:
     name: Test / cli
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -45,7 +45,7 @@ jobs:
     name: Test / sdk-python
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -56,7 +56,7 @@ jobs:
     name: Test / Python services
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -67,7 +67,7 @@ jobs:
     name: CLI / compliance check (local engine)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -114,7 +114,7 @@ jobs:
     name: DLP / egress-proxy allowlist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -135,7 +135,7 @@ jobs:
     name: Security scan / Python (ISO 27001 A.8.8 / SOC 2 CC7.1 / NIST ID.RA)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v6
         with:
           python-version: "3.11"
@@ -149,7 +149,7 @@ jobs:
     name: AI/LLM package gate (EU AI Act Art. 3/50 / ISO 27001 A.5.7)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Scan pyproject.toml files for unapproved AI/LLM packages
         run: |
           FORBIDDEN="openai anthropic transformers torch tensorflow langchain llm sentence-transformers diffusers accelerate"
