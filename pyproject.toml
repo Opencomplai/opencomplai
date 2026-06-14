@@ -50,6 +50,6 @@ asyncio_mode = "auto"
 [dependency-groups]
 dev = [
     "anyio>=4.13.0",
-    "pytest>=9.0.3",
+    "pytest>=9.1.0",
     "pytest-asyncio>=1.3.0",
 ]
