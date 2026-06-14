@@ -16,7 +16,7 @@
   "dependencies": {
     "fastify": "^4.26.0",
     "@fastify/swagger": "^8.14.0",
-    "@fastify/swagger-ui": "^3.0.0",
+    "@fastify/swagger-ui": "^6.0.0",
     "zod": "^3.22.4"
   },
   "optionalDependencies": {
