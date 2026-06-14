@@ -1,0 +1,347 @@
+openapi: "3.1.0"
+info:
+  title: Opencomplai Gateway API
+  version: 0.1.0-dev
+  description: |
+    REST API gateway for the Opencomplai compliance platform.
+    All routes proxy to the appropriate Python service.
+    This spec is the source of truth for the API contract.
+
+servers:
+  - url: http://localhost:8080
+    description: Local Docker Compose deployment
+
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      summary: Service health check
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /v1/manifests/validate:
+    post:
+      operationId: validateManifest
+      summary: Validate a system manifest (idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SystemManifest"
+      responses:
+        "200":
+          description: Manifest is valid
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /v1/risk/classify:
+    post:
+      operationId: classifyRisk
+      summary: Classify system risk level (deterministic, idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RiskClassifyRequest"
+      responses:
+        "200":
+          description: Risk classification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskClassifyResponse"
+
+  /v1/evidence/events:
+    post:
+      operationId: appendEvidenceEvent
+      summary: Append an event to the immutable ledger (non-idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AppendEventRequest"
+      responses:
+        "201":
+          description: Event appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppendEventResponse"
+
+  /v1/verify/claims:
+    post:
+      operationId: verifyClaim
+      summary: Verify an AI output claim (idempotent by request_hash)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyClaimRequest"
+      responses:
+        "200":
+          description: Verification result (proof or alert)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyClaimResponse"
+
+  /v1/hitl/overrides:
+    post:
+      operationId: submitOverride
+      summary: Submit a HITL override action with mandatory rationale (non-idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OverrideRequest"
+      responses:
+        "201":
+          description: Override submitted
+        "422":
+          description: Missing or empty rationale
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorEnvelope"
+
+  /v1/docs/generate:
+    post:
+      operationId: generateDocs
+      summary: Generate Annex IV technical documentation dossier (idempotent by system_id + commit_ref)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateDocsRequest"
+      responses:
+        "200":
+          description: Dossier generated or returned from cache
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateDocsResponse"
+
+  /v1/sync/metadata:
+    post:
+      operationId: syncMetadata
+      summary: Sync allowlisted metadata through egress proxy (idempotent)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncMetadataRequest"
+      responses:
+        "200":
+          description: Metadata synced
+
+  /v1/status:
+    get:
+      operationId: getStatus
+      summary: Non-sensitive system status snapshot (idempotent)
+      responses:
+        "200":
+          description: Status snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusResponse"
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        service:
+          type: string
+        version:
+          type: string
+
+    ErrorEnvelope:
+      type: object
+      required: [error_code, message, category, retryable, correlation_id]
+      properties:
+        error_code:
+          type: string
+        message:
+          type: string
+        category:
+          type: string
+          enum: [client, policy, system, dependency]
+        retryable:
+          type: boolean
+        correlation_id:
+          type: string
+        remediation_hint:
+          type: string
+
+    SystemManifest:
+      type: object
+      required: [system_id, intended_purpose, compliance_target, high_risk_presumption, commit_ref]
+      properties:
+        system_id:
+          type: string
+        intended_purpose:
+          type: string
+        compliance_target:
+          type: string
+          default: EU_AI_ACT
+        high_risk_presumption:
+          type: boolean
+          default: false
+        commit_ref:
+          type: string
+
+    RiskClassifyRequest:
+      type: object
+      required: [system_id, intended_purpose]
+      properties:
+        system_id:
+          type: string
+        intended_purpose:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        change_context:
+          type: string
+
+    RiskClassifyResponse:
+      type: object
+      required: [risk_class, profiling_detected, trap_detected, rationale_hash, evidence_event_id]
+      properties:
+        risk_class:
+          type: string
+        profiling_detected:
+          type: boolean
+        trap_detected:
+          type: boolean
+        score:
+          type: number
+        rationale_hash:
+          type: string
+        evidence_event_id:
+          type: string
+
+    AppendEventRequest:
+      type: object
+      required: [event_type, payload]
+      properties:
+        event_type:
+          type: string
+        payload:
+          type: object
+        signer_id:
+          type: string
+
+    AppendEventResponse:
+      type: object
+      required: [event_id, payload_hash, prev_hash]
+      properties:
+        event_id:
+          type: string
+        payload_hash:
+          type: string
+        prev_hash:
+          type: string
+
+    VerifyClaimRequest:
+      type: object
+      required: [system_id, claim_ref, source_ref]
+      properties:
+        system_id:
+          type: string
+        claim_ref:
+          type: string
+        source_ref:
+          type: string
+
+    VerifyClaimResponse:
+      type: object
+      required: [outcome, task_id]
+      properties:
+        outcome:
+          type: string
+          enum: [verified, alerted, pending]
+        task_id:
+          type: string
+        request_hash:
+          type: string
+        response_hash:
+          type: string
+
+    OverrideRequest:
+      type: object
+      required: [case_id, actor_id, rationale, decision]
+      properties:
+        case_id:
+          type: string
+        actor_id:
+          type: string
+        rationale:
+          type: string
+          minLength: 1
+        decision:
+          type: string
+          enum: [approved, rejected]
+
+    GenerateDocsRequest:
+      type: object
+      required: [system_id, commit_ref]
+      properties:
+        system_id:
+          type: string
+        commit_ref:
+          type: string
+
+    GenerateDocsResponse:
+      type: object
+      required: [bundle_checksum, status]
+      properties:
+        bundle_checksum:
+          type: string
+        status:
+          type: string
+          enum: [generated, cached, failed]
+        duration_ms:
+          type: integer
+
+    SyncMetadataRequest:
+      type: object
+      required: [system_id]
+      properties:
+        system_id:
+          type: string
+        endpoint:
+          type: string
+
+    StatusResponse:
+      type: object
+      required: [status, version]
+      properties:
+        status:
+          type: string
+        version:
+          type: string
+        services:
+          type: object

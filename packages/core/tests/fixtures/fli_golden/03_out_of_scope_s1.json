@@ -1,0 +1,25 @@
+{
+  "name": "03_out_of_scope_s1",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "provider",
+      "s1_in_scope": false
+    }
+  },
+  "expected": {
+    "in_scope": false,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "provider",
+    "status_change_ids": [
+      "out_of_scope"
+    ],
+    "obligation_ids": [],
+    "determination_path": [
+      "gate:yes",
+      "e1:provider",
+      "s1:none"
+    ]
+  }
+}

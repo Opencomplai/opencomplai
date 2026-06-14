@@ -1,0 +1,55 @@
+[tool.uv.workspace]
+members = ["packages/*", "services/risk-engine", "services/evidence-vault", "services/doc-generator", "services/egress-proxy"]
+
+[tool.uv.sources]
+opencomplai = { workspace = true }
+opencomplai-cli = { workspace = true }
+opencomplai-core = { workspace = true }
+opencomplai-risk-engine = { workspace = true }
+opencomplai-evidence-vault = { workspace = true }
+opencomplai-doc-generator = { workspace = true }
+opencomplai-egress-proxy = { workspace = true }
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "PT", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.flake8-bugbear]
+# typer.Option/Argument and fastapi.Depends/Query/etc. are called in argument
+# defaults by design — that is the framework idiom, not a B008 mutable-default bug.
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.Query",
+    "fastapi.Header",
+    "fastapi.Path",
+    "fastapi.Body",
+    "fastapi.Cookie",
+    "fastapi.Form",
+    "fastapi.File",
+    "fastapi.Security",
+    "typer.Option",
+    "typer.Argument",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["packages", "services"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+asyncio_mode = "auto"
+
+[dependency-groups]
+dev = [
+    "anyio>=4.13.0",
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+]

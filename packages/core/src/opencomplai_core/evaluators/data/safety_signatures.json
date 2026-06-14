@@ -1,0 +1,27 @@
+{
+  "version": "1.0.0",
+  "toxic_lexicon": [
+    "kill",
+    "murder",
+    "bomb",
+    "terrorist",
+    "genocide",
+    "torture"
+  ],
+  "injection_patterns": [
+    "ignore previous instructions",
+    "ignore all prior",
+    "disregard your instructions",
+    "you are now",
+    "act as dan",
+    "jailbreak",
+    "system prompt",
+    "developer mode"
+  ],
+  "jailbreak_markers": [
+    "do anything now",
+    "no restrictions",
+    "bypass safety",
+    "unfiltered mode"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "out_of_scope": {
+    "title": "Out of scope",
+    "body": "Based on your answers, the EU AI Act does not apply to your situation, or your system is not considered an AI system within the meaning of Article 3(1)."
+  },
+  "become_provider": {
+    "title": "You become a provider",
+    "body": "Because you substantially modify an AI system, you are considered a provider under Article 25(1)(b) and must comply with provider obligations rather than your original operator role."
+  },
+  "handover": {
+    "title": "Handover to new provider",
+    "body": "As a provider who has substantially modified a high-risk AI system, you must hand over documentation and information to the new provider so they can comply with their obligations under Article 25(2)."
+  },
+  "high_risk": {
+    "title": "High-risk AI system",
+    "body": "Your AI system is classified as high-risk under Article 6. Additional obligations under Title III, Chapter 2 apply before placing the system on the market or putting it into service."
+  },
+  "high_risk_exception": {
+    "title": "High-risk exception for deployers",
+    "body": "As a deployer operating in the EU, certain high-risk classification pathways (Annex III use cases) may not impose full provider obligations on you, but deployer obligations under Chapter 3, Section 4 still apply."
+  },
+  "prohibited": {
+    "title": "Prohibited AI practice",
+    "body": "Your AI system appears to fall within a prohibited practice under Article 5. Such systems must not be placed on the market, put into service, or used in the Union."
+  },
+  "gpai": {
+    "title": "General-purpose AI model",
+    "body": "Your system is a general-purpose AI model subject to Chapter V obligations in addition to any system-level requirements."
+  },
+  "transparency_only": {
+    "title": "Limited risk — transparency obligations",
+    "body": "Your AI system is not high-risk but is subject to transparency obligations under Article 50."
+  }
+}

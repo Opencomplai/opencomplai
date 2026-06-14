@@ -1,0 +1,56 @@
+{
+  "entity_definitions": {
+    "title": "Operator roles under the AI Act",
+    "body": "Article 3(3) defines operators: a provider develops an AI system or has it developed and places it on the market or puts it into service under its own name or trademark; a deployer uses an AI system under its authority; a distributor makes an AI system available on the Union market; an importer places an AI system from a third country on the Union market; a product manufacturer places on the market an AI system together with its product under its own name or trademark; an authorised representative is a natural or legal person established in the Union who has received a written mandate from a provider."
+  },
+  "entity_roles": {
+    "provider": {
+      "title": "Provider",
+      "description": "You develop an AI system (or have it developed) and place it on the market or put it into service under your own name or trademark. In short: you build and ship it."
+    },
+    "deployer": {
+      "title": "Deployer",
+      "description": "You use an AI system under your own authority in a professional capacity — you are not an affected end-user. In short: you bought it and run it on people or data."
+    },
+    "distributor": {
+      "title": "Distributor",
+      "description": "You make an AI system available on the EU market in the supply chain, without being its provider or importer. In short: you are a reseller or sales channel."
+    },
+    "importer": {
+      "title": "Importer",
+      "description": "You are established in the EU and place on the market an AI system carrying the name or trademark of a provider established outside the EU. In short: you bring a non-EU system into the EU."
+    },
+    "product_manufacturer": {
+      "title": "Product manufacturer",
+      "description": "You place on the market or put into service an AI system together with your product and under your own name or trademark. In short: AI is built into a product you sell."
+    },
+    "authorised_rep": {
+      "title": "Authorised representative",
+      "description": "You are a person or entity in the EU holding a written mandate from a non-EU provider to act on its behalf for AI Act obligations."
+    }
+  },
+  "ai_system_definition": {
+    "title": "Definition of an AI system",
+    "body": "An AI system is a machine-based system designed to operate with varying levels of autonomy, that may exhibit adaptiveness after deployment and that, for explicit or implicit objectives, infers, from the input it receives, how to generate outputs such as predictions, content, recommendations, or decisions that can influence physical or virtual environments (Article 3(1))."
+  },
+  "high_risk_overview": {
+    "title": "High-risk classification",
+    "body": "An AI system is high-risk if it is a product covered by Union harmonisation legislation listed in Annex I with a required third-party conformity assessment, and the product includes an AI system as a safety component; or if it is listed in Annex III and none of the Article 6(3) exceptions apply."
+  },
+  "scope_overview": {
+    "title": "Scope of the AI Act",
+    "body": "The AI Act applies to providers placing AI systems on the Union market or putting them into service, deployers with a place of establishment or located in the Union, and to providers and deployers in third countries where the output is used in the Union. Certain exclusions apply under Article 2 for military, national security, research, and personal non-professional activities."
+  },
+  "modifications_overview": {
+    "title": "Substantial modifications",
+    "body": "A substantial modification of an AI system is a change that affects compliance with the AI Act and requires a new conformity assessment. A deployer, distributor, importer, or product manufacturer that substantially modifies a system becomes a provider under Article 25(1)(b)."
+  },
+  "gpai_overview": {
+    "title": "General-purpose AI models",
+    "body": "A general-purpose AI model is an AI model, including where trained with a large amount of data using self-supervision at scale, that displays significant generality and is capable of competently performing a wide range of distinct tasks. Chapter V sets obligations for GPAI model providers distinct from high-risk AI system obligations."
+  },
+  "disclaimer": {
+    "title": "Not legal advice",
+    "body": "This tool automates the Future of Life Institute compliance checker logic for educational and planning purposes. It does not constitute legal advice. Seek qualified legal counsel and follow national guidance for formal compliance decisions."
+  }
+}

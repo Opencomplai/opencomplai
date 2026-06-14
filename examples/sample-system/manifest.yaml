@@ -1,0 +1,68 @@
+# OpenComplAI — Sample AI System Manifest
+# Drop this file at the root of your AI system repository.
+# Run `./run-compliance-check.sh` to verify EU AI Act compliance.
+
+system:
+  id: "sample-credit-scoring-v1"
+  name: "Sample Credit Scoring System"
+  version: "1.0.0"
+  risk_class: "high"            # EU AI Act Article 6 classification
+  description: >
+    Demonstration high-risk AI system for EU AI Act compliance validation.
+    Covers Annex III use case: creditworthiness assessment.
+
+provider:
+  name: "Acme Corp"
+  contact: "compliance@acme.example.com"
+  eu_representative: "Acme EU GmbH, Berlin, Germany"
+
+technical_documentation:
+  # REQ-DOC-001: Technical documentation required for high-risk systems
+  training_data_description: "docs/training-data.md"
+  model_card: "docs/model-card.md"
+  performance_metrics: "docs/performance.md"
+  conformity_assessment: "docs/conformity-assessment.md"
+
+controls:
+  # Each control maps to an EU AI Act article
+  - id: "CTRL-001"
+    article: "Art. 9"
+    title: "Risk management system"
+    automated_check: true
+
+  - id: "CTRL-002"
+    article: "Art. 10"
+    title: "Training data governance"
+    automated_check: true
+
+  - id: "CTRL-003"
+    article: "Art. 13"
+    title: "Transparency and provision of information"
+    automated_check: true
+
+  - id: "CTRL-004"
+    article: "Art. 14"
+    title: "Human oversight measures"
+    automated_check: false       # requires manual attestation
+    manual_attestation_required: true
+
+  - id: "CTRL-005"
+    article: "Art. 15"
+    title: "Accuracy, robustness and cybersecurity"
+    automated_check: true
+
+  - id: "CTRL-006"
+    article: "Art. 12"
+    title: "Record-keeping (audit log)"
+    automated_check: true
+
+bias_monitoring:
+  # REQ-GTVG-001: bias metrics to track
+  metrics:
+    - "demographic_parity_difference"
+    - "equalized_odds_difference"
+    - "accuracy_by_group"
+  alert_threshold: 0.05
+  retention_days: 90             # REQ-GTVG-002: data minimisation
+
+gateway_url: "http://localhost:8080"   # override with OPENCOMPLAI_GATEWAY_URL env var

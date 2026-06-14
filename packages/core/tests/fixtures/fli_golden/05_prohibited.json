@@ -1,0 +1,32 @@
+{
+  "name": "05_prohibited",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "provider",
+      "hr2_annex_iii": true,
+      "s1_in_scope": true,
+      "r3_prohibited": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": true,
+    "is_prohibited": true,
+    "effective_entity": "provider",
+    "status_change_ids": [
+      "high_risk",
+      "prohibited"
+    ],
+    "obligation_ids": [
+      "prohibited"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:provider",
+      "hr:high_risk",
+      "s1:in_scope",
+      "r3:prohibited"
+    ]
+  }
+}

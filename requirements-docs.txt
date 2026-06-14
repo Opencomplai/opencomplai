@@ -1,0 +1,7 @@
+mkdocs==1.5.3
+mkdocs-material==9.4.14
+mkdocs-minify-plugin==0.7.1
+pymdown-extensions>=10.7
+mike==2.0.0
+python-frontmatter==1.0.1
+pyyaml>=6.0.1

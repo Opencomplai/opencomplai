@@ -1,0 +1,341 @@
+# Project name pins container names to opencomplai-<service>-N regardless of
+# the checkout directory — the Falco rules match on this prefix.
+name: opencomplai
+
+# ---------------------------------------------------------------------------
+# Networks
+# internal: isolated — no outbound internet access (all services except egress-proxy)
+# external: outbound access — only egress-proxy is attached
+# frontend: host-accessible — only gateway-api is attached (enables host port publishing)
+# ---------------------------------------------------------------------------
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  external:
+    driver: bridge
+  frontend:
+    driver: bridge
+
+# ---------------------------------------------------------------------------
+# Persistent volumes
+# ---------------------------------------------------------------------------
+volumes:
+  evidence_data: # append-only ledger + CAS evidence objects
+  key_data: # local key custody material
+  config_data: # policy config and system manifests
+  postgres_data: # PostgreSQL data directory
+  redis_data: # Redis AOF persistence
+  prometheus_data: # Prometheus TSDB
+  grafana_data: # Grafana persistent storage
+
+services:
+
+  # -------------------------------------------------------------------------
+  # PostgreSQL — shared relational store for risk-engine and evidence-vault
+  # -------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-opencomplai}
+      POSTGRES_USER: ${POSTGRES_USER:-opencomplai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-opencomplai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # Redis — verification task queue (Streams + DLQ)
+  # -------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # risk-engine — deterministic risk classification service (Python/FastAPI)
+  # -------------------------------------------------------------------------
+  risk-engine:
+    build:
+      context: ../..
+      dockerfile: infra/docker/risk-engine.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-opencomplai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencomplai}
+      REDIS_URL: redis://redis:6379
+      PORT: "8001"
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # -------------------------------------------------------------------------
+  # evidence-vault — append-only Merkle ledger + CAS (Python/FastAPI)
+  # -------------------------------------------------------------------------
+  evidence-vault:
+    build:
+      context: ../..
+      dockerfile: infra/docker/evidence-vault.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-opencomplai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencomplai}
+      EVIDENCE_DATA_DIR: /data/evidence
+      KEY_DATA_DIR: /data/keys
+      PORT: "8002"
+    volumes:
+      - evidence_data:/data/evidence
+      - key_data:/data/keys
+    networks:
+      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    user: "1001:1001"
+
+  # -------------------------------------------------------------------------
+  # doc-generator — Annex IV dossier generator (Python/FastAPI)
+  # -------------------------------------------------------------------------
+  doc-generator:
+    build:
+      context: ../..
+      dockerfile: infra/docker/doc-generator.Dockerfile
+    environment:
+      EVIDENCE_VAULT_URL: http://evidence-vault:8002
+      PORT: "8003"
+    networks:
+      - internal
+    depends_on:
+      evidence-vault:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # -------------------------------------------------------------------------
+  # egress-proxy — allowlisted outbound traffic enforcer (Python/FastAPI)
+  # ONLY service with access to the external network.
+  # No host port — only gateway-api routes through it internally.
+  # -------------------------------------------------------------------------
+  egress-proxy:
+    build:
+      context: ../..
+      dockerfile: infra/docker/egress-proxy.Dockerfile
+    environment:
+      ALLOWED_DESTINATIONS: ${EGRESS_ALLOWED_DESTINATIONS:-}
+      PORT: "8004"
+    networks:
+      - internal
+      - external
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/egress-health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # -------------------------------------------------------------------------
+  # gateway-api — REST API gateway (Node.js/TypeScript/Fastify)
+  # The only service exposed to the host network (port 8080).
+  # -------------------------------------------------------------------------
+  gateway-api:
+    build:
+      context: ../..
+      dockerfile: infra/docker/gateway-api.Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "8080"
+      PROMETHEUS_METRICS_PORT: "9464"
+      OTEL_SERVICE_NAME: gateway-api
+      RISK_ENGINE_URL: http://risk-engine:8001
+      EVIDENCE_VAULT_URL: http://evidence-vault:8002
+      DOC_GENERATOR_URL: http://doc-generator:8003
+      EGRESS_PROXY_URL: http://egress-proxy:8004
+      # Auth is fail-closed: the gateway exits at startup unless
+      # OPENCOMPLAI_API_KEY is set (or OPENCOMPLAI_AUTH_DISABLED=1, local dev only).
+      OPENCOMPLAI_API_KEY: ${OPENCOMPLAI_API_KEY:-}
+      OPENCOMPLAI_AUTH_DISABLED: ${OPENCOMPLAI_AUTH_DISABLED:-}
+      OIDC_JWKS_URI: ${OIDC_JWKS_URI:-}
+    ports:
+      - "${GATEWAY_PORT:-8080}:8080"
+    networks:
+      - internal
+      - frontend
+    depends_on:
+      risk-engine:
+        condition: service_healthy
+      evidence-vault:
+        condition: service_healthy
+      doc-generator:
+        condition: service_healthy
+      egress-proxy:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+    user: "1001:1001"
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # -------------------------------------------------------------------------
+  # demo-seeder — one-shot service that seeds demo data after the full stack
+  # is healthy. Exits 0 on success; restart: on-failure retries up to 3 times
+  # so transient startup races are handled automatically.
+  # -------------------------------------------------------------------------
+  demo-seeder:
+    build:
+      context: ../..
+      dockerfile: infra/docker/evidence-vault.Dockerfile
+    command:
+      - python3
+      - /app/scripts/seed_demo.py
+      - --gateway
+      - http://gateway-api:8080
+      - --vault
+      - http://evidence-vault:8002
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-opencomplai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencomplai}
+      PYTHONPATH: /app/services/evidence-vault/src:/app/packages/core/src
+      DEMO_TENANT_API_KEY: ${DEMO_TENANT_API_KEY:-demo-api-key-local}
+    networks:
+      - internal
+    depends_on:
+      gateway-api:
+        condition: service_healthy
+      evidence-vault:
+        condition: service_healthy
+    restart: on-failure:3
+
+  # -------------------------------------------------------------------------
+  # otel-collector — OpenTelemetry Collector (ISO 27001 A.8.16 / SOC 2 CC7.2)
+  # Receives OTLP traces/metrics from all services; forwards to Prometheus.
+  # Internal-only; not exposed to the host network.
+  # -------------------------------------------------------------------------
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.103.0
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # falco — runtime security monitoring (ISO 27001 A.8.16 / SOC 2 CC7.2 / NIST DE.CM)
+  # Watches syscalls for unexpected exec, file access, and network activity.
+  # Privileged is required for eBPF/kmod probe access.
+  # -------------------------------------------------------------------------
+  falco:
+    image: falcosecurity/falco:0.39.2
+    privileged: true
+    # modern eBPF needs no kernel-module build (kernel >= 5.8 with BTF);
+    # the image's default entrypoint would otherwise try to compile a kmod.
+    environment:
+      SKIP_DRIVER_LOADER: "true"
+    command: ["falco", "-o", "engine.kind=modern_ebpf"]
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock:ro
+      - /proc:/host/proc:ro
+      - ./falco/rules.yaml:/etc/falco/falco_rules.local.yaml:ro
+    networks:
+      - internal
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # prometheus — metrics scraper for all services
+  # Only reachable on the internal network. Mapped to 9090 on the host for
+  # local debugging when PROMETHEUS_HOST_PORT is set.
+  # -------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.listen-address=:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - internal
+      - frontend
+    ports:
+      - "${PROMETHEUS_HOST_PORT:-9090}:9090"
+    depends_on:
+      gateway-api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # -------------------------------------------------------------------------
+  # grafana — operator dashboards (Phase 15)
+  # Default credentials: anonymous viewer access. Provisioning files live in
+  # infra/compose/grafana/provisioning/.
+  # -------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.1.0
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    networks:
+      - internal
+      - frontend
+    ports:
+      - "${GRAFANA_HOST_PORT:-3001}:3000"
+    depends_on:
+      - prometheus
+    restart: unless-stopped

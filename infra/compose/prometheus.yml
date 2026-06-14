@@ -1,0 +1,33 @@
+# Prometheus scrape configuration for the Opencomplai reference deployment.
+# Each service exposes /metrics in Prometheus text format. gateway-api uses a
+# separate scrape port (9464) because metrics live on a non-public listener.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: gateway-api
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['gateway-api:9464']
+
+  - job_name: risk-engine
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['risk-engine:8001']
+
+  - job_name: evidence-vault
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['evidence-vault:8002']
+
+  - job_name: doc-generator
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['doc-generator:8003']
+
+  - job_name: egress-proxy
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['egress-proxy:8004']

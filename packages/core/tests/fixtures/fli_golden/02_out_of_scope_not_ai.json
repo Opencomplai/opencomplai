@@ -1,0 +1,21 @@
+{
+  "name": "02_out_of_scope_not_ai",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": false
+    }
+  },
+  "expected": {
+    "in_scope": false,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": null,
+    "status_change_ids": [
+      "out_of_scope"
+    ],
+    "obligation_ids": [],
+    "determination_path": [
+      "gate:no"
+    ]
+  }
+}

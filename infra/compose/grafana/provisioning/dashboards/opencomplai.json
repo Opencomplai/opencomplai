@@ -1,0 +1,321 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Opencomplai — PRD Section 11 key health metrics (time-to-first-scan, control pass rate, trap detection, override rate, egress posture).",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 80 }
+            ]
+          },
+          "unit": "ms"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(opencomplai_compliance_check_completed_total_bucket[5m])) by (le))",
+          "refId": "A"
+        }
+      ],
+      "title": "Time to first scan — P95 (ms)",
+      "type": "gauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 0.95 }
+            ]
+          },
+          "unit": "percentunit"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "id": 2,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "expr": "sum(opencomplai_compliance_check_completed_total{status=\"pass\"}) / sum(opencomplai_compliance_check_completed_total)",
+          "refId": "A"
+        }
+      ],
+      "title": "Control pass rate",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 10 },
+          "unit": "ops"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 3,
+      "options": { "legend": { "displayMode": "list" } },
+      "targets": [
+        {
+          "expr": "sum(rate(opencomplai_trap_detected_total[5m])) by (system_id)",
+          "refId": "A"
+        }
+      ],
+      "title": "Trap detection frequency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 10 },
+          "unit": "ops"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "sum(rate(opencomplai_override_submitted_total[5m]))",
+          "refId": "A"
+        }
+      ],
+      "title": "Override rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 16 },
+      "id": 5,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_egress_blocked_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Egress blocked events (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 16 },
+      "id": 6,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_first_scan_completed_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "First scans completed (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 16 },
+      "id": 7,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_dossier_generated_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Dossiers generated (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 22 },
+      "id": 8,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_badge_issued_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "Badges issued (total)",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "description": "Rate of all audit events written to the ledger (ISO 27001 A.8.16 / SOC 2 CC7.2)",
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 10 },
+          "unit": "ops"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "sum(rate(opencomplai_compliance_check_completed_total[5m]))",
+          "legendFormat": "audit_events rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Audit Events Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "description": "Total EGRESS_BLOCKED events — spikes may indicate exfiltration attempts (NIST PR.IR-1)",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 10 }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 28 },
+      "id": 10,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_egress_blocked_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "EGRESS_BLOCKED count",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "description": "BREAK_GLASS_ACTIVATED count — each activation requires associated HITL approval (SOC 2 CC6.3)",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 28 },
+      "id": 11,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false }
+      },
+      "targets": [
+        {
+          "expr": "sum(opencomplai_override_submitted_total) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "title": "BREAK_GLASS_ACTIVATED count",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "description": "Auth failure rate — elevated rates indicate brute-force or credential-stuffing (ISO 27001 A.8.5 / FedRAMP IA-2)",
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "fillOpacity": 10 },
+          "unit": "ops"
+        }
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 36 },
+      "id": 12,
+      "targets": [
+        {
+          "expr": "sum(rate(opencomplai_verification_failed_total[5m]))",
+          "legendFormat": "auth failures/s",
+          "refId": "A"
+        }
+      ],
+      "title": "Auth Failure Rate",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["opencomplai", "compliance"],
+  "templating": { "list": [] },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Opencomplai — Compliance Health",
+  "uid": "opencomplai-health",
+  "version": 1,
+  "weekStart": ""
+}

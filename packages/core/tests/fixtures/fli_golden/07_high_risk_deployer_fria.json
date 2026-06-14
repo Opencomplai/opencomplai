@@ -1,0 +1,37 @@
+{
+  "name": "07_high_risk_deployer_fria",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "deployer",
+      "hr2_annex_iii": true,
+      "s1_in_scope": true,
+      "r5_fria": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": true,
+    "is_prohibited": false,
+    "effective_entity": "deployer",
+    "status_change_ids": [
+      "high_risk",
+      "high_risk_exception"
+    ],
+    "obligation_ids": [
+      "ai_literacy",
+      "deployer_high_risk",
+      "deployer_general",
+      "fria"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:deployer",
+      "hr:high_risk",
+      "s1:in_scope",
+      "s1:high_risk_exception",
+      "e1:ai_literacy",
+      "r5:fria"
+    ]
+  }
+}

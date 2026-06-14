@@ -1,0 +1,23 @@
+{
+  "name": "01_auth_rep_only",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "authorised_rep"
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "authorised_rep",
+    "status_change_ids": [],
+    "obligation_ids": [
+      "authorised_representative"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:authorised_rep"
+    ]
+  }
+}

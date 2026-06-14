@@ -1,0 +1,31 @@
+{
+  "name": "06_high_risk_provider",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "provider",
+      "hr2_annex_iii": true,
+      "s1_in_scope": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": true,
+    "is_prohibited": false,
+    "effective_entity": "provider",
+    "status_change_ids": [
+      "high_risk"
+    ],
+    "obligation_ids": [
+      "ai_literacy",
+      "provider_high_risk"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:provider",
+      "hr:high_risk",
+      "s1:in_scope",
+      "e1:ai_literacy"
+    ]
+  }
+}

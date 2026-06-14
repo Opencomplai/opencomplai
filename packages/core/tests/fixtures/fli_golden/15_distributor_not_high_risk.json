@@ -1,0 +1,23 @@
+{
+  "name": "15_distributor_not_high_risk",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "distributor",
+      "s1_in_scope": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "distributor",
+    "status_change_ids": [],
+    "obligation_ids": [],
+    "determination_path": [
+      "gate:yes",
+      "e1:distributor",
+      "s1:in_scope"
+    ]
+  }
+}

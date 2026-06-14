@@ -1,0 +1,39 @@
+# OpenTelemetry Collector configuration for Opencomplai
+# ISO 27001 A.8.16 / SOC 2 CC7.2 / NIST DE.CM / FedRAMP AU-6/SI-4
+#
+# Receives OTLP traces and metrics from all Python and Node.js services,
+# exports to the bundled Prometheus instance for Grafana visualisation.
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 5s
+    send_batch_size: 1024
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: opencomplai
+  debug:
+    verbosity: normal
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]

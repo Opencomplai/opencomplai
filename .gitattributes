@@ -1,0 +1,7 @@
+# Normalise line endings. Shell scripts must stay LF so they run on Linux/CI
+# even when checked out on Windows.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.svg text
+*.pkl binary

@@ -1,0 +1,37 @@
+opencomplai-ai — AI Intent Classification Plugin
+=================================================
+
+This package optionally downloads and uses the following pre-trained models.
+All models listed here are available under Apache 2.0 or MIT licenses.
+
+------------------------------------------------------------------------------
+CodeBERT (microsoft/codebert-base)
+  License  : MIT
+  Source   : https://huggingface.co/microsoft/codebert-base
+  Paper    : "CodeBERT: A Pre-Trained Model for Programming and Natural Languages"
+             Feng et al., 2020. https://arxiv.org/abs/2002.08155
+
+Qwen2.5-Coder-0.5B-Instruct
+  License  : Apache 2.0
+  Source   : https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF
+
+Qwen2.5-Coder-1.5B-Instruct
+  License  : Apache 2.0
+  Source   : https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF
+
+SmolLM2-1.7B-Instruct
+  License  : Apache 2.0
+  Source   : https://huggingface.co/HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF
+
+Phi-3.5-mini-instruct
+  License  : MIT
+  Source   : https://huggingface.co/microsoft/Phi-3.5-mini-instruct-gguf
+
+Mistral-7B-Instruct-v0.3
+  License  : Apache 2.0
+  Source   : https://huggingface.co/MaziyarPanahi/Mistral-7B-Instruct-v0.3-GGUF
+
+------------------------------------------------------------------------------
+Model files are downloaded on demand to ~/.cache/opencomplai/models/ and are
+NOT bundled with this package. Refer to each model's repository for full
+license text and usage terms.

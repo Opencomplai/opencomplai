@@ -1,0 +1,200 @@
+site_name: Opencomplai Documentation
+site_url: https://docs.opencomplai.com/
+site_description: Open-source EU AI Act compliance toolkit for AI engineering teams.
+repo_url: https://github.com/Checkref-co/opencomplai
+repo_name: Checkref-co/opencomplai
+edit_uri: edit/main/docs/src/
+docs_dir: src
+site_dir: ../site
+
+# Theme configuration
+theme:
+  name: material
+  custom_dir: theme/overrides
+
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+      primary: indigo
+      accent: amber
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+      primary: indigo
+      accent: amber
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  features:
+    - navigation.tracking
+    - navigation.top
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"`/]+'
+
+  - minify:
+      minify_html: true
+      minify_css: true
+      # checker-widget.js is loaded via extra_javascript; do not minify it (breaks IIFE bundle)
+      minify_js: false
+
+# Markdown extensions
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+  - pymdownx.caret
+  - pymdownx.details
+
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      auto_title: true
+
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: Checkref-co
+      repo: opencomplai
+
+  - pymdownx.mark
+
+  - pymdownx.superfences
+
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+  - pymdownx.tilde
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 2-3
+
+# Navigation structure
+nav:
+  - Home: index.md
+
+  - Getting Started:
+    - Overview: getting-started/index.md
+    - Requirements: getting-started/requirements.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - First Project: getting-started/first-project.md
+    - EU AI Act Checker: getting-started/eu-ai-act-checker.md
+    - Detect AI in your code: getting-started/scanner.md
+
+  - Guides:
+    - Customer Workflow: guides/customer-workflow.md
+    - Authentication: guides/authentication.md
+    - API Basics: guides/api-basics.md
+    - Error Handling: guides/error-handling.md
+    - Performance: guides/performance.md
+    - Deployment: guides/deployment.md
+    - Security: guides/security.md
+    - CI Integration: guides/ci-integration.md
+
+  - CLI Reference:
+    - init: cli/init.md
+    - checker: cli/checker.md
+    - validate-manifest: cli/validate-manifest.md
+    - check: cli/check.md
+    - risk classify: cli/risk-classify.md
+    - verify-output: cli/verify-output.md
+    - docs generate: cli/docs-generate.md
+    - sync metadata: cli/sync-metadata.md
+    - dashboard: cli/dashboard.md
+    - Exit codes: cli/exit-codes.md
+
+  - Python SDK:
+    - Quickstart: sdk/quickstart.md
+    - API Reference: sdk/api-reference.md
+
+  - Deployment:
+    - Docker Quickstart: deployment/quickstart.md
+    - Configuration: deployment/configuration.md
+    - Air-gap: deployment/airgap.md
+
+  - Core Concepts:
+    - Risk levels: concepts/risk-levels.md
+    - Rules: concepts/rules.md
+    - Control Codes: concepts/control-codes.md
+    - Evidence: concepts/evidence.md
+    - Scan workflow: concepts/scan-workflow.md
+
+  - Gateway API:
+    - REST Reference: api/rest-api.md
+
+  - Architecture:
+    - Overview: architecture/index.md
+    - System Design: architecture/system-design.md
+    - Data Model: architecture/data-model.md
+
+  - Examples:
+    - Overview: examples/index.md
+    - Basic Usage: examples/basic-usage.md
+    - Advanced Patterns: examples/advanced-patterns.md
+    - Integrations: examples/integrations.md
+
+  - Contributing:
+    - Guide: contributing/index.md
+    - Development Setup: contributing/development-setup.md
+    - Testing: contributing/testing.md
+    - Coding Standards: contributing/coding-standards.md
+    - Code Review: contributing/code-review.md
+    - Release Process: contributing/release-process.md
+    - Adding Rules: contributing/adding-rules.md
+
+  - Troubleshooting:
+    - Overview: troubleshooting/index.md
+    - Common Issues: troubleshooting/common-issues.md
+    - FAQ: troubleshooting/faq.md
+    - Debugging: troubleshooting/debugging.md
+
+# Inject brand CSS (loaded from theme/overrides/assets/ → /assets/ in built site)
+extra_css:
+  - stylesheets/tokens.css
+  - stylesheets/extra.css
+
+# EU AI Act checker widget — only loads on the checker page (auto-mounts on #ococ-checker)
+extra_javascript:
+  - assets/js/checker-widget.js
+
+# Extra configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Checkref-co/opencomplai
+
+# Copyright
+copyright: Copyright &copy; 2026 Checkref Co. All rights reserved.

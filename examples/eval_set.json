@@ -1,0 +1,19 @@
+{
+  "eval_set_id": "article-quickstart-v1",
+  "system_id": "demo-system",
+  "commit_ref": "HEAD",
+  "task_type": "binary_classification",
+  "outputs": [
+    "The system classified the request as low risk.",
+    "No sensitive data was included in the model response."
+  ],
+  "prompts": [
+    "Summarize the compliance status for this release."
+  ],
+  "predictions": [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1],
+  "labels": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  "protected_attributes": {
+    "region": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"]
+  },
+  "declared_output_fields": ["answer", "confidence", "risk_class"]
+}

@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# uv — DO NOT ignore uv.lock
+.venv/
+
+# Node.js
+node_modules/
+dist/
+*.js.map
+.pnpm-store/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+.DS_Store
+.cursor/*
+.autopilot.json
+
+# Secrets
+.env
+*.pem
+*.key
+
+# Docs build output
+site/
+docs/site/
+docs-env/
+.mkdocs/
+
+# Build artifacts
+.mintlify/
+
+# Opencomplai generated artifacts (output of `opencomplai init` / `opencomplai check`)
+compliance-artifact.json
+system-manifest.json
+.venv-ci-check/*
+# GitHub issues sync output (local mirror; may contain PII from issues)
+github-issues/
+
+docs/src/assets/js/checker-widget.js
+docs/checker-widget/src/data/
+docs/checker-widget/node_modules/
+packages/cli/src/opencomplai_cli/data/checker-local.html
+
+# --- Public-repo hardening (keep AI-tooling and internal artifacts out) ---
+.claude/
+.cursor/
+.autopilot.json
+.selfaudit/
+compliance-reports/
+*.plan.md
+x.key
+.tmp-*.db
+ci-logs/
+tmp/

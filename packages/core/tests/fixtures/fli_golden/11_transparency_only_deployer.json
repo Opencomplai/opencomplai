@@ -1,0 +1,30 @@
+{
+  "name": "11_transparency_only_deployer",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "deployer",
+      "s1_in_scope": true,
+      "r4_transparency": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "deployer",
+    "status_change_ids": [],
+    "obligation_ids": [
+      "ai_literacy",
+      "deployer_general",
+      "transparency"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:deployer",
+      "s1:in_scope",
+      "e1:ai_literacy",
+      "r4:transparency"
+    ]
+  }
+}

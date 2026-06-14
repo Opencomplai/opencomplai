@@ -1,0 +1,37 @@
+[project]
+name = "opencomplai-cli"
+version = "0.2.0-dev"
+description = "Opencomplai command-line interface for EU AI Act compliance assessment"
+readme = "README.md"
+license = { text = "AGPL-3.0-only" }
+authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]
+requires-python = ">=3.11"
+dependencies = [
+    "opencomplai-core[reports]>=0.2.0-dev",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "questionary>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://opencomplai.com"
+Documentation = "https://docs.opencomplai.com"
+
+[project.scripts]
+opencomplai = "opencomplai_cli.main:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opencomplai_cli"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/opencomplai_cli/data/checker-local.html" = "opencomplai_cli/data/checker-local.html"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

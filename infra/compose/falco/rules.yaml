@@ -1,0 +1,77 @@
+# Falco local rules for Opencomplai
+# Compliance: ISO 27001 A.8.16 / SOC 2 CC7.2 / NIST DE.CM / FedRAMP SI-4
+# These rules supplement the default Falco ruleset.
+
+- rule: Opencomplai unexpected outbound connection
+  desc: A service other than egress-proxy is making a direct outbound connection
+  condition: >
+    outbound and
+    not proc.name in (curl, wget, python3, node) and
+    not container.name contains "egress-proxy" and
+    not container.name contains "falco" and
+    fd.l4proto = tcp and
+    not fd.rip in (127.0.0.1, ::1)
+  output: >
+    Unexpected outbound connection from container
+    (container=%container.name proc=%proc.name cmd=%proc.cmdline
+     dst=%fd.rip:%fd.rport user=%user.name)
+  priority: WARNING
+  tags: [network, opencomplai]
+
+- rule: Opencomplai shell spawned in container
+  desc: A shell was spawned inside an Opencomplai service container
+  condition: >
+    spawned_process and
+    shell_procs and
+    container and
+    container.name startswith "opencomplai"
+  output: >
+    Shell spawned in Opencomplai container
+    (container=%container.name shell=%proc.name cmd=%proc.cmdline
+     parent=%proc.pname user=%user.name)
+  priority: CRITICAL
+  tags: [process, opencomplai]
+
+- rule: Opencomplai write to read-only filesystem
+  desc: A process attempted to write to a read_only container filesystem
+  # Only these services run with read_only: true — stateful containers
+  # (postgres, redis, ...) write to their volumes constantly and must not match.
+  condition: >
+    open_write and
+    container and
+    (container.name contains "risk-engine" or
+     container.name contains "doc-generator" or
+     container.name contains "egress-proxy" or
+     container.name contains "gateway-api") and
+    not fd.name startswith /tmp
+  output: >
+    Write attempt to read-only container filesystem
+    (container=%container.name file=%fd.name proc=%proc.name user=%user.name)
+  priority: WARNING
+  tags: [filesystem, opencomplai]
+
+- rule: Opencomplai sensitive file read
+  desc: A process read a sensitive credential or key file
+  condition: >
+    open_read and
+    container and
+    container.name startswith "opencomplai" and
+    fd.name pmatch (/data/keys/*, /etc/ssl/private/*, /run/secrets/*)
+  output: >
+    Sensitive file read in container
+    (container=%container.name file=%fd.name proc=%proc.name user=%user.name)
+  priority: WARNING
+  tags: [filesystem, credentials, opencomplai]
+
+- rule: Opencomplai privilege escalation attempt
+  desc: A process attempted to change its UID/GID inside a container
+  condition: >
+    evt.type in (setuid, setgid) and
+    container and
+    container.name startswith "opencomplai" and
+    not user.uid = 0
+  output: >
+    Privilege escalation attempt in container
+    (container=%container.name proc=%proc.name user=%user.name new_uid=%evt.arg.uid)
+  priority: CRITICAL
+  tags: [process, privilege-escalation, opencomplai]

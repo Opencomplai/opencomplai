@@ -1,0 +1,67 @@
+{
+  "ai_literacy": {
+    "title": "AI literacy",
+    "body": "Providers and deployers must take measures to ensure, to their best extent, a sufficient level of AI literacy of their staff and other persons dealing with the operation and use of AI systems on their behalf, taking into account their technical knowledge, experience, education and training and the context the AI systems are to be used in, according to Article 4 of the AI Act.",
+    "article_ref": "Art. 4"
+  },
+  "authorised_representative": {
+    "title": "Authorised representative obligations",
+    "body": "An authorised representative must receive a written mandate from a provider to perform specified tasks on its behalf. The authorised representative must keep contact details available, verify that the EU declaration of conformity and technical documentation have been drawn up, and cooperate with competent authorities. Upon termination of the mandate, the authorised representative must inform the market surveillance authority.",
+    "article_ref": "Art. 22, Art. 28"
+  },
+  "provider_high_risk": {
+    "title": "Provider obligations for high-risk AI systems",
+    "body": "Providers of high-risk AI systems must establish a risk management system, ensure data governance, draw up technical documentation, design for record-keeping, provide instructions for use, enable human oversight, ensure accuracy, robustness and cybersecurity, establish a quality management system, and draw up an EU declaration of conformity before placing the system on the market or putting it into service.",
+    "article_ref": "Art. 16–21, Art. 43"
+  },
+  "deployer_high_risk": {
+    "title": "Deployer obligations for high-risk AI systems",
+    "body": "Deployers of high-risk AI systems must take appropriate technical and organisational measures, ensure human oversight, monitor operation, keep automatically generated logs, and inform the provider or distributor where they consider that use may constitute a risk. Deployers that are public authorities or Union institutions, bodies, offices or agencies must perform a fundamental rights impact assessment before putting the system into use.",
+    "article_ref": "Art. 26, Art. 27"
+  },
+  "deployer_general": {
+    "title": "General deployer obligations",
+    "body": "Deployers must use AI systems in accordance with the instructions for use, assign human oversight, and ensure that input data is relevant in view of the intended purpose. Where applicable, deployers must inform workers' representatives and affected persons that they are subject to the use of a high-risk AI system.",
+    "article_ref": "Art. 26, Art. 29"
+  },
+  "distributor": {
+    "title": "Distributor obligations",
+    "body": "Before making a high-risk AI system available on the market, distributors must verify that it bears the required CE marking, is accompanied by the EU declaration of conformity and instructions for use, and that the provider and importer have complied with their obligations. Distributors must not make available systems they know or should have known are not in conformity.",
+    "article_ref": "Art. 24"
+  },
+  "importer": {
+    "title": "Importer obligations",
+    "body": "Before placing a high-risk AI system on the market, importers must ensure that the provider has drawn up the required technical documentation, that the system bears the CE marking and is accompanied by required documents, and that the provider has complied with registration obligations. Importers must indicate their name, registered trade name or trademark and contact address on the system or its packaging.",
+    "article_ref": "Art. 23"
+  },
+  "product_manufacturer": {
+    "title": "Product manufacturer obligations",
+    "body": "Where a product manufacturer places on the market or puts into service an AI system together with its product under its own name or trademark, it shall be considered the provider of that AI system and shall be subject to the obligations of the provider under this Regulation, in accordance with Article 25(1).",
+    "article_ref": "Art. 25(1), Art. 16"
+  },
+  "gpai_provider": {
+    "title": "General-purpose AI model provider obligations",
+    "body": "Providers of general-purpose AI models must draw up and keep technical documentation, provide information and documentation to downstream providers, put in place a policy to respect Union copyright law, and publish a sufficiently detailed summary about the content used for training. Providers must cooperate with the AI Office and national competent authorities.",
+    "article_ref": "Art. 53"
+  },
+  "gpai_systemic_risk": {
+    "title": "GPAI model with systemic risk obligations",
+    "body": "Providers of general-purpose AI models with systemic risk must perform model evaluations, assess and mitigate possible systemic risks, track and report serious incidents, and ensure adequate cybersecurity protection. They must also comply with additional obligations set out in Article 55.",
+    "article_ref": "Art. 55"
+  },
+  "transparency": {
+    "title": "Transparency obligations",
+    "body": "Providers must ensure that AI systems intended to interact directly with natural persons are designed and developed so that the persons concerned are informed that they are interacting with an AI system. Providers of AI systems that generate synthetic audio, image, video or text content must ensure outputs are marked in a machine-readable format and detectable as artificially generated.",
+    "article_ref": "Art. 50"
+  },
+  "prohibited": {
+    "title": "Prohibited AI practices",
+    "body": "The following AI practices are prohibited: harmful subliminal techniques, exploitation of vulnerabilities, social scoring by public authorities, individual predictive policing based solely on profiling, untargeted scraping of facial images, emotion recognition in workplaces and education, biometric categorisation inferring sensitive attributes, and real-time remote biometric identification in publicly accessible spaces for law enforcement except in strictly defined circumstances.",
+    "article_ref": "Art. 5"
+  },
+  "fria": {
+    "title": "Fundamental rights impact assessment",
+    "body": "Deployers that are bodies governed by public law or private entities providing public services must, prior to putting a high-risk AI system into use, perform an assessment of the impact on fundamental rights that the use of such system may produce in the specific context of use.",
+    "article_ref": "Art. 27"
+  }
+}

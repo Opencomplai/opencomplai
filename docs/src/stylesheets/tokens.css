@@ -1,0 +1,47 @@
+/* Brand tokens — copy of opencomplai-website/src/styles/tokens.css */
+
+:root {
+  /* Color palette */
+  --color-midnight: #21283B;
+  --color-electric-blue: #3B5BEB;
+  --color-success-green: #12D463;
+  --color-violet: #7C34A5;
+  --color-cool-gray: #F1F4F8;
+  --color-white: #FFFFFF;
+
+  /* Semantic aliases */
+  --color-primary: var(--color-electric-blue);
+  --color-primary-dark: #2d46c7;
+  --color-accent: var(--color-success-green);
+  --color-bg: var(--color-white);
+  --color-bg-subtle: var(--color-cool-gray);
+  --color-fg: var(--color-midnight);
+  --color-fg-muted: #5a6478;
+  --color-border: #e2e6ed;
+
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(33 40 59 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(33 40 59 / 0.08), 0 2px 4px -2px rgb(33 40 59 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(33 40 59 / 0.08), 0 4px 6px -4px rgb(33 40 59 / 0.05);
+}

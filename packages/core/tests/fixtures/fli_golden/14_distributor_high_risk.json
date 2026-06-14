@@ -1,0 +1,29 @@
+{
+  "name": "14_distributor_high_risk",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "distributor",
+      "hr2_annex_iii": true,
+      "s1_in_scope": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": true,
+    "is_prohibited": false,
+    "effective_entity": "distributor",
+    "status_change_ids": [
+      "high_risk"
+    ],
+    "obligation_ids": [
+      "distributor"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:distributor",
+      "hr:high_risk",
+      "s1:in_scope"
+    ]
+  }
+}

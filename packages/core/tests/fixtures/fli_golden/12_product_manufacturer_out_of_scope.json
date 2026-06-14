@@ -1,0 +1,25 @@
+{
+  "name": "12_product_manufacturer_out_of_scope",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "product_manufacturer",
+      "e3_product_integration": "none"
+    }
+  },
+  "expected": {
+    "in_scope": false,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "product_manufacturer",
+    "status_change_ids": [
+      "out_of_scope"
+    ],
+    "obligation_ids": [],
+    "determination_path": [
+      "gate:yes",
+      "e1:product_manufacturer",
+      "e3:none"
+    ]
+  }
+}

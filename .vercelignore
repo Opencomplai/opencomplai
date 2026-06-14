@@ -1,0 +1,4 @@
+# Exclude root-level API from the docs project (Root Dir: ./).
+# Leading slash anchors to repo root — does NOT exclude dashboard-saas/api/.
+# The dashboard-api Vercel project (Root Dir: dashboard-saas) handles those.
+/api/
