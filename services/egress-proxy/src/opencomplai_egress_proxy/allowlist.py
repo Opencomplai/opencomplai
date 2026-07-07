@@ -37,6 +37,9 @@ ALLOWED_FIELDS: frozenset[str] = frozenset(
         "fail_count",
         "trap_frequency",
         "override_rate",
+        "eval_set_id",
+        "eval_overall_outcome",
+        "eval_failed_evaluator_ids",
     }
 )
 

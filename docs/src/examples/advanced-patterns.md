@@ -130,19 +130,37 @@ match artifact.result:
 
 ## Service-backed mode with custom gateway URL
 
-```bash
-# Against local Docker Compose stack
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+=== "macOS / Linux"
+    ```bash
+    # Against local Docker Compose stack
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
 
-# Against a remote deployment
-OPENCOMPLAI_API_URL=https://compliance.internal.example.com \
-  opencomplai check --sign --scan-mode ci
-```
+    # Against a remote deployment
+    OPENCOMPLAI_API_URL=https://compliance.internal.example.com \
+      opencomplai check --sign --scan-mode ci
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Against local Docker Compose stack
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+
+    # Against a remote deployment
+    $env:OPENCOMPLAI_API_URL = "https://compliance.internal.example.com"
+    opencomplai check --sign --scan-mode ci
+    ```
 
 ## Airgap check
 
-```bash
-opencomplai check --scan-mode airgap
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --scan-mode airgap
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --scan-mode airgap
+    ```
 
 In airgap mode, `opencomplai check` uses the local engine even when `OPENCOMPLAI_API_URL` is set, and `egress-proxy` in the Docker stack blocks all outbound traffic.

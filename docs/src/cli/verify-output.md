@@ -4,9 +4,15 @@ Verify an AI output claim against ground-truth sources (REQ-GTVG-001).
 
 ## Synopsis
 
-```bash
-opencomplai verify-output --system-id <id> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai verify-output --system-id <id> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai verify-output --system-id <id> [OPTIONS]
+    ```
 
 ## Options
 
@@ -22,25 +28,41 @@ opencomplai verify-output --system-id <id> [OPTIONS]
 
 `verify-output` requires the Docker Compose stack (`OPENCOMPLAI_API_URL` must be set). It calls `POST /v1/verify/claims` on the gateway API.
 
-```bash
-export OPENCOMPLAI_API_URL=http://localhost:8080
-```
+=== "macOS / Linux"
+    ```bash
+    export OPENCOMPLAI_API_URL=http://localhost:8080
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    ```
 
 ## Examples
 
-```bash
-# Verify a named claim
-opencomplai verify-output \
-  --system-id "loan-model" \
-  --claim-ref "accuracy-claim-2026-05" \
-  --source-ref "https://internal-benchmarks/accuracy" \
-  --expected-value "0.94"
+=== "macOS / Linux"
+    ```bash
+    # Verify a named claim
+    opencomplai verify-output \
+      --system-id "loan-model" \
+      --claim-ref "accuracy-claim-2026-05" \
+      --source-ref "https://internal-benchmarks/accuracy" \
+      --expected-value "0.94"
 
-# Verify from a local file
-opencomplai verify-output \
-  --system-id "loan-model" \
-  --claim-file ./claims/accuracy.json
-```
+    # Verify from a local file
+    opencomplai verify-output \
+      --system-id "loan-model" \
+      --claim-file ./claims/accuracy.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Verify a named claim
+    opencomplai verify-output --system-id "loan-model" --claim-ref "accuracy-claim-2026-05" --source-ref "https://internal-benchmarks/accuracy" --expected-value "0.94"
+
+    # Verify from a local file
+    opencomplai verify-output --system-id "loan-model" --claim-file ./claims/accuracy.json
+    ```
 
 ## Output
 

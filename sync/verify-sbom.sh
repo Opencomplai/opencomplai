@@ -13,7 +13,7 @@ set -euo pipefail
 IMAGE="${1:?Usage: $0 <image-reference>}"
 
 OIDC_ISSUER="https://token.actions.githubusercontent.com"
-IDENTITY_REGEXP="^https://github.com/Checkref-co/opencomplai/\.github/workflows/supply-chain\.yml@"
+IDENTITY_REGEXP="^https://github.com/Opencomplai/opencomplai/\.github/workflows/supply-chain\.yml@"
 
 echo "==> Verifying image signature: $IMAGE"
 cosign verify \

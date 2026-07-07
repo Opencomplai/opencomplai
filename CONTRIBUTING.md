@@ -19,7 +19,7 @@ Check for issues labelled `good first issue` to find starter work. For anything 
 ## 4. Development setup
 
 ```bash
-git clone https://github.com/Checkref-co/opencomplai
+git clone https://github.com/Opencomplai/opencomplai
 cd opencomplai
 ./scripts/bootstrap.sh
 ```
@@ -87,7 +87,7 @@ your contribution can ship in both, we require two things on every pull request:
    which appends a `Signed-off-by: Your Name <you@example.com>` trailer certifying you have
    the right to submit the work under the project's licence.
 2. **Contributor Licence Agreement (CLA).** On your first pull request, the CLA Assistant
-   bot will ask you to sign the [CLA](CLA.md). This grants Checkref Co. the rights needed to
+   bot will ask you to sign the [CLA](CLA.md). This grants Opencomplai the rights needed to
    include your contribution in both the AGPL and the commercial editions. It is a one-time
    step.
 

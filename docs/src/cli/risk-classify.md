@@ -4,9 +4,15 @@ Classify the risk level for an intended purpose without running a full complianc
 
 ## Synopsis
 
-```bash
-opencomplai risk classify --system-id <id> --intended-purpose <purpose> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai risk classify --system-id <id> --intended-purpose <purpose> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai risk classify --system-id <id> --intended-purpose <purpose> [OPTIONS]
+    ```
 
 !!! note
     This is a **subcommand** of `risk`, not a top-level command. The full invocation is `opencomplai risk classify`.
@@ -21,11 +27,17 @@ opencomplai risk classify --system-id <id> --intended-purpose <purpose> [OPTIONS
 
 ## Example
 
-```bash
-opencomplai risk classify \
-  --system-id "my-model" \
-  --intended-purpose "customer support chatbot"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai risk classify \
+      --system-id "my-model" \
+      --intended-purpose "customer support chatbot"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai risk classify --system-id "my-model" --intended-purpose "customer support chatbot"
+    ```
 
 Human output:
 
@@ -35,12 +47,18 @@ Risk level: MINIMAL
 
 JSON output:
 
-```bash
-opencomplai risk classify \
-  --system-id "my-model" \
-  --intended-purpose "customer support chatbot" \
-  --output json
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai risk classify \
+      --system-id "my-model" \
+      --intended-purpose "customer support chatbot" \
+      --output json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai risk classify --system-id "my-model" --intended-purpose "customer support chatbot" --output json
+    ```
 
 ```json
 {

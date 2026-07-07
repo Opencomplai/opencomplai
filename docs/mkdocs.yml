@@ -1,8 +1,8 @@
-site_name: Opencomplai Documentation
+site_name: Opencomplai
 site_url: https://docs.opencomplai.com/
 site_description: Open-source EU AI Act compliance toolkit for AI engineering teams.
-repo_url: https://github.com/Checkref-co/opencomplai
-repo_name: Checkref-co/opencomplai
+repo_url: https://github.com/Opencomplai/opencomplai
+repo_name: Opencomplai/opencomplai
 edit_uri: edit/main/docs/src/
 docs_dir: src
 site_dir: ../site
@@ -46,6 +46,17 @@ theme:
     - content.code.copy
     - content.code.select
     - content.tabs.link
+    - header.autohide
+
+  header:
+    nav_primary: Docs
+    nav_secondary:
+      - text: Blog
+        url: https://blog.opencomplai.com
+      - text: GitHub
+        url: https://github.com/Opencomplai/opencomplai
+      - text: Get Started
+        url: /getting-started/
 
 # Plugins
 plugins:
@@ -77,7 +88,7 @@ markdown_extensions:
 
   - pymdownx.magiclink:
       repo_url_shorthand: true
-      user: Checkref-co
+      user: Opencomplai
       repo: opencomplai
 
   - pymdownx.mark
@@ -181,6 +192,8 @@ nav:
     - FAQ: troubleshooting/faq.md
     - Debugging: troubleshooting/debugging.md
 
+  - License: license.md
+
 # Inject brand CSS (loaded from theme/overrides/assets/ → /assets/ in built site)
 extra_css:
   - stylesheets/tokens.css
@@ -188,13 +201,13 @@ extra_css:
 
 # EU AI Act checker widget — only loads on the checker page (auto-mounts on #ococ-checker)
 extra_javascript:
-  - assets/js/checker-widget.js
+  - assets/js/checker-widget.js?v=checker-2025-07-28
 
 # Extra configuration
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Checkref-co/opencomplai
+      link: https://github.com/Opencomplai/opencomplai
 
 # Copyright
-copyright: Copyright &copy; 2026 Checkref Co. All rights reserved.
+copyright: Copyright &copy; 2026 Opencomplai. All rights reserved.

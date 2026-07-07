@@ -132,9 +132,15 @@ def test_transparency_non_chatbot():
 
 ## Step 5: Run the tests
 
-```bash
-uv run pytest packages/core/tests/test_engine.py -v
-```
+=== "macOS / Linux"
+    ```bash
+    uv run pytest packages/core/tests/test_engine.py -v
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv run pytest packages/core/tests/test_engine.py -v
+    ```
 
 All existing tests must still pass. New tests must pass. No regressions.
 

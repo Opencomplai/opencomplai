@@ -4,18 +4,31 @@ Common patterns for using Opencomplai in the CLI, Python SDK, and CI.
 
 ## CLI: check a minimal-risk system
 
-```bash
-# 1. Install
-pip install opencomplai
+=== "macOS / Linux"
+    ```bash
+    # 1. Install
+    pip install opencomplai
 
-# 2. Create manifest
-opencomplai init \
-  --system-id "support-bot-v1" \
-  --intended-purpose "customer support chatbot"
+    # 2. Create manifest
+    opencomplai init \
+      --system-id "support-bot-v1" \
+      --intended-purpose "customer support chatbot"
 
-# 3. Run compliance check
-opencomplai check
-```
+    # 3. Run compliance check
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # 1. Install
+    pip install opencomplai
+
+    # 2. Create manifest
+    opencomplai init --system-id "support-bot-v1" --intended-purpose "customer support chatbot"
+
+    # 3. Run compliance check
+    opencomplai check
+    ```
 
 Expected output:
 
@@ -31,13 +44,20 @@ Risk classification: MINIMAL. 4 rules passed, 0 rules failed.
 
 ## CLI: check a high-risk system
 
-```bash
-opencomplai init \
-  --system-id "loan-decision-v2" \
-  --intended-purpose "automated credit scoring for retail lending"
+=== "macOS / Linux"
+    ```bash
+    opencomplai init \
+      --system-id "loan-decision-v2" \
+      --intended-purpose "automated credit scoring for retail lending"
 
-opencomplai check
-```
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --system-id "loan-decision-v2" --intended-purpose "automated credit scoring for retail lending"
+    opencomplai check
+    ```
 
 The `AnnexIIIClassifierRule` will detect "credit scoring" as an Annex III category and fail:
 
@@ -55,22 +75,39 @@ Exit code: `1` (`CONTROL_FAIL`).
 
 ## CLI: JSON output for scripting
 
-```bash
-opencomplai check --output json | jq '.result'
-# "control_fail"
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --output json | jq '.result'
+    # "control_fail"
 
-opencomplai check --output json | jq '.failed_controls'
-# ["EU_AIA_ART6_HIGH_RISK"]
-```
+    opencomplai check --output json | jq '.failed_controls'
+    # ["EU_AIA_ART6_HIGH_RISK"]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # jq must be installed separately on Windows, or use ConvertFrom-Json
+    opencomplai check --output json | ConvertFrom-Json | Select-Object -ExpandProperty result
+    opencomplai check --output json | ConvertFrom-Json | Select-Object -ExpandProperty failed_controls
+    ```
 
 ## CLI: validate a manifest before check
 
-```bash
-opencomplai validate-manifest system-manifest.json
-# Manifest is valid.
+=== "macOS / Linux"
+    ```bash
+    opencomplai validate-manifest system-manifest.json
+    # Manifest is valid.
 
-opencomplai validate-manifest system-manifest.json --output json | jq .
-```
+    opencomplai validate-manifest system-manifest.json --output json | jq .
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai validate-manifest system-manifest.json
+    # Manifest is valid.
+
+    opencomplai validate-manifest system-manifest.json --output json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+    ```
 
 ## Python SDK: programmatic assessment
 
@@ -163,14 +200,27 @@ The step fails automatically if the exit code is non-zero.
 
 After starting the full stack:
 
-```bash
-docker compose -f infra/compose/docker-compose.yml up -d
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml up -d
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml up -d
+    ```
 
 Run the CLI in service-backed mode:
 
-```bash
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+    ```
 
 The gateway API routes the check through all services and writes an evidence ledger entry.

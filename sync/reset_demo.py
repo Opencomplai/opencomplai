@@ -64,10 +64,10 @@ def _post(url: str, body: dict, *, dry_run: bool) -> dict | None:
             return json.loads(resp.read())
     except urllib.error.HTTPError as exc:
         body_text = exc.read().decode(errors="replace")
-        print(f"  [WARN] POST {url} → HTTP {exc.code}: {body_text[:200]}")
+        print(f"  [WARN] POST {url} -> HTTP {exc.code}: {body_text[:200]}")
         return None
     except Exception as exc:
-        print(f"  [WARN] POST {url} → {exc}")
+        print(f"  [WARN] POST {url} -> {exc}")
         return None
 
 
@@ -84,10 +84,10 @@ def _delete(url: str, *, dry_run: bool) -> dict | None:
         if exc.code == 404:
             return None  # already gone
         body_text = exc.read().decode(errors="replace")
-        print(f"  [WARN] DELETE {url} → HTTP {exc.code}: {body_text[:200]}")
+        print(f"  [WARN] DELETE {url} -> HTTP {exc.code}: {body_text[:200]}")
         return None
     except Exception as exc:
-        print(f"  [WARN] DELETE {url} → {exc}")
+        print(f"  [WARN] DELETE {url} -> {exc}")
         return None
 
 
@@ -98,7 +98,7 @@ def _delete(url: str, *, dry_run: bool) -> dict | None:
 
 def reset_bias_alerts(vault: str, *, dry_run: bool) -> None:
     """Purge bias alert data for all demo system IDs."""
-    print("[reset] Purging bias alerts…")
+    print("[reset] Purging bias alerts...")
     for sid in DEMO_SYSTEM_IDS:
         resp = _post(
             f"{vault}/v1/admin/purge-bias-data",
@@ -111,11 +111,11 @@ def reset_bias_alerts(vault: str, *, dry_run: bool) -> None:
 
 def reset_dossiers(vault: str, *, dry_run: bool) -> None:
     """List and delete all dossier index entries for demo systems."""
-    print("[reset] Removing dossier index entries…")
+    print("[reset] Removing dossier index entries...")
     for sid in DEMO_SYSTEM_IDS:
         list_url = f"{vault}/v1/dossiers?system_id={sid}"
         if dry_run:
-            print(f"  [DRY-RUN] GET {list_url} → (would delete all found dossiers)")
+            print(f"  [DRY-RUN] GET {list_url} -> (would delete all found dossiers)")
             continue
         try:
             with urllib.request.urlopen(list_url, timeout=10) as r:
@@ -139,7 +139,7 @@ def reset_ledger_events(vault: str, *, dry_run: bool) -> None:
     demo data was intentionally cleared. Downstream renders should filter
     events whose payload contains the tombstone marker.
     """
-    print("[reset] Appending DEMO_RESET tombstone ledger events…")
+    print("[reset] Appending DEMO_RESET tombstone ledger events...")
     for sid in DEMO_SYSTEM_IDS:
         resp = _post(
             f"{vault}/v1/evidence/events",
@@ -153,7 +153,7 @@ def reset_ledger_events(vault: str, *, dry_run: bool) -> None:
             dry_run=dry_run,
         )
         event_id = (resp or {}).get("event_id", "")
-        print(f"    {sid}: tombstone → {event_id[:8] if event_id else 'dry-run'}…")
+        print(f"    {sid}: tombstone -> {event_id[:8] if event_id else 'dry-run'}...")
 
 
 def reset_redis_streams(*, dry_run: bool) -> None:
@@ -163,7 +163,7 @@ def reset_redis_streams(*, dry_run: bool) -> None:
     Uses 'docker compose exec redis redis-cli' — requires the stack to be running.
     Skips gracefully if Redis is unreachable or docker is unavailable.
     """
-    print("[reset] Flushing Redis stream entries for demo systems…")
+    print("[reset] Flushing Redis stream entries for demo systems...")
     if dry_run:
         print(
             "  [DRY-RUN] Would XDEL verification-stream entries for demo-* system_ids"
@@ -242,7 +242,7 @@ def main() -> None:
     print("\n  Demo data wiped successfully.\n")
 
     if args.reseed:
-        print("  --reseed flag set — running seed_demo.py…\n")
+        print("  --reseed flag set - running seed_demo.py...\n")
         seed_script = os.path.join(os.path.dirname(__file__), "seed_demo.py")
         seed_args = [
             sys.executable,

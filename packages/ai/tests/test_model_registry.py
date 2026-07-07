@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from opencomplai_ai.models import MODEL_CATALOG
 from opencomplai_ai.registry import ModelNotInstalledError, ModelRegistry
 
@@ -20,7 +19,9 @@ def test_resolve_codebert_returns_classifier():
     from opencomplai_ai.classifier import IntentClassifier
 
     mock_classifier = MagicMock(spec=IntentClassifier)
-    with patch("opencomplai_ai.registry.IntentClassifier", return_value=mock_classifier):
+    with patch(
+        "opencomplai_ai.registry.IntentClassifier", return_value=mock_classifier
+    ):
         backend = ModelRegistry.resolve("codebert-onnx")
     assert backend is mock_classifier
 

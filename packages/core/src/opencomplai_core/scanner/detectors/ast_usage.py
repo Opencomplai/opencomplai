@@ -19,6 +19,7 @@ _CATEGORY_MAP = {
     "orchestration": SignalCategory.LLM_ORCHESTRATION,
     "vector_embedding": SignalCategory.EMBEDDINGS_VECTOR,
     "biometric": SignalCategory.BIOMETRIC,
+    "scoring": SignalCategory.SCORING_PROFILING,
 }
 
 

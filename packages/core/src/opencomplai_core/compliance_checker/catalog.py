@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 from opencomplai_core.compliance_checker.models import ObligationItem, StatusChangeItem
 
@@ -32,6 +33,12 @@ def load_status_changes() -> dict[str, StatusChangeItem]:
 @lru_cache(maxsize=1)
 def load_help_content() -> dict[str, dict[str, str]]:
     return _load_json("help_content.json")
+
+
+@lru_cache(maxsize=1)
+def load_questions() -> dict[str, dict[str, Any]]:
+    """Question id -> {label, section, options?} for rendering answer summaries."""
+    return _load_json("questions.json")
 
 
 def get_obligation(obligation_id: str) -> ObligationItem:

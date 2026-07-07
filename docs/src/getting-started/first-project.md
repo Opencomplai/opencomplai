@@ -30,16 +30,29 @@ In your AI project repository:
 
 This creates `system-manifest.json`. Commit it:
 
-```bash
-git add system-manifest.json
-git commit -m "feat: add EU AI Act system manifest"
-```
+=== "macOS / Linux"
+    ```bash
+    git add system-manifest.json
+    git commit -m "feat: add EU AI Act system manifest"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    git add system-manifest.json
+    git commit -m "feat: add EU AI Act system manifest"
+    ```
 
 ## Step 2: Run a local check
 
-```bash
-opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check
+    ```
 
 `check` prints an `Opencomplai Compliance Check` block ending in `result: PASS`
 (or `CONTROL_FAIL` / `POLICY_BLOCK`) and writes `compliance-artifact.json`. When

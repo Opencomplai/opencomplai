@@ -1,4 +1,4 @@
-"""EU AI Act Compliance Checker — FLI-parity decision engine."""
+"""EU AI Act Compliance Checker — deterministic decision engine."""
 
 from opencomplai_core.compliance_checker.bridge import bridge_to_manifest_fields
 from opencomplai_core.compliance_checker.engine import CHECKER_VERSION, evaluate

@@ -7,7 +7,7 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [0.1.0] — Initial public release
+## [0.1.0] — 2026-06-28 — Initial public release
 
 ### Added
 
@@ -48,7 +48,7 @@ This project is pre-release. The packages are not yet published to PyPI. Install
 source:
 
 ```bash
-git clone https://github.com/Checkref-co/opencomplai
+git clone https://github.com/Opencomplai/opencomplai
 cd opencomplai
 pip install -e packages/core -e packages/cli -e packages/sdk-python
 ```
@@ -57,4 +57,4 @@ The v0.1 release will publish `opencomplai`, `opencomplai-cli`, and `opencomplai
 PyPI with a stable API contract. See
 [Contributing — Release Process](docs/src/contributing/release-process.md) for details.
 
-[0.1.0]: https://github.com/Checkref-co/opencomplai/releases/tag/v0.1.0
+[0.1.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.0

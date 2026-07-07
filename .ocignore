@@ -1,0 +1,63 @@
+# Opencomplai scan configuration
+# Pattern lines: ocignore subset v1 (fnmatch; use trailing / for directories)
+# https://docs.opencomplai.com/getting-started/scanner#ocignore
+
+[limits]
+max_files = 0
+max_bytes_per_file = 0
+max_total_bytes = 0
+skip_binary = false
+max_symlink_depth = 5
+max_notebook_cells = 500
+
+# --- Exclusions (edit freely) ---
+.git/
+node_modules/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+dist/
+build/
+site/
+docs/site/
+.env
+*.pem
+*.key
+*.pyc
+htmlcov/
+.coverage
+.pnpm-store/
+.idea/
+.vscode/
+.cursor/
+compliance-artifact.json
+system-manifest.json
+docs/src/assets/js/checker-widget.js
+docs/checker-widget/node_modules/
+packages/cli/src/opencomplai_cli/data/checker-local.html
+*.pyo
+*.egg-info/
+*.js.map
+*.swp
+.DS_Store
+.cursor/*
+.autopilot.json
+docs-env/
+.mkdocs/
+.mintlify/
+examples/
+.venv-ci-check/*
+github-issues/
+docs/checker-widget/src/data/
+.claude/
+.selfaudit/
+compliance-reports/
+*.plan.md
+x.key
+.tmp-*.db
+ci-logs/
+tmp/

@@ -19,19 +19,31 @@ The only input the customer provides is a **system manifest** describing one AI 
 
 ### Step 1 — install the CLI
 
-```bash
-pip install opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    ```
 
 ### Step 2 — initialise a manifest per AI system
 
 A minimal MINIMAL-risk system needs only two flags:
 
-```bash
-opencomplai init \
-  --system-id "loan-decision-model" \
-  --intended-purpose "automated credit scoring for retail lending"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai init \
+      --system-id "loan-decision-model" \
+      --intended-purpose "automated credit scoring for retail lending"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --system-id "loan-decision-model" --intended-purpose "automated credit scoring for retail lending"
+    ```
 
 This creates `system-manifest.json`:
 
@@ -47,26 +59,38 @@ This creates `system-manifest.json`:
 
 For **HIGH-risk** systems (anything that maps to Annex III, including the credit-scoring example above), the manifest **must** carry the real Annex IV Section 2 and 3 content. Either pass them inline:
 
-```bash
-opencomplai init \
-  --system-id "loan-decision-model" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --high-risk-presumption \
-  --training-data-description "5M anonymised loan applications 2018-2025, EU-only, GDPR-cleared lineage in s3://opencomplai-evidence/training-data-manifest.json" \
-  --model-architecture "Gradient-boosted decision trees (XGBoost 2.0), 1200 trees, depth 8, calibrated isotonic probabilities" \
-  --monitoring-approach "Hourly PSI drift checks per protected attribute; weekly KS test against the training distribution" \
-  --incident-response-procedure "runbooks/credit-scoring-incident.md (15-min p0 SLA, on-call rotation in PagerDuty)"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai init \
+      --system-id "loan-decision-model" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --high-risk-presumption \
+      --training-data-description "5M anonymised loan applications 2018-2025, EU-only, GDPR-cleared lineage in s3://opencomplai-evidence/training-data-manifest.json" \
+      --model-architecture "Gradient-boosted decision trees (XGBoost 2.0), 1200 trees, depth 8, calibrated isotonic probabilities" \
+      --monitoring-approach "Hourly PSI drift checks per protected attribute; weekly KS test against the training distribution" \
+      --incident-response-procedure "runbooks/credit-scoring-incident.md (15-min p0 SLA, on-call rotation in PagerDuty)"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --system-id "loan-decision-model" --intended-purpose "automated credit scoring for retail lending" --high-risk-presumption --training-data-description "5M anonymised loan applications 2018-2025, EU-only, GDPR-cleared lineage in s3://opencomplai-evidence/training-data-manifest.json" --model-architecture "Gradient-boosted decision trees (XGBoost 2.0), 1200 trees, depth 8, calibrated isotonic probabilities" --monitoring-approach "Hourly PSI drift checks per protected attribute; weekly KS test against the training distribution" --incident-response-procedure "runbooks/credit-scoring-incident.md (15-min p0 SLA, on-call rotation in PagerDuty)"
+    ```
 
 …or supply the long-form structured fields from a JSON file:
 
-```bash
-opencomplai init \
-  --system-id "loan-decision-model" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --high-risk-presumption \
-  --section-extras-file ./manifest-extras.json
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai init \
+      --system-id "loan-decision-model" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --high-risk-presumption \
+      --section-extras-file ./manifest-extras.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --system-id "loan-decision-model" --intended-purpose "automated credit scoring for retail lending" --high-risk-presumption --section-extras-file ./manifest-extras.json
+    ```
 
 Where `manifest-extras.json` looks like:
 
@@ -94,12 +118,21 @@ If `--high-risk-presumption` is set without `training_data_description` or `mode
 
 The **code corroboration scanner** cross-checks your `intended_purpose` against AI capability signals in the repository (dependencies, imports, endpoints, model artifacts). It runs offline and never auto-edits the manifest or risk classification.
 
-```bash
-opencomplai scan --manifest system-manifest.json --repo-root .
-# or opt-in during init/check:
-opencomplai init ... --scan
-opencomplai check --manifest system-manifest.json --scan
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai scan --manifest system-manifest.json --repo-root .
+    # or opt-in during init/check:
+    opencomplai init ... --scan
+    opencomplai check --manifest system-manifest.json --scan
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai scan --manifest system-manifest.json --repo-root .
+    # or opt-in during init/check:
+    opencomplai init ... --scan
+    opencomplai check --manifest system-manifest.json --scan
+    ```
 
 **Honesty rules:**
 
@@ -107,34 +140,98 @@ opencomplai check --manifest system-manifest.json --scan
 - *"No local AI signals detected"* is **not** a compliance verdict.
 - Use `--fail-on new-major` in CI only when you are ready to gate on new discrepancies.
 
-See [scan command reference](../cli/scan.md) and `examples/sample-system/under-declared-*` fixtures.
+#### Optional: local AI intent enrichment (`--ai-intent`)
+
+Add `--ai-intent` to layer semantic intent classification on top of signature detection. Each extracted callsite is classified locally (no data leaves the machine) across three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — and mapped to a per-callsite `eu_obligation` list.
+
+Install the AI plugin first. For CPU-only use (no C compiler needed):
+
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai-ai 'optimum[onnxruntime]'
+    opencomplai ai configure --model codebert-onnx --set-default
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai-ai "optimum[onnxruntime]"
+    opencomplai ai configure --model codebert-onnx --set-default
+    ```
+
+Then run the scan with intent enrichment:
+
+=== "macOS / Linux"
+    ```bash
+    opencomplai scan \
+      --manifest system-manifest.json \
+      --repo-root . \
+      --ai-intent \
+      --no-emit-evidence
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent --no-emit-evidence
+    ```
+
+The first run with `codebert-onnx` exports the model from the PyTorch checkpoint (~440 MB, one-time download). Subsequent scans use the cached ONNX graph with no network access. The `AI Intent Analysis` block appears at the end of the output:
+
+```
+AI Intent Analysis:
+  src/model.py:42  autonomy=autonomous  subject=natural_person  conf=0.9512
+  src/model.py:67  autonomy=advisory    subject=natural_person  conf=0.9301
+```
+
+An `autonomy=autonomous` + `subject=natural_person` classification maps to `["Art.6(2)+Annex III", "technical dossier required", "conformity assessment", "EU DB registration"]` — the same HIGH_RISK tier that an Annex III keyword match in your manifest would trigger. Use the annotations as a prompt to review whether your `intended_purpose` declaration accurately captures how the model output is actually used.
+
+For the full model catalogue and a walkthrough of the under-declared example fixtures, see the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) and [scan command reference](../cli/scan.md#ai-intent-analysis---ai-intent).
 
 ### Step 3 — run a check against the running stack
 
-```bash
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+    ```
 
 The 10-step service-backed workflow runs: validate manifest classify run control checks generate Annex IV dossier append events to the evidence ledger. This is the step that actually populates the `evidence-vault` database and Grafana metrics.
 
 ### Step 4 — generate the Annex IV dossier (per release)
 
-```bash
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai docs generate \
-  --manifest system-manifest.json \
-  --system-id "loan-decision-model" \
-  --commit-ref "$(git rev-parse HEAD)" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --provider-name "ACME Financial AI"
-```
+=== "macOS / Linux"
+    ```bash
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai docs generate \
+      --manifest system-manifest.json \
+      --system-id "loan-decision-model" \
+      --commit-ref "$(git rev-parse HEAD)" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --provider-name "ACME Financial AI"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai docs generate --manifest system-manifest.json --system-id "loan-decision-model" --commit-ref "$(git rev-parse HEAD)" --intended-purpose "automated credit scoring for retail lending" --provider-name "ACME Financial AI"
+    ```
 
 Passing `--manifest` ensures the Section 2/3 inputs from `opencomplai init` reach the dossier generator. Without it, those sections fall back to placeholder stubs — acceptable only for MINIMAL-risk systems.
 
 ### Step 5 — verify the evidence chain
 
-```bash
-python3 tools/verify-ledger/verify_ledger.py --gateway-url http://localhost:8080
-```
+=== "macOS / Linux"
+    ```bash
+    python3 tools/verify-ledger/verify_ledger.py --gateway-url http://localhost:8080
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    python tools\verify-ledger\verify_ledger.py --gateway-url http://localhost:8080
+    ```
 
 ## What the customer receives
 
@@ -183,9 +280,15 @@ Opencomplai gives you evidence and rule outputs — it does **not** make you com
 
 Generate a secret with:
 
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
-```
+=== "macOS / Linux"
+    ```bash
+    python -c "import secrets; print(secrets.token_urlsafe(32))"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    python -c "import secrets; print(secrets.token_urlsafe(32))"
+    ```
 
 **Dossier signing modes** — the dossier's own `signature_status` field tells an auditor exactly what trust level the artifact carries:
 
@@ -257,55 +360,105 @@ Panels update in real time — every `opencomplai check` you run increments the 
 The seeder runs automatically on `docker compose up`. To run it manually or explore the reset workflow:
 
 **Re-seed (idempotent, safe to run at any time):**
-```bash
-docker exec compose-evidence-vault-1 python3 /app/scripts/seed_demo.py \
-  --gateway http://gateway-api:8080 \
-  --vault http://localhost:8002
-```
+
+=== "macOS / Linux"
+    ```bash
+    docker exec compose-evidence-vault-1 python3 /app/scripts/seed_demo.py \
+      --gateway http://gateway-api:8080 \
+      --vault http://localhost:8002
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker exec compose-evidence-vault-1 python /app/scripts/seed_demo.py --gateway http://gateway-api:8080 --vault http://localhost:8002
+    ```
 
 **Dry-run — print all payloads without writing anything:**
-```bash
-docker exec compose-evidence-vault-1 python3 /app/scripts/seed_demo.py \
-  --gateway http://gateway-api:8080 \
-  --vault http://localhost:8002 \
-  --dry-run
-```
+
+=== "macOS / Linux"
+    ```bash
+    docker exec compose-evidence-vault-1 python3 /app/scripts/seed_demo.py \
+      --gateway http://gateway-api:8080 \
+      --vault http://localhost:8002 \
+      --dry-run
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker exec compose-evidence-vault-1 python /app/scripts/seed_demo.py --gateway http://gateway-api:8080 --vault http://localhost:8002 --dry-run
+    ```
 
 **Wipe all `demo-` data:**
-```bash
-docker exec compose-evidence-vault-1 python3 /app/scripts/reset_demo.py \
-  --vault http://localhost:8002
-```
+
+=== "macOS / Linux"
+    ```bash
+    docker exec compose-evidence-vault-1 python3 /app/scripts/reset_demo.py \
+      --vault http://localhost:8002
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker exec compose-evidence-vault-1 python /app/scripts/reset_demo.py --vault http://localhost:8002
+    ```
 
 **Wipe and immediately re-seed:**
-```bash
-docker exec compose-evidence-vault-1 python3 /app/scripts/reset_demo.py \
-  --vault http://localhost:8002 \
-  --reseed
-```
+
+=== "macOS / Linux"
+    ```bash
+    docker exec compose-evidence-vault-1 python3 /app/scripts/reset_demo.py \
+      --vault http://localhost:8002 \
+      --reseed
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker exec compose-evidence-vault-1 python /app/scripts/reset_demo.py --vault http://localhost:8002 --reseed
+    ```
 
 **From the host** (if Python is installed locally):
-```bash
-python scripts/seed_demo.py \
-  --gateway http://localhost:8080 \
-  --vault http://localhost:8002
-```
+
+=== "macOS / Linux"
+    ```bash
+    python scripts/seed_demo.py \
+      --gateway http://localhost:8080 \
+      --vault http://localhost:8002
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    python scripts\seed_demo.py --gateway http://localhost:8080 --vault http://localhost:8002
+    ```
 
 ### Tracing a complete narrative end-to-end
 
 **HR Hiring — HITL halt and remediation** is the richest scenario to follow:
 
 1. Query the ledger for the halt event:
-   ```bash
-   curl http://localhost:8002/v1/evidence/events?system_id=demo-hr-hiring-v2
-   ```
+
+    === "macOS / Linux"
+        ```bash
+        curl http://localhost:8002/v1/evidence/events?system_id=demo-hr-hiring-v2
+        ```
+
+    === "Windows (PowerShell)"
+        ```powershell
+        Invoke-WebRequest -Uri "http://localhost:8002/v1/evidence/events?system_id=demo-hr-hiring-v2"
+        ```
+
 2. Notice the 3-week scan gap in the timeline (indices 15–17 missing).
 3. Check the two dossiers — one generated before the halt (`v2.0.1-demo`), one after remediation (`v2.0.1-remediated-demo`).
 4. Inspect bias alerts: severity drops from HIGH to LOW across 4 alerts post-remediation.
 5. Run `verify-ledger` to confirm the Merkle chain is intact across the halt:
-   ```bash
-   python3 tools/verify-ledger/verify_ledger.py --gateway-url http://localhost:8080
-   ```
+
+    === "macOS / Linux"
+        ```bash
+        python3 tools/verify-ledger/verify_ledger.py --gateway-url http://localhost:8080
+        ```
+
+    === "Windows (PowerShell)"
+        ```powershell
+        python tools\verify-ledger\verify_ledger.py --gateway-url http://localhost:8080
+        ```
 
 **Credit Scoring — mid-period failure recovery** shows what CTRL-002/CTRL-005 failures look like in the scan history and how bias alert severity tracks alongside (HIGH bias alerts coincide with the scan failures, then both resolve).
 

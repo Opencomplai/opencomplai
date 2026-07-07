@@ -23,4 +23,4 @@ const risk = await fetch('http://localhost:8080/v1/risk/classify', {
 // { risk_class: 'limited', trap_detected: false, ... }
 ```
 
-A TypeScript SDK is on the roadmap. Watch the [GitHub repository](https://github.com/Checkref-co/opencomplai) for updates.
+A TypeScript SDK is on the roadmap. Watch the [GitHub repository](https://github.com/Opencomplai/opencomplai) for updates.

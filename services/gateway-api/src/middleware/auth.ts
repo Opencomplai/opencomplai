@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
+import type { webcrypto } from 'node:crypto';
 
 /**
  * Auth middleware (ISO 27001 A.8.5 / SOC 2 CC6.1 / NIST PR.AA / FedRAMP IA-2).
@@ -100,7 +101,7 @@ async function _verifyJwt(token: string, jwksUri: string, app: FastifyInstance):
       return false;
     }
     const { createPublicKey, createVerify } = await import('node:crypto');
-    const pubKey = createPublicKey({ key, format: 'jwk' });
+    const pubKey = createPublicKey({ key: key as webcrypto.JsonWebKey, format: 'jwk' });
     const alg = header.alg ?? 'RS256';
     const nodeAlg = alg.startsWith('RS') ? 'RSA-SHA256' : 'SHA256';
     const verifier = createVerify(nodeAlg);

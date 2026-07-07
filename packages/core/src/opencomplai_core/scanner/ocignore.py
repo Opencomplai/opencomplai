@@ -121,7 +121,10 @@ def _validate_pattern(line: str, line_no: int) -> tuple[str | None, str | None]:
     if "**" in line:
         return None, f"line {line_no}: '**' not supported in ocignore v1"
     if line.startswith("/"):
-        return None, f"line {line_no}: anchored paths (leading /) not supported in ocignore v1"
+        return (
+            None,
+            f"line {line_no}: anchored paths (leading /) not supported in ocignore v1",
+        )
     return line, None
 
 
@@ -218,9 +221,7 @@ def resolve_ocignore_path(repo_root: Path, ocignore_path: Path | None = None) ->
     return target
 
 
-def load_ocignore(
-    repo_root: Path, ocignore_path: Path | None = None
-) -> OcignoreConfig:
+def load_ocignore(repo_root: Path, ocignore_path: Path | None = None) -> OcignoreConfig:
     """Load `.ocignore` read-only; missing file → empty patterns, default limits."""
     repo_root = repo_root.resolve()
     try:
@@ -282,7 +283,9 @@ def ensure_ocignore(
 
     header_end = DEFAULT_OCIGNORE_TEMPLATE.index("# --- Exclusions")
     header = DEFAULT_OCIGNORE_TEMPLATE[:header_end]
-    content = header + "# --- Exclusions (edit freely) ---\n" + "\n".join(patterns) + "\n"
+    content = (
+        header + "# --- Exclusions (edit freely) ---\n" + "\n".join(patterns) + "\n"
+    )
 
     try:
         path.write_text(content, encoding="utf-8")
@@ -291,7 +294,9 @@ def ensure_ocignore(
     return True, path
 
 
-def config_dict_for_hash(patterns: list[str], limits: InventoryLimits, content_hash: str) -> dict:
+def config_dict_for_hash(
+    patterns: list[str], limits: InventoryLimits, content_hash: str
+) -> dict:
     """Canonical config for feature-cache hashing.
 
     Rules: sorted(patterns), limits as plain ints/bool, ocignore file SHA-256.

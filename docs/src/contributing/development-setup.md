@@ -2,6 +2,11 @@
 
 Set up Opencomplai for local development. The project is a Python monorepo managed with `uv`, with a Node.js service (`gateway-api`) managed with `pnpm`, and an optional Docker Compose stack for integration work.
 
+!!! note "Windows developers"
+    Development setup is primarily tested on macOS/Linux. Windows support via
+    WSL2 is recommended for the full dev workflow (especially `bootstrap.sh` and
+    shell scripts under `scripts/`).
+
 ## Prerequisites
 
 | Tool | Version | Install |
@@ -16,16 +21,30 @@ Set up Opencomplai for local development. The project is a Python monorepo manag
 
 ## 1. Clone the repository
 
-```bash
-git clone https://github.com/Checkref-co/opencomplai
-cd opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    ```
 
 ## 2. One-command bootstrap
 
-```bash
-./scripts/bootstrap.sh
-```
+=== "macOS / Linux"
+    ```bash
+    ./scripts/bootstrap.sh
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Bash-only script — use WSL2 or Git Bash, or follow manual setup below
+    ./scripts/bootstrap.sh
+    ```
 
 This script:
 
@@ -40,68 +59,129 @@ If any step fails, re-run after fixing the reported issue.
 
 ### Python packages
 
-```bash
-# Install all three packages in editable mode
-uv pip install -e packages/core
-uv pip install -e packages/cli
-uv pip install -e packages/sdk-python
-```
+=== "macOS / Linux"
+    ```bash
+    # Install all three packages in editable mode
+    uv pip install -e packages/core
+    uv pip install -e packages/cli
+    uv pip install -e packages/sdk-python
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Install all three packages in editable mode
+    uv pip install -e packages/core
+    uv pip install -e packages/cli
+    uv pip install -e packages/sdk-python
+    ```
 
 ### Node.js (gateway-api)
 
-```bash
-cd services/gateway-api
-pnpm install
-cd ../..
-```
+=== "macOS / Linux"
+    ```bash
+    cd services/gateway-api
+    pnpm install
+    cd ../..
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cd services/gateway-api
+    pnpm install
+    cd ../..
+    ```
 
 ### pre-commit hooks
 
-```bash
-pre-commit install
-```
+=== "macOS / Linux"
+    ```bash
+    pre-commit install
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pre-commit install
+    ```
 
 ## 4. Run the test suite
 
 ### Python
 
-```bash
-# All packages
-uv run pytest
+=== "macOS / Linux"
+    ```bash
+    # All packages
+    uv run pytest
 
-# Specific package
-uv run pytest packages/core/tests/
-uv run pytest packages/cli/tests/
-uv run pytest packages/sdk-python/tests/
-```
+    # Specific package
+    uv run pytest packages/core/tests/
+    uv run pytest packages/cli/tests/
+    uv run pytest packages/sdk-python/tests/
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # All packages
+    uv run pytest
+
+    # Specific package
+    uv run pytest packages/core/tests/
+    uv run pytest packages/cli/tests/
+    uv run pytest packages/sdk-python/tests/
+    ```
 
 ### Node.js (gateway-api)
 
-```bash
-cd services/gateway-api
-pnpm test
-```
+=== "macOS / Linux"
+    ```bash
+    cd services/gateway-api
+    pnpm test
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cd services/gateway-api
+    pnpm test
+    ```
 
 ## 5. Run linters
 
-```bash
-# Python (ruff + mypy)
-uv run ruff check .
-uv run mypy packages/
+=== "macOS / Linux"
+    ```bash
+    # Python (ruff + mypy)
+    uv run ruff check .
+    uv run mypy packages/
 
-# Node.js
-cd services/gateway-api && pnpm lint
-```
+    # Node.js
+    cd services/gateway-api && pnpm lint
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Python (ruff + mypy)
+    uv run ruff check .
+    uv run mypy packages/
+
+    # Node.js
+    cd services/gateway-api; pnpm lint
+    ```
 
 ## 6. Optional: start the full Docker Compose stack
 
 For integration work involving multiple services:
 
-```bash
-cp infra/compose/.env.example infra/compose/.env
-# Set POSTGRES_PASSWORD in infra/compose/.env
-docker compose -f infra/compose/docker-compose.yml up --build -d
-```
+=== "macOS / Linux"
+    ```bash
+    cp infra/compose/.env.example infra/compose/.env
+    # Set POSTGRES_PASSWORD in infra/compose/.env
+    docker compose -f infra/compose/docker-compose.yml up --build -d
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    Copy-Item infra/compose/.env.example infra/compose/.env
+    # Set POSTGRES_PASSWORD in infra/compose/.env
+    docker compose -f infra/compose/docker-compose.yml up --build -d
+    ```
 
 See [Deployment Quickstart](../deployment/quickstart.md) for details.
 
@@ -132,31 +212,60 @@ opencomplai/
 
 ### `uv` not found
 
-```bash
-pip install uv
-# or on macOS:
-brew install uv
-```
+=== "macOS / Linux"
+    ```bash
+    pip install uv
+    # or on macOS:
+    brew install uv
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install uv
+    # or:
+    winget install astral-sh.uv
+    ```
 
 ### `pnpm` not found
 
-```bash
-npm install -g pnpm
-```
+=== "macOS / Linux"
+    ```bash
+    npm install -g pnpm
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    npm install -g pnpm
+    ```
 
 ### Pre-commit hook fails
 
-```bash
-# See exactly what failed
-pre-commit run --all-files
+=== "macOS / Linux"
+    ```bash
+    # See exactly what failed
+    pre-commit run --all-files
 
-# Fix and re-commit (do NOT use --no-verify on real commits)
-```
+    # Fix and re-commit (do NOT use --no-verify on real commits)
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # See exactly what failed
+    pre-commit run --all-files
+
+    # Fix and re-commit (do NOT use --no-verify on real commits)
+    ```
 
 ### Docker Compose services not healthy
 
-```bash
-docker compose -f infra/compose/docker-compose.yml logs --tail=50 <service-name>
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml logs --tail=50 <service-name>
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml logs --tail=50 <service-name>
+    ```
 
 Common cause: `POSTGRES_PASSWORD` not set in `infra/compose/.env`.

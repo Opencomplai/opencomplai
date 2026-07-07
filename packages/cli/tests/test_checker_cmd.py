@@ -11,7 +11,7 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 FIXTURES = (
-    Path(__file__).resolve().parents[2] / "core" / "tests" / "fixtures" / "fli_golden"
+    Path(__file__).resolve().parents[2] / "core" / "tests" / "fixtures" / "checker_golden"
 )
 
 
@@ -65,8 +65,52 @@ def test_checker_web_default_url_points_to_docs() -> None:
 def test_checker_web_env_override_respected() -> None:
     """OPENCOMPLAI_DOCS_URL env var must override the default."""
     import os
+
     custom = "https://example.com/custom-checker/"
-    with patch("webbrowser.open") as mock_open, patch.dict(os.environ, {"OPENCOMPLAI_DOCS_URL": custom}):
+    with (
+        patch("webbrowser.open") as mock_open,
+        patch.dict(os.environ, {"OPENCOMPLAI_DOCS_URL": custom}),
+    ):
         result = runner.invoke(app, ["checker", "--web"])
     assert result.exit_code == 0, result.stdout
     assert mock_open.call_args[0][0] == custom
+
+
+def test_checker_web_local_serves_and_stops_via_page_button() -> None:
+    """--web --local marks the URL for the in-page Stop control, and hitting
+    the shutdown route it calls actually stops the blocked CLI process."""
+    import threading
+    import time
+    import urllib.request
+
+    opened_urls: list[str] = []
+    result_holder: dict = {}
+
+    def fake_open(url: str) -> bool:
+        opened_urls.append(url)
+        return True
+
+    def run_cli() -> None:
+        with patch("webbrowser.open", side_effect=fake_open):
+            result_holder["result"] = runner.invoke(app, ["checker", "--web", "--local"])
+
+    thread = threading.Thread(target=run_cli)
+    thread.start()
+    try:
+        deadline = time.time() + 5
+        while not opened_urls and time.time() < deadline:
+            time.sleep(0.05)
+        assert opened_urls, "local server never opened a URL"
+        local_url = opened_urls[0]
+        assert "?local=1" in local_url, (
+            "checker-widget UI relies on this marker to show its Stop control"
+        )
+
+        shutdown_url = local_url.split("?", 1)[0] + "__ococ_shutdown"
+        with urllib.request.urlopen(shutdown_url, timeout=5) as resp:
+            assert resp.status == 200
+    finally:
+        thread.join(timeout=5)
+
+    assert not thread.is_alive(), "CLI did not stop after the shutdown route was hit"
+    assert result_holder["result"].exit_code == 0, result_holder["result"].stdout

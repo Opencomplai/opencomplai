@@ -1,10 +1,8 @@
 """Tests for opencomplai_ai.downloader."""
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 from opencomplai_ai.downloader import ensure_model
 
 
@@ -29,7 +27,9 @@ def test_saas_model_raises_no_filename():
 
 
 def test_missing_file_triggers_download(tmp_path):
-    mock_hf = MagicMock(return_value=str(tmp_path / "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"))
+    mock_hf = MagicMock(
+        return_value=str(tmp_path / "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf")
+    )
     (tmp_path / "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf").write_bytes(b"downloaded")
 
     console_mock = MagicMock()

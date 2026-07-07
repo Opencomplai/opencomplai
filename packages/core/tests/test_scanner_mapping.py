@@ -24,9 +24,34 @@ def test_biometric_maps_to_biometric_category():
     assert "biometric" in mapped
 
 
+def test_scoring_profiling_single_area_when_annex_resolved():
+    mapped = signal_category_to_taxonomy(
+        SignalCategory.SCORING_PROFILING,
+        "predict_proba",
+        annex_iii_area=5,
+    )
+    assert mapped == ["essential_services"]
+
+
+def test_scoring_profiling_triple_fallback_without_area():
+    mapped = signal_category_to_taxonomy(SignalCategory.SCORING_PROFILING, "classifier")
+    assert "employment" in mapped
+    assert "essential_services" in mapped
+    assert "law_enforcement" in mapped
+
+
 def test_derive_declared_categories_matches_annex_iii():
-    declared = derive_declared_categories("employment screening and ranking")
+    declared = derive_declared_categories("candidate ranking for hiring")
     assert "employment" in declared
+
+
+def test_normalize_text_strips_punctuation():
+    from opencomplai_core.rules import normalize_text
+
+    assert (
+        normalize_text("Employment, screening & ranking!")
+        == "employment screening ranking"
+    )
 
 
 def test_unacceptable_signal_in_purpose():

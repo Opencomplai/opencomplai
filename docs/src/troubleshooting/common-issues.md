@@ -22,12 +22,21 @@ error: database is uninitialized and superuser password is not specified
 
 **Fix:**
 
-```bash
-cd infra/compose
-cp .env.example .env
-# Edit .env and set a real password:
-# POSTGRES_PASSWORD=use_a_strong_random_password_here
-```
+=== "macOS / Linux"
+    ```bash
+    cd infra/compose
+    cp .env.example .env
+    # Edit .env and set a real password:
+    # POSTGRES_PASSWORD=use_a_strong_random_password_here
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cd infra/compose
+    Copy-Item .env.example .env
+    # Edit .env and set a real password:
+    # POSTGRES_PASSWORD=use_a_strong_random_password_here
+    ```
 
 ---
 
@@ -47,9 +56,15 @@ GATEWAY_PORT=8081
 
 Then restart the stack and update `OPENCOMPLAI_API_URL` accordingly:
 
-```bash
-export OPENCOMPLAI_API_URL=http://localhost:8081
-```
+=== "macOS / Linux"
+    ```bash
+    export OPENCOMPLAI_API_URL=http://localhost:8081
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8081"
+    ```
 
 ---
 
@@ -61,10 +76,17 @@ export OPENCOMPLAI_API_URL=http://localhost:8081
 
 **Fix:**
 
-```bash
-export OPENCOMPLAI_API_URL=http://localhost:8080
-opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    export OPENCOMPLAI_API_URL=http://localhost:8080
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+    ```
 
 Confirm service-backed mode is active by looking for gateway service calls in the output, or by checking `compliance-artifact.json` for non-empty `evidence_hashes`.
 
@@ -82,10 +104,17 @@ Signing keypair already exists at /home/user/.opencomplai
 
 **If you want a fresh keypair** (e.g. rotating keys):
 
-```bash
-rm ~/.opencomplai/signing.key ~/.opencomplai/signing.pub ~/.opencomplai/config.yaml
-opencomplai init --system-id <id> --intended-purpose <purpose>
-```
+=== "macOS / Linux"
+    ```bash
+    rm ~/.opencomplai/signing.key ~/.opencomplai/signing.pub ~/.opencomplai/config.yaml
+    opencomplai init --system-id <id> --intended-purpose <purpose>
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    Remove-Item "$env:USERPROFILE\.opencomplai\signing.key", "$env:USERPROFILE\.opencomplai\signing.pub", "$env:USERPROFILE\.opencomplai\config.yaml" -ErrorAction SilentlyContinue
+    opencomplai init --system-id <id> --intended-purpose <purpose>
+    ```
 
 ---
 
@@ -101,15 +130,25 @@ Manifest validation error: <field> field required
 
 **Fix:**
 
-```bash
-# Validate and see the error
-opencomplai validate-manifest system-manifest.json
+=== "macOS / Linux"
+    ```bash
+    # Validate and see the error
+    opencomplai validate-manifest system-manifest.json
 
-# Regenerate a valid manifest
-opencomplai init \
-  --system-id "my-system" \
-  --intended-purpose "automated credit scoring"
-```
+    # Regenerate a valid manifest
+    opencomplai init \
+      --system-id "my-system" \
+      --intended-purpose "automated credit scoring"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Validate and see the error
+    opencomplai validate-manifest system-manifest.json
+
+    # Regenerate a valid manifest
+    opencomplai init --system-id "my-system" --intended-purpose "automated credit scoring"
+    ```
 
 ---
 
@@ -157,11 +196,19 @@ Warning: signing disabled — cryptography not installed. Run: pip install crypt
 
 **Fix:**
 
-```bash
-pip install cryptography
-# or, in the editable install:
-uv pip install cryptography
-```
+=== "macOS / Linux"
+    ```bash
+    pip install cryptography
+    # or, in the editable install:
+    uv pip install cryptography
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install cryptography
+    # or, in the editable install:
+    uv pip install cryptography
+    ```
 
 ---
 

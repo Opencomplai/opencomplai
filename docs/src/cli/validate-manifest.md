@@ -4,9 +4,15 @@ Validate a system manifest file against the required schema.
 
 ## Synopsis
 
-```bash
-opencomplai validate-manifest <manifest_file> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai validate-manifest <manifest_file> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai validate-manifest <manifest_file> [OPTIONS]
+    ```
 
 ## Arguments
 
@@ -22,13 +28,23 @@ opencomplai validate-manifest <manifest_file> [OPTIONS]
 
 ## Examples
 
-```bash
-# Human-readable validation result
-opencomplai validate-manifest system-manifest.json
+=== "macOS / Linux"
+    ```bash
+    # Human-readable validation result
+    opencomplai validate-manifest system-manifest.json
 
-# JSON output (returns the validated manifest)
-opencomplai validate-manifest system-manifest.json --output json
-```
+    # JSON output (returns the validated manifest)
+    opencomplai validate-manifest system-manifest.json --output json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Human-readable validation result
+    opencomplai validate-manifest system-manifest.json
+
+    # JSON output (returns the validated manifest)
+    opencomplai validate-manifest system-manifest.json --output json
+    ```
 
 ## Output
 

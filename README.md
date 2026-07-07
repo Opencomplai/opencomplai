@@ -2,7 +2,7 @@
 
 Automated risk assessment, evidence generation, and CI/CD-native compliance checks for AI engineering teams.
 
-[![CI (Python)](https://github.com/Checkref-co/opencomplai/actions/workflows/ci-python.yml/badge.svg)](https://github.com/Checkref-co/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Checkref-co/opencomplai/actions/workflows/ci-node.yml/badge.svg)](https://github.com/Checkref-co/opencomplai/actions/workflows/ci-node.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/) [![Node.js](https://img.shields.io/badge/node-20%20LTS-339933.svg)](https://nodejs.org/)
+[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/) [![Node.js](https://img.shields.io/badge/node-20%20LTS-339933.svg)](https://nodejs.org/)
 
 ## The problem
 
@@ -32,7 +32,7 @@ does not resolve yet. Install from source — the `core`, `cli`, and `sdk-python
 must be installed together:
 
 ```bash
-git clone https://github.com/Checkref-co/opencomplai
+git clone https://github.com/Opencomplai/opencomplai
 cd opencomplai
 pip install -e packages/core -e packages/cli -e packages/sdk-python
 # or, with uv:  uv sync

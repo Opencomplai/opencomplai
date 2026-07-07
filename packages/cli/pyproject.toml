@@ -1,13 +1,13 @@
 [project]
 name = "opencomplai-cli"
-version = "0.2.0-dev"
+version = "0.1.2"
 description = "Opencomplai command-line interface for EU AI Act compliance assessment"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]
 requires-python = ">=3.11"
 dependencies = [
-    "opencomplai-core[reports]>=0.2.0-dev",
+    "opencomplai-core[reports]>=0.1.0",
     "typer>=0.9.0",
     "rich>=13.0.0",
     "questionary>=2.0.0",

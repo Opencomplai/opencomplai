@@ -6,9 +6,15 @@ If the manifest has no `checker_session`, `check` prints a **non-blocking** warn
 
 ## Synopsis
 
-```bash
-opencomplai check [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check [OPTIONS]
+    ```
 
 ## Options
 
@@ -29,22 +35,41 @@ opencomplai check [OPTIONS]
 
 ## Examples
 
-```bash
-# Local check with human-readable output (default)
-opencomplai check
+=== "macOS / Linux"
+    ```bash
+    # Local check with human-readable output (default)
+    opencomplai check
 
-# Run pipeline evaluators against your own model outputs
-opencomplai check --sample-set eval-set.json
+    # Run pipeline evaluators against your own model outputs
+    opencomplai check --sample-set eval-set.json
 
-# CI-mode with JSON output piped to jq
-opencomplai check --scan-mode ci --output json | jq .result
+    # CI-mode with JSON output piped to jq
+    opencomplai check --scan-mode ci --output json | jq .result
 
-# Service-backed mode (Docker Compose stack running)
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+    # Service-backed mode (Docker Compose stack running)
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
 
-# Air-gap mode
-opencomplai check --scan-mode airgap
-```
+    # Air-gap mode
+    opencomplai check --scan-mode airgap
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Local check with human-readable output (default)
+    opencomplai check
+
+    # Run pipeline evaluators against your own model outputs
+    opencomplai check --sample-set eval-set.json
+
+    # CI-mode with JSON output (pipe to ConvertFrom-Json for parsing)
+    opencomplai check --scan-mode ci --output json | ConvertFrom-Json | Select-Object -ExpandProperty result
+
+    # Service-backed mode (Docker Compose stack running)
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"; opencomplai check
+
+    # Air-gap mode
+    opencomplai check --scan-mode airgap
+    ```
 
 ## Output
 

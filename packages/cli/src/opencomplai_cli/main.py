@@ -704,11 +704,31 @@ def _checker_web(*, local: bool) -> None:
         port = s.getsockname()[1]
 
     class _Handler(http.server.BaseHTTPRequestHandler):
-        def do_GET(self) -> None:  # noqa: N802
+        def do_GET(self) -> None:
+            if self.path.startswith("/__ococ_shutdown"):
+                self._respond_shutdown()
+                return
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(html_bytes)
+
+        def do_POST(self) -> None:
+            if self.path.startswith("/__ococ_shutdown"):
+                self._respond_shutdown()
+                return
+            self.send_response(404)
+            self.end_headers()
+
+        def _respond_shutdown(self) -> None:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(b"stopping")
+            # serve_forever() can't be stopped from inside its own
+            # request-handling call stack — shut down from another thread.
+            threading.Thread(target=server.shutdown, daemon=True).start()
 
         def log_message(self, *_args: object) -> None:
             pass  # suppress request logs
@@ -717,9 +737,11 @@ def _checker_web(*, local: bool) -> None:
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
 
-    local_url = f"http://127.0.0.1:{port}/"
+    local_url = f"http://127.0.0.1:{port}/?local=1"
     console.print(f"Serving checker locally: [link]{local_url}[/link]")
-    console.print("Press [bold]Ctrl+C[/bold] to stop.")
+    console.print(
+        "Press [bold]Ctrl+C[/bold], or use the Stop button on the page, to stop."
+    )
     webbrowser.open(local_url)
     try:
         thread.join()
@@ -749,11 +771,13 @@ def checker_cmd(
         False, "--web", help="Open the browser-based checker on the docs site"
     ),
     local: bool = typer.Option(
-        False, "--local", help="With --web: serve the checker locally instead of opening the hosted page"
+        False,
+        "--local",
+        help="With --web: serve the checker locally instead of opening the hosted page",
     ),
 ) -> None:
     """
-    Run the EU AI Act applicability checker (FLI parity, v2025-07-28).
+    Run the EU AI Act applicability checker (checker version v2025-07-28).
 
     Interactive by default; pass --answers for CI replay. Export with --export-* flags.
     Use --web to open the browser-based checker; add --local to serve it offline.
@@ -982,10 +1006,13 @@ class RichScanProgress:
             "inventory": "Inventorying files",
             "extract": "Extracting features",
             "detect": "Running detectors",
+            "ai_intent": "Annotating callsites",
         }
         desc = labels.get(phase, phase)
         if phase not in self._tasks:
-            self._tasks[phase] = self._progress.add_task(desc, total=total or None, label="")
+            self._tasks[phase] = self._progress.add_task(
+                desc, total=total or None, label=""
+            )
         else:
             self._progress.update(self._tasks[phase], total=total or None)
 
@@ -1026,16 +1053,27 @@ def _bootstrap_ocignore(
 ) -> ScanConfig:
     resolved_root = repo_root.resolve()
     if bootstrap:
-        created, path = ensure_ocignore(resolved_root, ocignore_path=ocignore_path)
-        if created:
+        if not resolved_root.exists():
             console.print(
-                f"[dim]Created scan config at {path} (edit patterns and limits as needed)[/dim]"
+                "[yellow]Warning:[/yellow] repo-root does not exist — "
+                "cannot create .ocignore. Check --repo-root path."
             )
-        elif not path.exists():
+        elif not resolved_root.is_dir():
             console.print(
-                "[yellow]Warning:[/yellow] could not create .ocignore — "
-                "scanning with empty exclusions and unlimited limits."
+                "[yellow]Warning:[/yellow] repo-root is not a directory — "
+                "cannot create .ocignore."
             )
+        else:
+            created, path = ensure_ocignore(resolved_root, ocignore_path=ocignore_path)
+            if created:
+                console.print(
+                    f"[dim]Created scan config at {path} (edit patterns and limits as needed)[/dim]"
+                )
+            elif not path.exists():
+                console.print(
+                    "[yellow]Warning:[/yellow] could not create .ocignore — "
+                    "scanning with empty exclusions and unlimited limits."
+                )
     return ScanConfig(ocignore_path=ocignore_path)
 
 
@@ -1051,6 +1089,8 @@ def _run_scan_corroboration(
     scan_config: ScanConfig | None = None,
     ai_intent: bool = False,
     ai_model: str | None = None,
+    ai_deep: bool = False,
+    ai_legacy: bool = False,
 ) -> tuple[ScanSummary, CorroborationReport, list[str]]:
     """Returns (scan_summary, full_report, extra_evidence_hashes)."""
     report = run_scan(
@@ -1064,6 +1104,8 @@ def _run_scan_corroboration(
         progress_cb=progress_cb,
         ai_intent=ai_intent,
         ai_model=ai_model,
+        ai_deep=ai_deep,
+        ai_legacy=ai_legacy,
     )
     summary = scan_summary_from_report(report)
     extra_hashes: list[str] = [report.report_hash, *summary.evidence_hashes]
@@ -1083,7 +1125,9 @@ def _read_snippet(location: str) -> str | None:
     except ValueError:
         return None
     try:
-        lines = Path(file_path).read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = (
+            Path(file_path).read_text(encoding="utf-8", errors="replace").splitlines()
+        )
         if line_number < 1 or line_number > len(lines):
             return None
         return lines[line_number - 1][:80].strip()
@@ -1099,8 +1143,8 @@ def _render_scan_md(report: CorroborationReport) -> str:
         "",
         "## Summary",
         "",
-        f"| Field | Value |",
-        f"|-------|-------|",
+        "| Field | Value |",
+        "|-------|-------|",
         f"| Severity | {report.severity.value} |",
         f"| Declared categories | {', '.join(report.declared_categories) or '(none)'} |",
         f"| Detected categories | {', '.join(report.detected_categories) or '(none)'} |",
@@ -1131,7 +1175,246 @@ def _render_scan_md(report: CorroborationReport) -> str:
     return "\n".join(lines)
 
 
-def _print_scan_human(report: CorroborationReport, *, ai_intent: bool = False) -> None:
+_INTENT_AREA_LABELS: dict[int | None, str] = {
+    None: "unresolved",
+    1: "1 Biometrics",
+    2: "2 Critical infrastructure",
+    3: "3 Education",
+    4: "4 Employment",
+    5: "5 Essential services",
+    6: "6 Law enforcement",
+    7: "7 Migration",
+    8: "8 Justice & democracy",
+}
+
+_INTENT_TIER_ORDER = {
+    "prohibited": 0,
+    "autonomous_high_risk": 1,
+    "advisory_high_risk": 2,
+    "high_risk": 3,
+    "other": 4,
+}
+
+_INTENT_DETAIL_LIMIT = 10
+
+
+def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) -> None:
+    """Print EU AI Act workflow output from structured eu_ai_scan summary."""
+    from collections import Counter, defaultdict
+
+    summary = report.eu_ai_scan
+    console.print("\n[bold]EU AI Act Scan[/bold]")
+    console.print("  " + "─" * 40)
+
+    if summary is None:
+        console.print("  [dim]No AI usage sites detected after gating.[/dim]")
+        return
+
+    by_type: dict[str, set[str]] = defaultdict(set)
+    by_type_tokens: dict[str, set[str]] = defaultdict(set)
+    for cap in summary.capabilities:
+        by_type[cap.usage_type].add(cap.file)
+        by_type_tokens[cap.usage_type].add(cap.function)
+
+    console.print(
+        f"\n  [bold]1. AI usage map[/bold] "
+        f"({summary.gated_callsite_count} sites in "
+        f"{len({c.file for c in summary.capabilities})} files)"
+    )
+    for usage_type in sorted(by_type.keys()):
+        files = by_type[usage_type]
+        tokens = ", ".join(sorted(by_type_tokens[usage_type])[:5])
+        console.print(f"     {usage_type:18} {len(files):>3} files   {tokens}")
+
+    if verbose and summary.capabilities:
+        console.print("\n  [dim]Detailed AI callsites:[/dim]")
+        for cap in summary.capabilities[:50]:
+            console.print(
+                f"     [cyan]{cap.location}[/cyan]  {cap.function}  ({cap.usage_type})"
+            )
+        if len(summary.capabilities) > 50:
+            console.print(
+                f"     [dim]... and {len(summary.capabilities) - 50} more[/dim]"
+            )
+
+    console.print(
+        f"\n  [bold]2. Prohibited (Art. 5)[/bold] — {len(summary.prohibited)} findings"
+    )
+    for f in summary.prohibited[: 10 if not verbose else None]:
+        console.print(f"     [red]{f.location}[/red]  {f.function}")
+        if f.eu_obligation:
+            console.print(f"       [yellow]{' | '.join(f.eu_obligation[:2])}[/yellow]")
+
+    console.print(
+        f"\n  [bold]3. High-risk (Annex III)[/bold] — {len(summary.high_risk)} findings"
+    )
+    area_groups: Counter[int | None] = Counter()
+    for f in summary.high_risk:
+        area_groups[f.annex_iii_area] += 1
+    for area, count in sorted(area_groups.items(), key=lambda x: x[0] or 99):
+        label = _INTENT_AREA_LABELS.get(area, "unresolved")
+        console.print(f"     {label:28} {count:>3}")
+    for f in summary.high_risk[: 10 if not verbose else None]:
+        label = _INTENT_AREA_LABELS.get(f.annex_iii_area, "unresolved")
+        console.print(
+            f"     [cyan]{f.location}[/cyan]  {f.function}  [dim]{label}[/dim]"
+        )
+        if f.eu_obligation:
+            console.print(f"       [yellow]{' | '.join(f.eu_obligation[:3])}[/yellow]")
+
+    console.print(
+        f"\n  [bold]4. Limited-risk (Art. 50)[/bold] — {len(summary.limited_risk)} findings"
+    )
+    for f in summary.limited_risk[: 10 if not verbose else None]:
+        console.print(f"     [cyan]{f.location}[/cyan]  {f.function}")
+        if f.eu_obligation:
+            console.print(f"       [yellow]{f.eu_obligation[0]}[/yellow]")
+
+    console.print("\n  [bold]5. Declaration cross-check[/bold]")
+    console.print(
+        f"     declared:      {', '.join(report.declared_categories) or '(none)'}"
+    )
+    console.print(
+        f"     detected:        {', '.join(report.detected_categories) or '(none)'}"
+    )
+    if report.discrepancies:
+        console.print(f"     discrepancies: {', '.join(report.discrepancies)}")
+    else:
+        console.print("     discrepancies: (none)")
+
+    all_regulatory = [
+        *summary.prohibited,
+        *summary.high_risk,
+        *summary.limited_risk,
+    ]
+    with_rationale = [f for f in all_regulatory if f.rationale is not None]
+    console.print(
+        f"\n  [bold]6. Flag rationale[/bold] — {len(with_rationale)} flagged lines"
+    )
+    if not with_rationale:
+        console.print("     [dim](no regulatory-tier findings to explain)[/dim]")
+    else:
+        display = with_rationale if verbose else with_rationale[:_INTENT_DETAIL_LIMIT]
+        for f in display:
+            console.print(f"     [cyan]{f.location}[/cyan]  [dim]{f.function}[/dim]")
+            if f.rationale:
+                console.print(f"       [bold]WHY:[/bold] {f.rationale.summary}")
+                action = f.needed_action or (
+                    f.rationale.needed_action if f.rationale else None
+                )
+                if action:
+                    console.print(f"       [bold]ACTION:[/bold] {action}")
+                if verbose:
+                    if f.rationale.matched_signals:
+                        console.print(
+                            f"       [dim]signals:[/dim] {', '.join(f.rationale.matched_signals)}"
+                        )
+                    if f.rationale.regulation_ref:
+                        console.print(
+                            f"       [dim]regulation:[/dim] {f.rationale.regulation_ref}"
+                        )
+                    if f.rationale.gate_reason:
+                        console.print(
+                            f"       [dim]gate:[/dim] {f.rationale.gate_reason}"
+                        )
+        hidden = len(with_rationale) - len(display)
+        if hidden > 0:
+            console.print(
+                f"\n     [dim]... and {hidden} more (use --ai-verbose to show all)[/dim]"
+            )
+
+
+def _intent_risk_tier(ann) -> str:
+    if getattr(ann, "art5_prohibited", False):
+        return "prohibited"
+    if ann.decision_autonomy == "autonomous" and ann.consequential in (
+        "yes",
+        "unknown",
+    ):
+        return "autonomous_high_risk"
+    if (
+        ann.decision_autonomy in ("advisory", "human_in_loop")
+        and ann.annex_iii_area is not None
+    ):
+        return "advisory_high_risk"
+    if ann.annex_iii_area is not None:
+        return "high_risk"
+    return "other"
+
+
+def _intent_sort_key(ev) -> tuple:
+    ann = ev.intent_annotation
+    tier = _intent_risk_tier(ann)
+    area = ann.annex_iii_area if ann.annex_iii_area is not None else 99
+    return (_INTENT_TIER_ORDER.get(tier, 5), area, -(ann.confidence or 0.0))
+
+
+def _render_intent_analysis(intent_items: list, *, verbose: bool = False) -> None:
+    """Print grouped Annex III summary and ranked intent detail rows."""
+    from collections import Counter
+
+    console.print("\n[bold]AI Intent Analysis[/bold]")
+    console.print("  " + "─" * 40)
+
+    groups: Counter[tuple[str, str]] = Counter()
+    for ev in intent_items:
+        ann = ev.intent_annotation
+        area_label = _INTENT_AREA_LABELS.get(ann.annex_iii_area, "unresolved")
+        tier = _intent_risk_tier(ann)
+        groups[(area_label, tier)] += 1
+
+    console.print("  [bold]Summary by Annex III area / risk tier[/bold]")
+    summary_rows = sorted(
+        groups.items(),
+        key=lambda item: (
+            _INTENT_TIER_ORDER.get(item[0][1], 5),
+            item[0][0],
+        ),
+    )
+    for (area_label, tier), count in summary_rows:
+        console.print(f"    {area_label:28} {tier:22} {count:>3}")
+
+    sorted_items = sorted(intent_items, key=_intent_sort_key)
+    display_items = sorted_items if verbose else sorted_items[:_INTENT_DETAIL_LIMIT]
+    hidden = len(sorted_items) - len(display_items)
+
+    console.print("\n  [bold]Callsite details[/bold]")
+    for ev in display_items:
+        ann = ev.intent_annotation
+        loc = ev.locations[0] if ev.locations else ""
+        area_label = _INTENT_AREA_LABELS.get(ann.annex_iii_area, "unresolved")
+        tier = _intent_risk_tier(ann)
+        console.print(
+            f"  [cyan]{loc}[/cyan]  [dim]{ev.token_label}[/dim]  "
+            f"[dim]area:[/dim] {area_label}  [dim]tier:[/dim] {tier}"
+        )
+        console.print(f"    decision_autonomy : {ann.decision_autonomy}")
+        console.print(f"    subject_type      : {ann.subject_type}")
+        console.print(f"    consequential     : {ann.consequential}")
+        if ann.eu_obligation:
+            obligation_str = " | ".join(ann.eu_obligation[:3])
+            console.print(f"    eu_obligation     : [yellow]{obligation_str}[/yellow]")
+        if ann.explanation:
+            console.print(
+                f"    explanation       : [italic dim]{ann.explanation}[/italic dim]"
+            )
+        if ann.needed_action:
+            console.print(f"    needed_action     : [green]{ann.needed_action}[/green]")
+        console.print(f"    confidence        : {ann.confidence:.2f}")
+
+    if hidden > 0:
+        console.print(
+            f"\n  [dim]... and {hidden} more (use --ai-verbose to show all)[/dim]"
+        )
+
+
+def _print_scan_human(
+    report: CorroborationReport,
+    *,
+    ai_intent: bool = False,
+    ai_verbose: bool = False,
+    ai_legacy: bool = False,
+) -> None:
     console.print("\n[bold]Code Corroboration Scan[/bold]")
     console.print(f"  severity:     {report.severity.value}")
     console.print(
@@ -1144,46 +1427,48 @@ def _print_scan_human(report: CorroborationReport, *, ai_intent: bool = False) -
         console.print(f"  discrepancies: {', '.join(report.discrepancies)}")
     else:
         console.print("  discrepancies: (none)")
-    if report.evidence:
-        console.print("  evidence:")
-        for ev in report.evidence[:8]:
-            for loc in ev.locations[:3]:
-                console.print(
-                    f"    - {loc}  "
-                    f'[dim]token:[/dim] "{ev.token_label}"  '
-                    f"[dim]category:[/dim] {ev.category.value}  "
-                    f"[dim]confidence:[/dim] {ev.confidence:.2f}"
-                )
-                snippet = _read_snippet(loc)
-                if snippet:
-                    console.print(f"      [italic dim]{snippet}[/italic dim]")
-    else:
+
+    empty_inventory = next(
+        (w for w in report.warnings if w.startswith("empty_inventory:")),
+        None,
+    )
+    if empty_inventory:
         console.print(
-            "  [dim]No local AI signals detected — not a compliance verdict.[/dim]"
+            f"\n  [yellow]Warning:[/yellow] {empty_inventory.split(':', 1)[1].strip()}"
         )
 
-    if ai_intent:
-        intent_items = [ev for ev in report.evidence if ev.intent_annotation is not None]
-        if intent_items:
-            console.print("\n[bold]AI Intent Analysis[/bold]")
-            console.print("  " + "─" * 40)
-            for ev in intent_items[:10]:
-                ann = ev.intent_annotation
-                loc = ev.locations[0] if ev.locations else ""
-                console.print(f"  [cyan]{loc}[/cyan]  [dim]{ev.token_label}[/dim]")
-                console.print(f"    decision_autonomy : {ann.decision_autonomy}")
-                console.print(f"    subject_type      : {ann.subject_type}")
-                console.print(f"    consequential     : {ann.consequential}")
-                if ann.eu_obligation:
-                    obligation_str = " | ".join(ann.eu_obligation[:2])
-                    console.print(f"    eu_obligation     : [yellow]{obligation_str}[/yellow]")
-                if ann.explanation:
-                    console.print(f"    explanation       : [italic dim]{ann.explanation}[/italic dim]")
-                console.print(f"    confidence        : {ann.confidence:.2f}")
+    if not ai_intent or ai_legacy:
+        if report.evidence:
+            console.print("  evidence:")
+            for ev in report.evidence[:8]:
+                for loc in ev.locations[:3]:
+                    console.print(
+                        f"    - {loc}  "
+                        f'[dim]token:[/dim] "{ev.token_label}"  '
+                        f"[dim]category:[/dim] {ev.category.value}  "
+                        f"[dim]confidence:[/dim] {ev.confidence:.2f}"
+                    )
+                    snippet = _read_snippet(loc)
+                    if snippet:
+                        console.print(f"      [italic dim]{snippet}[/italic dim]")
         else:
             console.print(
-                "\n[dim]AI Intent Analysis: no callsites annotated (plugin ran but found no signals).[/dim]"
+                "  [dim]No local AI signals detected — not a compliance verdict.[/dim]"
             )
+
+    if ai_intent:
+        if ai_legacy:
+            intent_items = [
+                ev for ev in report.evidence if ev.intent_annotation is not None
+            ]
+            if intent_items:
+                _render_intent_analysis(intent_items, verbose=ai_verbose)
+            else:
+                console.print(
+                    "\n[dim]AI Intent Analysis: no callsites annotated (plugin ran but found no signals).[/dim]"
+                )
+        else:
+            _render_eu_ai_scan(report, verbose=ai_verbose)
 
     console.print(
         "\n  [dim]Declaration is authoritative; confirm or update intended_purpose.[/dim]"
@@ -1218,12 +1503,35 @@ def scan_cmd(
         help="Create default .ocignore on first scan if missing",
     ),
     ai_intent: bool = typer.Option(
-        False, "--ai-intent", help="Enable AI intent classification (requires opencomplai-ai)"
+        False,
+        "--ai-intent",
+        help="Enable AI intent classification (requires opencomplai-ai)",
     ),
     ai_model: str | None = typer.Option(
         None,
         "--ai-model",
         help="AI model to use (overrides ~/.opencomplai/ai-config.yaml)",
+    ),
+    ai_deep: bool = typer.Option(
+        False,
+        "--ai-deep",
+        help=(
+            "Run AI intent analysis on every callsite in the repo. "
+            "By default only callsites from files with lexical findings are annotated (faster)."
+        ),
+    ),
+    ai_verbose: bool = typer.Option(
+        False,
+        "--ai-verbose",
+        help="Show all AI intent callsite annotations (default: top 10 by risk tier).",
+    ),
+    ai_legacy: bool = typer.Option(
+        False,
+        "--ai-legacy",
+        help=(
+            "Restore pre-v2 behavior: ungated lexical evidence and Art.50 default "
+            "for non-regulatory callsites."
+        ),
     ),
 ) -> None:
     """Cross-check declared purpose against AI capability signals in the repo."""
@@ -1240,6 +1548,39 @@ def scan_cmd(
         baseline_data = json.loads(baseline.read_text())
         baseline_categories = baseline_data.get("accepted_categories", [])
         baseline_ref = baseline_data.get("baseline_ref")
+
+    if ai_intent:
+        ai_intent = _preload_ai_model(ai_model)
+
+    requested_repo_root = repo_root
+    try:
+        from opencomplai_core.scan_engine import validate_scan_repo_root
+
+        repo_root = validate_scan_repo_root(repo_root, auto_correct=True)
+    except FileNotFoundError as exc:
+        err_console.print(f"[red]Error:[/red] {exc}")
+        err_console.print(
+            "[dim]Tip: use the website project's own system-manifest.json when scanning "
+            "a different repo.[/dim]"
+        )
+        sys.exit(2)
+    except NotADirectoryError as exc:
+        err_console.print(f"[red]Error:[/red] {exc}")
+        sys.exit(2)
+
+    if not requested_repo_root.exists() and repo_root.exists():
+        err_console.print(
+            f"[yellow]Note:[/yellow] auto-corrected --repo-root "
+            f"{requested_repo_root} → {repo_root}"
+        )
+        website_manifest = repo_root / "system-manifest.json"
+        if (
+            manifest_file.resolve() != website_manifest.resolve()
+            and website_manifest.is_file()
+        ):
+            err_console.print(
+                f"[dim]Tip: consider --manifest {website_manifest} for this repo.[/dim]"
+            )
 
     progress_cb: ScanProgressCallback | None = None
     if output == OutputFormat.human and sys.stdout.isatty():
@@ -1262,12 +1603,19 @@ def scan_cmd(
         scan_config=scan_config,
         ai_intent=ai_intent,
         ai_model=ai_model,
+        ai_deep=ai_deep,
+        ai_legacy=ai_legacy,
     )
 
     if output == OutputFormat.json:
         console.print_json(report.model_dump_json(indent=2))
     else:
-        _print_scan_human(report, ai_intent=ai_intent)
+        _print_scan_human(
+            report,
+            ai_intent=ai_intent,
+            ai_verbose=ai_verbose,
+            ai_legacy=ai_legacy,
+        )
 
     if output_file is not None:
         suffix = output_file.suffix.lower()
@@ -2235,12 +2583,16 @@ def _require_ai_plugin() -> None:
 
 @ai_app.command("configure")
 def ai_configure_cmd(
-    model: str | None = typer.Option(None, "--model", help="Model ID to set as default"),
-    set_default: bool = typer.Option(False, "--set-default", help="Save the chosen model"),
+    model: str | None = typer.Option(
+        None, "--model", help="Model ID to set as default"
+    ),
+    set_default: bool = typer.Option(
+        False, "--set-default", help="Save the chosen model"
+    ),
 ) -> None:
     """Configure the active AI intent model (interactive or via --model)."""
     _require_ai_plugin()
-    from opencomplai_ai.config import get_active_model, set_active_model
+    from opencomplai_ai.config import set_active_model
     from opencomplai_ai.models import MODEL_CATALOG
 
     if model:
@@ -2280,7 +2632,9 @@ def ai_configure_cmd(
         set_active_model(chosen)
         console.print(f"[green]Default model set to:[/green] {chosen}")
     else:
-        console.print(f"Selected model: {chosen}  (not saved — pass --set-default to persist)")
+        console.print(
+            f"Selected model: {chosen}  (not saved — pass --set-default to persist)"
+        )
 
 
 @ai_app.command("status")
@@ -2302,8 +2656,9 @@ def ai_status_cmd() -> None:
         console.print(f"  runtime       : {spec.runtime}")
         console.print(f"  license       : {spec.license}")
         deep_status = (
-            "[green]installed[/green]" if _deep_installed() else
-            "[yellow]not installed[/yellow] (run: pip install 'opencomplai-ai\\[deep]')"
+            "[green]installed[/green]"
+            if _deep_installed()
+            else "[yellow]not installed[/yellow] (run: pip install 'opencomplai-ai\\[deep]')"
         )
         if spec.requires_deep:
             console.print(f"  llama-cpp     : {deep_status}")
@@ -2323,6 +2678,29 @@ def ai_status_cmd() -> None:
 def _deep_installed() -> bool:
     try:
         import llama_cpp  # noqa: F401
+
         return True
     except ImportError:
+        return False
+
+
+def _preload_ai_model(model_id: str | None) -> bool:
+    """Ensure the AI model is cached before Rich's live display starts.
+
+    Interactive download/export prompts must be shown BEFORE progress bars are
+    active; Rich's live renderer hides console.input() on most terminals.
+    Returns False if the user cancels or a hard dependency is missing (caller
+    should set ai_intent=False so the scan still completes without AI).
+    """
+    try:
+        from opencomplai_ai.config import get_active_model
+        from opencomplai_ai.downloader import ensure_model
+
+        resolved = model_id or get_active_model()
+        ensure_model(resolved)
+        return True
+    except ImportError:
+        return True  # plugin not installed; run_scan will emit the warning
+    except RuntimeError as exc:
+        err_console.print(f"[yellow]AI intent skipped:[/yellow] {exc}")
         return False

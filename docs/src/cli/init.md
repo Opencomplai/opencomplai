@@ -4,10 +4,17 @@ Create a system manifest and set up the local signing keypair.
 
 ## Synopsis
 
-```bash
-opencomplai init --system-id <id> --intended-purpose <purpose> [OPTIONS]
-opencomplai init --interactive [--skip-checker] [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai init --system-id <id> --intended-purpose <purpose> [OPTIONS]
+    opencomplai init --interactive [--skip-checker] [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --system-id <id> --intended-purpose <purpose> [OPTIONS]
+    opencomplai init --interactive [--skip-checker] [OPTIONS]
+    ```
 
 ## Options
 
@@ -28,16 +35,26 @@ opencomplai init --interactive [--skip-checker] [OPTIONS]
 
 ## Examples
 
-```bash
-# Interactive onboarding with EU AI Act checker
-opencomplai init --interactive
+=== "macOS / Linux"
+    ```bash
+    # Interactive onboarding with EU AI Act checker
+    opencomplai init --interactive
 
-# Flag-based init (unchanged)
-opencomplai init \
-  --system-id "credit-scoring-v2" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --high-risk-presumption
-```
+    # Flag-based init
+    opencomplai init \
+      --system-id "credit-scoring-v2" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --high-risk-presumption
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Interactive onboarding with EU AI Act checker
+    opencomplai init --interactive
+
+    # Flag-based init
+    opencomplai init --system-id "credit-scoring-v2" --intended-purpose "automated credit scoring for retail lending" --high-risk-presumption
+    ```
 
 ## What it does
 
@@ -65,7 +82,7 @@ Section 2/3 fields (with `null`/empty defaults when not supplied):
   "incident_response_procedure": null,
   "operator_role": "deployer",
   "checker_session": {
-    "checker_version": "fli-2025-07-28",
+    "checker_version": "checker-2025-07-28",
     "session_id": "uuid",
     "completed_at": "2026-06-09T12:00:00+00:00",
     "report_json_path": "./eu-ai-act-result.json"

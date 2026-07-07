@@ -33,7 +33,8 @@ COPY --chown=1001:1001 services/evidence-vault/src ./services/evidence-vault/src
 COPY --chown=1001:1001 services/evidence-vault/alembic.ini ./services/evidence-vault/alembic.ini
 COPY --chown=1001:1001 services/evidence-vault/migrations ./services/evidence-vault/migrations
 COPY --chown=1001:1001 packages/core/src ./packages/core/src
-COPY --chown=1001:1001 scripts ./scripts
+COPY --chown=1001:1001 sync/seed_demo.py sync/reset_demo.py ./scripts/
+COPY --chown=1001:1001 sync/demo ./scripts/demo
 
 # Pre-create the data directories owned by the runtime user. Docker seeds a
 # fresh named volume from the image's mount point, so creating these here as

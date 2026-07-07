@@ -1,16 +1,13 @@
 {#
-  Branded top bar injected above the Material search/tab bar.
+  Unified single header with logo, Blog, Docs, GitHub, Search, and Get Started.
   This file overrides material/partials/header.html entirely.
-  The oc-topbar nav mirrors the marketing site Nav.tsx so switching
-  between opencomplai.com and docs.opencomplai.com feels seamless.
 #}
 
-<div class="oc-topbar" data-md-component="oc-topbar">
-  <div class="oc-topbar__inner">
+<header class="md-header oc-header--unified" data-md-component="header">
+  <nav class="md-header__inner md-grid oc-header__nav" aria-label="Header">
 
-    {# Logo — always links back to the marketing site #}
-    <a href="https://opencomplai.com" class="oc-topbar__logo" aria-label="Opencomplai — back to homepage">
-      {# Light-mode logo (hidden by [data-md-color-scheme="slate"] rule below) #}
+    {# 1. Logo #}
+    <a href="https://opencomplai.com" class="oc-header__logo" aria-label="Opencomplai — back to homepage">
       <img
         src="{{ config.site_url }}logo/light.svg"
         alt="Opencomplai"
@@ -19,7 +16,6 @@
         class="oc-logo--light"
         loading="eager"
       />
-      {# Dark-mode logo #}
       <img
         src="{{ config.site_url }}logo/dark.svg"
         alt="Opencomplai"
@@ -30,74 +26,28 @@
       />
     </a>
 
-    {# Nav links #}
-    <nav class="oc-topbar__nav" aria-label="Site navigation">
-      <a href="https://opencomplai.com/blog"       class="oc-topbar__link">Blog</a>
-      <a href="https://docs.opencomplai.com"       class="oc-topbar__link oc-topbar__link--active" aria-current="true">Docs</a>
-      <a href="https://github.com/Checkref-co/opencomplai"
-         class="oc-topbar__link"
-         target="_blank"
-         rel="noopener noreferrer">GitHub</a>
+    {# 2. Primary Nav (Blog, Docs, GitHub) #}
+    <nav class="oc-header__nav-primary" aria-label="Site navigation">
+      <a href="https://opencomplai.com/blog" class="oc-header__nav-link">Blog</a>
+      <a href="https://docs.opencomplai.com" class="oc-header__nav-link oc-header__nav-link--active" aria-current="true">Docs</a>
+      <a href="https://github.com/Opencomplai/opencomplai" class="oc-header__nav-link" target="_blank" rel="noopener noreferrer">GitHub</a>
     </nav>
 
-    {# Return link (mobile) + CTA #}
-    <div class="oc-topbar__actions">
-      <a href="https://opencomplai.com" class="oc-topbar__back" aria-label="← opencomplai.com">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>opencomplai.com</span>
-      </a>
-      <a href="https://docs.opencomplai.com/getting-started/quick-start" class="oc-topbar__cta">
-        Get Started
-      </a>
-    </div>
+    {# Spacer #}
+    <div class="oc-header__spacer"></div>
 
-  </div>
-</div>
-
-{#
-  Render the rest of the Material header (search bar, color-scheme toggle, etc.)
-  by including the original partial via the parent theme lookup.
-  MkDocs Material does NOT support super() in partials; we replicate only
-  the thin topbar here and let Material render its own header beneath it
-  via the main.html block system.
-#}
-<header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="{{ config.site_url | d(nav.homepage.url, true) }}" title="{{ config.site_name }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
-      {% include "partials/logo.html" %}
-    </a>
-    <label class="md-header__button md-icon" for="__drawer">
-      {% include ".icons/material/menu.svg" %}
-    </label>
-    <div class="md-header__title" data-md-component="header-title">
-      <div class="md-header__ellipsis">
-        <div class="md-header__topic">
-          <span class="md-ellipsis">{{ config.site_name }}</span>
-        </div>
-        <div class="md-header__topic" data-md-component="header-topic">
-          <span class="md-ellipsis">
-            {% if page.meta and page.meta.title %}
-              {{ page.meta.title }}
-            {% else %}
-              {{ page.title }}
-            {% endif %}
-          </span>
-        </div>
-      </div>
-    </div>
-    {# Runtime plugin key is material/search (MkDocs PluginCollection), not the yaml alias "search" #}
+    {# 3. Search (material component) #}
     {% if "material/search" in config.plugins %}
-      <label class="md-header__button md-icon" for="__search">
+      <label class="md-header__button md-icon oc-header__search-btn" for="__search">
         {% include ".icons/material/magnify.svg" %}
       </label>
       {% include "partials/search.html" %}
     {% endif %}
-    {% if config.repo_url %}
-      <div class="md-header__source">
-        {% include "partials/source.html" %}
-      </div>
-    {% endif %}
+
+    {# 4. Get Started CTA #}
+    <a href="https://docs.opencomplai.com/getting-started/quick-start" class="oc-header__cta">
+      Get Started
+    </a>
+
   </nav>
 </header>

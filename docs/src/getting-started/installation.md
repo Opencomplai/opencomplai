@@ -21,9 +21,15 @@ Python 3.11+ is required. Verify with:
 
 ## Install from PyPI (recommended once available)
 
-```bash
-pip install opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    ```
 
 !!! warning "Pre-release status"
     `opencomplai` is at version `0.1.0-dev` and has not yet been published to PyPI.
@@ -37,14 +43,14 @@ local `core` and `cli` packages **in the same command** — otherwise pip tries
 
 === "macOS / Linux"
     ```bash
-    git clone https://github.com/Checkref-co/opencomplai
+    git clone https://github.com/Opencomplai/opencomplai
     cd opencomplai
     pip install -e packages/core -e packages/cli -e packages/sdk-python
     ```
 
 === "Windows (PowerShell)"
     ```powershell
-    git clone https://github.com/Checkref-co/opencomplai
+    git clone https://github.com/Opencomplai/opencomplai
     cd opencomplai
     pip install -e packages/core -e packages/cli -e packages/sdk-python
     ```
@@ -64,9 +70,15 @@ automatically as a dependency of `opencomplai-core`.
 The repository is a [uv](https://github.com/astral-sh/uv) workspace. If you have
 `uv` installed, a single command installs every package in editable mode:
 
-```bash
-uv sync
-```
+=== "macOS / Linux"
+    ```bash
+    uv sync
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv sync
+    ```
 
 Then prefix commands with `uv run` (e.g. `uv run opencomplai check`) or activate
 the created `.venv`.
@@ -76,10 +88,17 @@ the created `.venv`.
 The CLI does not expose a `--version` flag. Verify with `--help` (lists the
 available commands) and `pip show` (prints the installed version):
 
-```bash
-opencomplai --help
-pip show opencomplai          # Version: 0.1.0.dev0
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai --help
+    pip show opencomplai          # Version: 0.1.0.dev0
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai --help
+    pip show opencomplai          # Version: 0.1.0.dev0
+    ```
 
 A successful `opencomplai --help` lists `init`, `check`, `eval`,
 `validate-manifest`, `risk`, `docs`, `keys`, and more.

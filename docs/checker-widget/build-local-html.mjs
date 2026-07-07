@@ -170,14 +170,14 @@ const html = `<!DOCTYPE html>
       <p>
         Answer a short questionnaire to find out whether the EU AI Act applies to
         your AI system, in what operator role, at what risk tier, and which
-        obligations follow. Engine version <strong>fli-2025-07-28</strong>.
+        obligations follow. Engine version <strong>checker-2025-07-28</strong>.
       </p>
     </div>
     <div id="ococ-checker"></div>
   </main>
 
   <footer>
-    Opencomplai · checker fli-2025-07-28 ·
+    Opencomplai · checker checker-2025-07-28 ·
     <a href="https://opencomplai.com" target="_blank" rel="noopener">opencomplai.com</a><br>
     Not legal advice — informational only. Seek qualified legal counsel.
   </footer>

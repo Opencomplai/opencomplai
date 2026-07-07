@@ -15,7 +15,7 @@ import { evaluate, CHECKER_VERSION, CheckerResult } from "./engine";
 import { HELP_CONTENT, ENTITY_ROLES } from "./catalog";
 
 const DISCLAIMER =
-  "This tool automates the Future of Life Institute compliance checker logic " +
+  "This tool automates EU AI Act compliance checker logic " +
   "for educational and planning purposes. It does not constitute legal advice. " +
   "Seek qualified legal counsel and follow national guidance for formal compliance decisions.";
 
@@ -269,93 +269,151 @@ const QUESTIONS: Question[] = [
   },
 ];
 
-// ── CSS (injected once, uses Material CSS vars) ───────────────────────────────
+// ── CSS (brand tokens with Material-var fallback for light/dark parity) ──────
 
 const CSS = `
 #ococ-checker {
-  font-family: var(--md-text-font, system-ui, sans-serif);
+  --ococ-accent: var(--color-electric-blue, var(--md-primary-fg-color, #3B5BEB));
+  --ococ-accent-dark: var(--color-primary-dark, var(--md-primary-fg-color--dark, #2d46c7));
+  --ococ-accent-soft: var(--ococ-accent-soft-override, rgba(59, 91, 235, 0.08));
+  --ococ-ink: var(--color-midnight, var(--md-default-fg-color, #21283B));
+  --ococ-ink-muted: var(--color-fg-muted, var(--md-default-fg-color--light, #5a6478));
+  --ococ-surface: var(--md-default-bg-color, #fff);
+  --ococ-surface-subtle: var(--color-cool-gray, var(--md-default-fg-color--lightest, #F1F4F8));
+  --ococ-border: var(--color-border, var(--md-default-fg-color--lightest, #e2e6ed));
+  --ococ-success: var(--color-success-green, #12D463);
+  --ococ-success-soft: rgba(18, 212, 99, 0.10);
+  --ococ-danger: #d1293d;
+  --ococ-danger-soft: rgba(209, 41, 61, 0.09);
+  --ococ-warning: #b3690a;
+  --ococ-warning-soft: rgba(217, 138, 15, 0.12);
+  font-family: var(--font-sans, var(--md-text-font, system-ui, sans-serif));
   max-width: 720px;
   margin: 0 auto;
 }
-.ococ-card {
-  border: 1px solid var(--md-default-fg-color--lightest, #e0e0e0);
-  border-radius: 12px;
-  padding: 1.5rem 1.75rem;
-  margin-bottom: 1rem;
-  background: var(--md-default-bg-color, #fff);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.05);
+[data-md-color-scheme="slate"] #ococ-checker {
+  --ococ-accent-soft-override: rgba(92, 120, 240, 0.16);
+  --ococ-surface-subtle: var(--md-default-fg-color--lightest, #2a3142);
+  --ococ-border: var(--md-default-fg-color--lightest, #333c50);
+  --ococ-success-soft: rgba(18, 212, 99, 0.14);
+  --ococ-danger-soft: rgba(255, 99, 118, 0.14);
+  --ococ-warning-soft: rgba(245, 166, 35, 0.16);
 }
+
+.ococ-frame { display: flex; flex-direction: column; gap: 0.9rem; }
+
+/* ── status rail: step counter + progress track, outside the card ── */
+.ococ-rail {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.ococ-rail-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ococ-ink-muted);
+}
+.ococ-rail-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ococ-accent);
+  letter-spacing: 0.02em;
+}
+.ococ-progress-track {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ococ-border);
+  overflow: hidden;
+}
+.ococ-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ococ-accent);
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ococ-card {
+  border: 1px solid var(--ococ-border);
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
+  background: var(--ococ-surface);
+  box-shadow: 0 1px 2px rgba(33, 40, 59, 0.04), 0 12px 28px rgba(33, 40, 59, 0.06);
+}
+[data-md-color-scheme="slate"] .ococ-card {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 12px 28px rgba(0,0,0,0.28);
+}
+
 .ococ-eyebrow {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--md-primary-fg-color, #2563eb);
-  margin-bottom: 0.5rem;
-}
-.ococ-progress {
-  font-size: 0.78rem;
-  color: var(--md-default-fg-color--light, #666);
-  margin-bottom: 0.4rem;
-}
-.ococ-progress-bar {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--md-default-fg-color--lightest, #e0e0e0);
-  margin-bottom: 1.25rem;
-  overflow: hidden;
-}
-.ococ-progress-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--md-primary-fg-color, #2563eb);
-  transition: width 0.3s ease;
+  color: var(--ococ-accent);
+  margin-bottom: 0.6rem;
 }
 .ococ-question {
-  font-size: 1.2rem;
-  font-weight: 700;
-  line-height: 1.35;
-  margin-bottom: 0.85rem;
-  color: var(--md-default-fg-color, #222);
+  font-size: 1.32rem;
+  font-weight: 650;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+  color: var(--ococ-ink);
 }
 .ococ-help details {
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
   font-size: 0.88rem;
-  color: var(--md-default-fg-color--light, #555);
+  color: var(--ococ-ink-muted);
 }
 .ococ-help summary {
   cursor: pointer;
-  color: var(--md-primary-fg-color, #2563eb);
-  font-weight: 500;
+  color: var(--ococ-accent);
+  font-weight: 600;
   list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
-.ococ-help summary::before { content: "ⓘ "; }
+.ococ-help summary::before { content: "ⓘ"; }
 .ococ-help summary::-webkit-details-marker { display: none; }
-.ococ-help p { margin: 0.5rem 0 0; line-height: 1.5; }
+.ococ-help p {
+  margin: 0.6rem 0 0;
+  line-height: 1.55;
+  padding: 0.75rem 0.9rem;
+  background: var(--ococ-surface-subtle);
+  border-radius: 8px;
+  border-left: 2.5px solid var(--ococ-accent);
+}
 
 /* option list (select + multi) */
 .ococ-options { display: flex; flex-direction: column; gap: 0.6rem; }
 .ococ-option {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.85rem;
   width: 100%;
   text-align: left;
-  padding: 0.85rem 1rem;
-  border: 1.5px solid var(--md-default-fg-color--lightest, #e0e0e0);
+  padding: 0.95rem 1.1rem;
+  border: 1.5px solid var(--ococ-border);
   border-radius: 10px;
-  background: var(--md-default-bg-color, #fff);
-  color: var(--md-default-fg-color, #222);
+  background: var(--ococ-surface);
+  color: var(--ococ-ink);
   cursor: pointer;
   font: inherit;
-  transition: border-color 0.15s, background 0.15s, transform 0.05s;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.05s;
 }
-.ococ-option:hover { border-color: var(--md-primary-fg-color, #2563eb); }
+.ococ-option:hover {
+  border-color: var(--ococ-accent);
+  box-shadow: 0 2px 8px rgba(59, 91, 235, 0.10);
+}
 .ococ-option:active { transform: translateY(1px); }
 .ococ-option[aria-checked="true"] {
-  border-color: var(--md-primary-fg-color, #2563eb);
-  background: var(--ococ-accent-soft, var(--md-default-fg-color--lightest, #eef2ff));
-  box-shadow: inset 0 0 0 1px var(--md-primary-fg-color, #2563eb);
+  border-color: var(--ococ-accent);
+  background: var(--ococ-accent-soft);
+  box-shadow: inset 0 0 0 1.5px var(--ococ-accent);
 }
 .ococ-option-marker {
   flex: 0 0 auto;
@@ -363,28 +421,29 @@ const CSS = `
   height: 20px;
   margin-top: 1px;
   border-radius: 50%;
-  border: 2px solid var(--md-default-fg-color--light, #aaa);
+  border: 2px solid var(--ococ-border);
   display: grid;
   place-items: center;
+  transition: border-color 0.15s, background 0.15s;
 }
 .ococ-option--multi .ococ-option-marker { border-radius: 5px; }
 .ococ-option[aria-checked="true"] .ococ-option-marker {
-  border-color: var(--md-primary-fg-color, #2563eb);
-  background: var(--md-primary-fg-color, #2563eb);
+  border-color: var(--ococ-accent);
+  background: var(--ococ-accent);
 }
 .ococ-option-marker svg { width: 12px; height: 12px; display: none; }
 .ococ-option[aria-checked="true"] .ococ-option-marker svg { display: block; }
-.ococ-option-body { display: flex; flex-direction: column; gap: 0.15rem; }
-.ococ-option-title { font-weight: 600; font-size: 0.98rem; }
+.ococ-option-body { display: flex; flex-direction: column; gap: 0.2rem; }
+.ococ-option-title { font-weight: 600; font-size: 0.98rem; color: var(--ococ-ink); }
 .ococ-option-desc {
   font-size: 0.84rem;
-  line-height: 1.45;
-  color: var(--md-default-fg-color--light, #666);
+  line-height: 1.5;
+  color: var(--ococ-ink-muted);
 }
 
 /* yes / no */
 .ococ-yesno { display: flex; gap: 0.75rem; }
-.ococ-yesno .ococ-option { flex: 1 1 0; justify-content: center; align-items: center; font-weight: 600; font-size: 1.05rem; padding: 1rem; }
+.ococ-yesno .ococ-option { flex: 1 1 0; justify-content: center; align-items: center; font-weight: 600; font-size: 1.05rem; padding: 1.1rem; }
 .ococ-yesno .ococ-option-body { align-items: center; }
 
 /* navigation */
@@ -392,25 +451,33 @@ const CSS = `
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ococ-border);
   flex-wrap: wrap;
 }
 .ococ-spacer { flex: 1 1 auto; }
 .ococ-btn {
-  padding: 0.55rem 1.2rem;
+  padding: 0.65rem 1.35rem;
   border-radius: 8px;
   border: 1.5px solid transparent;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
-  transition: opacity 0.15s, background 0.15s;
+  font-family: inherit;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
 }
-.ococ-btn:hover { opacity: 0.88; }
-.ococ-btn-primary { background: var(--md-primary-fg-color, #2563eb); color: #fff; }
+.ococ-btn:active { transform: translateY(1px); }
+.ococ-btn-primary { background: var(--ococ-accent); color: #fff; }
+.ococ-btn-primary:hover { background: var(--ococ-accent-dark); }
 .ococ-btn-secondary {
   background: transparent;
-  border-color: var(--md-default-fg-color--lightest, #d0d0d0);
-  color: var(--md-default-fg-color--light, #555);
+  border-color: var(--ococ-border);
+  color: var(--ococ-ink-muted);
+}
+.ococ-btn-secondary:hover {
+  border-color: var(--ococ-ink-muted);
+  color: var(--ococ-ink);
 }
 .ococ-btn:disabled { opacity: 0.4; cursor: default; }
 
@@ -418,60 +485,129 @@ const CSS = `
 .ococ-option:focus-visible,
 .ococ-btn:focus-visible,
 .ococ-help summary:focus-visible {
-  outline: 2px solid var(--md-primary-fg-color, #2563eb);
+  outline: 2px solid var(--ococ-accent);
   outline-offset: 2px;
 }
 
-/* result */
-.ococ-result-headline {
-  font-size: 1.2rem;
-  font-weight: 700;
-  padding: 0.7rem 1.1rem;
-  border-radius: 8px;
-  margin-bottom: 1.25rem;
-  display: inline-block;
+/* ── result ── */
+.ococ-result-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid transparent;
 }
-.ococ-result-prohibited { background: #fee2e2; color: #b91c1c; }
-.ococ-result-high { background: #fef3c7; color: #92400e; }
-.ococ-result-in-scope { background: #d1fae5; color: #065f46; }
-.ococ-result-out { background: var(--md-default-fg-color--lightest, #f3f4f6); color: var(--md-default-fg-color--light, #555); }
+.ococ-result-banner-icon {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  margin-top: 0.1rem;
+}
+.ococ-result-banner-icon svg { width: 22px; height: 22px; }
+.ococ-result-banner-text { display: flex; flex-direction: column; gap: 0.15rem; }
+.ococ-result-headline { font-size: 1.18rem; font-weight: 700; line-height: 1.3; }
+.ococ-result-sub { font-size: 0.86rem; font-weight: 500; opacity: 0.85; }
+
+.ococ-result-prohibited { background: var(--ococ-danger-soft); border-left-color: var(--ococ-danger); color: var(--ococ-danger); }
+.ococ-result-high { background: var(--ococ-warning-soft); border-left-color: var(--ococ-warning); color: var(--ococ-warning); }
+.ococ-result-in-scope { background: var(--ococ-success-soft); border-left-color: var(--ococ-success); color: #0a8f4c; }
+[data-md-color-scheme="slate"] .ococ-result-in-scope { color: #34e08c; }
+.ococ-result-out { background: var(--ococ-surface-subtle); border-left-color: var(--ococ-ink-muted); color: var(--ococ-ink-muted); }
+
 .ococ-section-title {
-  font-size: 0.92rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  margin: 1.25rem 0 0.5rem;
+  margin: 1.5rem 0 0.6rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--md-default-fg-color--light, #555);
+  letter-spacing: 0.06em;
+  color: var(--ococ-ink-muted);
 }
-.ococ-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 0.5rem; }
+.ococ-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 0.5rem; font-variant-numeric: tabular-nums; }
 .ococ-table th {
-  text-align: left; padding: 0.45rem 0.65rem;
-  background: var(--md-default-fg-color--lightest, #f3f4f6);
-  font-weight: 600; color: var(--md-default-fg-color, #333);
+  text-align: left; padding: 0.55rem 0.7rem;
+  background: var(--ococ-surface-subtle);
+  font-weight: 600; color: var(--ococ-ink);
 }
+.ococ-table th:first-child { border-radius: 6px 0 0 6px; }
+.ococ-table th:last-child { border-radius: 0 6px 6px 0; }
 .ococ-table td {
-  padding: 0.45rem 0.65rem;
-  border-top: 1px solid var(--md-default-fg-color--lightest, #e5e7eb);
-  vertical-align: top; color: var(--md-default-fg-color, #333);
+  padding: 0.6rem 0.7rem;
+  border-top: 1px solid var(--ococ-border);
+  vertical-align: top; color: var(--ococ-ink);
 }
 .ococ-path details { font-size: 0.82rem; margin-top: 0.75rem; }
-.ococ-path summary { cursor: pointer; color: var(--md-default-fg-color--light, #666); }
+.ococ-path summary { cursor: pointer; color: var(--ococ-ink-muted); font-weight: 500; }
 .ococ-path code {
-  display: inline-block; background: var(--md-code-bg-color, #f5f5f5);
-  border-radius: 4px; padding: 0.08rem 0.4rem; font-size: 0.8rem; margin: 0.1rem;
-  color: var(--md-default-fg-color, #333);
+  display: inline-block; background: var(--ococ-surface-subtle);
+  border-radius: 4px; padding: 0.1rem 0.45rem; font-size: 0.8rem; margin: 0.15rem 0.1rem 0 0;
+  color: var(--ococ-ink); font-family: var(--font-mono, ui-monospace, monospace);
 }
 .ococ-export { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
 .ococ-disclaimer {
-  font-size: 0.78rem; color: var(--md-default-fg-color--light, #666);
+  font-size: 0.78rem; color: var(--ococ-ink-muted);
   margin-top: 1.5rem; padding-top: 1rem;
-  border-top: 1px solid var(--md-default-fg-color--lightest, #e5e7eb);
-  line-height: 1.5;
+  border-top: 1px solid var(--ococ-border);
+  line-height: 1.55;
 }
-.ococ-privacy { font-size: 0.82rem; color: var(--md-default-fg-color--light, #666); margin: 0 0 1rem; }
+.ococ-privacy {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--ococ-ink-muted);
+  margin: 0 0 1.25rem;
+}
+
+.ococ-local-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--ococ-ink-muted);
+  background: var(--ococ-surface-subtle);
+  border: 1px solid var(--ococ-border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+}
+.ococ-answer-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.86rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--ococ-border);
+}
+.ococ-answer-row:last-child { border-bottom: none; }
+.ococ-answer-row .ococ-answer-label { color: var(--ococ-ink-muted); }
+.ococ-answer-row .ococ-answer-value { color: var(--ococ-ink); font-weight: 600; text-align: right; }
+.ococ-email {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  align-items: center;
+}
+.ococ-email input[type="email"] {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--ococ-border);
+  background: var(--ococ-surface);
+  color: var(--ococ-ink);
+  font-size: 0.88rem;
+}
+.ococ-email-status { font-size: 0.82rem; color: var(--ococ-ink-muted); margin-top: 0.4rem; }
+.ococ-email-status.ococ-email-error { color: var(--ococ-danger); }
+.ococ-email-status.ococ-email-success { color: var(--ococ-success); }
 
 @media (max-width: 520px) {
-  .ococ-card { padding: 1.15rem 1.1rem; }
+  .ococ-card { padding: 1.35rem 1.25rem; }
   .ococ-yesno { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -530,7 +666,9 @@ function setAnswer(state: State, q: Question, value: unknown): void {
 
 function h(tag: string, attrs: Record<string, string> = {}, ...children: (string | Node)[]): HTMLElement {
   const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
+  for (const entry of Object.entries(attrs)) {
+    const k = entry[0];
+    const v = entry[1];
     if (k === "className") el.className = v;
     else el.setAttribute(k, v);
   }
@@ -597,9 +735,23 @@ function renderQuestion(state: State, root: HTMLElement) {
 
   const q = questions[state.step];
   const total = questions.length;
-  const pct = Math.round((state.step / total) * 100);
+  const pct = Math.round(((state.step + 1) / total) * 100);
 
   root.innerHTML = "";
+  const frame = h("div", { className: "ococ-frame" });
+  appendLocalServerControl(frame);
+
+  const rail = h("div", { className: "ococ-rail" });
+  rail.appendChild(h("span", { className: "ococ-rail-label" }, q.section ?? "EU AI Act Checker"));
+  rail.appendChild(h("span", { className: "ococ-rail-count" }, `Step ${state.step + 1} of ${total}`));
+  frame.appendChild(rail);
+
+  const track = h("div", { className: "ococ-progress-track" });
+  const fill = h("div", { className: "ococ-progress-fill" });
+  fill.style.width = `${pct}%`;
+  track.appendChild(fill);
+  frame.appendChild(track);
+
   const card = h("div", { className: "ococ-card" });
 
   if (state.step === 0) {
@@ -609,15 +761,6 @@ function renderQuestion(state: State, root: HTMLElement) {
   if (q.section) {
     card.appendChild(h("div", { className: "ococ-eyebrow" }, q.section));
   }
-
-  card.appendChild(
-    h("div", { className: "ococ-progress" }, `Step ${state.step + 1} of ${total}`)
-  );
-  const bar = h("div", { className: "ococ-progress-bar" });
-  const fill = h("div", { className: "ococ-progress-fill" });
-  fill.style.width = `${pct}%`;
-  bar.appendChild(fill);
-  card.appendChild(bar);
 
   card.appendChild(h("div", { className: "ococ-question" }, q.label));
 
@@ -710,7 +853,8 @@ function renderQuestion(state: State, root: HTMLElement) {
   card.appendChild(actions);
 
   card.appendChild(h("p", { className: "ococ-disclaimer" }, DISCLAIMER));
-  root.appendChild(card);
+  frame.appendChild(card);
+  root.appendChild(frame);
 
   // Move focus to the answer group for keyboard users (not on the very first paint).
   const firstOption = card.querySelector<HTMLButtonElement>(".ococ-option");
@@ -745,14 +889,46 @@ function headlineClass(result: CheckerResult): string {
 }
 
 function headlineText(result: CheckerResult): string {
-  const role = result.effective_entity
-    ? ` — ${result.effective_entity.replace(/_/g, " ")}`
-    : "";
-  if (result.is_prohibited) return `Prohibited practice${role}`;
-  if (result.is_high_risk) return `High risk${role}`;
-  if (result.in_scope) return `In scope${role}`;
-  return `Out of scope${role}`;
+  if (result.is_prohibited) return "Prohibited practice";
+  if (result.is_high_risk) return "High risk";
+  if (result.in_scope) return "In scope";
+  return "Out of scope";
 }
+
+function headlineSub(result: CheckerResult): string {
+  const role = result.effective_entity
+    ? result.effective_entity.replace(/_/g, " ")
+    : null;
+  if (result.is_prohibited) return "This system may not be placed on the market or put into service.";
+  if (result.is_high_risk) {
+    return role ? `High-risk obligations apply to you as ${role}.` : "High-risk obligations apply under the AI Act.";
+  }
+  if (result.in_scope) {
+    return role ? `The AI Act applies to you as ${role}.` : "The AI Act applies to this system.";
+  }
+  return "The AI Act does not apply to this system as described.";
+}
+
+const RESULT_ICONS: Record<string, string> = {
+  "ococ-result-prohibited":
+    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>' +
+    '<path d="M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  "ococ-result-high":
+    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<path d="M12 3.5l9.5 16.5H2.5L12 3.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>' +
+    '<path d="M12 10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+    '<circle cx="12" cy="17.2" r="0.9" fill="currentColor"/></svg>',
+  "ococ-result-in-scope":
+    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>' +
+    '<path d="M8 12.5l2.5 2.5L16 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  "ococ-result-out":
+    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>' +
+    '<path d="M12 8v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+    '<circle cx="12" cy="16" r="0.9" fill="currentColor"/></svg>',
+};
 
 function downloadFile(filename: string, content: string, mime: string) {
   const blob = new Blob([content], { type: mime });
@@ -762,6 +938,104 @@ function downloadFile(filename: string, content: string, mime: string) {
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+// ── local-CLI stop control ("opencomplai checker --web --local") ────────────
+// The CLI marks its served URL with ?local=1 (see _checker_web in main.py) so
+// this bundle — otherwise identical whether hosted on docs.opencomplai.com or
+// served offline — knows to show a way to stop the local server it's running
+// under, instead of requiring the user to find the terminal and press Ctrl+C.
+
+function isLocalCliServed(): boolean {
+  return new URLSearchParams(window.location.search).get("local") === "1";
+}
+
+function appendLocalServerControl(frame: HTMLElement) {
+  if (!isLocalCliServed()) return;
+  const bar = h("div", { className: "ococ-local-bar" });
+  const label = h("span", {}, "Running locally via opencomplai checker --web --local.");
+  const stopBtn = h("button", { className: "ococ-btn ococ-btn-secondary", type: "button" }, "Stop local server");
+  (stopBtn as HTMLButtonElement).onclick = () => {
+    (stopBtn as HTMLButtonElement).disabled = true;
+    stopBtn.textContent = "Stopping…";
+    fetch("/__ococ_shutdown", { method: "POST" }).catch(() => {
+      // The server closing the connection as it shuts down looks like a
+      // failed fetch from here — that's the expected/successful outcome.
+    });
+    window.setTimeout(() => {
+      bar.innerHTML = "";
+      bar.appendChild(h("span", {}, "Server stopped — you can close this tab."));
+    }, 300);
+  };
+  bar.appendChild(label);
+  bar.appendChild(stopBtn);
+  frame.appendChild(bar);
+}
+
+// ── answer formatting (mirrors _answer_entries in report.py) ────────────────
+
+function formatAnswerValue(value: unknown, q: Question): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) {
+    if (!q.options) return value.map(String).join(", ");
+    return value
+      .map((v) => q.options!.find((o) => o.value === v)?.label ?? String(v))
+      .join(", ");
+  }
+  if (q.options) {
+    const opt = q.options.find((o) => o.value === value);
+    if (opt) return opt.label;
+  }
+  if (value === null || value === undefined) return "(no answer)";
+  return String(value);
+}
+
+interface AnswerEntry {
+  section: string;
+  label: string;
+  value: string;
+}
+
+function answerEntries(answers: Record<string, unknown>): AnswerEntry[] {
+  const entries: AnswerEntry[] = [];
+  const seen = new Set<string>();
+  for (const q of QUESTIONS) {
+    if (!(q.key in answers)) continue;
+    seen.add(q.key);
+    entries.push({ section: q.section ?? "", label: q.label, value: formatAnswerValue(answers[q.key], q) });
+  }
+  for (const key of Object.keys(answers)) {
+    if (seen.has(key)) continue;
+    const label = key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    entries.push({ section: "", label, value: String(answers[key]) });
+  }
+  return entries;
+}
+
+// ── email delivery (public docs site only — see isLocalCliServed) ───────────
+// The CLI's --local mode is explicitly offline, so it never shows this; the
+// hosted docs.opencomplai.com page calls the risk-engine's /v1/checker/email.
+
+const CHECKER_API_BASE =
+  (typeof window !== "undefined" && (window as { OCOC_RISK_ENGINE_URL?: string }).OCOC_RISK_ENGINE_URL) ||
+  "http://localhost:8001";
+
+async function emailResult(answers: Record<string, unknown>, toEmail: string): Promise<void> {
+  const res = await fetch(`${CHECKER_API_BASE}/v1/checker/email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ answers, to_email: toEmail }),
+  });
+  if (!res.ok) {
+    let message = "Could not send the email.";
+    try {
+      const body = await res.json();
+      if (body?.detail?.message) message = body.detail.message;
+    } catch {
+      // non-JSON error body — fall back to the generic message
+    }
+    throw new Error(message);
+  }
 }
 
 function renderJson(result: CheckerResult): string {
@@ -793,6 +1067,22 @@ function renderMarkdown(result: CheckerResult): string {
   if (result.effective_entity) {
     lines.push(`**Effective operator role:** ${result.effective_entity}`);
   }
+
+  lines.push("", "## Your answers", "");
+  const answers = answerEntries(result.answers);
+  if (answers.length) {
+    let lastSection = "";
+    for (const entry of answers) {
+      if (entry.section && entry.section !== lastSection) {
+        lines.push(`**${entry.section}**`);
+        lastSection = entry.section;
+      }
+      lines.push(`- ${entry.label} — ${entry.value}`);
+    }
+  } else {
+    lines.push("None.");
+  }
+
   lines.push("", "## Status changes", "");
   if (result.status_changes.length) {
     for (const sc of result.status_changes) {
@@ -821,11 +1111,48 @@ function renderResult(state: State, root: HTMLElement) {
   const result = state.result!;
   root.innerHTML = "";
 
+  const frame = h("div", { className: "ococ-frame" });
+  appendLocalServerControl(frame);
+
+  const rail = h("div", { className: "ococ-rail" });
+  rail.appendChild(h("span", { className: "ococ-rail-label" }, "EU AI Act Checker"));
+  rail.appendChild(h("span", { className: "ococ-rail-count" }, "Result"));
+  frame.appendChild(rail);
+
+  const track = h("div", { className: "ococ-progress-track" });
+  const fill = h("div", { className: "ococ-progress-fill" });
+  fill.style.width = "100%";
+  track.appendChild(fill);
+  frame.appendChild(track);
+
   const card = h("div", { className: "ococ-card" });
 
-  const hl = h("div", { className: `ococ-result-headline ${headlineClass(result)}` },
-    headlineText(result));
-  card.appendChild(hl);
+  const resultClass = headlineClass(result);
+  const banner = h("div", { className: `ococ-result-banner ${resultClass}` });
+  const icon = h("span", { className: "ococ-result-banner-icon" });
+  icon.innerHTML = RESULT_ICONS[resultClass] ?? "";
+  banner.appendChild(icon);
+  const bannerText = h("div", { className: "ococ-result-banner-text" });
+  bannerText.appendChild(h("div", { className: "ococ-result-headline" }, headlineText(result)));
+  bannerText.appendChild(h("div", { className: "ococ-result-sub" }, headlineSub(result)));
+  banner.appendChild(bannerText);
+  card.appendChild(banner);
+
+  const answers = answerEntries(state.answers);
+  if (answers.length) {
+    card.appendChild(h("div", { className: "ococ-section-title" }, "Your answers"));
+    let lastSection = "";
+    for (const entry of answers) {
+      if (entry.section && entry.section !== lastSection) {
+        card.appendChild(h("div", { className: "ococ-eyebrow" }, entry.section));
+        lastSection = entry.section;
+      }
+      const row = h("div", { className: "ococ-answer-row" });
+      row.appendChild(h("span", { className: "ococ-answer-label" }, entry.label));
+      row.appendChild(h("span", { className: "ococ-answer-value" }, entry.value));
+      card.appendChild(row);
+    }
+  }
 
   if (result.status_changes.length) {
     card.appendChild(h("div", { className: "ococ-section-title" }, "Status changes"));
@@ -893,7 +1220,54 @@ function renderResult(state: State, root: HTMLElement) {
   exportRow.appendChild(btnPrint);
   card.appendChild(exportRow);
 
-  const restartRow = h("div", { style: "margin-top:1.25rem" });
+  if (!isLocalCliServed()) {
+    card.appendChild(h("div", { className: "ococ-section-title" }, "Email a copy"));
+    const emailRow = h("div", { className: "ococ-email" });
+    const emailInput = h("input", {
+      type: "email",
+      placeholder: "you@example.com",
+      "aria-label": "Email address to send a copy of your result",
+    });
+    const emailBtn = h("button", { className: "ococ-btn ococ-btn-secondary", type: "button" }, "Send");
+    const emailStatus = h("p", { className: "ococ-email-status" });
+
+    (emailBtn as HTMLButtonElement).onclick = () => {
+      const toEmail = (emailInput as HTMLInputElement).value.trim();
+      if (!toEmail.includes("@") || !toEmail.includes(".")) {
+        emailStatus.textContent = "Enter a valid email address.";
+        emailStatus.className = "ococ-email-status ococ-email-error";
+        return;
+      }
+      const originalLabel = emailBtn.textContent ?? "Send";
+      (emailBtn as HTMLButtonElement).disabled = true;
+      (emailInput as HTMLInputElement).disabled = true;
+      emailBtn.textContent = "Sending…";
+      emailStatus.textContent = "";
+      emailStatus.className = "ococ-email-status";
+      emailResult(state.answers, toEmail)
+        .then(() => {
+          emailStatus.textContent = "Sent — check your inbox.";
+          emailStatus.className = "ococ-email-status ococ-email-success";
+        })
+        .catch((err: unknown) => {
+          const reason = err instanceof Error ? err.message : "Could not send the email.";
+          emailStatus.textContent = `${reason} Try one of the downloads above instead.`;
+          emailStatus.className = "ococ-email-status ococ-email-error";
+        })
+        .finally(() => {
+          (emailBtn as HTMLButtonElement).disabled = false;
+          (emailInput as HTMLInputElement).disabled = false;
+          emailBtn.textContent = originalLabel;
+        });
+    };
+
+    emailRow.appendChild(emailInput);
+    emailRow.appendChild(emailBtn);
+    card.appendChild(emailRow);
+    card.appendChild(emailStatus);
+  }
+
+  const actions = h("div", { className: "ococ-actions" });
   const restart = h("button", { className: "ococ-btn ococ-btn-secondary", type: "button" }, "← Start over");
   (restart as HTMLButtonElement).onclick = () => {
     state.step = 0;
@@ -901,11 +1275,12 @@ function renderResult(state: State, root: HTMLElement) {
     state.result = null;
     renderQuestion(state, root);
   };
-  restartRow.appendChild(restart);
-  card.appendChild(restartRow);
+  actions.appendChild(restart);
+  card.appendChild(actions);
 
   card.appendChild(h("p", { className: "ococ-disclaimer" }, DISCLAIMER));
-  root.appendChild(card);
+  frame.appendChild(card);
+  root.appendChild(frame);
 }
 
 // ── public mount ──────────────────────────────────────────────────────────────

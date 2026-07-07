@@ -1,0 +1,7 @@
+{
+  "system_id": "eu-ai-scan-gemini-fixture",
+  "intended_purpose": "Conversational AI assistant that answers visitor questions about the product",
+  "compliance_target": "EU_AI_ACT",
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD"
+}

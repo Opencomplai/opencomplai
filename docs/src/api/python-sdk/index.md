@@ -4,14 +4,25 @@ The Opencomplai Python SDK provides a programmatic interface to the EU AI Act co
 
 ## Installation
 
-```bash
-# Install from PyPI (once published)
-pip install opencomplai
+=== "macOS / Linux"
+    ```bash
+    # Install from PyPI (once published)
+    pip install opencomplai
 
-# Install from source (pre-release)
-git clone https://github.com/Checkref-co/opencomplai
-uv pip install -e packages/sdk-python
-```
+    # Install from source (pre-release)
+    git clone https://github.com/Opencomplai/opencomplai
+    uv pip install -e packages/sdk-python
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Install from PyPI (once published)
+    pip install opencomplai
+
+    # Install from source (pre-release)
+    git clone https://github.com/Opencomplai/opencomplai
+    uv pip install -e packages/sdk-python
+    ```
 
 ## Quick Start
 

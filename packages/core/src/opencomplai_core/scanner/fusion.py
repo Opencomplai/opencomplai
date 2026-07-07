@@ -58,7 +58,15 @@ def fuse_evidence(evidence: list[EvidenceItem]) -> list[DetectionFinding]:
         reach_w = REACHABILITY_WEIGHT.get(best_reach, 0.2)
         strength = min(1.0, avg_conf * scope_w * reach_w * len(items) ** 0.3)
 
-        taxonomy = signal_category_to_taxonomy(category, token_label)
+        annex_area: int | None = None
+        for it in items:
+            ann = getattr(it, "intent_annotation", None)
+            if ann is not None and getattr(ann, "annex_iii_area", None) is not None:
+                annex_area = ann.annex_iii_area
+                break
+        taxonomy = signal_category_to_taxonomy(
+            category, token_label, annex_iii_area=annex_area
+        )
         rationale: list[str] = []
         if best_scope != EvidenceScope.PROD:
             rationale.append(f"scope_reduced:{best_scope.value}")

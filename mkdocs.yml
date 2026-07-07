@@ -1,0 +1,197 @@
+site_name: OpenComplai
+site_url: https://docs.opencomplai.com/
+site_description: Complete technical documentation for OpenComplai - Open source document analysis and processing platform
+repo_url: https://github.com/Opencomplai/opencomplai
+repo_name: opencomplai
+edit_uri: edit/main/docs/src/
+docs_dir: docs/src
+site_dir: site
+
+# Theme configuration
+theme:
+  name: material
+  custom_dir: docs/theme/overrides
+
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+      primary: custom
+      accent: custom
+
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+      primary: custom
+      accent: custom
+
+  font:
+    text: Inter
+    code: Roboto Mono
+
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.top
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+    - search.share
+    - toc.follow
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - header.autohide
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+      separator: '[\s\-,:!=\[\]()"`/]+'
+
+  - minify:
+      minify_html: true
+      minify_css: true
+      minify_js: true
+
+# Markdown extensions
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+
+  - pymdownx.betterem
+
+  - pymdownx.caret
+  - pymdownx.details
+
+  - pymdownx.emoji:
+      emoji_index: !!python/name:pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: Opencomplai
+      repo: opencomplai
+
+  - pymdownx.mark
+
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+  - pymdownx.tilde
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 2-3
+
+# Navigation structure
+nav:
+  - Home: index.md
+
+  - Getting Started:
+    - Overview: getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+    - First Project: getting-started/first-project.md
+    - Requirements: getting-started/requirements.md
+
+  - Guides:
+    - Overview: guides/index.md
+    - Customer Workflow: guides/customer-workflow.md
+    - Authentication: guides/authentication.md
+    - API Basics: guides/api-basics.md
+    - Error Handling: guides/error-handling.md
+    - Performance: guides/performance.md
+    - Deployment: guides/deployment.md
+    - Security: guides/security.md
+
+  - API Reference:
+    - Overview: api/index.md
+    - REST API: api/rest-api.md
+    - Python SDK:
+      - Overview: api/python-sdk/index.md
+      - Installation: api/python-sdk/installation.md
+      - API Reference: api/python-sdk/api-reference.md
+    - JavaScript SDK:
+      - Overview: api/javascript-sdk/index.md
+      - Installation: api/javascript-sdk/installation.md
+      - API Reference: api/javascript-sdk/api-reference.md
+    - Webhooks: api/webhooks.md
+
+  - Examples:
+    - Overview: examples/index.md
+    - Basic Usage: examples/basic-usage.md
+    - Advanced Patterns: examples/advanced-patterns.md
+    - Integrations: examples/integrations.md
+
+  - Concepts:
+    - Rules: concepts/rules.md
+    - Control Codes: concepts/control-codes.md
+    - Risk Levels: concepts/risk-levels.md
+    - Evidence: concepts/evidence.md
+    - Scan Workflow: concepts/scan-workflow.md
+
+  - Architecture:
+    - Overview: architecture/index.md
+    - System Design: architecture/system-design.md
+    - Design Decisions: architecture/design-decisions.md
+    - Data Model: architecture/data-model.md
+
+  - Contributing:
+    - Overview: contributing/index.md
+    - Development Setup: contributing/development-setup.md
+    - Coding Standards: contributing/coding-standards.md
+    - Testing: contributing/testing.md
+    - Code Review: contributing/code-review.md
+    - Release Process: contributing/release-process.md
+
+  - Troubleshooting:
+    - Overview: troubleshooting/index.md
+    - Common Issues: troubleshooting/common-issues.md
+    - FAQ: troubleshooting/faq.md
+    - Debugging: troubleshooting/debugging.md
+
+# Extra CSS / JS
+extra_css:
+  - stylesheets/tokens.css
+  - stylesheets/extra.css
+
+# Extra configuration
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Opencomplai/opencomplai
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/opencomplai
+
+# Copyright
+copyright: Copyright &copy; 2026 Opencomplai. All rights reserved.

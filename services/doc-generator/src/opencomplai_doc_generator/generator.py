@@ -120,7 +120,7 @@ def generate_dossier(
             "It constitutes structured evidence, not legal advice. "
             f"Assessment against Reg. (EU) 2024/1689. "
             f"Rule set version: {RULE_SET_VERSION}. "
-            f"Generated: {generated_at}."
+            "Generation timestamp is recorded in generated_at."
         ),
         section1=AnnexIVSection1(
             system_name=manifest.system_id,

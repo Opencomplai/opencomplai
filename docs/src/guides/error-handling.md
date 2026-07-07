@@ -18,11 +18,18 @@ The `degraded_complete` state exits with code `0` in local mode and `1` in CI mo
 
 When `check` exits 1, inspect the artifact:
 
-```bash
-opencomplai check --scan-mode ci --output json | tee compliance-artifact.json
-cat compliance-artifact.json | python3 -c \
-  "import json,sys; a=json.load(sys.stdin); [print(c) for c in a['failed_controls']]"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --scan-mode ci --output json | tee compliance-artifact.json
+    cat compliance-artifact.json | python3 -c \
+      "import json,sys; a=json.load(sys.stdin); [print(c) for c in a['failed_controls']]"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --scan-mode ci --output json | Tee-Object compliance-artifact.json
+    python -c "import json,sys; a=json.load(open('compliance-artifact.json')); [print(c) for c in a['failed_controls']]"
+    ```
 
 Then look up the rule in `packages/core/src/opencomplai_core/rules.py` and follow the `rationale` in the rule result to understand what needs to change.
 

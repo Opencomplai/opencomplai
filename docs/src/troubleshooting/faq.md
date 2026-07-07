@@ -22,11 +22,19 @@ No. Opencomplai automates the technical checks in the EU AI Act obligations but 
 
 Yes. The CLI and SDK work in fully local mode:
 
-```bash
-pip install opencomplai
-opencomplai init --system-id my-system --intended-purpose "..."
-opencomplai check  # uses local rule engine, no Docker needed
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    opencomplai init --system-id my-system --intended-purpose "..."
+    opencomplai check  # uses local rule engine, no Docker needed
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    opencomplai init --system-id my-system --intended-purpose "..."
+    opencomplai check  # uses local rule engine, no Docker needed
+    ```
 
 Docker is only required to run the full service stack (gateway API, evidence vault, doc generator).
 
@@ -34,12 +42,21 @@ Docker is only required to run the full service stack (gateway API, evidence vau
 
 The SDK is currently pre-release (`0.1.0-dev`). If `pip install opencomplai` fails with a "not found" error, install from source:
 
-```bash
-git clone https://github.com/Checkref-co/opencomplai
-cd opencomplai
-uv pip install -e packages/sdk-python
-uv pip install -e packages/cli
-```
+=== "macOS / Linux"
+    ```bash
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    uv pip install -e packages/sdk-python
+    uv pip install -e packages/cli
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    uv pip install -e packages/sdk-python
+    uv pip install -e packages/cli
+    ```
 
 ### What Python version is required?
 
@@ -64,9 +81,15 @@ No. Run `init` once per system. Subsequent `check` runs read the existing manife
 
 Don't set `OPENCOMPLAI_API_URL`. The CLI falls back to the local rule engine automatically:
 
-```bash
-opencomplai check   # local mode, no network needed
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check   # local mode, no network needed
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check   # local mode, no network needed
+    ```
 
 ### What is `compliance-artifact.json`?
 
@@ -74,11 +97,19 @@ The `ScanStatusArtifact` written to the current directory after every `check` ru
 
 ### How do I gate a CI pipeline on the result?
 
-```bash
-opencomplai check --scan-mode ci
-# The exit code is the gate:
-# 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --scan-mode ci
+    # The exit code is the gate:
+    # 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --scan-mode ci
+    # The exit code is the gate:
+    # 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
+    ```
 
 Any non-zero exit code will fail the CI step.
 
@@ -120,11 +151,19 @@ The `SubstantialModificationRule` (`EU_AIA_ART25_MODIFICATION_TRAP`) triggers wh
 
 ### How do I reset the database?
 
-```bash
-docker compose -f infra/compose/docker-compose.yml down -v
-# -v removes named volumes including the PostgreSQL data volume
-docker compose -f infra/compose/docker-compose.yml up -d
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml down -v
+    # -v removes named volumes including the PostgreSQL data volume
+    docker compose -f infra/compose/docker-compose.yml up -d
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml down -v
+    # -v removes named volumes including the PostgreSQL data volume
+    docker compose -f infra/compose/docker-compose.yml up -d
+    ```
 
 ---
 

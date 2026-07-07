@@ -1,10 +1,8 @@
 """Tests for opencomplai_ai.config."""
 
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-
 from opencomplai_ai.config import get_active_model, set_active_model
 from opencomplai_ai.models import MODEL_CATALOG
 

@@ -1,14 +1,14 @@
 [project]
 name = "opencomplai"
-version = "0.2.0-dev"
+version = "0.1.2"
 description = "Opencomplai Python SDK for EU AI Act compliance"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]
 requires-python = ">=3.11"
 dependencies = [
-    "opencomplai-core>=0.2.0-dev",
-    "opencomplai-cli>=0.2.0-dev",
+    "opencomplai-core>=0.1.0",
+    "opencomplai-cli>=0.1.0",
 ]
 
 [project.urls]

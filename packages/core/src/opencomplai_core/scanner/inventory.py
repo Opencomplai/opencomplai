@@ -158,9 +158,8 @@ def build_repo_inventory(
     patterns = list(ignore_patterns or [])
     if extra_excludes:
         for name in extra_excludes:
-            pat = name if name.endswith("/") else name
-            if pat not in patterns:
-                patterns.append(pat)
+            if name not in patterns:
+                patterns.append(name)
 
     repo_root = repo_root.resolve()
     inventory = RepoInventory(repo_root=repo_root, limits=limits)

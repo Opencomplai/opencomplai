@@ -13,9 +13,15 @@ Manage enrollment in the Opencomplai Premium Dashboard.
 
 ## dashboard enroll
 
-```bash
-opencomplai dashboard enroll --tenant <id> --token <token> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai dashboard enroll --tenant <id> --token <token> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai dashboard enroll --tenant <id> --token <token> [OPTIONS]
+    ```
 
 Opts an OSS install into the Premium Dashboard by:
 
@@ -43,12 +49,18 @@ Opts an OSS install into the Premium Dashboard by:
 
 ### Example
 
-```bash
-opencomplai dashboard enroll \
-  --tenant "t_abc123" \
-  --token  "bt_xyz789" \
-  --dashboard-url "https://app.opencomplai.com"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai dashboard enroll \
+      --tenant "t_abc123" \
+      --token  "bt_xyz789" \
+      --dashboard-url "https://app.opencomplai.com"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai dashboard enroll --tenant "t_abc123" --token "bt_xyz789" --dashboard-url "https://app.opencomplai.com"
+    ```
 
 **Output:**
 
@@ -79,9 +91,15 @@ Re-running `enroll` with the same tenant and install returns the existing enroll
 
 ## dashboard withdraw
 
-```bash
-opencomplai dashboard withdraw --tenant <id> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai dashboard withdraw --tenant <id> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai dashboard withdraw --tenant <id> [OPTIONS]
+    ```
 
 Revokes dashboard enrollment for this install. Emits a `consent_revoked` ledger event and removes the egress allowlist entry within the same command run.
 
@@ -94,10 +112,16 @@ Revokes dashboard enrollment for this install. Emits a `consent_revoked` ledger 
 
 ### Example
 
-```bash
-opencomplai dashboard withdraw \
-  --tenant "t_abc123"
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai dashboard withdraw \
+      --tenant "t_abc123"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai dashboard withdraw --tenant "t_abc123"
+    ```
 
 **Output:**
 

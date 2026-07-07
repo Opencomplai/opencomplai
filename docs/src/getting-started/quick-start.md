@@ -22,20 +22,22 @@ Python 3.11+ and pip.
 
 ## Install the SDK and CLI
 
-```bash
-pip install opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    ```
 
 !!! note "Pre-release — install from source"
     `opencomplai` is at `0.1.0.dev0` and is **not yet on PyPI**. Install from
     source instead. The local `core` and `cli` packages must be installed in the
     **same command** as the SDK (they are not on PyPI, so pip cannot resolve them
-    separately):
-    ```bash
-    git clone https://github.com/Checkref-co/opencomplai
-    cd opencomplai
-    pip install -e packages/core -e packages/cli -e packages/sdk-python
-    ```
+    separately) — see [Installation](installation.md#install-from-source) for
+    tabbed macOS/Linux and Windows commands.
     Running `pip install -e packages/sdk-python` on its own fails with
     `No matching distribution found for opencomplai-cli`. See
     [Installation](installation.md) for the `uv` alternative and full details.
@@ -43,9 +45,15 @@ pip install opencomplai
 The install provides the `opencomplai` command. Verify it (there is **no**
 `--version` flag — use `--help`):
 
-```bash
-opencomplai --help
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai --help
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai --help
+    ```
 
 ## Initialise your system manifest
 
@@ -86,9 +94,15 @@ On subsequent runs the first line instead reads
 
 ## Run your first compliance check
 
-```bash
-opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check
+    ```
 
 Expected output for the `customer support chatbot` purpose (a **MINIMAL**-risk
 use case, so the check **passes**):
@@ -184,9 +198,15 @@ Create `eval-set.json`:
 }
 ```
 
-```bash
-opencomplai check --sample-set eval-set.json
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --sample-set eval-set.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --sample-set eval-set.json
+    ```
 
 ```text
 Opencomplai Compliance Check
@@ -206,9 +226,15 @@ If an output contained, say, `SSN 123-45-6789` or
 
 ## JSON output for CI
 
-```bash
-opencomplai check --output json
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --output json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --output json
+    ```
 
 The `--output json` flag prints the full `ScanStatusArtifact` to stdout:
 

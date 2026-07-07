@@ -4,9 +4,15 @@ Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 
 ## Synopsis
 
-```bash
-opencomplai docs generate --system-id <id> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai docs generate --system-id <id> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai docs generate --system-id <id> [OPTIONS]
+    ```
 
 ## Options
 
@@ -27,21 +33,31 @@ opencomplai docs generate --system-id <id> [OPTIONS]
 
 ## Examples
 
-```bash
-# Service-backed (Docker Compose stack running)
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai docs generate \
-  --system-id "loan-decision-model" \
-  --commit-ref "$(git rev-parse HEAD)" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --provider-name "ACME Financial AI"
+=== "macOS / Linux"
+    ```bash
+    # Service-backed (Docker Compose stack running)
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai docs generate \
+      --system-id "loan-decision-model" \
+      --commit-ref "$(git rev-parse HEAD)" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --provider-name "ACME Financial AI"
 
-# Local generation
-opencomplai docs generate \
-  --system-id "loan-decision-model" \
-  --intended-purpose "automated credit scoring for retail lending" \
-  --provider-name "ACME Financial AI" \
-  --output-dir ./compliance-docs/
-```
+    # Local generation
+    opencomplai docs generate \
+      --system-id "loan-decision-model" \
+      --intended-purpose "automated credit scoring for retail lending" \
+      --provider-name "ACME Financial AI" \
+      --output-dir ./compliance-docs/
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Service-backed (Docker Compose stack running)
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"; opencomplai docs generate --system-id "loan-decision-model" --commit-ref (git rev-parse HEAD) --intended-purpose "automated credit scoring for retail lending" --provider-name "ACME Financial AI"
+
+    # Local generation
+    opencomplai docs generate --system-id "loan-decision-model" --intended-purpose "automated credit scoring for retail lending" --provider-name "ACME Financial AI" --output-dir ./compliance-docs/
+    ```
 
 ## Output (human)
 

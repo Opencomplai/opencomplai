@@ -1,12 +1,18 @@
 # checker
 
-Run the EU AI Act applicability checker (FLI parity, checker version `fli-2025-07-28`).
+Run the EU AI Act applicability checker (checker version `checker-2025-07-28`).
 
 ## Synopsis
 
-```bash
-opencomplai checker [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai checker [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai checker [OPTIONS]
+    ```
 
 ## Options
 
@@ -25,32 +31,61 @@ opencomplai checker [OPTIONS]
 
 ## Examples
 
-```bash
-# Interactive wizard
-opencomplai checker
+=== "macOS / Linux"
+    ```bash
+    # Interactive wizard
+    opencomplai checker
 
-# Open the browser-based checker on the docs site
-opencomplai checker --web
+    # Open the browser-based checker on the docs site
+    opencomplai checker --web
 
-# Serve the checker locally (fully offline)
-opencomplai checker --web --local
+    # Serve the checker locally (fully offline)
+    opencomplai checker --web --local
 
-# Replay golden answers
-opencomplai checker --answers answers.json -o json
+    # Replay golden answers
+    opencomplai checker --answers answers.json -o json
 
-# Export all formats
-opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
+    # Export all formats
+    opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
 
-# Pre-fill a manifest from checker results
-opencomplai checker --answers answers.json --write-manifest system-manifest.json
-```
+    # Pre-fill a manifest from checker results
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Interactive wizard
+    opencomplai checker
+
+    # Open the browser-based checker on the docs site
+    opencomplai checker --web
+
+    # Serve the checker locally (fully offline)
+    opencomplai checker --web --local
+
+    # Replay golden answers
+    opencomplai checker --answers answers.json -o json
+
+    # Export all formats
+    opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
+
+    # Pre-fill a manifest from checker results
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    ```
 
 ## Init integration
 
-```bash
-opencomplai init --interactive          # runs the checker wizard first
-opencomplai init --interactive --skip-checker
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai init --interactive          # runs the checker wizard first
+    opencomplai init --interactive --skip-checker
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai init --interactive          # runs the checker wizard first
+    opencomplai init --interactive --skip-checker
+    ```
 
 ## Browser-based checker
 
@@ -67,6 +102,6 @@ environment variable.
 
 ## Disclaimer
 
-Opencomplai is not affiliated with the Future of Life Institute or the European
-Union. Results are informational only — not legal advice. Seek professional legal
-counsel for formal compliance decisions.
+Opencomplai is not affiliated with the European Union. Results are informational
+only — not legal advice. Seek professional legal counsel for formal compliance
+decisions.

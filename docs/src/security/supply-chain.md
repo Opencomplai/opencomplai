@@ -8,7 +8,7 @@ signatures are produced and how you can verify them before deploying.
 
 Every image published from this repository under
 `ghcr.io/opencomplai/opencomplai/<service>` is built, signed, and attested by
-the [`supply-chain.yml`](https://github.com/Checkref-co/opencomplai/actions/workflows/supply-chain.yml)
+the [`supply-chain.yml`](https://github.com/Opencomplai/opencomplai/actions/workflows/supply-chain.yml)
 GitHub Actions workflow. The workflow runs on every version tag (`v*.*.*`) and
 on manual dispatch.
 
@@ -24,12 +24,21 @@ SPDX-JSON format and attached to the image as a cosign **in-toto attestation**
 
 ## Verifying an image signature
 
-```bash
-cosign verify \
-  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-  --certificate-identity-regexp "^https://github.com/Checkref-co/opencomplai/\.github/workflows/supply-chain\.yml@" \
-  ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
-```
+=== "macOS / Linux"
+    ```bash
+    cosign verify \
+      --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+      --certificate-identity-regexp "^https://github.com/Opencomplai/opencomplai/\.github/workflows/supply-chain\.yml@" \
+      ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cosign verify `
+      --certificate-oidc-issuer https://token.actions.githubusercontent.com `
+      --certificate-identity-regexp "^https://github.com/Opencomplai/opencomplai/\.github/workflows/supply-chain\.yml@" `
+      ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
+    ```
 
 The command exits 0 and prints the signing certificate when the signature is
 valid and the identity matches the expected workflow.
@@ -38,9 +47,16 @@ valid and the identity matches the expected workflow.
 
 Use the helper script bundled with the repository:
 
-```bash
-./scripts/verify-sbom.sh ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
-```
+=== "macOS / Linux"
+    ```bash
+    ./scripts/verify-sbom.sh ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Bash script — run via WSL2 or Git Bash
+    ./scripts/verify-sbom.sh ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0
+    ```
 
 It runs both `cosign verify` and `cosign verify-attestation` and decodes the
 predicate name from the SBOM payload.
@@ -50,22 +66,38 @@ predicate name from the SBOM payload.
 The SBOM is **SPDX-JSON** (SPDX 2.3). You can extract it from the attestation
 and pipe it into other tooling:
 
-```bash
-cosign download attestation \
-  --predicate-type https://spdx.dev/Document \
-  ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 \
-  | jq -r '.payload | @base64d | fromjson | .predicate' > gateway-api.spdx.json
-```
+=== "macOS / Linux"
+    ```bash
+    cosign download attestation \
+      --predicate-type https://spdx.dev/Document \
+      ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 \
+      | jq -r '.payload | @base64d | fromjson | .predicate' > gateway-api.spdx.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cosign download attestation `
+      --predicate-type https://spdx.dev/Document `
+      ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 `
+      | jq -r '.payload | @base64d | fromjson | .predicate' > gateway-api.spdx.json
+    ```
 
 ## Scanning for known vulnerabilities
 
 `syft` and [`grype`](https://github.com/anchore/grype) compose cleanly:
 
-```bash
-syft ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 -o spdx-json \
-  | grype --fail-on high
-```
+=== "macOS / Linux"
+    ```bash
+    syft ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 -o spdx-json \
+      | grype --fail-on high
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    syft ghcr.io/opencomplai/opencomplai/gateway-api:1.0.0 -o spdx-json `
+      | grype --fail-on high
+    ```
 
 CI runs an equivalent scan on every pull request via the `vulnerability-scan`
-job in [`ci-docker.yml`](https://github.com/Checkref-co/opencomplai/actions/workflows/ci-docker.yml).
+job in [`ci-docker.yml`](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-docker.yml).
 CRITICAL and HIGH fixable findings fail the build.

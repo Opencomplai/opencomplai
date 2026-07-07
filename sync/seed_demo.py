@@ -372,6 +372,19 @@ def main() -> None:
 
     _print_summary(badge_urls, scan_results, dossier_ids, dry_run=args.dry_run)
 
+    if not args.dry_run:
+        missing_badges = [
+            system["system_id"]
+            for system in DEMO_SYSTEMS
+            if not badge_urls.get(system["system_id"], "").startswith("http")
+        ]
+        if missing_badges:
+            print(
+                f"[ERROR] Demo seed incomplete — badges missing for: {missing_badges}",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

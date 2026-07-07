@@ -28,13 +28,15 @@ export function configureTelemetry(): void {
   type GetNodeAutoInstrumentations = () => unknown[];
   type PrometheusExporterCtor = new (opts: { port: number }) => unknown;
   type ResourceCtor = new (attrs: Record<string, string>) => unknown;
+  type ResourceFromAttributes = (attrs: Record<string, string>) => unknown;
 
   // Definite-assignment assertions: all five are set inside the try block;
   // execution reaches past the try only when all assignments succeeded.
   let NodeSDK!: NodeSDKCtor;
   let getNodeAutoInstrumentations!: GetNodeAutoInstrumentations;
   let PrometheusExporter!: PrometheusExporterCtor;
-  let Resource!: ResourceCtor;
+  let Resource: ResourceCtor | undefined;
+  let resourceFromAttributes: ResourceFromAttributes | undefined;
   let SEMRESATTRS_SERVICE_NAME!: string;
 
   try {
@@ -45,7 +47,7 @@ export function configureTelemetry(): void {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     ({ PrometheusExporter } = require('@opentelemetry/exporter-prometheus'));
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    ({ Resource } = require('@opentelemetry/resources'));
+    ({ Resource, resourceFromAttributes } = require('@opentelemetry/resources'));
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     ({ SEMRESATTRS_SERVICE_NAME } = require('@opentelemetry/semantic-conventions'));
   } catch {
@@ -54,9 +56,19 @@ export function configureTelemetry(): void {
   }
 
   const prometheusExporter = new PrometheusExporter({ port: METRICS_PORT });
+  const resourceAttrs = { [SEMRESATTRS_SERVICE_NAME]: SERVICE_NAME };
+  const resource = resourceFromAttributes
+    ? resourceFromAttributes(resourceAttrs)
+    : Resource
+      ? new Resource(resourceAttrs)
+      : undefined;
+
+  if (!resource) {
+    return;
+  }
 
   const sdk = new NodeSDK({
-    resource: new Resource({ [SEMRESATTRS_SERVICE_NAME]: SERVICE_NAME }),
+    resource,
     metricReader: prometheusExporter,
     instrumentations: [getNodeAutoInstrumentations()],
   });

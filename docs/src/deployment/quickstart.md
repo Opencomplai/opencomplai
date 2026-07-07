@@ -14,11 +14,19 @@ Reference Docker deployment for the full Opencomplai platform.
 
 ## Clone and configure
 
-```bash
-git clone https://github.com/Checkref-co/opencomplai
-cd opencomplai
-cp infra/compose/.env.example infra/compose/.env
-```
+=== "macOS / Linux"
+    ```bash
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    cp infra/compose/.env.example infra/compose/.env
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    git clone https://github.com/Opencomplai/opencomplai
+    cd opencomplai
+    Copy-Item infra/compose/.env.example infra/compose/.env
+    ```
 
 Edit `infra/compose/.env` — at minimum you **must** set `POSTGRES_PASSWORD` or the stack will refuse to start:
 
@@ -30,19 +38,35 @@ See [Configuration](configuration.md) for the full env-var reference.
 
 ## Start the stack
 
-```bash
-docker compose -f infra/compose/docker-compose.yml up --build -d
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml up --build -d
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml up --build -d
+    ```
 
 ## Verify all services are healthy
 
-```bash
-docker compose -f infra/compose/docker-compose.yml ps
-# All services should show "(healthy)"
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml ps
+    # All services should show "(healthy)"
 
-curl http://localhost:8080/health
-# {"status":"ok","service":"gateway-api","version":"0.1.0-dev"}
-```
+    curl http://localhost:8080/health
+    # {"status":"ok","service":"gateway-api","version":"0.1.0-dev"}
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml ps
+    # All services should show "(healthy)"
+
+    Invoke-WebRequest -Uri "http://localhost:8080/health"
+    # {"status":"ok","service":"gateway-api","version":"0.1.0-dev"}
+    ```
 
 ## Service ports (default)
 
@@ -58,19 +82,36 @@ curl http://localhost:8080/health
 
 ## Run a compliance check against the stack
 
-```bash
-pip install opencomplai
-opencomplai init --system-id "my-model" --intended-purpose "customer support chatbot"
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    opencomplai init --system-id "my-model" --intended-purpose "customer support chatbot"
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    opencomplai init --system-id "my-model" --intended-purpose "customer support chatbot"
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+    ```
 
 ## Stop the stack
 
-```bash
-docker compose -f infra/compose/docker-compose.yml down
-# To also remove volumes (deletes all evidence data):
-docker compose -f infra/compose/docker-compose.yml down -v
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml down
+    # To also remove volumes (deletes all evidence data):
+    docker compose -f infra/compose/docker-compose.yml down -v
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml down
+    # To also remove volumes (deletes all evidence data):
+    docker compose -f infra/compose/docker-compose.yml down -v
+    ```
 
 ## Air-gap mode
 

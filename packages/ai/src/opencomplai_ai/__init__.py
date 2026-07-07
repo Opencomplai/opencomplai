@@ -4,7 +4,7 @@ from __future__ import annotations
 
 __version__ = "0.1.0"
 
-from opencomplai_ai.models import IntentAnnotation, MODEL_CATALOG
+from opencomplai_ai.models import MODEL_CATALOG, IntentAnnotation
 from opencomplai_ai.registry import ModelRegistry
 
-__all__ = ["IntentAnnotation", "MODEL_CATALOG", "ModelRegistry", "__version__"]
+__all__ = ["MODEL_CATALOG", "IntentAnnotation", "ModelRegistry", "__version__"]

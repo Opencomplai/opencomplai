@@ -31,12 +31,13 @@ class DataflowDetector(BaseDetector):
         ai_locations = {
             c.location.split(":")[0]
             for c in features.callsites
-            if match_token_identifier(c.name, "ai_sdks") or match_token_identifier(c.name, "ml_frameworks")
+            if match_token_identifier(c.name, "ai_sdks")
+            or match_token_identifier(c.name, "ml_frameworks")
         }
         for call in features.callsites:
-            if call.location.split(":")[0] not in ai_locations and not match_token_identifier(
-                call.name, "ai_sdks"
-            ):
+            if call.location.split(":")[
+                0
+            ] not in ai_locations and not match_token_identifier(call.name, "ai_sdks"):
                 continue
             token = match_token_identifier(call.name, "pii_hints")
             if token:

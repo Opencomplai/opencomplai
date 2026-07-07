@@ -12,7 +12,7 @@ from opencomplai_core.compliance_checker.models import CheckerSession, EntityTyp
 
 
 def test_checker_version_constant():
-    assert CHECKER_VERSION == "fli-2025-07-28"
+    assert CHECKER_VERSION == "checker-2025-07-28"
 
 
 def test_catalogs_load():

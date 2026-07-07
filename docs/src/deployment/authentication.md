@@ -17,9 +17,15 @@
 
 ## API-Key Mode (Self-Hosted)
 
-```bash
-OPENCOMPLAI_API_KEY=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
-```
+=== "macOS / Linux"
+    ```bash
+    OPENCOMPLAI_API_KEY=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_KEY = python -c "import secrets; print(secrets.token_urlsafe(32))"
+    ```
 
 All non-health requests must carry `x-api-key: <key>`.
 

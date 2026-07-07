@@ -1,0 +1,10 @@
+{
+  "name": "opencomplai-enterprise-workspace",
+  "private": true,
+  "pnpm": {
+    "overrides": {
+      "fast-uri": "3.1.2",
+      "protobufjs": "8.6.5"
+    }
+  }
+}

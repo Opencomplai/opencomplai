@@ -1,0 +1,7 @@
+{
+  "system_id": "under-declared-scoring",
+  "intended_purpose": "rule-based scoring",
+  "compliance_target": "EU_AI_ACT",
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD"
+}

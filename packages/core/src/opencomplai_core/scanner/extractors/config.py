@@ -11,6 +11,8 @@ from opencomplai_core.scanner.inventory import RepoInventory
 CONFIG_PATTERNS = [
     (re.compile(r"OPENAI_API_KEY", re.I), "config_key"),
     (re.compile(r"ANTHROPIC_API_KEY", re.I), "config_key"),
+    (re.compile(r"GEMINI_API_KEY", re.I), "config_key"),
+    (re.compile(r"GOOGLE_API_KEY", re.I), "config_key"),
     (re.compile(r"AZURE_OPENAI_ENDPOINT", re.I), "config_key"),
     (re.compile(r"BEDROCK", re.I), "config_key"),
     (re.compile(r"VERTEX_AI", re.I), "config_key"),
@@ -20,6 +22,8 @@ CONFIG_PATTERNS = [
     (re.compile(r"bedrock-runtime", re.I), "endpoint"),
     (re.compile(r"aiplatform\.googleapis\.com", re.I), "endpoint"),
     (re.compile(r"generativelanguage\.googleapis\.com", re.I), "endpoint"),
+    (re.compile(r"generateContent", re.I), "endpoint"),
+    (re.compile(r"gemini-[\d]", re.I), "endpoint"),
     (re.compile(r"localhost:11434", re.I), "endpoint"),
 ]
 

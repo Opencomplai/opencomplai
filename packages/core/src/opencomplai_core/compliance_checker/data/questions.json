@@ -1,0 +1,90 @@
+{
+  "gate_is_ai_system": {
+    "label": "Is your system an 'AI system' under the EU AI Act (Article 3(1))?",
+    "section": "AI system"
+  },
+  "e1_entity_type": {
+    "label": "Which kind of entity is your organisation?",
+    "section": "Operator role",
+    "options": {
+      "provider": "Provider",
+      "deployer": "Deployer",
+      "distributor": "Distributor",
+      "importer": "Importer",
+      "product_manufacturer": "Product manufacturer",
+      "authorised_rep": "Authorised representative"
+    }
+  },
+  "e2_modifications": {
+    "label": "Do you (or a downstream operator) make substantial modifications to the system?",
+    "section": "Operator role"
+  },
+  "e3_product_integration": {
+    "label": "Does your product integrate an AI system under your manufacturer name?",
+    "section": "Operator role",
+    "options": {
+      "integrated": "Yes — placed on market or put into service with my product",
+      "none": "No — none of the above"
+    }
+  },
+  "hr1_annex_i": {
+    "label": "Is the system a product with AI as safety component under Annex I harmonisation law?",
+    "section": "Risk classification"
+  },
+  "hr2_annex_iii": {
+    "label": "Does the system fall within an Annex III high-risk use case?",
+    "section": "Risk classification"
+  },
+  "hr3_art_6_3": {
+    "label": "Does Article 6(3) apply (safety component required for product conformity)?",
+    "section": "Risk classification"
+  },
+  "hr4_narrow_task": {
+    "label": "Is the AI intended only for a narrow procedural task (Art 6(3) exception)?",
+    "section": "Risk classification"
+  },
+  "hr5_no_significant_risk": {
+    "label": "Does the system NOT pose significant risk to health, safety, or fundamental rights?",
+    "section": "Risk classification"
+  },
+  "hr6_accessory": {
+    "label": "Is the system purely accessory to the relevant human decision (Art 6(3))?",
+    "section": "Risk classification"
+  },
+  "s1_in_scope": {
+    "label": "Are you placing, deploying, or using the system's output in the EU?",
+    "section": "Scope"
+  },
+  "s1_scope_region": {
+    "label": "Where is your organisation established?",
+    "section": "Scope",
+    "options": {
+      "eu": "Established or located in the EU",
+      "third_country": "Outside the EU"
+    }
+  },
+  "s1_gpai": {
+    "label": "Are you placing a General-Purpose AI model on the EU market?",
+    "section": "Scope"
+  },
+  "s1_gpai_systemic_risk": {
+    "label": "Does the GPAI model have systemic risk (high impact capabilities)?",
+    "section": "Scope"
+  },
+  "r2_excluded": {
+    "label": "Is the system excluded (military, R&D only, open-source not yet placed, personal use)?",
+    "section": "Scope"
+  },
+  "r3_prohibited": {
+    "label": "Does the system perform prohibited practices under Article 5?",
+    "section": "Obligations"
+  },
+  "r4_transparency": {
+    "label": "Does the system require transparency obligations (chatbot, deepfake, synthetic content)?",
+    "section": "Obligations"
+  },
+  "r5_fria": {
+    "label": "Are you a public body or private entity providing public services (FRIA under Art 27)?",
+    "section": "Obligations"
+  }
+}

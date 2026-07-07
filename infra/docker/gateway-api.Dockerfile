@@ -5,7 +5,7 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@9 --activate
 
-COPY pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 
 WORKDIR /app/services/gateway-api
 COPY services/gateway-api/package.json ./

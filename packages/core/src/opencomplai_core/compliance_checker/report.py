@@ -6,10 +6,50 @@ import json
 from pathlib import Path
 from typing import Any
 
-from opencomplai_core.compliance_checker.catalog import load_help_content
+from opencomplai_core.compliance_checker.catalog import load_help_content, load_questions
 from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
 
 _DISCLAIMER = load_help_content()["disclaimer"]["body"]
+
+
+def _format_answer_value(value: Any, options: dict[str, str] | None) -> str:
+    """Format a raw answer value for display (bool -> Yes/No, select -> option label)."""
+    if isinstance(value, bool):
+        return "Yes" if value else "No"
+    if options and isinstance(value, str) and value in options:
+        return options[value]
+    if value is None:
+        return "(no answer)"
+    return str(value)
+
+
+def _answer_entries(answers: dict[str, Any]) -> list[tuple[str, str, str]]:
+    """Return (section, question label, formatted answer) triples.
+
+    Ordered by the question catalog so the summary reads in wizard order
+    regardless of the input dict's order. Any answer key not found in the
+    catalog (e.g. a newer question not yet ported) is appended at the end
+    under a title-cased fallback label rather than silently dropped.
+    """
+    catalog = load_questions()
+    entries: list[tuple[str, str, str]] = []
+    seen: set[str] = set()
+    for key, meta in catalog.items():
+        if key not in answers:
+            continue
+        seen.add(key)
+        entries.append(
+            (
+                meta.get("section", ""),
+                meta.get("label", key),
+                _format_answer_value(answers[key], meta.get("options")),
+            )
+        )
+    for key, value in answers.items():
+        if key in seen:
+            continue
+        entries.append(("", key.replace("_", " ").title(), _format_answer_value(value, None)))
+    return entries
 
 
 def render_json(result: ComplianceCheckerResult, *, indent: int = 2) -> str:
@@ -29,6 +69,19 @@ def render_markdown(result: ComplianceCheckerResult) -> str:
     ]
     if result.effective_entity is not None:
         lines.append(f"**Effective operator role:** {result.effective_entity.value}")
+
+    lines.extend(["", "## Your answers", ""])
+    entries = _answer_entries(result.answers)
+    if entries:
+        last_section = None
+        for section, label, value in entries:
+            if section and section != last_section:
+                lines.append(f"**{section}**")
+                last_section = section
+            lines.append(f"- {label} — {value}")
+    else:
+        lines.append("None.")
+
     lines.extend(["", "## Status changes", ""])
     if result.status_changes:
         for item in result.status_changes:
@@ -84,6 +137,18 @@ def render_pdf(result: ComplianceCheckerResult) -> bytes:
     if result.effective_entity is not None:
         write_block(f"Effective operator role: {result.effective_entity.value}")
 
+    write_block("Your answers", bold=True)
+    entries = _answer_entries(result.answers)
+    if entries:
+        last_section = None
+        for section, label, value in entries:
+            if section and section != last_section:
+                write_block(section, bold=True)
+                last_section = section
+            write_block(f"{label}: {value}")
+    else:
+        write_block("None.")
+
     write_block("Status changes", bold=True)
     if result.status_changes:
         for item in result.status_changes:
@@ -97,6 +162,12 @@ def render_pdf(result: ComplianceCheckerResult) -> bytes:
         for item in result.obligations:
             write_block(f"{item.title} ({item.article_ref})", bold=True)
             write_block(item.body)
+    else:
+        write_block("None.")
+
+    write_block("Determination path", bold=True)
+    if result.determination_path:
+        write_block("\n".join(result.determination_path))
     else:
         write_block("None.")
 

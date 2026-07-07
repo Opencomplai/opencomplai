@@ -28,10 +28,16 @@ The ledger chain can be independently verified with `tools/verify-ledger/verify_
 
 ## Verifying the ledger
 
-```bash
-python3 tools/verify-ledger/verify_ledger.py \
-  --gateway-url http://localhost:8080
-```
+=== "macOS / Linux"
+    ```bash
+    python3 tools/verify-ledger/verify_ledger.py \
+      --gateway-url http://localhost:8080
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    python tools\verify-ledger\verify_ledger.py --gateway-url http://localhost:8080
+    ```
 
 Expected output on a valid chain:
 

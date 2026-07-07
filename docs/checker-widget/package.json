@@ -11,8 +11,8 @@
     "dev": "node build.mjs --watch"
   },
   "devDependencies": {
-    "esbuild": "^0.21.5",
+    "esbuild": "^0.28.1",
     "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "vitest": "^3.2.6"
   }
 }

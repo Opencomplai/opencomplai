@@ -29,7 +29,7 @@ console = Console()
 err_console = Console(stderr=True)
 
 DISCLAIMER = (
-    "Opencomplai is not affiliated with the Future of Life Institute or the European Union. "
+    "Opencomplai is not affiliated with the European Union. "
     "Results are informational only — not legal advice. Seek professional legal counsel."
 )
 

@@ -9,7 +9,7 @@ import pytest
 from opencomplai_core.compliance_checker.engine import evaluate
 from opencomplai_core.compliance_checker.models import CheckerSession, EntityType
 
-FIXTURES_DIR = Path(__file__).parent / "fixtures" / "fli_golden"
+FIXTURES_DIR = Path(__file__).parent / "fixtures" / "checker_golden"
 
 
 def _fixture_paths() -> list[Path]:

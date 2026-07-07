@@ -4,9 +4,15 @@ Run assessments programmatically using the Opencomplai Python SDK.
 
 ## Install
 
-```bash
-pip install opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai
+    ```
 
 !!! note "Pre-release"
     See [Installation](../getting-started/installation.md) for source-install fallback.

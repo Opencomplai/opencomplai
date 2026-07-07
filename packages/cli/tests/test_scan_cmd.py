@@ -257,3 +257,84 @@ def test_scan_fail_on_new_major_exits_one(tmp_path):
         assert result.exit_code == 1
     else:
         assert result.exit_code in (0, 1)
+
+
+def test_intent_risk_tier_sorting_and_truncation_footer():
+    from unittest.mock import MagicMock, patch
+
+    from opencomplai_ai.models import IntentAnnotation
+    from opencomplai_cli.main import (
+        _intent_risk_tier,
+        _intent_sort_key,
+        _render_intent_analysis,
+    )
+    from opencomplai_core.models import (
+        EvidenceItem,
+        EvidenceKind,
+        EvidenceScope,
+        Reachability,
+        SignalCategory,
+    )
+
+    prohibited = IntentAnnotation(
+        art5_prohibited=True,
+        decision_autonomy="autonomous",
+        consequential="yes",
+        model_id="test",
+        confidence=0.99,
+    )
+    credit = IntentAnnotation(
+        annex_iii_area=5,
+        decision_autonomy="autonomous",
+        consequential="yes",
+        model_id="test",
+        confidence=0.9,
+    )
+    display = IntentAnnotation(
+        decision_autonomy="display_only",
+        consequential="no",
+        model_id="test",
+        confidence=0.5,
+    )
+
+    assert _intent_risk_tier(prohibited) == "prohibited"
+    assert _intent_risk_tier(credit) == "autonomous_high_risk"
+
+    def _ev(ann: IntentAnnotation, idx: int) -> EvidenceItem:
+        return EvidenceItem(
+            evidence_id=f"ev_{idx}",
+            evidence_kind=EvidenceKind.CALLSITE,
+            category=SignalCategory.PROMPT_AGENT,
+            token_hash=f"sha256:{idx}",
+            token_label=f"fn_{idx}",
+            locations=[f"src/a.py:{idx}"],
+            scope=EvidenceScope.PROD,
+            reachability=Reachability.INTERNAL_CALLCHAIN,
+            detector_id="DET_INTENT_V1",
+            detector_version="1.0.0",
+            redaction_level="hash_only",
+            rationale_code="intent_annotation",
+            confidence=ann.confidence,
+            intent_annotation=ann,
+        )
+
+    items = [_ev(display, i) for i in range(12)]
+    items[0] = _ev(prohibited, 0)
+    items[1] = _ev(credit, 1)
+    sorted_items = sorted(items, key=_intent_sort_key)
+    assert _intent_risk_tier(sorted_items[0].intent_annotation) == "prohibited"
+
+    printed: list[str] = []
+
+    def fake_print(*args, **kwargs):
+        printed.append(" ".join(str(a) for a in args))
+
+    mock_console = MagicMock()
+    mock_console.print.side_effect = fake_print
+    with patch("opencomplai_cli.main.console", mock_console):
+        _render_intent_analysis(items, verbose=False)
+
+    output = "\n".join(printed)
+    assert "Summary by Annex III area / risk tier" in output
+    assert "5 Essential services" in output or "prohibited" in output
+    assert "and 2 more (use --ai-verbose" in output

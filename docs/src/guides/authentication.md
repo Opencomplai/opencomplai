@@ -18,8 +18,14 @@ The Opencomplai Premium Dashboard uses email/password or magic-link authenticati
 
 To prove that a compliance artifact was produced by a known install (not forged), use `--sign`:
 
-```bash
-opencomplai check --sign
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --sign
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --sign
+    ```
 
 This signs the `ScanStatusArtifact` with the Ed25519 key in `~/.opencomplai/signing.key`. The signature can be verified by anyone who has the corresponding public key (`~/.opencomplai/signing.pub`).

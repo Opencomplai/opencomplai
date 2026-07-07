@@ -13,6 +13,7 @@ import os
 import urllib.request as urlreq
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from opencomplai_core.engine import assess
 from opencomplai_core.models import (
     AssessmentInput,
@@ -71,6 +72,23 @@ app = FastAPI(
 )
 
 configure_telemetry("risk-engine")
+
+# The public docs-site checker widget calls POST /v1/checker/email directly
+# from the browser — the only cross-origin caller of this service today.
+_CHECKER_CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get(
+        "OPENCOMPLAI_DOCS_ORIGINS",
+        "https://docs.opencomplai.com,http://localhost:8000,http://127.0.0.1:8000",
+    ).split(",")
+    if origin.strip()
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_CHECKER_CORS_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
 from opencomplai_risk_engine.checker_routes import (  # noqa: E402 — imported after app init to avoid a circular import
     router as checker_router,

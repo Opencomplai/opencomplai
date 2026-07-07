@@ -1,4 +1,4 @@
-"""Deterministic FLI-parity compliance checker engine."""
+"""Deterministic compliance checker engine."""
 
 from __future__ import annotations
 

@@ -110,7 +110,7 @@ def test_ensure_ocignore_creates_file(tmp_path: Path):
 
 def test_ensure_ocignore_imports_gitignore(tmp_path: Path):
     (tmp_path / ".gitignore").write_text("custom_dir/\n# comment\n", encoding="utf-8")
-    created, path = ensure_ocignore(tmp_path, import_gitignore=True)
+    created, _path = ensure_ocignore(tmp_path, import_gitignore=True)
     assert created is True
     cfg = load_ocignore(tmp_path)
     assert "custom_dir/" in cfg.patterns

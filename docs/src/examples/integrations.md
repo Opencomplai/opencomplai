@@ -109,13 +109,24 @@ def test_all_rules_pass(model_input):
 
 ## Docker Compose + CLI: one-command local check
 
-```bash
-# Start the full stack once
-docker compose -f infra/compose/docker-compose.yml up -d
+=== "macOS / Linux"
+    ```bash
+    # Start the full stack once
+    docker compose -f infra/compose/docker-compose.yml up -d
 
-# Run checks against it repeatedly
-OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
-```
+    # Run checks against it repeatedly
+    OPENCOMPLAI_API_URL=http://localhost:8080 opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Start the full stack once
+    docker compose -f infra/compose/docker-compose.yml up -d
+
+    # Run checks against it repeatedly
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+    opencomplai check
+    ```
 
 The stack retains evidence in a PostgreSQL volume across runs.
 

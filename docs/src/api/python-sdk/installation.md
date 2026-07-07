@@ -4,11 +4,22 @@
 
 ## Quick reference
 
-```bash
-# Install from PyPI (once published)
-pip install opencomplai
+=== "macOS / Linux"
+    ```bash
+    # Install from PyPI (once published)
+    pip install opencomplai
 
-# Install from source (pre-release)
-git clone https://github.com/Checkref-co/opencomplai
-uv pip install -e packages/sdk-python
-```
+    # Install from source (pre-release)
+    git clone https://github.com/Opencomplai/opencomplai
+    uv pip install -e packages/sdk-python
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Install from PyPI (once published)
+    pip install opencomplai
+
+    # Install from source (pre-release)
+    git clone https://github.com/Opencomplai/opencomplai
+    uv pip install -e packages/sdk-python
+    ```

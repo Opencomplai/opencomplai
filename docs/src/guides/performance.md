@@ -53,7 +53,7 @@ If you run the Docker Compose stack as a CI service:
 ```yaml
 services:
   opencomplai:
-    image: ghcr.io/checkref-co/opencomplai/gateway-api:latest
+    image: ghcr.io/opencomplai/opencomplai/gateway-api:latest
     ports: ["8080:8080"]
     env:
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}

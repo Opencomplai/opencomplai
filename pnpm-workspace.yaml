@@ -1,2 +1,2 @@
 packages:
-  - "services/gateway-api"
+  - 'services/gateway-api'

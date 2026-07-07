@@ -1,9 +1,9 @@
 /**
  * TypeScript port of packages/core/src/opencomplai_core/compliance_checker/engine.py
- * Deterministic FLI-parity compliance checker — checker version fli-2025-07-28.
+ * Deterministic compliance checker — checker version checker-2025-07-28.
  *
  * Must produce identical output to the Python evaluate() for all 17 golden
- * fixtures in packages/core/tests/fixtures/fli_golden/.
+ * fixtures in packages/core/tests/fixtures/checker_golden/.
  */
 import {
   getObligation,
@@ -12,7 +12,7 @@ import {
   StatusChangeItem,
 } from "./catalog";
 
-export const CHECKER_VERSION = "fli-2025-07-28";
+export const CHECKER_VERSION = "checker-2025-07-28";
 
 export type EntityType =
   | "provider"

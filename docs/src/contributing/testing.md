@@ -8,29 +8,55 @@ Opencomplai uses `pytest` for Python tests and `pnpm test` for the Node.js gatew
 
 ### Run all Python tests
 
-```bash
-uv run pytest packages/
-```
+=== "macOS / Linux"
+    ```bash
+    uv run pytest packages/
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv run pytest packages/
+    ```
 
 ### Run tests for a specific package
 
-```bash
-uv run pytest packages/core/
-uv run pytest packages/cli/
-uv run pytest packages/sdk-python/
-```
+=== "macOS / Linux"
+    ```bash
+    uv run pytest packages/core/
+    uv run pytest packages/cli/
+    uv run pytest packages/sdk-python/
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv run pytest packages/core/
+    uv run pytest packages/cli/
+    uv run pytest packages/sdk-python/
+    ```
 
 ### Run a specific test file
 
-```bash
-uv run pytest packages/core/tests/test_engine.py -v
-```
+=== "macOS / Linux"
+    ```bash
+    uv run pytest packages/core/tests/test_engine.py -v
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv run pytest packages/core/tests/test_engine.py -v
+    ```
 
 ### Run with coverage
 
-```bash
-uv run pytest packages/ --cov=packages --cov-report=term-missing
-```
+=== "macOS / Linux"
+    ```bash
+    uv run pytest packages/ --cov=packages --cov-report=term-missing
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv run pytest packages/ --cov=packages --cov-report=term-missing
+    ```
 
 ---
 
@@ -122,10 +148,17 @@ def test_validate_manifest_missing_file(tmp_path):
 
 ## Node.js tests (gateway-api)
 
-```bash
-cd services/gateway-api
-pnpm test
-```
+=== "macOS / Linux"
+    ```bash
+    cd services/gateway-api
+    pnpm test
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    cd services/gateway-api
+    pnpm test
+    ```
 
 The gateway-api uses Jest. Test files live under `services/gateway-api/src/__tests__/`.
 
@@ -149,12 +182,24 @@ All three must be green before a PR can merge.
 
 The project uses `pre-commit` to run checks before each commit. Install once:
 
-```bash
-pre-commit install
-```
+=== "macOS / Linux"
+    ```bash
+    pre-commit install
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pre-commit install
+    ```
 
 Hooks run `ruff check`, `ruff format`, and other checks on changed files. Run manually:
 
-```bash
-pre-commit run --all-files
-```
+=== "macOS / Linux"
+    ```bash
+    pre-commit run --all-files
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pre-commit run --all-files
+    ```

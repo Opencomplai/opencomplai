@@ -202,10 +202,10 @@ class SystemManifest(BaseModel):
 
 
 class CheckerSessionRef(BaseModel):
-    """Embedded reference to a completed FLI-parity checker run."""
+    """Embedded reference to a completed checker run."""
 
     checker_version: str = Field(
-        ..., description="Checker catalog version, e.g. fli-2025-07-28"
+        ..., description="Checker catalog version, e.g. checker-2025-07-28"
     )
     session_id: str = Field(..., description="UUID for this checker session")
     completed_at: str = Field(
@@ -626,6 +626,47 @@ class ScoreBreakdown(BaseModel):
     rationale_codes: list[str]
 
 
+class EuAiUsageEntry(BaseModel):
+    location: str
+    function: str
+    usage_type: str
+    file: str
+
+
+class FlagRationale(BaseModel):
+    """Structured explanation for why a callsite was flagged under the EU AI Act."""
+
+    summary: str
+    needed_action: str = ""
+    matched_signals: list[str] = Field(default_factory=list)
+    gate_reason: str | None = None
+    regulation_ref: str = ""
+    knowledge_entry_title: str | None = None
+    declared_purpose_used: bool = False
+
+
+class EuAiRegulatoryFinding(BaseModel):
+    location: str
+    function: str
+    risk_tier: str
+    annex_iii_area: int | None = None
+    eu_obligation: list[str] = Field(default_factory=list)
+    explanation: str | None = None
+    needed_action: str | None = None
+    rationale: FlagRationale | None = None
+
+
+class EuAiScanSummary(BaseModel):
+    """Structured EU AI Act scan output (--ai-intent)."""
+
+    capabilities: list[EuAiUsageEntry] = Field(default_factory=list)
+    prohibited: list[EuAiRegulatoryFinding] = Field(default_factory=list)
+    high_risk: list[EuAiRegulatoryFinding] = Field(default_factory=list)
+    limited_risk: list[EuAiRegulatoryFinding] = Field(default_factory=list)
+    gated_callsite_count: int = 0
+    regulatory_finding_count: int = 0
+
+
 class CorroborationReport(BaseModel):
     scan_id: str
     system_id: str
@@ -652,6 +693,7 @@ class CorroborationReport(BaseModel):
     baseline_ref: str | None
     generated_at: str
     report_hash: str
+    eu_ai_scan: EuAiScanSummary | None = None
 
 
 class ScanSummary(BaseModel):

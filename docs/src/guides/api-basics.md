@@ -24,12 +24,24 @@ For full request/response documentation, see [Gateway API — REST Reference](..
 
 The `opencomplai` CLI calls the gateway API automatically when `OPENCOMPLAI_API_URL` is set. You can also call the API directly with `curl` for testing or scripting:
 
-```bash
-# Health check
-curl http://localhost:8080/health
+=== "macOS / Linux"
+    ```bash
+    # Health check
+    curl http://localhost:8080/health
 
-# Risk classification
-curl -s -X POST http://localhost:8080/v1/risk/classify \
-  -H "Content-Type: application/json" \
-  -d '{"system_id": "my-model", "intended_purpose": "customer support chatbot"}' | jq .
-```
+    # Risk classification
+    curl -s -X POST http://localhost:8080/v1/risk/classify \
+      -H "Content-Type: application/json" \
+      -d '{"system_id": "my-model", "intended_purpose": "customer support chatbot"}' | jq .
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Health check
+    Invoke-WebRequest -Uri "http://localhost:8080/health"
+
+    # Risk classification (install jq separately, or use ConvertFrom-Json)
+    curl.exe -s -X POST http://localhost:8080/v1/risk/classify `
+      -H "Content-Type: application/json" `
+      -d '{\"system_id\": \"my-model\", \"intended_purpose\": \"customer support chatbot\"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+    ```

@@ -6,9 +6,8 @@
 Answer a short questionnaire to find out whether the EU AI Act applies to your
 AI system, in what operator role, at what risk tier, and which obligations follow.
 
-The engine is a direct port of the
-[Future of Life Institute compliance checker](https://futuroflife.institute)
-flowchart (version **fli-2025-07-28**), verified against 17 golden test cases
+The engine is a direct port of a published EU AI Act compliance checker
+flowchart (version **checker-2025-07-28**), verified against 17 golden test cases
 that run in CI on every commit.
 
 ---
@@ -27,48 +26,82 @@ that run in CI on every commit.
 
 ## Use from the CLI instead
 
-```bash
-# Interactive wizard (same questions, same engine)
-opencomplai checker
+=== "macOS / Linux"
+    ```bash
+    # Interactive wizard (same questions, same engine)
+    opencomplai checker
 
-# Open this page in your browser directly
-opencomplai checker --web
+    # Open this page in your browser directly
+    opencomplai checker --web
 
-# Serve the checker locally and open it (no internet required)
-opencomplai checker --web --local
+    # Serve the checker locally and open it (no internet required)
+    opencomplai checker --web --local
 
-# Replay a saved answer set (for CI or repeatable demos)
-opencomplai checker --answers answers.json -o json
+    # Replay a saved answer set (for CI or repeatable demos)
+    opencomplai checker --answers answers.json -o json
 
-# Export a full report
-opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
-```
+    # Export a full report
+    opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Interactive wizard (same questions, same engine)
+    opencomplai checker
+
+    # Open this page in your browser directly
+    opencomplai checker --web
+
+    # Serve the checker locally and open it (no internet required)
+    opencomplai checker --web --local
+
+    # Replay a saved answer set (for CI or repeatable demos)
+    opencomplai checker --answers answers.json -o json
+
+    # Export a full report
+    opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
+    ```
 
 ## What happens after the checker?
 
 Once you know your role and risk tier, the next step is declaring a manifest:
 
-```bash
-# Let the checker pre-fill the manifest for you
-opencomplai checker --answers answers.json --write-manifest system-manifest.json
+=== "macOS / Linux"
+    ```bash
+    # Let the checker pre-fill the manifest for you
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json
 
-# Or initialise interactively (runs the checker first)
-opencomplai init --interactive
-```
+    # Or initialise interactively (runs the checker first)
+    opencomplai init --interactive
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Let the checker pre-fill the manifest for you
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+
+    # Or initialise interactively (runs the checker first)
+    opencomplai init --interactive
+    ```
 
 Then run the compliance gate:
 
-```bash
-opencomplai check
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check
+    ```
 
 See the [quick start](quick-start.md) for the full flow.
 
 ## Disclaimer
 
 !!! note "Not legal advice"
-    This tool automates the Future of Life Institute compliance checker logic
+    This tool automates EU AI Act compliance checker logic
     for educational and planning purposes. It does not constitute legal advice.
     Seek qualified legal counsel and follow national guidance for formal compliance
-    decisions. Opencomplai is not affiliated with the Future of Life Institute or
-    the European Union.
+    decisions. Opencomplai is not affiliated with the European Union.

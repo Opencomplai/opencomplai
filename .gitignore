@@ -44,6 +44,9 @@ docs-env/
 # Opencomplai generated artifacts (output of `opencomplai init` / `opencomplai check`)
 compliance-artifact.json
 system-manifest.json
+# ...but keep the committed example fixtures used by the scanner docs
+!examples/sample-system/**/system-manifest.json
+!tests/fixtures/**/system-manifest.json
 .venv-ci-check/*
 # GitHub issues sync output (local mirror; may contain PII from issues)
 github-issues/
@@ -54,6 +57,7 @@ docs/checker-widget/node_modules/
 packages/cli/src/opencomplai_cli/data/checker-local.html
 
 # --- Public-repo hardening (keep AI-tooling and internal artifacts out) ---
+.oss-sync-state
 .claude/
 .cursor/
 .autopilot.json

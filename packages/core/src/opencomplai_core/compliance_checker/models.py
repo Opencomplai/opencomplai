@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-CHECKER_VERSION = "fli-2025-07-28"
+CHECKER_VERSION = "checker-2025-07-28"
 
 
 class EntityType(StrEnum):

@@ -45,6 +45,22 @@ def test_config_extractor_finds_endpoint_keys_not_values(tmp_path: Path):
     assert not any("sk-secret" in c.key for c in features.configs)
 
 
+def test_config_extractor_finds_gemini_env_and_endpoint_in_typescript(tmp_path: Path):
+    route = tmp_path / "src" / "app" / "api" / "oracle"
+    route.mkdir(parents=True)
+    (route / "route.ts").write_text(
+        "const apiKey = process.env.GEMINI_API_KEY;\n"
+        "fetch('https://generativelanguage.googleapis.com/v1beta/models/"
+        "gemini-2.5-flash:generateContent');\n",
+        encoding="utf-8",
+    )
+    inv = build_repo_inventory(tmp_path)
+    features = extract_features(inv, ScanConfig())
+    keys = {c.key for c in features.configs}
+    assert "gemini_api_key" in keys
+    assert "generativelanguage.googleapis.com" in keys
+
+
 def test_artifact_extractor_finds_model_files(tmp_path: Path):
     repo = _setup_repo(tmp_path)
     inv = build_repo_inventory(repo)

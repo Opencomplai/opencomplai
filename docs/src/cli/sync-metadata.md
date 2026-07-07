@@ -4,9 +4,15 @@ Sync allowlisted compliance metadata to the Premium Dashboard (Phase 18).
 
 ## Synopsis
 
-```bash
-opencomplai sync metadata --system-id <id> [OPTIONS]
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai sync metadata --system-id <id> [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai sync metadata --system-id <id> [OPTIONS]
+    ```
 
 !!! note "Service required"
     `sync metadata` requires the Docker Compose stack. Set `OPENCOMPLAI_API_URL` and ensure the `egress-proxy` service is running.
@@ -24,12 +30,20 @@ Only fields on the `ALLOWED_FIELDS` allowlist pass through the egress proxy. No 
 
 ## Example
 
-```bash
-export OPENCOMPLAI_API_URL=http://localhost:8080
+=== "macOS / Linux"
+    ```bash
+    export OPENCOMPLAI_API_URL=http://localhost:8080
 
-opencomplai sync metadata \
-  --system-id "loan-decision-model"
-```
+    opencomplai sync metadata \
+      --system-id "loan-decision-model"
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    $env:OPENCOMPLAI_API_URL = "http://localhost:8080"
+
+    opencomplai sync metadata --system-id "loan-decision-model"
+    ```
 
 ## Output
 

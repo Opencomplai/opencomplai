@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 from opencomplai_ai._saas_client import SaaSIntentClient
 from opencomplai_ai.classifier import IntentClassifier
 from opencomplai_ai.explainer import IntentExplainer
@@ -17,7 +19,7 @@ class _IntentBackendProtocol:
 
 
 class ModelRegistry:
-    _instances: dict[str, _IntentBackendProtocol] = {}
+    _instances: ClassVar[dict[str, _IntentBackendProtocol]] = {}
 
     @classmethod
     def resolve(cls, model_id: str) -> _IntentBackendProtocol:
@@ -39,7 +41,7 @@ class ModelRegistry:
                     f"Model '{model_id}' requires llama-cpp-python.\n"
                     f"Run: pip install 'opencomplai-ai[deep]'\n"
                     f"Or choose a lighter model: opencomplai ai configure"
-                )
+                ) from None
 
         if model_id == "codebert-onnx":
             backend: _IntentBackendProtocol = IntentClassifier()

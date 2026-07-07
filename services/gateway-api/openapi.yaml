@@ -345,3 +345,103 @@ components:
           type: string
         services:
           type: object
+
+    EuAiUsageEntry:
+      type: object
+      required: [location, function, usage_type, file]
+      properties:
+        location:
+          type: string
+          description: File path and line number (path:line)
+        function:
+          type: string
+          description: Callsite token or import name
+        usage_type:
+          type: string
+          enum: [llm_inference, ml_inference, embedding, training, orchestration, biometric, scoring, unknown_ai]
+        file:
+          type: string
+
+    EuAiRegulatoryFinding:
+      type: object
+      required: [location, function, risk_tier]
+      properties:
+        location:
+          type: string
+        function:
+          type: string
+        risk_tier:
+          type: string
+          enum: [prohibited, high_risk, limited_risk, minimal]
+        annex_iii_area:
+          type: integer
+          nullable: true
+        eu_obligation:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+          nullable: true
+
+    EuAiScanSummary:
+      type: object
+      description: |
+        Structured EU AI Act scan output when --ai-intent is enabled.
+        Present on CorroborationReport; evidence is filtered to regulatory findings only.
+      properties:
+        capabilities:
+          type: array
+          items:
+            $ref: "#/components/schemas/EuAiUsageEntry"
+        prohibited:
+          type: array
+          items:
+            $ref: "#/components/schemas/EuAiRegulatoryFinding"
+        high_risk:
+          type: array
+          items:
+            $ref: "#/components/schemas/EuAiRegulatoryFinding"
+        limited_risk:
+          type: array
+          items:
+            $ref: "#/components/schemas/EuAiRegulatoryFinding"
+        gated_callsite_count:
+          type: integer
+        regulatory_finding_count:
+          type: integer
+
+    CorroborationReport:
+      type: object
+      description: |
+        Full scan report from opencomplai scan. When ai-intent mode is active,
+        eu_ai_scan holds the EU AI Act workflow summary and evidence contains
+        regulatory intent findings only. Use ai-legacy to restore pre-v2 shape.
+      properties:
+        scan_id:
+          type: string
+        system_id:
+          type: string
+        severity:
+          type: string
+        declared_categories:
+          type: array
+          items:
+            type: string
+        detected_categories:
+          type: array
+          items:
+            type: string
+        discrepancies:
+          type: array
+          items:
+            type: string
+        report_hash:
+          type: string
+        eu_ai_scan:
+          $ref: "#/components/schemas/EuAiScanSummary"
+          nullable: true
+        evidence:
+          type: array
+          items:
+            type: object

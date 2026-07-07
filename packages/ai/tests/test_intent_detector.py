@@ -4,12 +4,10 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-from opencomplai_core.models import EvidenceItem, EvidenceScope
-from opencomplai_core.scanner.feature_types import CallsiteRef, FeatureStore, ImportRef
-
 from opencomplai_ai.detector import IntentDetector
 from opencomplai_ai.models import IntentAnnotation
+from opencomplai_core.models import EvidenceItem, EvidenceScope
+from opencomplai_core.scanner.feature_types import CallsiteRef, FeatureStore, ImportRef
 
 
 def _make_features(tmp_path: Path) -> FeatureStore:
@@ -20,7 +18,9 @@ def _make_features(tmp_path: Path) -> FeatureStore:
         CallsiteRef(name="model.predict", location=f"{src}:1", scope=EvidenceScope.PROD)
     )
     store.imports.append(
-        ImportRef(module="sklearn.linear_model", location=f"{src}:1", scope=EvidenceScope.PROD)
+        ImportRef(
+            module="sklearn.linear_model", location=f"{src}:1", scope=EvidenceScope.PROD
+        )
     )
     return store
 
@@ -55,7 +55,7 @@ def test_detect_populates_intent_annotation(tmp_path):
 def test_detect_detector_id():
     detector = IntentDetector("codebert-onnx")
     assert detector.detector_id == "DET_INTENT_V1"
-    assert detector.detector_version == "1.0.0"
+    assert detector.detector_version == "1.1.0"
 
 
 def test_detect_empty_features(tmp_path):

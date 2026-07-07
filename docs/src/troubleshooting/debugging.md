@@ -6,24 +6,42 @@
 
 The CLI does not expose a `--verbose` flag, but you can inspect the gateway API directly with `curl`:
 
-```bash
-# Check gateway health
-curl http://localhost:8080/health
+=== "macOS / Linux"
+    ```bash
+    # Check gateway health
+    curl http://localhost:8080/health
 
-# Manually call risk classify
-curl -s -X POST http://localhost:8080/v1/risk/classify \
-  -H "Content-Type: application/json" \
-  -d '{"system_id": "my-model", "intended_purpose": "customer support chatbot"}' \
-  | jq .
-```
+    # Manually call risk classify
+    curl -s -X POST http://localhost:8080/v1/risk/classify \
+      -H "Content-Type: application/json" \
+      -d '{"system_id": "my-model", "intended_purpose": "customer support chatbot"}' \
+      | jq .
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Check gateway health
+    Invoke-WebRequest -Uri "http://localhost:8080/health"
+
+    # Manually call risk classify (jq must be installed separately, or use ConvertFrom-Json)
+    curl.exe -s -X POST http://localhost:8080/v1/risk/classify `
+      -H "Content-Type: application/json" `
+      -d '{\"system_id\": \"my-model\", \"intended_purpose\": \"customer support chatbot\"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+    ```
 
 ### Inspect the compliance artifact
 
 After every `check` run, `compliance-artifact.json` is written to the current directory. Read it to understand what the CLI produced:
 
-```bash
-cat compliance-artifact.json | jq .
-```
+=== "macOS / Linux"
+    ```bash
+    cat compliance-artifact.json | jq .
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    Get-Content compliance-artifact.json | ConvertFrom-Json | ConvertTo-Json -Depth 10
+    ```
 
 Key fields to inspect:
 
@@ -64,24 +82,43 @@ This runs entirely in-process without any network calls or Docker stack.
 
 ### Check service status
 
-```bash
-docker compose -f infra/compose/docker-compose.yml ps
-```
+=== "macOS / Linux"
+    ```bash
+    docker compose -f infra/compose/docker-compose.yml ps
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    docker compose -f infra/compose/docker-compose.yml ps
+    ```
 
 All services should be `running`. If any show `exited`, check their logs.
 
 ### Tail logs for a specific service
 
-```bash
-# Gateway API
-docker compose -f infra/compose/docker-compose.yml logs -f gateway-api
+=== "macOS / Linux"
+    ```bash
+    # Gateway API
+    docker compose -f infra/compose/docker-compose.yml logs -f gateway-api
 
-# Risk engine
-docker compose -f infra/compose/docker-compose.yml logs -f risk-engine
+    # Risk engine
+    docker compose -f infra/compose/docker-compose.yml logs -f risk-engine
 
-# Evidence vault
-docker compose -f infra/compose/docker-compose.yml logs -f evidence-vault
-```
+    # Evidence vault
+    docker compose -f infra/compose/docker-compose.yml logs -f evidence-vault
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Gateway API
+    docker compose -f infra/compose/docker-compose.yml logs -f gateway-api
+
+    # Risk engine
+    docker compose -f infra/compose/docker-compose.yml logs -f risk-engine
+
+    # Evidence vault
+    docker compose -f infra/compose/docker-compose.yml logs -f evidence-vault
+    ```
 
 ### Common log patterns
 
@@ -94,10 +131,16 @@ docker compose -f infra/compose/docker-compose.yml logs -f evidence-vault
 
 ### Verify the evidence ledger
 
-```bash
-python3 tools/verify-ledger/verify_ledger.py \
-  --gateway-url http://localhost:8080
-```
+=== "macOS / Linux"
+    ```bash
+    python3 tools/verify-ledger/verify_ledger.py \
+      --gateway-url http://localhost:8080
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    python tools\verify-ledger\verify_ledger.py --gateway-url http://localhost:8080
+    ```
 
 Expected output:
 
@@ -112,9 +155,15 @@ Expected output:
 
 ### Verify installed packages
 
-```bash
-uv pip list | grep opencomplai
-```
+=== "macOS / Linux"
+    ```bash
+    uv pip list | grep opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv pip list | Select-String opencomplai
+    ```
 
 Expected output:
 
@@ -135,13 +184,23 @@ for rule in RULE_REGISTRY:
 
 ### Reset local state
 
-```bash
-# Remove signing keypair and config (forces fresh init)
-rm -rf ~/.opencomplai/
+=== "macOS / Linux"
+    ```bash
+    # Remove signing keypair and config (forces fresh init)
+    rm -rf ~/.opencomplai/
 
-# Remove local compliance artifacts
-rm -f compliance-artifact.json system-manifest.json
-```
+    # Remove local compliance artifacts
+    rm -f compliance-artifact.json system-manifest.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    # Remove signing keypair and config (forces fresh init)
+    Remove-Item -Recurse -Force "$env:USERPROFILE\.opencomplai" -ErrorAction SilentlyContinue
+
+    # Remove local compliance artifacts
+    Remove-Item compliance-artifact.json, system-manifest.json -ErrorAction SilentlyContinue
+    ```
 
 ---
 
@@ -172,9 +231,16 @@ Add `--output json` to capture the full artifact:
 
 ### Inspect exit code meaning
 
-```bash
-opencomplai check; echo "Exit code: $?"
-# 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
-```
+=== "macOS / Linux"
+    ```bash
+    opencomplai check; echo "Exit code: $?"
+    # 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check; Write-Host "Exit code: $LASTEXITCODE"
+    # 0 = pass, 1 = control_fail, 2 = validation_fail, 3 = policy_block, 4 = trap_detected
+    ```
 
 See [Exit codes](../cli/exit-codes.md) for the full table.
