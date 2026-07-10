@@ -32,15 +32,10 @@ Python 3.11+ and pip.
     pip install opencomplai
     ```
 
-!!! note "Pre-release — install from source"
-    `opencomplai` is at `0.1.0.dev0` and is **not yet on PyPI**. Install from
-    source instead. The local `core` and `cli` packages must be installed in the
-    **same command** as the SDK (they are not on PyPI, so pip cannot resolve them
-    separately) — see [Installation](installation.md#install-from-source) for
-    tabbed macOS/Linux and Windows commands.
-    Running `pip install -e packages/sdk-python` on its own fails with
-    `No matching distribution found for opencomplai-cli`. See
-    [Installation](installation.md) for the `uv` alternative and full details.
+!!! note "Install from source"
+    For development or if PyPI is unreachable, install from source — see
+    [Installation](installation.md#install-from-source). The local `core` and `cli`
+    packages must be installed in the **same command** as the SDK.
 
 The install provides the `opencomplai` command. Verify it (there is **no**
 `--version` flag — use `--help`):

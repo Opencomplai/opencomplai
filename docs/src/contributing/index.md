@@ -5,7 +5,7 @@ Thank you for your interest in contributing! OpenComplai is an open-source proje
 ## Ways to Contribute
 
 ### Report Bugs
-Found a bug? [Open an issue](https://github.com/Opencomplai/opencomplai/issues/new?template=bug_report.md) with:
+Found a bug? [Open an issue](https://github.com/Opencomplai/opencomplai/issues/new?template=bug-report.yml) with:
 - Description of the bug
 - Steps to reproduce
 - Expected vs actual behavior
@@ -448,12 +448,12 @@ Before submitting a PR:
 
 ## Communication Channels
 
+See **[Support & Community](../community/support.md)** for the full list of channels, GitHub issue templates, and security reporting.
+
 - **Discord**: [Developer community](https://discord.gg/egjX5JgQJ) — EU AI Act workflows, pipeline integration, and closed-beta feedback
-- **Issues**: Bug reports and feature requests
+- **Issues**: [Bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug-report.yml), [feature](https://github.com/Opencomplai/opencomplai/issues/new?template=feature-request.yml), and [task](https://github.com/Opencomplai/opencomplai/issues/new?template=task.yml) templates
 - **Discussions**: Ideas, questions, announcements
 - **Pull Requests**: Code changes and reviews
-- **LinkedIn**: [Opencomplai company page](https://www.linkedin.com/company/opencomplai)
-- **Reddit**: [Opencomplai research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
 - **Email**: open@opencomplai.com (for private concerns)
 
 ---

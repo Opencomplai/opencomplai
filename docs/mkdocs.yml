@@ -194,6 +194,8 @@ nav:
     - FAQ: troubleshooting/faq.md
     - Debugging: troubleshooting/debugging.md
 
+  - Support & Community: community/support.md
+
   - License: license.md
 
 # Inject brand CSS (loaded from theme/overrides/assets/ → /assets/ in built site)
@@ -216,6 +218,8 @@ extra:
       link: https://www.linkedin.com/company/opencomplai
     - icon: fontawesome/brands/reddit
       link: https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/
+    - icon: simple/pypi
+      link: https://pypi.org/project/opencomplai/
 
 # Copyright
 copyright: Copyright &copy; 2026 Opencomplai. All rights reserved.

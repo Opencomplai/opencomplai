@@ -40,22 +40,29 @@ Docker is only required to run the full service stack (gateway API, evidence vau
 
 ### Is the package published to PyPI?
 
-The SDK is currently pre-release (`0.1.0-dev`). If `pip install opencomplai` fails with a "not found" error, install from source:
+Yes. All packages are published on PyPI (latest **0.1.2**):
+
+- [opencomplai](https://pypi.org/project/opencomplai/) — `pip install opencomplai` (recommended)
+- [opencomplai-core](https://pypi.org/project/opencomplai-core/)
+- [opencomplai-cli](https://pypi.org/project/opencomplai-cli/)
+- [opencomplai-ai](https://pypi.org/project/opencomplai-ai/)
+
+See the [installation guide](../getting-started/installation.md#published-packages) for details.
+
+If `pip install opencomplai` fails (network, air-gapped environment, or development), install from source:
 
 === "macOS / Linux"
     ```bash
     git clone https://github.com/Opencomplai/opencomplai
     cd opencomplai
-    uv pip install -e packages/sdk-python
-    uv pip install -e packages/cli
+    pip install -e packages/core -e packages/cli -e packages/sdk-python
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     git clone https://github.com/Opencomplai/opencomplai
     cd opencomplai
-    uv pip install -e packages/sdk-python
-    uv pip install -e packages/cli
+    pip install -e packages/core -e packages/cli -e packages/sdk-python
     ```
 
 ### What Python version is required?

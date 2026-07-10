@@ -19,7 +19,7 @@ Python 3.11+ is required. Verify with:
     is usually `python3` (and `pip3`). Use whichever resolves on your machine —
     the rest of this guide writes `python`/`pip` for brevity.
 
-## Install from PyPI (recommended once available)
+## Install from PyPI (recommended)
 
 === "macOS / Linux"
     ```bash
@@ -31,15 +31,22 @@ Python 3.11+ is required. Verify with:
     pip install opencomplai
     ```
 
-!!! warning "Pre-release status"
-    `opencomplai` is at version `0.1.0-dev` and has not yet been published to PyPI.
-    If `pip install opencomplai` fails with a "not found" error, install from source (see below).
+### Published packages
+
+| Package | PyPI | Install | Use when |
+|---------|------|---------|----------|
+| `opencomplai` | [opencomplai](https://pypi.org/project/opencomplai/) | `pip install opencomplai` | Default — meta-package (core + CLI + SDK) |
+| `opencomplai-core` | [opencomplai-core](https://pypi.org/project/opencomplai-core/) | `pip install opencomplai-core` | Embedding the risk engine in your own app |
+| `opencomplai-cli` | [opencomplai-cli](https://pypi.org/project/opencomplai-cli/) | `pip install opencomplai-cli` | CLI only (pulls in core) |
+| `opencomplai-ai` | [opencomplai-ai](https://pypi.org/project/opencomplai-ai/) | `pip install opencomplai-ai` | Optional `--ai-intent` scan plugin |
+
+Latest release: **0.1.2** on PyPI.
 
 ## Install from source
 
-The packages are not yet on PyPI, so the editable install must include the
-local `core` and `cli` packages **in the same command** — otherwise pip tries
-(and fails) to resolve `opencomplai-core` / `opencomplai-cli` from PyPI.
+For contributors or bleeding-edge development, install from the repository. The local
+`core` and `cli` packages must be installed in the **same command** as the SDK —
+otherwise pip tries (and fails) to resolve `opencomplai-core` / `opencomplai-cli` from PyPI.
 
 === "macOS / Linux"
     ```bash
@@ -91,13 +98,13 @@ available commands) and `pip show` (prints the installed version):
 === "macOS / Linux"
     ```bash
     opencomplai --help
-    pip show opencomplai          # Version: 0.1.0.dev0
+    pip show opencomplai          # Version: 0.1.2
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     opencomplai --help
-    pip show opencomplai          # Version: 0.1.0.dev0
+    pip show opencomplai          # Version: 0.1.2
     ```
 
 A successful `opencomplai --help` lists `init`, `check`, `eval`,

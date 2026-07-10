@@ -28,5 +28,6 @@ Ask on [Developer Discord](https://discord.gg/egjX5JgQJ) or [GitHub Discussions]
 ## Getting Help
 
 - Check [Common Issues](common-issues.md)
+- Read [Support & Community](../community/support.md) — Discord, issue templates, security policy, and contact options
 - Search [GitHub Issues](https://github.com/Opencomplai/opencomplai/issues)
 - Ask on [GitHub Discussions](https://github.com/Opencomplai/opencomplai/discussions)

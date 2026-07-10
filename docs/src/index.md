@@ -22,9 +22,9 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 
 ## Core Components
 
-- **opencomplai-core** — the rule engine that evaluates compliance controls and produces structured results.
-- **opencomplai CLI** — the developer interface for creating manifests and running checks locally and in CI.
-- **opencomplai Python SDK** — the programmatic interface for embedding checks into internal tooling.
+- **[opencomplai-core](https://pypi.org/project/opencomplai-core/)** — the rule engine that evaluates compliance controls and produces structured results.
+- **[opencomplai-cli](https://pypi.org/project/opencomplai-cli/)** — the developer interface for creating manifests and running checks locally and in CI.
+- **[opencomplai](https://pypi.org/project/opencomplai/)** (Python SDK meta-package) — the programmatic interface for embedding checks into internal tooling.
 
 ## Quick Start
 
@@ -39,5 +39,4 @@ Get your first compliance check running in **under 15 minutes**:
 
 We are currently in a **Closed Beta Pilot**. If you are an AI engineer or ML platform lead, we want your feedback.
 
-- [Report a bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug_report.md) · [Request a feature](https://github.com/Opencomplai/opencomplai/discussions/new?category=ideas)
-- [LinkedIn](https://www.linkedin.com/company/opencomplai) · [Reddit research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
+See **[Support & Community](community/support.md)** for Discord, GitHub issue templates, security reporting, and all contact options.
