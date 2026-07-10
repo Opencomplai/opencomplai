@@ -1,31 +1,36 @@
-# Opencomplai — Open-source AI compliance for a trustworthy future
+# OpenComplAI: Compliance-as-Code for AI Pipelines
 
-Automated risk assessment, evidence generation, and CI/CD-native compliance checks for AI engineering teams.
+**Stop manual audits → Start shipping.**
+
+OpenComplAI brings EU AI Act compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks."
 
 [![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/) [![Node.js](https://img.shields.io/badge/node-20%20LTS-339933.svg)](https://nodejs.org/)
 
-## The problem
+## Why OpenComplAI?
 
-Teams building AI systems face ambiguity around what qualifies as a high-risk system and which obligations apply. Evidence collection is often manual: risk rationale, system intent, datasets, evaluations, and operational controls end up scattered across tickets and docs. Compliance checks rarely fit CI/CD, so reviews happen late and slow down releases.
+Traditional GRC tools are disconnected dashboards that create "velocity tax." We shift compliance left:
 
-## What Opencomplai does
+- **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
+- **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
+- **Framework-Agnostic:** Built to adapt to evolving global standards (EU AI Act, NIST RMF, ISO).
 
-- Classifies AI system risk and maps obligations for the EU AI Act in a developer-friendly workflow.
-- Generates structured evidence bundles from project inputs and automated checks.
-- Runs compliance checks in CI/CD with clear pass/fail outputs and actionable remediation steps.
-- Provides a path to align with NIST AI RMF and ISO/IEC standards (roadmap).
-- Keeps an auditable trail of decisions and artifacts suitable for internal and external review.
+## How It Works (The 3-Minute Setup)
 
-## EU AI Act Checker
+1. **Define:** Create a compliance manifest for your model.
+2. **Integrate:** Add the OpenComplAI action to your GitHub/GitLab pipeline.
+3. **Ship:** Get an automated "Pass/Fail" result before your code ever hits production.
 
-Not sure whether the EU AI Act applies to your system, or which obligations you carry as a provider versus a deployer? Use the interactive [EU AI Act Checker](https://docs.opencomplai.com/getting-started/eu-ai-act-checker/) — a browser-based wizard covering scope, high-risk classification, GPAI, and obligations. No account needed. Or run it locally:
+[**Check out our Dummy Repo (Sandbox)**](examples/sample-system/) – *Test how we catch AI errors without risking your production code.*
 
-```bash
-opencomplai checker --web          # opens the hosted docs page
-opencomplai checker --web --local  # serves a self-contained copy offline
-```
+## Core Components
 
-## Quickstart
+- `opencomplai-core`: The rule engine that evaluates controls.
+- `opencomplai-cli`: Run checks locally in your dev environment.
+- `opencomplai-sdk`: Programmatically embed compliance into your custom internal tooling.
+
+## Quick Start
+
+Get your first compliance check running in **under 15 minutes**:
 
 The packages are pre-release and not yet published to PyPI, so `pip install opencomplai`
 does not resolve yet. Install from source — the `core`, `cli`, and `sdk-python` packages
@@ -45,8 +50,27 @@ opencomplai init --system-id my-model --intended-purpose "customer support chatb
 opencomplai check
 ```
 
+[View Full Documentation](https://docs.opencomplai.com/getting-started/quick-start/)
+
 Full Docker-based deployment is documented in
 [docs/src/deployment/quickstart.md](docs/src/deployment/quickstart.md).
+
+## Community & Feedback
+
+We are currently in a **Closed Beta Pilot**. If you are an AI engineer or ML platform lead, we want your feedback.
+
+- **[Join our Developer Discord](https://discord.gg/egjX5JgQJ)** — discuss EU AI Act workflows, pipeline integration, and stress-test the engine with other MLOps engineers
+- [Report a bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug_report.md) · [Request a feature](https://github.com/Opencomplai/opencomplai/discussions/new?category=ideas)
+- [LinkedIn](https://www.linkedin.com/company/opencomplai) · [Reddit research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
+
+## EU AI Act Checker
+
+Not sure whether the EU AI Act applies to your system, or which obligations you carry as a provider versus a deployer? Use the interactive [EU AI Act Checker](https://docs.opencomplai.com/getting-started/eu-ai-act-checker/) — a browser-based wizard covering scope, high-risk classification, GPAI, and obligations. No account needed. Or run it locally:
+
+```bash
+opencomplai checker --web          # opens the hosted docs page
+opencomplai checker --web --local  # serves a self-contained copy offline
+```
 
 ## Architecture overview
 

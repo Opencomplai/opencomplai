@@ -55,6 +55,8 @@ theme:
         url: https://blog.opencomplai.com
       - text: GitHub
         url: https://github.com/Opencomplai/opencomplai
+      - text: Community
+        url: https://discord.gg/egjX5JgQJ
       - text: Get Started
         url: /getting-started/
 
@@ -208,6 +210,12 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Opencomplai/opencomplai
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/egjX5JgQJ
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/opencomplai
+    - icon: fontawesome/brands/reddit
+      link: https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/
 
 # Copyright
 copyright: Copyright &copy; 2026 Opencomplai. All rights reserved.

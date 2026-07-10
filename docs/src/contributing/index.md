@@ -448,9 +448,12 @@ Before submitting a PR:
 
 ## Communication Channels
 
+- **Discord**: [Developer community](https://discord.gg/egjX5JgQJ) — EU AI Act workflows, pipeline integration, and closed-beta feedback
 - **Issues**: Bug reports and feature requests
 - **Discussions**: Ideas, questions, announcements
 - **Pull Requests**: Code changes and reviews
+- **LinkedIn**: [Opencomplai company page](https://www.linkedin.com/company/opencomplai)
+- **Reddit**: [Opencomplai research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
 - **Email**: open@opencomplai.com (for private concerns)
 
 ---
@@ -467,6 +470,7 @@ All contributors are recognized:
 ## Getting Help
 
 ### Questions?
+- [Developer Discord](https://discord.gg/egjX5JgQJ)
 - [GitHub Discussions](https://github.com/Opencomplai/opencomplai/discussions)
 - Check [Development Setup](development-setup.md)
 - Email: open@opencomplai.com
@@ -474,7 +478,7 @@ All contributors are recognized:
 ### Issues?
 - Search [existing issues](https://github.com/Opencomplai/opencomplai/issues)
 - Check [Troubleshooting](../troubleshooting/index.md)
-- Ask in [Discussions](https://github.com/Opencomplai/opencomplai/discussions)
+- Ask in [Discussions](https://github.com/Opencomplai/opencomplai/discussions) or on [Discord](https://discord.gg/egjX5JgQJ)
 
 ---
 

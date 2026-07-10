@@ -17,7 +17,7 @@ Check [Installation Guide](../getting-started/installation.md)
 See [Error Handling Guide](../guides/error-handling.md)
 
 **Still stuck?**
-Ask on [GitHub Discussions](https://github.com/Opencomplai/opencomplai/discussions)
+Ask on [Developer Discord](https://discord.gg/egjX5JgQJ) or [GitHub Discussions](https://github.com/Opencomplai/opencomplai/discussions)
 
 ## Related
 

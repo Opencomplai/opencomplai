@@ -7,7 +7,7 @@ it responsibly.
 
 **Do not create a public GitHub issue for security vulnerabilities.**
 
-Instead, email **security@opencomplai.org** with:
+Instead, email **security@opencomplai.com** with:
 
 - A description of the vulnerability
 - Steps to reproduce

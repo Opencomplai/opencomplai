@@ -122,6 +122,23 @@ body,
   font-weight: 600;
 }
 
+.oc-header__nav-link--community {
+  color: #5865F2;
+  font-weight: 600;
+}
+
+.oc-header__nav-link--community:hover {
+  color: #4752C4;
+}
+
+[data-md-color-scheme="slate"] .oc-header__nav-link--community {
+  color: #7289da;
+}
+
+[data-md-color-scheme="slate"] .oc-header__nav-link--community:hover {
+  color: #99aaf0;
+}
+
 /* Spacer for right alignment */
 .oc-header__spacer {
   flex: 1;

@@ -1,32 +1,43 @@
-# Open-source AI compliance for a trustworthy future.
+# OpenComplAI: Compliance-as-Code for AI Pipelines
 
-Opencomplai is an open-source compliance toolkit that helps AI engineering teams assess EU AI Act risk, generate auditable evidence, and gate releases in CI/CD using machine-readable results.
+**Stop manual audits → Start shipping.**
 
-## The problem
+OpenComplAI brings EU AI Act compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks."
 
-The EU AI Act introduces real friction for AI engineering teams. High-Risk classification can be ambiguous at build time, especially when intended purpose and deployment context change. Evidence collection often becomes a manual, spreadsheet-driven process that does not scale with fast iteration. Compliance checks also tend to arrive late and block CI/CD at the worst possible moment.
+## Why OpenComplAI?
 
-## Three components
+Traditional GRC tools are disconnected dashboards that create "velocity tax." We shift compliance left:
+
+- **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
+- **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
+- **Framework-Agnostic:** Built to adapt to evolving global standards (EU AI Act, NIST RMF, ISO).
+
+## How It Works (The 3-Minute Setup)
+
+1. **Define:** Create a compliance manifest for your model.
+2. **Integrate:** Add the OpenComplAI action to your GitHub/GitLab pipeline.
+3. **Ship:** Get an automated "Pass/Fail" result before your code ever hits production.
+
+[**Check out our Dummy Repo (Sandbox)**](https://github.com/Opencomplai/opencomplai/tree/main/examples/sample-system) – *Test how we catch AI errors without risking your production code.*
+
+## Core Components
 
 - **opencomplai-core** — the rule engine that evaluates compliance controls and produces structured results.
 - **opencomplai CLI** — the developer interface for creating manifests and running checks locally and in CI.
 - **opencomplai Python SDK** — the programmatic interface for embedding checks into internal tooling.
-- **Docker Compose reference deployment** — the full platform skeleton for services and workflows.
 
-## Why open source?
+## Quick Start
 
-- **Trust**: deterministic rules and transparent outputs reduce compliance uncertainty.
-- **Auditability**: reviewers can inspect rule logic and evidence traces end-to-end.
-- **Community**: shared patterns and rules lower the cost of compliance for everyone.
+Get your first compliance check running in **under 15 minutes**:
 
-## Who is this for?
+[Quick Start](getting-started/quick-start.md) — install the CLI, initialise a manifest, and run your first compliance check.
 
-AI engineers, ML platform teams, and CTOs at AI startups that need repeatable compliance checks without slowing delivery.
+## Community & Feedback
 
-## Supported compliance frameworks
+!!! tip "Join the developer community"
+    **[Join our Developer Discord](https://discord.gg/egjX5JgQJ)** — the fastest place to get help with EU AI Act workflows, CI/CD integration, and closed-beta feedback.
 
-EU AI Act (v0.1). NIST AI RMF and ISO/IEC standards are on the roadmap.
+We are currently in a **Closed Beta Pilot**. If you are an AI engineer or ML platform lead, we want your feedback.
 
-## Get started
-
-[Quick Start](getting-started/quick-start.md) — run your first compliance check in under 15 minutes.
+- [Report a bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug_report.md) · [Request a feature](https://github.com/Opencomplai/opencomplai/discussions/new?category=ideas)
+- [LinkedIn](https://www.linkedin.com/company/opencomplai) · [Reddit research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
