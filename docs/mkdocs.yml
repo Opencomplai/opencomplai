@@ -167,7 +167,7 @@ nav:
     - Control Codes: concepts/control-codes.md
     - Evidence: concepts/evidence.md
     - Scan workflow: concepts/scan-workflow.md
-    - Inspect-AI eval bridge: concepts/inspect-bridge.md
+    - "Inspect-AI eval bridge": concepts/inspect-bridge.md
 
   - Gateway API:
     - REST Reference: api/rest-api.md
@@ -176,7 +176,7 @@ nav:
     - Overview: architecture/index.md
     - System Design: architecture/system-design.md
     - Data Model: architecture/data-model.md
-    - ADR: Local serve vs SaaS: architecture/adr-local-serve-vs-saas.md
+    - "ADR: Local serve vs SaaS": architecture/adr-local-serve-vs-saas.md
 
   - Examples:
     - Overview: examples/index.md
