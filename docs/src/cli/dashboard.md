@@ -2,6 +2,8 @@
 
 Manage enrollment in the Opencomplai Premium Dashboard.
 
+For a **local** scan UI on your laptop (no SaaS), see [`opencomplai serve`](serve.md).
+
 ## Subcommands
 
 | Subcommand | Description |

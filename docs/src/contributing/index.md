@@ -43,6 +43,16 @@ Have an idea? [Open a discussion](https://github.com/Opencomplai/opencomplai/dis
 
 ---
 
+## Roadmap: JS/TS repository scanning (design spike, not implemented)
+
+`opencomplai scan` only extracts AI-capability signals from Python today. A design
+spike for extending the scanner to JavaScript/TypeScript repositories exists at
+`docs/design/js-ts-scanning-spike.md` — it documents an architecture direction, not a
+shipped feature. If you're interested in contributing this, start there; do not expect
+`opencomplai scan` to detect anything in a `.js`/`.ts` file yet.
+
+---
+
 ## Getting Started
 
 ### 1. [Development Setup](development-setup.md)

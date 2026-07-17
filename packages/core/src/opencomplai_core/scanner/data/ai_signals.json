@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "ai_sdks": ["openai", "anthropic", "google-genai", "google-generativeai", "azure-ai-openai", "cohere", "mistralai", "groq", "together", "replicate", "huggingface_hub", "transformers", "sentence-transformers"],
+  "version": "1.1.0",
+  "ai_sdks": ["openai", "anthropic", "google-genai", "google-generativeai", "azure-ai-openai", "cohere", "mistralai", "groq", "together", "replicate", "huggingface_hub", "transformers", "sentence-transformers", "fireworks-ai", "perplexityai", "ai21", "stability-sdk", "elevenlabs", "deepgram", "assemblyai", "google-cloud-aiplatform", "ibm-watsonx-ai"],
   "ml_frameworks": ["torch", "tensorflow", "keras", "sklearn", "xgboost", "lightgbm", "catboost", "onnxruntime", "llama-cpp-python", "vllm", "ollama", "mlflow", "bentoml"],
   "orchestration": ["langchain", "llama-index", "llama_index", "semantic-kernel", "autogen", "crewai", "haystack", "dspy", "instructor", "guidance", "guardrails", "ragas"],
   "vector_embedding": ["pinecone", "weaviate", "qdrant", "chromadb", "milvus", "faiss", "pgvector", "lancedb", "voyageai", "jina", "embedding", "rerank", "similarity_search"],

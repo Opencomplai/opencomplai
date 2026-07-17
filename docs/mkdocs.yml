@@ -135,6 +135,7 @@ nav:
     - Performance: guides/performance.md
     - Deployment: guides/deployment.md
     - Security: guides/security.md
+    - Gap-closure control mapping: security/gap-closure-control-mapping.md
     - CI Integration: guides/ci-integration.md
 
   - CLI Reference:
@@ -147,6 +148,7 @@ nav:
     - docs generate: cli/docs-generate.md
     - sync metadata: cli/sync-metadata.md
     - dashboard: cli/dashboard.md
+    - serve: cli/serve.md
     - Exit codes: cli/exit-codes.md
 
   - Python SDK:
@@ -164,6 +166,7 @@ nav:
     - Control Codes: concepts/control-codes.md
     - Evidence: concepts/evidence.md
     - Scan workflow: concepts/scan-workflow.md
+    - COMPL-AI bridge: concepts/compl-ai-bridge.md
 
   - Gateway API:
     - REST Reference: api/rest-api.md
@@ -172,6 +175,7 @@ nav:
     - Overview: architecture/index.md
     - System Design: architecture/system-design.md
     - Data Model: architecture/data-model.md
+    - ADR: Local serve vs SaaS: architecture/adr-local-serve-vs-saas.md
 
   - Examples:
     - Overview: examples/index.md

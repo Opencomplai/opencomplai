@@ -1,0 +1,23 @@
+- id: opencomplai-quick-scan
+  name: Opencomplai quick scan
+  description: >-
+    Zero-config discovery scan for AI/ML capability signals in the repo. Never gates
+    the commit and never requires a system-manifest.json — informational only. Use
+    `opencomplai-check` instead once you have a manifest and want a real CI gate.
+  entry: opencomplai scan --quick --repo-root .
+  language: python
+  additional_dependencies: ["opencomplai-cli"]
+  pass_filenames: false
+  always_run: true
+
+- id: opencomplai-check
+  name: Opencomplai compliance check
+  description: >-
+    Full EU AI Act compliance gate against a declared system-manifest.json. Requires
+    `opencomplai init` to have been run first. Fails the commit on CONTROL_FAIL,
+    VALIDATION_FAIL, POLICY_BLOCK, or TRAP_DETECTED (see exit codes in README).
+  entry: opencomplai check
+  language: python
+  additional_dependencies: ["opencomplai-cli"]
+  pass_filenames: false
+  always_run: true

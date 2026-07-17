@@ -7,6 +7,48 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.0] — 2026-07-17 — New public release
+
+### Added
+
+- Fail-closed scanner defaults: refuse symlinks, numeric file/byte caps, report
+  text sanitize helpers, and `scan_errors` gating when `--fail-on` is set.
+- Versioned CLI JSON `ScanOutputEnvelope` for scan/gaps/report (not a signed
+  `ScanStatusArtifact`).
+- Artifact probes for Arts. 9, 13, 14, 16, 24, 43 plus honesty/confidence labels
+  on gap rows; MCP/agent detector (`DET_AGENTS_MCP_V1`).
+- Four compile-checked Python remediation templates (transparency, logging,
+  oversight, disclosure helpers) via `opencomplai recommend`.
+- Working COMPL-AI bridge MVP: curated `strong_reject` / `bbq` /
+  `bigbench_calibration` pin, `--log-dir`, never gates `check`.
+- Local `opencomplai serve` (optional `[serve]` extra) — loopback dashboard.
+- Meta-package extras re-export: `reports`, `compl-ai-bridge`, `serve`.
+- Docs: serve, COMPL-AI bridge, hostile-scan defaults, SOC2/ISO control mapping,
+  ADR local-serve-vs-saas.
+
+### Changed
+
+- Interactive HTML reports embed the JSON envelope and support status/text filters.
+
+---
+
+## [0.1.2] — 2026-07-11 — First PyPI release
+
+### Added
+
+- `opencomplai`, `opencomplai-cli`, `opencomplai-core`, and `opencomplai-ai` are now
+  published to PyPI. `pip install opencomplai` resolves the full stack; no source
+  checkout required. Packages are built and published in dependency order by
+  `.github/workflows/publish-pypi.yml` on `v*` tag push.
+
+### Contract
+
+- The stable API contract introduced in `0.1.0` (exit codes `0`–`4`, the
+  `compliance-artifact.json` / `ScanStatusArtifact` schema) is unchanged by the PyPI
+  release — publishing changes distribution only, not behavior.
+
+---
+
 ## [0.1.0] — 2026-06-28 — Initial public release
 
 ### Added
@@ -44,8 +86,14 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
-This project is pre-release. The packages are not yet published to PyPI. Install from
-source:
+`opencomplai`, `opencomplai-cli`, `opencomplai-core`, and `opencomplai-ai` are published
+on PyPI:
+
+```bash
+pip install opencomplai
+```
+
+Installing from a source checkout remains supported for contributors:
 
 ```bash
 git clone https://github.com/Opencomplai/opencomplai
@@ -53,8 +101,8 @@ cd opencomplai
 pip install -e packages/core -e packages/cli -e packages/sdk-python
 ```
 
-The v0.1 release will publish `opencomplai`, `opencomplai-cli`, and `opencomplai-core` to
-PyPI with a stable API contract. See
-[Contributing — Release Process](docs/src/contributing/release-process.md) for details.
+See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
+release/publish workflow.
 
+[0.1.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.2
 [0.1.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.0

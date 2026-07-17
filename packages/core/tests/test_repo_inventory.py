@@ -84,8 +84,53 @@ def test_skip_binary_when_enabled(tmp_path: Path):
 
 
 def test_unlimited_limits_by_default(tmp_path: Path):
+    """Explicit zeros still mean unlimited; default InventoryLimits are capped."""
     big = tmp_path / "large.py"
     big.write_bytes(b"x" * 5_000_000)
-    inv = build_repo_inventory(tmp_path, limits=InventoryLimits())
+    inv = build_repo_inventory(
+        tmp_path,
+        limits=InventoryLimits(
+            max_files=0,
+            max_bytes_per_file=0,
+            max_total_bytes=0,
+        ),
+    )
     rels = {e.rel_path for e in inv.entries}
     assert "large.py" in rels
+
+
+def test_default_limits_skip_oversized_file(tmp_path: Path):
+    big = tmp_path / "large.py"
+    big.write_bytes(b"x" * 2_000_000)
+    _write(tmp_path, "small.py", "ok")
+    inv = build_repo_inventory(tmp_path)  # default 1 MiB per-file cap
+    rels = {e.rel_path for e in inv.entries}
+    assert "small.py" in rels
+    assert "large.py" not in rels
+
+
+def test_refuses_symlinks_by_default(tmp_path: Path):
+    target = _write(tmp_path, "real.py", "import openai")
+    link = tmp_path / "linked.py"
+    try:
+        link.symlink_to(target)
+    except OSError:
+        # Windows without developer mode / privilege
+        return
+    inv = build_repo_inventory(tmp_path)
+    rels = {e.rel_path for e in inv.entries}
+    assert "real.py" in rels
+    assert "linked.py" not in rels
+    assert inv.skip_reasons.get("symlink", 0) >= 1
+
+
+def test_allow_symlinks_opt_in(tmp_path: Path):
+    target = _write(tmp_path, "real.py", "import openai")
+    link = tmp_path / "linked.py"
+    try:
+        link.symlink_to(target)
+    except OSError:
+        return
+    inv = build_repo_inventory(tmp_path, limits=InventoryLimits(allow_symlinks=True))
+    rels = {e.rel_path for e in inv.entries}
+    assert "linked.py" in rels or "real.py" in rels

@@ -614,6 +614,7 @@ def run_scan(
         limits_hit=inventory.limits_hit,
         warnings=inventory.warnings,
         detector_errors=[],
+        scan_errors=list(inventory.limits_hit),
         baseline_ref=baseline_ref,
         generated_at=datetime.now(UTC).isoformat(),
         report_hash="",

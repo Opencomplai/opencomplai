@@ -79,6 +79,23 @@ class SemanticRef:
 
 
 @dataclass
+class FrameworkObjectRef:
+    """A variable constructed from a known class and later invoked via method call.
+
+    Distinguishes "imports/mentions a framework" from "instantiates a framework object
+    and calls a method on it" — the instantiation and invocation are joined by variable
+    name within a single function/module scope by the extractor.
+    """
+
+    class_name: str
+    method_name: str
+    var_name: str
+    instantiation_location: str
+    invocation_location: str
+    scope: EvidenceScope
+
+
+@dataclass
 class FeatureStore:
     repo_root: Path
     packages: list[ManifestPackage] = field(default_factory=list)
@@ -88,6 +105,7 @@ class FeatureStore:
     artifacts: list[ArtifactRef] = field(default_factory=list)
     notebooks: list[NotebookRef] = field(default_factory=list)
     semantics: list[SemanticRef] = field(default_factory=list)
+    framework_objects: list[FrameworkObjectRef] = field(default_factory=list)
     summary: dict[str, int] = field(default_factory=dict)
 
 
@@ -97,3 +115,4 @@ class ScanConfig:
     ocignore_path: Path | None = None
     cache_dir: Path | None = None
     use_cache: bool = True
+    framework_detectors: bool = False  # opt-in: AST framework-object detection (1.4)

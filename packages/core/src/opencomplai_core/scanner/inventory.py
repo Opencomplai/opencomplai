@@ -58,14 +58,24 @@ MODEL_EXTENSIONS = {
 }
 
 
+# Fail-closed defaults for hostile-repo scanning (SOC2 CC6 / ISO A.8.28).
+# max_* = 0 still means "unlimited" when explicitly set; defaults are non-zero.
+DEFAULT_MAX_FILES = 20_000
+DEFAULT_MAX_BYTES_PER_FILE = 1_048_576  # 1 MiB
+DEFAULT_MAX_TOTAL_BYTES = 209_715_200  # 200 MiB
+
+
 @dataclass
 class InventoryLimits:
-    max_files: int = 0
-    max_bytes_per_file: int = 0
-    max_total_bytes: int = 0
+    max_files: int = DEFAULT_MAX_FILES
+    max_bytes_per_file: int = DEFAULT_MAX_BYTES_PER_FILE
+    max_total_bytes: int = DEFAULT_MAX_TOTAL_BYTES
     skip_binary: bool = False
+    # Kept for break-glass configs that still resolve links; default path refuses
+    # symlinks via allow_symlinks=False (do not use depth=0 as "refuse").
     max_symlink_depth: int = 5
     max_notebook_cells: int = 500
+    allow_symlinks: bool = False
 
 
 @dataclass
@@ -173,11 +183,18 @@ def build_repo_inventory(
         if rel_dir == ".":
             rel_dir = ""
 
-        dirnames[:] = [
-            d
-            for d in dirnames
-            if not _is_ignored(f"{rel_dir}/{d}".strip("/"), patterns)
-        ]
+        kept_dirs: list[str] = []
+        for d in dirnames:
+            child_rel = f"{rel_dir}/{d}".strip("/") if rel_dir else d
+            if _is_ignored(child_rel, patterns):
+                continue
+            child = Path(dirpath) / d
+            if child.is_symlink() and not limits.allow_symlinks:
+                _record_skip(inventory, child_rel, "symlink")
+                inventory.warnings.append(f"symlink_refused:{child_rel}")
+                continue
+            kept_dirs.append(d)
+        dirnames[:] = kept_dirs
 
         for name in filenames:
             if limits.max_files > 0 and len(inventory.entries) >= limits.max_files:
@@ -190,11 +207,26 @@ def build_repo_inventory(
                 continue
 
             full = Path(dirpath) / name
-            resolved = _resolve_path(full, repo_root, 0, limits)
-            if resolved is None:
-                _record_skip(inventory, rel, "traversal")
-                inventory.warnings.append(f"path_traversal_blocked:{rel}")
+            if full.is_symlink() and not limits.allow_symlinks:
+                _record_skip(inventory, rel, "symlink")
+                inventory.warnings.append(f"symlink_refused:{rel}")
                 continue
+
+            if limits.allow_symlinks:
+                resolved = _resolve_path(full, repo_root, 0, limits)
+                if resolved is None:
+                    _record_skip(inventory, rel, "traversal")
+                    inventory.warnings.append(f"path_traversal_blocked:{rel}")
+                    continue
+            else:
+                # Stay on the non-followed path; still jail to repo_root.
+                try:
+                    full.resolve(strict=False).relative_to(repo_root)
+                except (OSError, ValueError):
+                    _record_skip(inventory, rel, "traversal")
+                    inventory.warnings.append(f"path_traversal_blocked:{rel}")
+                    continue
+                resolved = full
 
             try:
                 stat = resolved.stat()

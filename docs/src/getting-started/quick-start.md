@@ -50,6 +50,37 @@ The install provides the `opencomplai` command. Verify it (there is **no**
     opencomplai --help
     ```
 
+## Try it with zero setup first
+
+Before creating a manifest, run a **discovery-only** scan against any repo — no
+manifest required, and it can never fail your build:
+
+=== "macOS / Linux"
+    ```bash
+    opencomplai scan --quick .
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai scan --quick .
+    ```
+
+```text
+Discovery only — not a compliance verdict. No manifest was loaded and no CI gate was evaluated.
+
+Detected categories: openai, vector_embedding
+
+Suggested next step:
+  opencomplai init --system-id <your-system-id> --intended-purpose "openai, vector_embedding"
+```
+
+`scan --quick` always exits `0` and never writes `compliance-artifact.json` — it exists
+purely to answer *"does this repo look like it touches AI at all?"* before you commit to
+declaring a system. Contrast this with `opencomplai check` below: `check` is the
+command that actually gates CI and produces the compliance artifact. See the
+[scan reference](../cli/scan.md#zero-config-discovery---quick) for the full flag
+behavior.
+
 ## Initialise your system manifest
 
 === "macOS / Linux"

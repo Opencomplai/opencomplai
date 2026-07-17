@@ -42,6 +42,19 @@ Python 3.11+ is required. Verify with:
 
 Latest release: **0.1.2** on PyPI.
 
+## Optional extras
+
+| Extra | Install | What you get |
+|-------|---------|--------------|
+| *(default)* | `pip install opencomplai` | check, scan, gaps, recommend, lexical evaluators — air-gap safe |
+| `reports` | `pip install 'opencomplai[reports]'` | PDF via fpdf2 |
+| `compl-ai-bridge` | `pip install 'opencomplai[compl-ai-bridge]'` | Inspect + curated COMPL-AI suite (never used by `check`) |
+| `serve` | `pip install 'opencomplai[serve]'` | Localhost dashboard (`opencomplai serve`) |
+
+**Don't** install the bridge or serve extras into production gate images unless you
+intentionally want those network surfaces. `opencomplai check` never pulls Inspect.
+
+
 ## Install from source
 
 For contributors or bleeding-edge development, install from the repository. The local

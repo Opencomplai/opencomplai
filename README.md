@@ -4,7 +4,15 @@
 
 OpenComplAI brings EU AI Act compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks."
 
-[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/) [![Node.js](https://img.shields.io/badge/node-20%20LTS-339933.svg)](https://nodejs.org/)
+[![CI (Python)](assets/badge-ci-python.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](assets/badge-ci-node.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![License: AGPL v3](assets/badge-license-agpl-v3.svg)](LICENSE) [![Python](assets/badge-python.svg)](https://www.python.org/) [![Node.js](assets/badge-nodejs.svg)](https://nodejs.org/)
+
+### Demo
+
+<video src="https://raw.githubusercontent.com/Opencomplai/opencomplai-enterprise/main/assets/opencomplai.mp4" controls width="100%">
+  Your browser does not support the video tag.
+</video>
+
+[Watch the OpenComplAI demo (MP4)](https://raw.githubusercontent.com/Opencomplai/opencomplai-enterprise/main/assets/opencomplai.mp4)
 
 ## Why OpenComplAI?
 
@@ -32,9 +40,15 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 
 Get your first compliance check running in **under 15 minutes**:
 
-The packages are pre-release and not yet published to PyPI, so `pip install opencomplai`
-does not resolve yet. Install from source — the `core`, `cli`, and `sdk-python` packages
-must be installed together:
+```bash
+pip install opencomplai
+```
+
+This installs the CLI, core rule engine, and SDK with a stable API contract (see
+[CHANGELOG](CHANGELOG.md) for exit-code and artifact-schema guarantees).
+
+For contributors who want to work from a checkout instead, install from source — the
+`core`, `cli`, and `sdk-python` packages must be installed together:
 
 ```bash
 git clone https://github.com/Opencomplai/opencomplai
@@ -48,6 +62,27 @@ Then run a first assessment:
 ```bash
 opencomplai init --system-id my-model --intended-purpose "customer support chatbot"
 opencomplai check
+```
+
+Or try it with zero setup first — `opencomplai scan --quick .` runs a discovery-only
+scan with no manifest required and never gates your build:
+
+```bash
+opencomplai scan --quick .
+```
+
+### Pre-commit hook
+
+Add Opencomplai to your own `.pre-commit-config.yaml` to run the quick scan (or the
+full compliance gate, once you have a manifest) on every commit:
+
+```yaml
+repos:
+  - repo: https://github.com/Opencomplai/opencomplai
+    rev: v0.1.2
+    hooks:
+      - id: opencomplai-quick-scan   # discovery only, never fails the commit
+      # - id: opencomplai-check      # full EU AI Act gate — requires system-manifest.json
 ```
 
 [View Full Documentation](https://docs.opencomplai.com/getting-started/quick-start/)

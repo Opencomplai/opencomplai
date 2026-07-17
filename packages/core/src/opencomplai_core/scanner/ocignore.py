@@ -17,11 +17,15 @@ DEFAULT_OCIGNORE_TEMPLATE = """\
 # https://docs.opencomplai.com/getting-started/scanner#ocignore
 
 [limits]
-max_files = 0
-max_bytes_per_file = 0
-max_total_bytes = 0
+# Fail-closed defaults (0 = unlimited if you intentionally override)
+max_files = 20000
+max_bytes_per_file = 1048576
+max_total_bytes = 209715200
 skip_binary = false
+# Symlinks are refused by default (allow_symlinks = false). Do not set
+# max_symlink_depth = 0 expecting "refuse" — 0 means unlimited when links are allowed.
 max_symlink_depth = 5
+allow_symlinks = false
 max_notebook_cells = 500
 
 # --- Exclusions (edit freely) ---
@@ -63,13 +67,14 @@ _LIMIT_KEYS = frozenset(
         "skip_binary",
         "max_symlink_depth",
         "max_notebook_cells",
+        "allow_symlinks",
     }
 )
 
 _INT_LIMIT_DEFAULTS: dict[str, int] = {
-    "max_files": 0,
-    "max_bytes_per_file": 0,
-    "max_total_bytes": 0,
+    "max_files": 20_000,
+    "max_bytes_per_file": 1_048_576,
+    "max_total_bytes": 209_715_200,
     "max_symlink_depth": 5,
     "max_notebook_cells": 500,
 }
@@ -183,6 +188,7 @@ def _build_limits(
 ) -> InventoryLimits:
     ints: dict[str, int] = dict(_INT_LIMIT_DEFAULTS)
     skip_binary = False
+    allow_symlinks = False
 
     for key, value in raw.items():
         if key == "skip_binary":
@@ -191,6 +197,13 @@ def _build_limits(
                 warnings.append(f"{source}: invalid skip_binary value '{value}'")
             else:
                 skip_binary = parsed
+            continue
+        if key == "allow_symlinks":
+            parsed = _parse_bool(value)
+            if parsed is None:
+                warnings.append(f"{source}: invalid allow_symlinks value '{value}'")
+            else:
+                allow_symlinks = parsed
             continue
         parsed = _parse_int(value)
         if parsed is None:
@@ -205,6 +218,7 @@ def _build_limits(
         skip_binary=skip_binary,
         max_symlink_depth=ints["max_symlink_depth"],
         max_notebook_cells=ints["max_notebook_cells"],
+        allow_symlinks=allow_symlinks,
     )
 
 
@@ -310,6 +324,7 @@ def config_dict_for_hash(
             "skip_binary": limits.skip_binary,
             "max_symlink_depth": limits.max_symlink_depth,
             "max_notebook_cells": limits.max_notebook_cells,
+            "allow_symlinks": limits.allow_symlinks,
         },
         "ocignore_hash": content_hash,
     }

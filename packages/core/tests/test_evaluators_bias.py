@@ -52,3 +52,40 @@ def test_bias_skipped_without_data():
     sample = EvalSampleSet(eval_set_id="b4", system_id="sys")
     result = ev.evaluate(sample)
     assert result.outcome == EvaluatorOutcome.SKIPPED
+
+
+def test_bias_falls_back_to_bundled_probe_when_opted_in():
+    """2.4: bundled synthetic probe only used with the explicit opt-in flag."""
+    ev = BiasEvaluator()
+    sample = EvalSampleSet(
+        eval_set_id="b5",
+        system_id="sys",
+        threshold_overrides={"use_bundled_bias_probe": 1.0},
+    )
+    result = ev.evaluate(sample)
+    assert result.outcome != EvaluatorOutcome.SKIPPED
+    assert result.sample_count == 40
+
+
+def test_bias_does_not_use_bundled_probe_without_opt_in():
+    ev = BiasEvaluator()
+    sample = EvalSampleSet(eval_set_id="b6", system_id="sys")
+    result = ev.evaluate(sample)
+    assert result.outcome == EvaluatorOutcome.SKIPPED
+    assert result.skip_reason == "missing_predictions_labels_or_groups"
+
+
+def test_bias_does_not_use_bundled_probe_when_custom_data_supplied():
+    """Even with the opt-in flag set, custom data takes precedence over the bundled probe."""
+    ev = BiasEvaluator()
+    n = 25
+    sample = EvalSampleSet(
+        eval_set_id="b7",
+        system_id="sys",
+        predictions=[1.0] * n + [1.0] * n,
+        labels=[1.0] * (2 * n),
+        protected_attributes={"gender": ["A"] * n + ["B"] * n},
+        threshold_overrides={"use_bundled_bias_probe": 1.0},
+    )
+    result = ev.evaluate(sample)
+    assert result.sample_count == 2 * n

@@ -1,0 +1,105 @@
+{
+  "Art. 4": {
+    "template_id": "ai_literacy_checklist",
+    "kind": "markdown",
+    "title": "AI Literacy Checklist",
+    "file": "ai_literacy_checklist.md"
+  },
+  "Art. 5": {
+    "template_id": "annex_iii_applicability_note",
+    "kind": "markdown",
+    "title": "Annex III Applicability Note",
+    "file": "annex_iii_applicability_note.md"
+  },
+  "Art. 6": {
+    "template_id": "annex_iii_applicability_note",
+    "kind": "markdown",
+    "title": "Annex III Applicability Note",
+    "file": "annex_iii_applicability_note.md"
+  },
+  "Art. 9": {
+    "template_id": "risk_register_entry",
+    "kind": "markdown",
+    "title": "Risk Register Entry Stub",
+    "file": "risk_register_entry.md"
+  },
+  "Art. 10": {
+    "template_id": "risk_register_entry",
+    "kind": "markdown",
+    "title": "Risk Register Entry Stub",
+    "file": "risk_register_entry.md"
+  },
+  "Art. 11": {
+    "template_id": "logging_event_capture",
+    "kind": "markdown",
+    "title": "Logging / Event Capture Stub",
+    "file": "logging_event_capture.md"
+  },
+  "Art. 12": {
+    "template_id": "event_logging",
+    "kind": "python",
+    "title": "Event Logging Helper",
+    "file": "python/art12/event_logging.py"
+  },
+  "Art. 13": {
+    "template_id": "transparency_notice",
+    "kind": "markdown",
+    "title": "Transparency / Disclosure Notice Stub",
+    "file": "transparency_notice.md"
+  },
+  "Art. 14": {
+    "template_id": "oversight_checkpoint",
+    "kind": "python",
+    "title": "Human Oversight Checkpoint",
+    "file": "python/art14/oversight_checkpoint.py"
+  },
+  "Art. 15": {
+    "template_id": "risk_register_entry",
+    "kind": "markdown",
+    "title": "Risk Register Entry Stub",
+    "file": "risk_register_entry.md"
+  },
+  "Art. 16": {
+    "template_id": "risk_register_entry",
+    "kind": "markdown",
+    "title": "Risk Register Entry Stub",
+    "file": "risk_register_entry.md"
+  },
+  "Art. 24": {
+    "template_id": "annex_iii_applicability_note",
+    "kind": "markdown",
+    "title": "Annex III Applicability Note",
+    "file": "annex_iii_applicability_note.md"
+  },
+  "Art. 25": {
+    "template_id": "human_oversight_checklist",
+    "kind": "markdown",
+    "title": "Human Oversight Checklist",
+    "file": "human_oversight_checklist.md"
+  },
+  "Art. 43": {
+    "template_id": "annex_iii_applicability_note",
+    "kind": "markdown",
+    "title": "Annex III Applicability Note",
+    "file": "annex_iii_applicability_note.md"
+  },
+  "Art. 50": {
+    "template_id": "transparency_middleware",
+    "kind": "python",
+    "title": "ASGI Transparency Middleware",
+    "file": "python/art50/transparency_middleware.py",
+    "assets": ["python/common/disclosure_helpers.py"]
+  },
+  "Art. 53": {
+    "template_id": "gpai_obligation_stub",
+    "kind": "markdown",
+    "title": "GPAI Provider Obligation Stub (Art. 53)",
+    "file": "gpai_obligation_stub.md"
+  },
+  "Art. 55": {
+    "template_id": "gpai_obligation_stub",
+    "kind": "markdown",
+    "title": "GPAI Systemic-Risk Obligation Stub (Art. 55)",
+    "file": "gpai_obligation_stub.md"
+  }
+}

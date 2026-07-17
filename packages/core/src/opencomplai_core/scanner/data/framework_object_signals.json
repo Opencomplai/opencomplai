@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "framework_classes": {
+    "langchain": ["AgentExecutor", "Chain", "LLMChain", "ConversationChain", "SequentialChain"],
+    "crewai": ["Crew", "Agent", "Task"],
+    "autogen": ["ConversableAgent", "AssistantAgent", "UserProxyAgent", "GroupChat"],
+    "langgraph": ["StateGraph", "MessageGraph"]
+  }
+}

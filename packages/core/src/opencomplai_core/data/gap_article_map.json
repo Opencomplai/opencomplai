@@ -1,0 +1,94 @@
+{
+  "Art. 4": {
+    "sources": [
+      { "kind": "obligation", "ref": "ai_literacy" }
+    ]
+  },
+  "Art. 5": {
+    "sources": [
+      { "kind": "rule", "ref": "EU_AIA_ART5_UNACCEPTABLE" },
+      { "kind": "obligation", "ref": "prohibited" }
+    ]
+  },
+  "Art. 6": {
+    "sources": [
+      { "kind": "rule", "ref": "EU_AIA_ART6_HIGH_RISK" },
+      { "kind": "rule", "ref": "EU_AIA_ART6_PROFILING" },
+      { "kind": "scan", "ref": "biometric" },
+      { "kind": "scan", "ref": "scoring_profiling" },
+      { "kind": "scan", "ref": "agent_framework" }
+    ]
+  },
+  "Art. 9": {
+    "sources": [
+      { "kind": "artifact", "ref": "risk_register" },
+      { "kind": "obligation", "ref": "provider_high_risk" }
+    ]
+  },
+  "Art. 10": {
+    "sources": [
+      { "kind": "evaluator", "ref": "EVAL_BIAS_FAIRNESS_V1" },
+      { "kind": "scan", "ref": "PII_DATAFLOW" }
+    ]
+  },
+  "Art. 11": {
+    "sources": []
+  },
+  "Art. 12": {
+    "sources": []
+  },
+  "Art. 13": {
+    "sources": [
+      { "kind": "artifact", "ref": "deployer_instructions" }
+    ]
+  },
+  "Art. 14": {
+    "sources": [
+      { "kind": "artifact", "ref": "human_oversight_construct" },
+      { "kind": "scan", "ref": "agent_framework" },
+      { "kind": "scan", "ref": "mcp_server" }
+    ]
+  },
+  "Art. 15": {
+    "sources": [
+      { "kind": "evaluator", "ref": "EVAL_SAFETY_LEXICAL_V1" },
+      { "kind": "evaluator", "ref": "EVAL_DATA_LEAKAGE_V1" },
+      { "kind": "scan", "ref": "agent_framework" }
+    ]
+  },
+  "Art. 16": {
+    "sources": [
+      { "kind": "artifact", "ref": "provider_qms_bundle" }
+    ]
+  },
+  "Art. 24": {
+    "sources": [
+      { "kind": "artifact", "ref": "distributor_conformity" }
+    ]
+  },
+  "Art. 25": {
+    "sources": [
+      { "kind": "rule", "ref": "EU_AIA_ART25_MODIFICATION_TRAP" }
+    ]
+  },
+  "Art. 43": {
+    "sources": [
+      { "kind": "artifact", "ref": "conformity_assessment_docs" }
+    ]
+  },
+  "Art. 50": {
+    "sources": [
+      { "kind": "obligation", "ref": "transparency" }
+    ]
+  },
+  "Art. 53": {
+    "sources": [
+      { "kind": "obligation", "ref": "gpai_provider" }
+    ]
+  },
+  "Art. 55": {
+    "sources": [
+      { "kind": "obligation", "ref": "gpai_systemic_risk" }
+    ]
+  }
+}

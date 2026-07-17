@@ -257,6 +257,9 @@ class ScanStatusArtifact(BaseModel):
     scan_summary: ScanSummary | None = Field(
         None, description="Code corroboration scan outcomes when --scan was used"
     )
+    gap_report: "GapReport | None" = Field(
+        None, description="Per-article gap status when --with-gaps was used"
+    )
 
 
 class LedgerEvent(BaseModel):
@@ -356,6 +359,8 @@ class EvaluatorCategory(StrEnum):
     SAFETY = "safety"
     BIAS = "bias"
     DATA_LEAKAGE = "data_leakage"
+    ADVERSARIAL = "adversarial"
+    CALIBRATION = "calibration"
 
 
 class EvaluatorOutcome(StrEnum):
@@ -558,6 +563,8 @@ class SignalCategory(StrEnum):
     BIOMETRIC = "biometric"
     SCORING_PROFILING = "scoring_profiling"
     PII_DATAFLOW = "pii_dataflow"
+    AGENT_FRAMEWORK = "agent_framework"
+    MCP_SERVER = "mcp_server"
 
 
 class DiscrepancySeverity(StrEnum):
@@ -690,10 +697,36 @@ class CorroborationReport(BaseModel):
     limits_hit: list[str]
     warnings: list[str]
     detector_errors: list[str]
+    scan_errors: list[str] = Field(
+        default_factory=list,
+        description="Incomplete-scan / detector / limit failures surfaced for gating",
+    )
     baseline_ref: str | None
     generated_at: str
     report_hash: str
     eu_ai_scan: EuAiScanSummary | None = None
+
+
+DISCLAIMER_V1 = (
+    "OpenComplAI produces structured compliance evidence and heuristics. "
+    "It does not certify EU AI Act compliance or constitute legal advice."
+)
+
+
+class ScanOutputEnvelope(BaseModel):
+    """Versioned JSON wrapper for CLI scan/gaps/report output.
+
+    This is **not** the signed `ScanStatusArtifact` produced by `opencomplai check`.
+    Auditors should treat envelopes as machine-readable CLI output only.
+    """
+
+    schema_version: str = "1.0"
+    tool_name: str = "opencomplai"
+    tool_version: str
+    disclaimer: str = DISCLAIMER_V1
+    generated_at: str
+    scan_errors: list[str] = Field(default_factory=list)
+    payload: dict[str, Any]
 
 
 class ScanSummary(BaseModel):
@@ -705,4 +738,90 @@ class ScanSummary(BaseModel):
     detected_categories: list[str] = Field(default_factory=list)
     discrepancies: list[str] = Field(default_factory=list)
     report_hash: str
+    evidence_hashes: list[str] = Field(
+        default_factory=list, description="SHA-256 hashes of evidence objects"
+    )
+
+
+# ---------------------------------------------------------------------------
+# Gap report (opencomplai gaps)
+# ---------------------------------------------------------------------------
+
+
+class GapStatus(StrEnum):
+    """Per-article compliance status shown by `opencomplai gaps`."""
+
+    MET = "met"
+    PARTIAL = "partial"
+    MISSING = "missing"
+    UNVERIFIED = "unverified"
+
+
+class ArticleGapSource(StrEnum):
+    """Which subsystem produced an ArticleGapStatus row's evidence."""
+
+    RULE = "rule"
+    OBLIGATION = "obligation"
+    SCAN = "scan"
+    EVALUATOR = "evaluator"
+    ARTIFACT = "artifact"
+
+
+class ConfidenceLabel(StrEnum):
+    """Honesty label for gap / report surfaces (heuristic aid, not legal determination)."""
+
+    HEURISTIC_ESTIMATE = "heuristic_estimate"
+    NOT_ASSESSED = "not_assessed"
+    MEASURED = "measured"
+
+
+class ArticleGapStatus(BaseModel):
+    """Met/Partial/Missing/Unverified status for a single EU AI Act article."""
+
+    article: str = Field(..., description="EU AI Act article reference, e.g. 'Art. 6'")
+    status: GapStatus
+    source: ArticleGapSource
+    evidence_ref: str = Field(
+        ..., description="Rule id, obligation id, evaluator id, or scan finding reference"
+    )
+    rationale: str = ""
+    confidence: float | None = Field(
+        None, description="Heuristic confidence 0–1; null when not assessed"
+    )
+    confidence_label: ConfidenceLabel = ConfidenceLabel.HEURISTIC_ESTIMATE
+    disclaimer_ref: str = "DISCLAIMER_V1"
+
+
+class PrincipleStatus(BaseModel):
+    """Rollup Met/Partial/Missing/Unverified status for one of the 6 EU Trustworthy
+    AI principles, derived from the article-level rows already in a GapReport."""
+
+    principle_id: str = Field(..., description="e.g. 'accountability'")
+    title: str
+    status: GapStatus
+    articles: list[str] = Field(
+        default_factory=list, description="Article references rolled up into this principle"
+    )
+
+
+class PrincipleSummary(BaseModel):
+    """6-principle rollup of a GapReport, additive to `opencomplai gaps --output json`."""
+
+    principles: list[PrincipleStatus] = Field(default_factory=list)
+
+
+class GapReport(BaseModel):
+    """Per-article Met/Partial/Missing/Unverified projection (opencomplai gaps).
+
+    Purely a read-only projection of already-deterministic rule/obligation/scan/eval
+    outputs — introduces no new analysis logic and does not affect exit codes.
+    """
+
+    system_id: str
+    commit_ref: str
+    generated_at: str
+    articles: list[ArticleGapStatus] = Field(default_factory=list)
     evidence_hashes: list[str] = Field(default_factory=list)
+    principle_summary: "PrincipleSummary | None" = Field(
+        None, description="6-principle rollup, populated by `opencomplai gaps`"
+    )

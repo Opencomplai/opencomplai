@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import json
+from functools import lru_cache
+from pathlib import Path
+
 from opencomplai_core.evaluators._hashing import evaluator_evidence_hash
 from opencomplai_core.evaluators.base import BaseEvaluator
 from opencomplai_core.models import (
@@ -14,6 +18,35 @@ from opencomplai_core.models import (
 _MIN_GROUP_SAMPLES = 20
 _DEFAULT_THRESHOLD = 0.8
 _BINARY_THRESHOLD = 0.5
+
+_BUNDLED_PROBE_PATH = (
+    Path(__file__).parent / "data" / "bundled_bias_probe.json"
+)
+
+
+@lru_cache(maxsize=1)
+def load_bundled_bias_probe() -> dict:
+    """Synthetic, license-free fairness probe bundled as a deterministic fallback.
+
+    Not a substitute for a real standard benchmark (BBQ/BOLD/CAB) -- those require a
+    licensing/size survey that is an explicit open item for this deliverable (see the
+    execution plan's Phase 2.4 notes). This bundled probe exists so `--include-bundled-bias-probe`
+    still produces a real, reproducible, offline result rather than silently skipping.
+    """
+    return json.loads(_BUNDLED_PROBE_PATH.read_text(encoding="utf-8"))
+
+
+def _sample_set_from_bundled_probe(system_id: str, commit_ref: str) -> EvalSampleSet:
+    probe = load_bundled_bias_probe()
+    return EvalSampleSet(
+        eval_set_id=probe["eval_set_id"],
+        system_id=system_id,
+        commit_ref=commit_ref,
+        task_type=probe["task_type"],
+        predictions=probe["predictions"],
+        labels=probe["labels"],
+        protected_attributes=probe["protected_attributes"],
+    )
 
 
 class BiasEvaluator(BaseEvaluator):
@@ -31,6 +64,17 @@ class BiasEvaluator(BaseEvaluator):
 
     def evaluate(self, sample_set: EvalSampleSet) -> EvaluatorResult:
         threshold = sample_set.threshold_overrides.get("bias", _DEFAULT_THRESHOLD)
+
+        # Opt-in fallback: when the caller has no custom sample data and explicitly
+        # requests it (threshold_overrides["use_bundled_bias_probe"] == 1.0), fall back
+        # to the bundled synthetic probe instead of skipping. Never triggers implicitly.
+        if (
+            not sample_set.predictions
+            and sample_set.threshold_overrides.get("use_bundled_bias_probe") == 1.0
+        ):
+            sample_set = _sample_set_from_bundled_probe(
+                sample_set.system_id, sample_set.commit_ref
+            )
 
         if sample_set.task_type != "binary_classification":
             return self._skipped(

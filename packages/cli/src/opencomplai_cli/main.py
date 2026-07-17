@@ -26,6 +26,8 @@ from pathlib import Path
 import typer
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
+from opencomplai_core.gap_report import build_gap_report
+from opencomplai_core.principle_report import build_principle_summary
 from opencomplai_core.models import (
     AssessmentInput,
     CorroborationReport,
@@ -33,6 +35,8 @@ from opencomplai_core.models import (
     EvalSampleSet,
     EvalSummary,
     EvaluatorOutcome,
+    GapReport,
+    GapStatus,
     ModelMetadata,
     RiskLevel,
     ScanResult,
@@ -40,6 +44,9 @@ from opencomplai_core.models import (
     ScanSummary,
     SystemManifest,
 )
+from opencomplai_core.output_envelope import wrap_scan_output
+from opencomplai_core.recommend_engine import render_recommendations
+from opencomplai_core.report_engine import render_report
 from opencomplai_core.scan_engine import run_scan, scan_summary_from_report
 from opencomplai_core.scanner.feature_types import ScanConfig, ScanProgressCallback
 from opencomplai_core.scanner.ocignore import ensure_ocignore
@@ -93,6 +100,7 @@ from opencomplai_cli.commands.checker import (  # noqa: E402
 )
 from opencomplai_cli.commands.dashboard import app as dashboard_app  # noqa: E402
 from opencomplai_cli.commands.interactive_init import run_interactive_init  # noqa: E402
+from opencomplai_cli.commands.serve import run_serve  # noqa: E402
 
 ai_app = typer.Typer(help="AI intent analysis commands.")
 
@@ -898,6 +906,316 @@ def _load_sample_set(
     return sample
 
 
+_GAP_STATUS_STYLE = {
+    GapStatus.MET: "[green]MET[/green]",
+    GapStatus.PARTIAL: "[yellow]PARTIAL[/yellow]",
+    GapStatus.MISSING: "[red]MISSING[/red]",
+    GapStatus.UNVERIFIED: "[dim]UNVERIFIED[/dim]",
+}
+
+
+@app.command("gaps")
+def gaps_cmd(
+    manifest_file: Path = typer.Option(
+        Path("system-manifest.json"),
+        "--manifest",
+        "-m",
+        help="Path to system manifest JSON file",
+    ),
+    commit_ref: str = typer.Option("HEAD", "--commit-ref", help="Git commit reference"),
+    scan_report_file: Path | None = typer.Option(
+        None,
+        "--scan-report",
+        help="Path to a CorroborationReport JSON file from a prior `opencomplai scan --output json`",
+    ),
+    sample_set_file: Path | None = typer.Option(
+        None,
+        "--sample-set",
+        help="Path to EvalSampleSet JSON for safety/bias/leakage evaluators",
+    ),
+    repo_root: Path = typer.Option(
+        Path("."),
+        "--repo-root",
+        help="Repository root for artifact path probes (Arts. 9/13/14/16/24/43)",
+    ),
+    output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+) -> None:
+    """
+    Print a per-article EU AI Act gap report (Met/Partial/Missing/Unverified).
+
+    Purely a projection of already-computed rule/obligation/scan/eval results —
+    informational only, never gates CI (see `opencomplai check` for the CI gate).
+    """
+    if not manifest_file.exists():
+        err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
+        err_console.print("Run [bold]opencomplai init[/bold] first.")
+        sys.exit(2)
+
+    try:
+        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+    except Exception as e:
+        err_console.print(f"[red]Validation error:[/red] {e}")
+        sys.exit(2)
+
+    assessment_input = AssessmentInput(
+        model=ModelMetadata(
+            name=manifest.system_id,
+            version=commit_ref,
+            modality="text",
+            use_case=manifest.intended_purpose,
+            deployment_context="local",
+        )
+    )
+    risk_result = assess(assessment_input)
+
+    corroboration_report = None
+    if scan_report_file is not None:
+        if not scan_report_file.exists():
+            err_console.print(f"[red]Error:[/red] scan report not found: {scan_report_file}")
+            sys.exit(2)
+        corroboration_report = CorroborationReport.model_validate(
+            json.loads(scan_report_file.read_text())
+        )
+
+    eval_report = None
+    sample_set = _load_sample_set(sample_set_file, manifest)
+    if sample_set is not None:
+        sample_set = sample_set.model_copy(update={"commit_ref": commit_ref})
+        eval_report = run_evals(manifest.system_id, commit_ref, sample_set)
+
+    report = build_gap_report(
+        system_id=manifest.system_id,
+        commit_ref=commit_ref,
+        risk_result=risk_result,
+        corroboration_report=corroboration_report,
+        eval_report=eval_report,
+        repo_root=repo_root.resolve(),
+    )
+    principle_summary = build_principle_summary(report)
+    report = report.model_copy(update={"principle_summary": principle_summary})
+
+    if output == OutputFormat.json:
+        envelope = wrap_scan_output(
+            json.loads(report.model_dump_json()),
+            scan_errors=[],
+            tool_version=__version__,
+        )
+        console.print_json(envelope.model_dump_json(indent=2))
+        return
+
+    console.print(f"\n[bold]Opencomplai Gap Report[/bold] — {manifest.system_id}\n")
+    console.print(
+        "[dim]Statuses are heuristic estimates — not a legal determination.[/dim]\n"
+    )
+    table = Table(show_header=True, header_style="bold")
+    table.add_column("Article", style="dim")
+    table.add_column("Status", min_width=10)
+    table.add_column("Source", style="dim")
+    table.add_column("Evidence", style="dim")
+    table.add_column("Rationale")
+    for row in report.articles:
+        table.add_row(
+            row.article,
+            _GAP_STATUS_STYLE[row.status],
+            row.source.value,
+            row.evidence_ref,
+            row.rationale,
+        )
+    console.print(table)
+
+    console.print("\n[bold]Principle Summary[/bold]\n")
+    principle_table = Table(show_header=True, header_style="bold")
+    principle_table.add_column("Principle", style="dim")
+    principle_table.add_column("Status", min_width=10)
+    principle_table.add_column("Articles", style="dim")
+    for p in principle_summary.principles:
+        principle_table.add_row(
+            p.title, _GAP_STATUS_STYLE[p.status], ", ".join(p.articles)
+        )
+    console.print(principle_table)
+
+    console.print(
+        "\n[dim]Gap report is informational only — it does not gate CI. "
+        "See `opencomplai check` for the compliance-artifact.json CI contract.[/dim]\n"
+    )
+
+
+@app.command("recommend")
+def recommend_cmd(
+    manifest_file: Path = typer.Option(
+        Path("system-manifest.json"),
+        "--manifest",
+        "-m",
+        help="Path to system manifest JSON file (used when --gap-report is not supplied)",
+    ),
+    commit_ref: str = typer.Option("HEAD", "--commit-ref", help="Git commit reference"),
+    gap_report_file: Path | None = typer.Option(
+        None,
+        "--gap-report",
+        help="Path to a GapReport JSON file from a prior `opencomplai gaps --output json`",
+    ),
+    scan_report_file: Path | None = typer.Option(
+        None,
+        "--scan-report",
+        help="Path to a CorroborationReport JSON file (only used when --gap-report is not supplied)",
+    ),
+    sample_set_file: Path | None = typer.Option(
+        None,
+        "--sample-set",
+        help="Path to EvalSampleSet JSON (only used when --gap-report is not supplied)",
+    ),
+    output_dir: Path = typer.Option(
+        Path("./fixes"), "--output", "-o", help="Directory to write remediation templates to"
+    ),
+) -> None:
+    """
+    Write copy-paste remediation templates for every Missing/Partial gap-report row.
+
+    Templates are static content generation, mapped 1:1 to `opencomplai gaps` article
+    rows — no code execution, no network calls, no interaction with signing/evidence.
+    """
+    if gap_report_file is not None:
+        if not gap_report_file.exists():
+            err_console.print(f"[red]Error:[/red] gap report not found: {gap_report_file}")
+            sys.exit(2)
+        report = GapReport.model_validate(json.loads(gap_report_file.read_text()))
+    else:
+        if not manifest_file.exists():
+            err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
+            err_console.print("Run [bold]opencomplai init[/bold] first, or pass --gap-report.")
+            sys.exit(2)
+        try:
+            manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+        except Exception as e:
+            err_console.print(f"[red]Validation error:[/red] {e}")
+            sys.exit(2)
+
+        assessment_input = AssessmentInput(
+            model=ModelMetadata(
+                name=manifest.system_id,
+                version=commit_ref,
+                modality="text",
+                use_case=manifest.intended_purpose,
+                deployment_context="local",
+            )
+        )
+        risk_result = assess(assessment_input)
+
+        corroboration_report = None
+        if scan_report_file is not None:
+            if not scan_report_file.exists():
+                err_console.print(f"[red]Error:[/red] scan report not found: {scan_report_file}")
+                sys.exit(2)
+            corroboration_report = CorroborationReport.model_validate(
+                json.loads(scan_report_file.read_text())
+            )
+
+        eval_report = None
+        sample_set = _load_sample_set(sample_set_file, manifest)
+        if sample_set is not None:
+            sample_set = sample_set.model_copy(update={"commit_ref": commit_ref})
+            eval_report = run_evals(manifest.system_id, commit_ref, sample_set)
+
+        report = build_gap_report(
+            system_id=manifest.system_id,
+            commit_ref=commit_ref,
+            risk_result=risk_result,
+            corroboration_report=corroboration_report,
+            eval_report=eval_report,
+        )
+
+    written = render_recommendations(report, output_dir)
+
+    if not written:
+        console.print(
+            "[green]No Missing/Partial gap-report rows — nothing to recommend.[/green]"
+        )
+        return
+
+    console.print(f"[bold]Wrote {len(written)} remediation template(s) to {output_dir}[/bold]")
+    for path in written:
+        console.print(f"  {path}")
+
+
+@app.command("report")
+def report_cmd(
+    manifest_file: Path = typer.Option(
+        Path("system-manifest.json"),
+        "--manifest",
+        "-m",
+        help="Path to system manifest JSON file",
+    ),
+    artifact_file: Path | None = typer.Option(
+        Path("compliance-artifact.json"),
+        "--artifact",
+        help="Path to a compliance-artifact.json (ScanStatusArtifact) — optional",
+    ),
+    gap_report_file: Path | None = typer.Option(
+        None,
+        "--gap-report",
+        help="Path to a GapReport JSON file (overrides any gap_report embedded in --artifact)",
+    ),
+    output_file: Path = typer.Option(
+        Path("report.html"), "--output", "-o", help="Output path (.html or .pdf)"
+    ),
+) -> None:
+    """
+    Render a single shareable report combining manifest + rule results + gap report +
+    eval/scan summaries.
+
+    Air-gap compatible: reads only local files, makes no network calls, and does not
+    replace the Annex IV dossier (`opencomplai docs generate`) or the CI gate
+    (`opencomplai check`).
+    """
+    if not manifest_file.exists():
+        err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
+        err_console.print("Run [bold]opencomplai init[/bold] first.")
+        sys.exit(2)
+    try:
+        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+    except Exception as e:
+        err_console.print(f"[red]Validation error:[/red] {e}")
+        sys.exit(2)
+
+    artifact = None
+    if artifact_file is not None and artifact_file.exists():
+        artifact = ScanStatusArtifact.model_validate(json.loads(artifact_file.read_text()))
+
+    gap_report = None
+    if gap_report_file is not None:
+        if not gap_report_file.exists():
+            err_console.print(f"[red]Error:[/red] gap report not found: {gap_report_file}")
+            sys.exit(2)
+        gap_report = GapReport.model_validate(json.loads(gap_report_file.read_text()))
+
+    assessment_input = AssessmentInput(
+        model=ModelMetadata(
+            name=manifest.system_id,
+            version=manifest.commit_ref,
+            modality="text",
+            use_case=manifest.intended_purpose,
+            deployment_context="local",
+        )
+    )
+    risk_result = assess(assessment_input)
+
+    fmt = "pdf" if output_file.suffix.lower() == ".pdf" else "html"
+    rendered = render_report(
+        manifest,
+        artifact=artifact,
+        gap_report=gap_report,
+        risk_result=risk_result,
+        fmt=fmt,
+    )
+
+    if isinstance(rendered, bytes):
+        output_file.write_bytes(rendered)
+    else:
+        output_file.write_text(rendered, encoding="utf-8")
+
+    console.print(f"[bold green]Wrote report to {output_file}[/bold green]")
+
+
 def _run_pipeline_evals(
     manifest: SystemManifest,
     commit_ref: str,
@@ -971,6 +1289,9 @@ def _scan_should_fail(
 ) -> bool:
     if fail_on == FailOnLevel.none:
         return False
+    # Incomplete / hostile-repo conditions fail any non-none fail-on level.
+    if report.scan_errors or report.detector_errors:
+        return True
     if fail_on == FailOnLevel.critical:
         return report.severity == DiscrepancySeverity.CRITICAL
     if fail_on == FailOnLevel.major:
@@ -1494,6 +1815,11 @@ def scan_cmd(
     output_file: Path | None = typer.Option(
         None, "--output-file", "-f", help="Write scan results to file (.json or .md)"
     ),
+    sarif_output: Path | None = typer.Option(
+        None,
+        "--sarif-output",
+        help="Write scan evidence as SARIF 2.1.0 (for GitHub code scanning / GHAS upload)",
+    ),
     ocignore_path: Path | None = typer.Option(
         None, "--ocignore", help="Path to .ocignore (must be inside --repo-root)"
     ),
@@ -1533,12 +1859,41 @@ def scan_cmd(
             "for non-regulatory callsites."
         ),
     ),
+    framework_detectors: bool = typer.Option(
+        False,
+        "--framework-detectors",
+        help=(
+            "Opt-in: AST-level framework-object detection (LangChain AgentExecutor, "
+            "CrewAI Crew, AutoGen ConversableAgent, LangGraph StateGraph, etc.) — "
+            "informational only, in addition to the existing lexical orchestration signal."
+        ),
+    ),
+    quick: bool = typer.Option(
+        False,
+        "--quick",
+        help=(
+            "Zero-config discovery scan: skip manifest loading, never gate CI, never "
+            "emit ledger events. Prints detected categories and a suggested `init` command."
+        ),
+    ),
 ) -> None:
     """Cross-check declared purpose against AI capability signals in the repo."""
-    if not manifest_file.exists():
+    if quick:
+        fail_on = FailOnLevel.none
+        emit_evidence = False
+        enqueue_review = False
+        manifest = SystemManifest(
+            system_id="quick-scan",
+            intended_purpose="",
+            compliance_target="EU_AI_ACT",
+            high_risk_presumption=False,
+            commit_ref=commit_ref,
+        )
+    elif not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest not found: {manifest_file}")
         sys.exit(2)
-    manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+    else:
+        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
     baseline_categories: list[str] | None = None
     baseline_ref: str | None = None
     if baseline is not None:
@@ -1592,6 +1947,28 @@ def scan_cmd(
         bootstrap=ocignore_bootstrap,
     )
 
+    from opencomplai_core.project_config import find_project_config, load_project_config
+
+    project_config_path = find_project_config(repo_root)
+    resolved_fail_on = fail_on
+    resolved_framework_detectors = framework_detectors
+    if project_config_path is not None:
+        project_config = load_project_config(project_config_path)
+        # Config values only apply where the CLI flag is still at its built-in default —
+        # an explicit CLI flag always wins over opencomplai.yaml (never the reverse).
+        if fail_on == FailOnLevel.none and project_config.scan_fail_on is not None:
+            resolved_fail_on = FailOnLevel(project_config.scan_fail_on)
+        if (
+            framework_detectors is False
+            and project_config.scan_framework_detectors is not None
+        ):
+            resolved_framework_detectors = project_config.scan_framework_detectors
+        console.print(f"[dim]Loaded project config: {project_config_path}[/dim]")
+    fail_on = resolved_fail_on
+    framework_detectors = resolved_framework_detectors
+
+    scan_config.framework_detectors = framework_detectors
+
     _summary, report, _ = _run_scan_corroboration(
         manifest,
         commit_ref,
@@ -1608,7 +1985,12 @@ def scan_cmd(
     )
 
     if output == OutputFormat.json:
-        console.print_json(report.model_dump_json(indent=2))
+        envelope = wrap_scan_output(
+            json.loads(report.model_dump_json()),
+            scan_errors=list(report.scan_errors) + list(report.detector_errors),
+            tool_version=__version__,
+        )
+        console.print_json(envelope.model_dump_json(indent=2))
     else:
         _print_scan_human(
             report,
@@ -1616,6 +1998,26 @@ def scan_cmd(
             ai_verbose=ai_verbose,
             ai_legacy=ai_legacy,
         )
+
+    if quick:
+        categories = ", ".join(report.detected_categories) or "(none)"
+        console.print(
+            "\n[bold]Discovery only — not a compliance verdict.[/bold] "
+            "No manifest was loaded and no CI gate was evaluated.\n"
+        )
+        console.print(f"[dim]Detected categories:[/dim] {categories}")
+        if report.detected_categories:
+            purpose_guess = ", ".join(report.detected_categories)
+            console.print(
+                "\n[bold]Suggested next step:[/bold]\n"
+                f'  opencomplai init --system-id <your-system-id> --intended-purpose "{purpose_guess}"\n'
+            )
+        else:
+            console.print(
+                "\n[dim]No AI signals detected in this repo — "
+                "`opencomplai init` when you have a system to declare.[/dim]\n"
+            )
+        sys.exit(0)
 
     if output_file is not None:
         suffix = output_file.suffix.lower()
@@ -1629,6 +2031,12 @@ def scan_cmd(
             )
             output_file.write_text(report.model_dump_json(indent=2), encoding="utf-8")
         console.print(f"[dim]Results written to {output_file}[/dim]")
+
+    if sarif_output is not None:
+        from opencomplai_core.scanner.sarif import report_to_sarif
+
+        sarif_output.write_text(json.dumps(report_to_sarif(report), indent=2), encoding="utf-8")
+        console.print(f"[dim]SARIF written to {sarif_output}[/dim]")
 
     if enqueue_review and report.severity in (
         DiscrepancySeverity.MAJOR,
@@ -1688,6 +2096,11 @@ def check_cmd(
         FailOnLevel.none, "--fail-on", help="Gate check on scan discrepancies"
     ),
     scan_baseline: Path | None = typer.Option(None, "--baseline"),
+    with_gaps: bool = typer.Option(
+        False,
+        "--with-gaps",
+        help="Attach a per-article gap_report to the artifact (additive, informational only)",
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """
@@ -1737,6 +2150,7 @@ def check_cmd(
     )
 
     scan_summary: ScanSummary | None = None
+    scan_report: CorroborationReport | None = None
     scan_failed = False
     baseline_categories: list[str] | None = None
     if scan_baseline is not None and scan_baseline.exists():
@@ -1787,6 +2201,31 @@ def check_cmd(
         artifact.failed_controls = list(
             dict.fromkeys([*artifact.failed_controls, "CODE_CORROBORATION_GAP"])
         )
+
+    if with_gaps:
+        gap_assessment_input = AssessmentInput(
+            model=ModelMetadata(
+                name=manifest.system_id,
+                version=commit_ref,
+                modality="text",
+                use_case=manifest.intended_purpose,
+                deployment_context=scan_mode,
+            )
+        )
+        gap_risk_result = assess(gap_assessment_input)
+        gap_eval_report = None
+        if sample_set is not None:
+            gap_eval_report = run_evals(
+                manifest.system_id, commit_ref, sample_set.model_copy(update={"commit_ref": commit_ref})
+            )
+        gap_report = build_gap_report(
+            system_id=manifest.system_id,
+            commit_ref=commit_ref,
+            risk_result=gap_risk_result,
+            corroboration_report=scan_report,
+            eval_report=gap_eval_report,
+        )
+        artifact = artifact.model_copy(update={"gap_report": gap_report})
 
     # Write artifact to disk for CI consumption
     artifact_path = Path("compliance-artifact.json")
@@ -2167,11 +2606,114 @@ def eval_cmd(
     manifest_file: Path = typer.Option(
         Path("system-manifest.json"), "--manifest", "-m"
     ),
-    sample_set_file: Path = typer.Option(..., "--sample-set"),
+    sample_set_file: Path | None = typer.Option(
+        None,
+        "--sample-set",
+        help="Path to EvalSampleSet JSON (required unless --suite is set)",
+    ),
     commit_ref: str = typer.Option("HEAD", "--commit-ref"),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+    provider: str | None = typer.Option(
+        None,
+        "--provider",
+        help=(
+            "Opt-in: call a live model provider (e.g. 'openai') for each prompt in the "
+            "sample set. Non-deterministic and network-dependent -- never runs by "
+            "default, and never invoked by `opencomplai check`."
+        ),
+    ),
+    provider_model: str | None = typer.Option(
+        None, "--model", help="Model name to request from --provider or --suite (e.g. gpt-4o-mini)"
+    ),
+    provider_api_key_env: str = typer.Option(
+        "OPENCOMPLAI_PROVIDER_API_KEY",
+        "--provider-api-key-env",
+        help="Environment variable holding the provider API key",
+    ),
+    suite: str | None = typer.Option(
+        None,
+        "--suite",
+        help=(
+            "Opt-in: run an external benchmark suite bridge (currently 'compl-ai'). "
+            "Requires the 'opencomplai-core[compl-ai-bridge]' extra. Non-deterministic, "
+            "network-dependent — never invoked by `opencomplai check`."
+        ),
+    ),
+    tasks: str | None = typer.Option(
+        None,
+        "--tasks",
+        help="Comma-separated curated COMPL-AI tasks (default: strong_reject,bbq,bigbench_calibration)",
+    ),
+    log_dir: Path | None = typer.Option(
+        None,
+        "--log-dir",
+        help="Local Inspect log directory for --suite compl-ai (no S3 in this release)",
+    ),
 ) -> None:
     """Run safety, bias, and data-leakage pipeline evaluators."""
+    if suite is not None:
+        if suite != "compl-ai":
+            err_console.print(f"[red]Error:[/red] unknown --suite {suite!r} (only 'compl-ai' is supported)")
+            sys.exit(2)
+        from opencomplai_core.bridges.compl_ai import (
+            curated_task_names,
+            is_inspect_available,
+            run_compl_ai_suite,
+        )
+
+        if not is_inspect_available():
+            err_console.print(
+                "[red]Error:[/red] --suite compl-ai requires the optional 'compl-ai-bridge' extra.\n"
+                "  Install with: pip install 'opencomplai-core\\[compl-ai-bridge]'"
+            )
+            sys.exit(2)
+        if not provider_model:
+            err_console.print("[red]Error:[/red] --model is required with --suite compl-ai")
+            sys.exit(2)
+        api_key = os.environ.get(provider_api_key_env, "") or os.environ.get("OPENAI_API_KEY", "")
+        task_list = (
+            [t.strip() for t in tasks.split(",") if t.strip()]
+            if tasks
+            else curated_task_names()
+        )
+        console.print(
+            "[bold yellow]COMPL-AI bridge[/bold yellow] — non-deterministic, never gates "
+            "`opencomplai check` (gate_on_bridge=false)."
+        )
+        try:
+            suite_results = run_compl_ai_suite(
+                task_list,
+                model=provider_model,
+                api_key=api_key,
+                log_dir=log_dir,
+            )
+        except Exception as exc:  # noqa: BLE001 — surface bridge errors cleanly
+            err_console.print(f"[red]Error:[/red] COMPL-AI suite failed: {exc}")
+            sys.exit(2)
+        if output == OutputFormat.json:
+            envelope = wrap_scan_output(
+                {
+                    "suite": "compl-ai",
+                    "model": provider_model,
+                    "deterministic": False,
+                    "tasks": [r.model_dump() for r in suite_results],
+                },
+                tool_version=__version__,
+            )
+            console.print_json(envelope.model_dump_json(indent=2))
+        else:
+            for r in suite_results:
+                console.print(
+                    f"  {r.evaluator_id}: {r.outcome.value} score={r.score} "
+                    f"(n={r.sample_count})"
+                )
+        if any(r.outcome == EvaluatorOutcome.FAIL for r in suite_results):
+            sys.exit(1)
+        sys.exit(0)
+
+    if sample_set_file is None:
+        err_console.print("[red]Error:[/red] --sample-set is required unless --suite is set")
+        sys.exit(2)
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest not found: {manifest_file}")
         sys.exit(2)
@@ -2195,9 +2737,61 @@ def eval_cmd(
         if summary.skipped_evaluators:
             console.print(f"  skipped: {summary.skipped_evaluators}")
 
+    if provider is not None:
+        if not provider_model:
+            err_console.print("[red]Error:[/red] --model is required when --provider is set")
+            sys.exit(2)
+        api_key = os.environ.get(provider_api_key_env, "")
+        if not api_key:
+            err_console.print(
+                f"[red]Error:[/red] {provider_api_key_env} is not set; "
+                "cannot call --provider without an API key"
+            )
+            sys.exit(2)
+
+        from opencomplai_core.model_providers import get_provider_client
+
+        client = get_provider_client(provider)
+        completions = [
+            client.complete(prompt, model=provider_model, api_key=api_key)
+            for prompt in sample_set.prompts
+        ]
+        provider_payload = {
+            "provider": provider,
+            "model": provider_model,
+            "deterministic": False,
+            "note": "Live model-provider call — non-deterministic, network-dependent, opt-in only.",
+            "completions": [
+                {"prompt": c.prompt, "completion": c.completion} for c in completions
+            ],
+        }
+        if output == OutputFormat.json:
+            console.print_json(json.dumps(provider_payload, indent=2))
+        else:
+            console.print(
+                f"\n[bold yellow]Live provider call ({provider}/{provider_model}) "
+                "— non-deterministic, not part of the deterministic evaluator suite[/bold yellow]"
+            )
+            for c in completions:
+                console.print(f"  prompt:     {c.prompt[:80]}")
+                console.print(f"  completion: {c.completion[:80]}")
+
     if summary.overall_outcome == EvaluatorOutcome.FAIL:
         sys.exit(1)
     sys.exit(0)
+
+
+@app.command("serve")
+def serve_cmd(
+    project_root: Path = typer.Argument(
+        Path("."),
+        help="Project directory to scan (must stay on this machine)",
+    ),
+    host: str = typer.Option("127.0.0.1", "--host", help="Loopback host only"),
+    port: int = typer.Option(8420, "--port", help="Local port"),
+) -> None:
+    """Start a localhost-only scan dashboard (not Pro / SaaS)."""
+    run_serve(project_root, host=host, port=port)
 
 
 # ---------------------------------------------------------------------------

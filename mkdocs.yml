@@ -132,6 +132,27 @@ nav:
     - Performance: guides/performance.md
     - Deployment: guides/deployment.md
     - Security: guides/security.md
+    - CI Integration: guides/ci-integration.md
+    - Pre-commit Integration: guides/pre-commit.md
+    - Project Configuration: guides/configuration.md
+    - CI Code Scanning (SARIF): guides/sarif-integration.md
+
+  - CLI Reference:
+    - init: cli/init.md
+    - check: cli/check.md
+    - scan: cli/scan.md
+    - gaps: cli/gaps.md
+    - recommend: cli/recommend.md
+    - report: cli/report.md
+    - eval: cli/eval.md
+    - checker: cli/checker.md
+    - dashboard: cli/dashboard.md
+    - docs generate: cli/docs-generate.md
+    - risk classify: cli/risk-classify.md
+    - sync-metadata: cli/sync-metadata.md
+    - validate-manifest: cli/validate-manifest.md
+    - verify-output: cli/verify-output.md
+    - Exit Codes: cli/exit-codes.md
 
   - API Reference:
     - Overview: api/index.md
@@ -155,6 +176,8 @@ nav:
   - Concepts:
     - Rules: concepts/rules.md
     - Control Codes: concepts/control-codes.md
+    - Evaluators: concepts/evaluators.md
+    - EU AI Act Principles: concepts/eu-ai-act-principles.md
     - Risk Levels: concepts/risk-levels.md
     - Evidence: concepts/evidence.md
     - Scan Workflow: concepts/scan-workflow.md

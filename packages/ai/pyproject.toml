@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai-ai"
-version = "0.1.2"
+version = "0.2.0"
 description = "AI-powered intent classification plugin for Opencomplai (EU AI Act)"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }

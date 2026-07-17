@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "description": "Six EU Trustworthy AI principles (per the EU High-Level Expert Group on AI / COMPL-AI-style grouping), mapped from existing article-level gap-report rows. Purely a re-projection of already-computed article statuses -- introduces no new analysis.",
+  "principles": {
+    "technical_robustness_safety": {
+      "title": "Technical Robustness and Safety",
+      "articles": ["Art. 15", "Art. 25"]
+    },
+    "privacy_data_governance": {
+      "title": "Privacy and Data Governance",
+      "articles": ["Art. 10"]
+    },
+    "transparency": {
+      "title": "Transparency",
+      "articles": ["Art. 12", "Art. 13", "Art. 50"]
+    },
+    "diversity_non_discrimination_fairness": {
+      "title": "Diversity, Non-discrimination and Fairness",
+      "articles": ["Art. 5", "Art. 6", "Art. 10"]
+    },
+    "societal_environmental_wellbeing": {
+      "title": "Societal and Environmental Wellbeing",
+      "articles": ["Art. 5"]
+    },
+    "accountability": {
+      "title": "Accountability",
+      "articles": ["Art. 4", "Art. 9", "Art. 11", "Art. 14", "Art. 16", "Art. 24", "Art. 43", "Art. 53", "Art. 55"]
+    }
+  }
+}

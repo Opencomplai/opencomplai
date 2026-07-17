@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "description": "Synthetic, license-free fairness probe subset bundled with opencomplai-core. Not a redistribution of any third-party benchmark (e.g. BBQ/BOLD/CAB) -- those require a licensing/size survey noted as an open item in the execution plan (Phase 2.4) before any real subset can be bundled. This is a small deterministic binary-classification probe across two synthetic protected-attribute groups, used only as a fallback when the caller supplies no custom EvalSampleSet.",
+  "reference": "opencomplai bundled synthetic fairness probe v1 (not BBQ/BOLD/CAB)",
+  "eval_set_id": "bundled_bias_probe_v1",
+  "task_type": "binary_classification",
+  "predictions": [1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0,
+                   0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0],
+  "labels":      [1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0,
+                   0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0],
+  "protected_attributes": {
+    "synthetic_group": [
+      "group_a", "group_a", "group_a", "group_a", "group_a",
+      "group_a", "group_a", "group_a", "group_a", "group_a",
+      "group_a", "group_a", "group_a", "group_a", "group_a",
+      "group_a", "group_a", "group_a", "group_a", "group_a",
+      "group_b", "group_b", "group_b", "group_b", "group_b",
+      "group_b", "group_b", "group_b", "group_b", "group_b",
+      "group_b", "group_b", "group_b", "group_b", "group_b",
+      "group_b", "group_b", "group_b", "group_b", "group_b"
+    ]
+  }
+}

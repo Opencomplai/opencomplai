@@ -49,3 +49,17 @@ Expected output on a valid chain:
 ## In local (non-service) mode
 
 When `OPENCOMPLAI_API_URL` is not set, `compliance-artifact.json` is the sole evidence output. `evidence_hashes` will be empty in local mode.
+
+## Scanner signal categories and detectors
+
+Code-corroboration scan evidence (`opencomplai scan`) is tagged with a `SignalCategory`
+and produced by a versioned `detector_id`, so evidence stays traceable to the exact
+detection logic that produced it:
+
+| Signal category | Detector(s) | Notes |
+|---|---|---|
+| `AGENT_FRAMEWORK` | `DET_FRAMEWORK_AST_V1` | Opt-in (`--framework-detectors`). AST-level: fires on framework object *construction + invocation* (LangChain, CrewAI, AutoGen, LangGraph), not just a lexical import. See [scan reference](../cli/scan.md#framework-object-detection---framework-detectors). |
+
+Other signal categories (AI SDK usage, ML frameworks, vector/embedding stores, PII
+dataflow, biometric, scoring/profiling) are produced by the existing lexical detectors
+and are always-on (no opt-in flag).

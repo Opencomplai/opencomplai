@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai"
-version = "0.1.2"
+version = "0.2.0"
 description = "Opencomplai Python SDK for EU AI Act compliance"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
@@ -19,6 +19,15 @@ Documentation = "https://docs.opencomplai.com"
 dev = [
     "pytest>=7.0",
     "ruff>=0.1.0",
+]
+reports = [
+    "opencomplai-core[reports]>=0.1.0",
+]
+compl-ai-bridge = [
+    "opencomplai-core[compl-ai-bridge]>=0.1.0",
+]
+serve = [
+    "opencomplai-cli[serve]>=0.1.0",
 ]
 
 [build-system]

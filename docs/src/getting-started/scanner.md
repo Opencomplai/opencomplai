@@ -4,6 +4,13 @@ The `opencomplai scan` command cross-checks your manifest's declared
 `intended_purpose` against the AI capability signals actually present in the
 repository — dependencies, imports, model artifacts, API endpoints.
 
+AI-SDK detection recognizes 22 provider SDKs, including `openai`, `anthropic`,
+`google-genai`, `azure-ai-openai`, `cohere`, `mistralai`, `groq`, `together`,
+`replicate`, `huggingface_hub`, `fireworks-ai`, `perplexityai`, `ai21`,
+`stability-sdk`, `elevenlabs`, `deepgram`, `assemblyai`, `google-cloud-aiplatform`,
+and `ibm-watsonx-ai` — this list is pure signature data
+(`scanner/data/ai_signals.json`) and grows independently of CLI flags or behavior.
+
 ## Two honesty rules
 
 !!! warning "Read these before using the scanner"
@@ -417,6 +424,16 @@ Use a baseline file to suppress already-accepted gaps:
     # Future runs only fail on NEW gaps not in the baseline
     opencomplai check --scan --fail-on new-major --baseline scan-baseline.json
     ```
+
+## MCP / agent signals
+
+**What:** the scanner can flag MCP server imports/config and multi-agent patterns
+(`DET_AGENTS_MCP_V1` → `mcp_server` / `agent_framework`).
+
+**When:** repos that use Model Context Protocol tools or multi-agent frameworks.
+
+**Don't:** treat a detection as “high-risk under the Act.” It is a corroboration
+signal for Art. 14-style oversight discussions — not a legal classification.
 
 ## Service-backed mode (Docker stack)
 

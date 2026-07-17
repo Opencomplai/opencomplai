@@ -6,6 +6,7 @@ from opencomplai_core.scanner.cache import FeatureCache
 from opencomplai_core.scanner.extractors.artifacts import extract_artifacts
 from opencomplai_core.scanner.extractors.ast import (
     extract_ast_callsites,
+    extract_ast_framework_objects,
     extract_ast_imports,
 )
 from opencomplai_core.scanner.extractors.config import extract_config_features
@@ -71,6 +72,15 @@ def extract_features(
     if progress_cb:
         progress_cb.on_step("extract", 6, "notebooks")
 
+    if config.framework_detectors:
+        from opencomplai_core.scanner.detectors.framework_ast import (
+            load_framework_class_names,
+        )
+
+        store.framework_objects.extend(
+            extract_ast_framework_objects(inventory, load_framework_class_names())
+        )
+
     store.summary = {
         "packages": len(store.packages),
         "imports": len(store.imports),
@@ -78,6 +88,7 @@ def extract_features(
         "configs": len(store.configs),
         "artifacts": len(store.artifacts),
         "notebooks": len(store.notebooks),
+        "framework_objects": len(store.framework_objects),
     }
     if cache is not None and config.use_cache:
         cache.record_summary(store.summary)
