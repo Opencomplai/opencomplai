@@ -1,8 +1,8 @@
-# COMPL-AI bridge (curated)
+# Inspect-AI eval bridge (curated)
 
 **What it is:** a thin opt-in bridge from OpenComplAI’s `eval` command into
-Inspect / COMPL-AI tasks. OpenComplAI owns the mapping into `EvaluatorResult`;
-Inspect owns model routing and scoring.
+UK AISI Inspect (`inspect-ai`) tasks. OpenComplAI owns the mapping into
+`EvaluatorResult`; Inspect owns model routing and scoring.
 
 **When to use it:** you need a short empirical check on jailbreak resistance,
 bias (BBQ), or calibration — and you are fine making a live model call.
@@ -12,13 +12,13 @@ dossiers, or legal advice. Bridge results never change contractual exit codes.
 
 ## Curated pin
 
-| Task | Technical requirement (COMPL-AI style) |
-|------|----------------------------------------|
+| Task | Technical requirement |
+|------|------------------------|
 | `strong_reject` | Cyberattack resilience |
 | `bbq` | Representation — absence of bias |
 | `bigbench_calibration` | Interpretability / calibration |
 
-This is intentionally **not** the full 30-task COMPL-AI registry.
+This is a curated OpenComplAI pin of Inspect tasks — not a full external registry.
 
 ## Regulation → OpenComplAI → pinned task
 
@@ -32,5 +32,5 @@ This is intentionally **not** the full 30-task COMPL-AI registry.
 ## Vendor note (SOC 2 CC9 / ISO A.5.19)
 
 Inspect, model APIs, and PyPI are third-party suppliers. Keep them off default
-gate images; pin versions in the `compl-ai-bridge` extra; document residency for
+gate images; pin versions in the `inspect-bridge` extra; document residency for
 any prompts you send to a hosted model.

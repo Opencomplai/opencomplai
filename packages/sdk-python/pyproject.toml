@@ -23,8 +23,8 @@ dev = [
 reports = [
     "opencomplai-core[reports]>=0.1.0",
 ]
-compl-ai-bridge = [
-    "opencomplai-core[compl-ai-bridge]>=0.1.0",
+inspect-bridge = [
+    "opencomplai-core[inspect-bridge]>=0.1.0",
 ]
 serve = [
     "opencomplai-cli[serve]>=0.1.0",

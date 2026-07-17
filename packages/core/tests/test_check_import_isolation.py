@@ -8,8 +8,8 @@ from pathlib import Path
 import opencomplai_core.engine as engine_module
 
 _FORBIDDEN_SUBSTRINGS = (
-    "compl_ai",
-    "bridges.compl_ai",
+    "inspect_eval",
+    "bridges.inspect_eval",
     "inspect_ai",
     "local_dashboard",
     "opencomplai_cli.updates",

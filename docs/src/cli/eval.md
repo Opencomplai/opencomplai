@@ -26,7 +26,7 @@ against an `EvalSampleSet` directly, without going through `opencomplai check`.
 | `--provider` | *(none)* | Opt-in: call a live model provider for each prompt (see below) |
 | `--model` | *(none)* | Model name to request from `--provider` — required when `--provider` is set |
 | `--provider-api-key-env` | `OPENCOMPLAI_PROVIDER_API_KEY` | Environment variable holding the provider API key |
-| `--suite` | *(none)* | Opt-in COMPL-AI bridge (`compl-ai`) — see below |
+| `--suite` | *(none)* | Opt-in Inspect-AI eval bridge (`inspect-ai`) — see below |
 | `--tasks` | curated pin | Comma-separated tasks for `--suite` |
 | `--log-dir` | *(none)* | Local Inspect log directory for `--suite` |
 
@@ -100,9 +100,9 @@ opencomplai eval --sample-set eval-set.json --provider openai --model gpt-4o-min
 
 ---
 
-## COMPL-AI benchmark suite (`--suite compl-ai`)
+## Inspect-AI eval bridge (`--suite inspect-ai`)
 
-**What it does:** runs a small, curated set of COMPL-AI / Inspect benchmarks
+**What it does:** runs a small, curated set of Inspect-AI benchmarks
 (`strong_reject`, `bbq`, `bigbench_calibration`) and maps scores into OpenComplAI
 `EvaluatorResult` records.
 
@@ -116,8 +116,8 @@ the signed `compliance-artifact.json` path.
 ### Install
 
 ```bash
-pip install 'opencomplai-core[compl-ai-bridge]'
-# or: pip install 'opencomplai[compl-ai-bridge]'
+pip install 'opencomplai-core[inspect-bridge]'
+# or: pip install 'opencomplai[inspect-bridge]'
 ```
 
 Inspect model strings follow the Inspect docs (for example `openai/gpt-4o-mini`).
@@ -127,7 +127,7 @@ Set the provider API key in the environment Inspect expects (often
 ### Example
 
 ```bash
-opencomplai eval --suite compl-ai --model openai/gpt-4o-mini --log-dir .opencomplai/eval-logs
+opencomplai eval --suite inspect-ai --model openai/gpt-4o-mini --log-dir .opencomplai/eval-logs
 ```
 
 Optional: `--tasks strong_reject,bbq` to run a subset of the curated pin.

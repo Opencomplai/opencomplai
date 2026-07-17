@@ -7,7 +7,7 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
-## [0.2.0] — 2026-07-17 — New public release
+## [Unreleased]
 
 ### Added
 
@@ -19,16 +19,20 @@ project follows [Semantic Versioning](https://semver.org/).
   on gap rows; MCP/agent detector (`DET_AGENTS_MCP_V1`).
 - Four compile-checked Python remediation templates (transparency, logging,
   oversight, disclosure helpers) via `opencomplai recommend`.
-- Working COMPL-AI bridge MVP: curated `strong_reject` / `bbq` /
+- Working Inspect-AI eval bridge MVP: curated `strong_reject` / `bbq` /
   `bigbench_calibration` pin, `--log-dir`, never gates `check`.
 - Local `opencomplai serve` (optional `[serve]` extra) — loopback dashboard.
-- Meta-package extras re-export: `reports`, `compl-ai-bridge`, `serve`.
-- Docs: serve, COMPL-AI bridge, hostile-scan defaults, SOC2/ISO control mapping,
+- Meta-package extras re-export: `reports`, `inspect-bridge`, `serve`.
+- Docs: serve, Inspect-AI eval bridge, hostile-scan defaults, SOC2/ISO control mapping,
   ADR local-serve-vs-saas.
 
 ### Changed
 
 - Interactive HTML reports embed the JSON envelope and support status/text filters.
+- **Breaking:** Inspect-AI eval bridge hard-cut rename — `--suite inspect-ai`,
+  pip extra `inspect-bridge`, module `opencomplai_core.bridges.inspect_eval`,
+  evaluator IDs `EVAL_INSPECT_*` (evidence hashes change). Previous suite/extra
+  identifiers removed with no aliases.
 
 ---
 

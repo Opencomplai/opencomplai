@@ -21,7 +21,7 @@ CPA attestation or certified ISMS Statement of Applicability.
 | SaaS ingest allowlist unchanged | C1 | A.5.14, A.5.23 | `allowed_fields.json` boundary |
 | Envelope ≠ signed artifact | PI1, C1 | A.5.33 | docs + `ScanOutputEnvelope` |
 | AGPL template disclaimer | CC2 | A.5.31, A.5.32 | template banners + recommend docs |
-| COMPL-AI bridge never gates `check` | PI1 | A.8.9 | ADR + `gate_on_bridge: false` |
+| Inspect-AI eval bridge never gates `check` | PI1 | A.8.9 | ADR + `gate_on_bridge: false` |
 
 ## Explicit non-claims
 

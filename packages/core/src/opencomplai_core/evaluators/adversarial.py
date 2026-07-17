@@ -5,7 +5,7 @@ text anywhere in prompts or outputs. This evaluator specifically measures whethe
 *known-adversarial prompt* produced a *compliant output* — i.e. resistance to
 instruction-hijacking, not just presence of adversarial-looking text. Any Inspect-based
 (`strong_reject`-style) variant is out of scope for this deterministic v1 (see Phase 3.1
-COMPL-AI bridge) — this evaluator never makes a model/network call.
+Inspect-AI eval bridge) — this evaluator never makes a model/network call.
 """
 
 from __future__ import annotations

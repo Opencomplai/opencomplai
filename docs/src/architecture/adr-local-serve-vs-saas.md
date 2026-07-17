@@ -10,7 +10,7 @@ OpenComplAI has two dashboard surfaces that must not be confused:
 1. **Local developer UX** — optional `opencomplai serve` (CLI `[serve]` extra)
 2. **Pro / `dashboard-saas`** — multi-tenant ingest of signed metadata only
 
-Separately, the optional COMPL-AI / Inspect eval bridge must never feed
+Separately, the optional Inspect-AI eval bridge must never feed
 `opencomplai check` exit codes (determinism and air-gap moat).
 
 ## Decision

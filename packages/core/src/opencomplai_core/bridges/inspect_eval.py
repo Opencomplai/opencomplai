@@ -1,11 +1,11 @@
-"""Optional COMPL-AI benchmark bridge — maps Inspect eval-log output into
+"""Optional Inspect-AI eval bridge — maps Inspect eval-log output into
 `EvaluatorResult`/`EvalSummary` shapes.
 
 HARD RULE (moat preservation): `inspect_ai` is imported lazily, inside function bodies
 only, and only when this module is explicitly invoked (`opencomplai eval --suite
-compl-ai`). This module must never be imported by `opencomplai check`'s default
+inspect-ai`). This module must never be imported by `opencomplai check`'s default
 (deterministic, air-gapped) path. Install with:
-`pip install opencomplai-core[compl-ai-bridge]`.
+`pip install opencomplai-core[inspect-bridge]`.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ from typing import Any
 from opencomplai_core.evaluators._hashing import evaluator_evidence_hash
 from opencomplai_core.models import EvaluatorCategory, EvaluatorOutcome, EvaluatorResult
 
-COMPL_AI_SUITE_NAME = "compl-ai"
+INSPECT_SUITE_NAME = "inspect-ai"
 _MANIFEST_PATH = Path(__file__).resolve().parent / "task_manifest.json"
 
 
@@ -47,8 +47,8 @@ def _require_inspect():
         import inspect_ai
     except ImportError as exc:
         msg = (
-            "The COMPL-AI bridge requires the optional 'compl-ai-bridge' extra: "
-            "pip install 'opencomplai-core[compl-ai-bridge]'"
+            "The Inspect-AI eval bridge requires the optional 'inspect-bridge' extra: "
+            "pip install 'opencomplai-core[inspect-bridge]'"
         )
         raise ImportError(msg) from exc
     return inspect_ai
@@ -62,20 +62,20 @@ def eval_log_to_evaluator_result(
 ) -> EvaluatorResult:
     """Map a single Inspect eval-log task result into an `EvaluatorResult`."""
     outcome = EvaluatorOutcome.PASS if accuracy >= threshold else EvaluatorOutcome.FAIL
-    evaluator_id = f"EVAL_COMPL_AI_{task_name.upper()}_V1"
+    evaluator_id = f"EVAL_INSPECT_{task_name.upper()}_V1"
     result = EvaluatorResult(
         evaluator_id=evaluator_id,
         category=EvaluatorCategory.SAFETY,
         outcome=outcome,
         score=round(accuracy, 6),
         threshold=threshold,
-        metric_name="compl_ai_accuracy",
+        metric_name="inspect_accuracy",
         sample_count=sample_count,
-        findings=[f"compl_ai_task={task_name}", "source=inspect_ai_eval_log"],
-        reference=f"COMPL-AI benchmark task: {task_name} (via Inspect bridge, non-deterministic)",
+        findings=[f"inspect_task={task_name}", "source=inspect_ai_eval_log"],
+        reference=f"Inspect-AI benchmark task: {task_name} (via Inspect bridge, non-deterministic)",
         evidence_hash="",
     )
-    result.evidence_hash = evaluator_evidence_hash(evaluator_id, COMPL_AI_SUITE_NAME, result)
+    result.evidence_hash = evaluator_evidence_hash(evaluator_id, INSPECT_SUITE_NAME, result)
     return result
 
 
@@ -121,7 +121,7 @@ def _accuracy_from_eval_log(log: Any) -> tuple[float, int]:
     return accuracy, sample_count
 
 
-def run_compl_ai_suite(
+def run_inspect_suite(
     task_names: list[str],
     model: str,
     api_key: str,
@@ -129,11 +129,10 @@ def run_compl_ai_suite(
     log_dir: Path | str | None = None,
     limit: int | None = None,
 ) -> list[EvaluatorResult]:
-    """Run curated COMPL-AI Inspect tasks and map results to EvaluatorResult.
+    """Run curated Inspect-AI tasks and map results to EvaluatorResult.
 
-    Requires `inspect-ai`. Prefers COMPL-AI registered tasks when importable;
-    otherwise resolves tasks from the Inspect registry by name. Never called from
-    `opencomplai check`.
+    Requires `inspect-ai`. Resolves tasks from the Inspect registry by name.
+    Never called from `opencomplai check`.
     """
     inspect_ai = _require_inspect()
     manifest = load_task_manifest()
@@ -144,21 +143,12 @@ def run_compl_ai_suite(
     unknown = [t for t in task_names if t not in known]
     if unknown:
         msg = (
-            f"Unknown COMPL-AI pin task(s): {unknown}. "
+            f"Unknown Inspect-AI pin task(s): {unknown}. "
             f"Curated pin: {sorted(known)}"
         )
         raise ValueError(msg)
 
-    # Lazy: try complai task registry, else inspect_ai task by name.
-    tasks = []
-    try:
-        import complai  # type: ignore  # noqa: F401
-
-        from inspect_ai import Task  # noqa: F401
-        # Prefer entry-point discovery via inspect_ai.eval task strings.
-        tasks = list(task_names)
-    except ImportError:
-        tasks = list(task_names)
+    tasks = list(task_names)
 
     eval_kwargs: dict[str, Any] = {
         "model": model,

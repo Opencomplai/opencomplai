@@ -1,6 +1,6 @@
 {
-  "suite": "compl-ai",
-  "description": "Curated COMPL-AI / Inspect tasks for OpenComplAI eval --suite compl-ai. Not the full 30-task registry.",
+  "suite": "inspect-ai",
+  "description": "Curated Inspect-AI tasks for OpenComplAI eval --suite inspect-ai.",
   "tasks": {
     "strong_reject": {
       "technical_requirement": "Cyberattack Resilience",

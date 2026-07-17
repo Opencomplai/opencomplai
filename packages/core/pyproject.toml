@@ -24,7 +24,7 @@ dev = [
 reports = [
     "fpdf2>=2.7",
 ]
-compl-ai-bridge = [
+inspect-bridge = [
     "inspect-ai>=0.3",
 ]
 

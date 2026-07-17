@@ -149,6 +149,7 @@ nav:
     - sync metadata: cli/sync-metadata.md
     - dashboard: cli/dashboard.md
     - serve: cli/serve.md
+    - eval: cli/eval.md
     - Exit codes: cli/exit-codes.md
 
   - Python SDK:
@@ -166,7 +167,7 @@ nav:
     - Control Codes: concepts/control-codes.md
     - Evidence: concepts/evidence.md
     - Scan workflow: concepts/scan-workflow.md
-    - COMPL-AI bridge: concepts/compl-ai-bridge.md
+    - Inspect-AI eval bridge: concepts/inspect-bridge.md
 
   - Gateway API:
     - REST Reference: api/rest-api.md

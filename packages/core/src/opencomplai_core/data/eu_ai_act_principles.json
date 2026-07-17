@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "Six EU Trustworthy AI principles (per the EU High-Level Expert Group on AI / COMPL-AI-style grouping), mapped from existing article-level gap-report rows. Purely a re-projection of already-computed article statuses -- introduces no new analysis.",
+  "description": "Six EU Trustworthy AI principles (per the EU High-Level Expert Group on AI / HLEG principle grouping), mapped from existing article-level gap-report rows. Purely a re-projection of already-computed article statuses -- introduces no new analysis.",
   "principles": {
     "technical_robustness_safety": {
       "title": "Technical Robustness and Safety",

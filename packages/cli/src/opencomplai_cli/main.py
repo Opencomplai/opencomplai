@@ -2634,41 +2634,41 @@ def eval_cmd(
         None,
         "--suite",
         help=(
-            "Opt-in: run an external benchmark suite bridge (currently 'compl-ai'). "
-            "Requires the 'opencomplai-core[compl-ai-bridge]' extra. Non-deterministic, "
+            "Opt-in: run an external benchmark suite bridge (currently 'inspect-ai'). "
+            "Requires the 'opencomplai-core[inspect-bridge]' extra. Non-deterministic, "
             "network-dependent — never invoked by `opencomplai check`."
         ),
     ),
     tasks: str | None = typer.Option(
         None,
         "--tasks",
-        help="Comma-separated curated COMPL-AI tasks (default: strong_reject,bbq,bigbench_calibration)",
+        help="Comma-separated curated Inspect-AI tasks (default: strong_reject,bbq,bigbench_calibration)",
     ),
     log_dir: Path | None = typer.Option(
         None,
         "--log-dir",
-        help="Local Inspect log directory for --suite compl-ai (no S3 in this release)",
+        help="Local Inspect log directory for --suite inspect-ai (no S3 in this release)",
     ),
 ) -> None:
     """Run safety, bias, and data-leakage pipeline evaluators."""
     if suite is not None:
-        if suite != "compl-ai":
-            err_console.print(f"[red]Error:[/red] unknown --suite {suite!r} (only 'compl-ai' is supported)")
+        if suite != "inspect-ai":
+            err_console.print(f"[red]Error:[/red] unknown --suite {suite!r} (only 'inspect-ai' is supported)")
             sys.exit(2)
-        from opencomplai_core.bridges.compl_ai import (
+        from opencomplai_core.bridges.inspect_eval import (
             curated_task_names,
             is_inspect_available,
-            run_compl_ai_suite,
+            run_inspect_suite,
         )
 
         if not is_inspect_available():
             err_console.print(
-                "[red]Error:[/red] --suite compl-ai requires the optional 'compl-ai-bridge' extra.\n"
-                "  Install with: pip install 'opencomplai-core\\[compl-ai-bridge]'"
+                "[red]Error:[/red] --suite inspect-ai requires the optional 'inspect-bridge' extra.\n"
+                "  Install with: pip install 'opencomplai-core\\[inspect-bridge]'"
             )
             sys.exit(2)
         if not provider_model:
-            err_console.print("[red]Error:[/red] --model is required with --suite compl-ai")
+            err_console.print("[red]Error:[/red] --model is required with --suite inspect-ai")
             sys.exit(2)
         api_key = os.environ.get(provider_api_key_env, "") or os.environ.get("OPENAI_API_KEY", "")
         task_list = (
@@ -2677,23 +2677,23 @@ def eval_cmd(
             else curated_task_names()
         )
         console.print(
-            "[bold yellow]COMPL-AI bridge[/bold yellow] — non-deterministic, never gates "
+            "[bold yellow]Inspect-AI eval bridge[/bold yellow] — non-deterministic, never gates "
             "`opencomplai check` (gate_on_bridge=false)."
         )
         try:
-            suite_results = run_compl_ai_suite(
+            suite_results = run_inspect_suite(
                 task_list,
                 model=provider_model,
                 api_key=api_key,
                 log_dir=log_dir,
             )
         except Exception as exc:  # noqa: BLE001 — surface bridge errors cleanly
-            err_console.print(f"[red]Error:[/red] COMPL-AI suite failed: {exc}")
+            err_console.print(f"[red]Error:[/red] Inspect-AI suite failed: {exc}")
             sys.exit(2)
         if output == OutputFormat.json:
             envelope = wrap_scan_output(
                 {
-                    "suite": "compl-ai",
+                    "suite": "inspect-ai",
                     "model": provider_model,
                     "deterministic": False,
                     "tasks": [r.model_dump() for r in suite_results],
