@@ -4,7 +4,7 @@
 
 OpenComplAI brings EU AI Act compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks."
 
-[![CI (Python)](assets/badge-ci-python.svg)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](assets/badge-license-agpl-v3.svg)](LICENSE) [![Python](assets/badge-python.svg)](https://www.python.org/) [![Node.js](assets/badge-nodejs.svg)](https://nodejs.org/)
+[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933)](https://nodejs.org/)
 
 ### Demo
 
