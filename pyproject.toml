@@ -60,7 +60,8 @@ dev = [
     "anyio>=4.14.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "ruff>=0.1.0",
+    # Pinned to the exact version CI resolves so local, pre-commit and CI agree; Dependabot bumps it.
+    "ruff==0.15.12",
     # packages/cli/tests/test_publish.py's structural schema-validation
     # test needs this to actually run (rather than soft-skip) under
     # `uv sync --all-packages` -- CI's test-cli job never passes
