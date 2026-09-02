@@ -5,10 +5,17 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  # Only the security job runs on the scheduled event; workflow_dispatch
+  # lets it be triggered on demand too (e.g. to re-check after an
+  # advisory is published outside the weekly cadence).
+  workflow_dispatch:
 
 jobs:
   lint:
     name: Lint / Python
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -32,6 +39,7 @@ jobs:
 
   test-core:
     name: Test / core
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -57,6 +65,7 @@ jobs:
 
   test-cli:
     name: Test / cli
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -79,6 +88,7 @@ jobs:
 
   test-sdk:
     name: Test / sdk-python
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -101,6 +111,7 @@ jobs:
 
   test-ai:
     name: Test / ai
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -123,6 +134,7 @@ jobs:
 
   test-services:
     name: Test / Python services
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -168,6 +180,7 @@ jobs:
 
   cli-check:
     name: CLI / compliance check (local engine)
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -225,6 +238,7 @@ jobs:
 
   egress-dlp:
     name: DLP / egress-proxy allowlist
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -277,11 +291,22 @@ jobs:
       - run: uv sync --all-packages
       - name: Install pip-audit
         run: uv pip install pip-audit
+      # transformers is held at 4.57.x by optimum-onnx (<4.58,>=4.36) via
+      # the packages/ai [onnx] extra; fixes for the advisories below are
+      # all 5.x. Tracked in #54; drop these flags once optimum-onnx
+      # supports transformers 5.
       - name: pip-audit (fail on any finding)
-        run: uv run pip-audit
+        run: >-
+          uv run pip-audit
+          --ignore-vuln PYSEC-2025-217
+          --ignore-vuln PYSEC-2026-2288
+          --ignore-vuln PYSEC-2026-2289
+          --ignore-vuln PYSEC-2026-2290
+          --ignore-vuln CVE-2026-9856
 
   ai-package-gate:
     name: AI/LLM package gate (EU AI Act Art. 3/50 / ISO 27001 A.5.7)
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
