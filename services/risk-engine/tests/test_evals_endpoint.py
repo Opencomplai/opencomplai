@@ -25,7 +25,9 @@ async def test_evals_run_happy_path():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/evals/run",
@@ -51,7 +53,9 @@ async def test_evals_run_422_on_mismatched_system_id():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/evals/run",

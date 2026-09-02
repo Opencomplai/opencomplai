@@ -77,7 +77,9 @@ def verify_artifact(path: Path, expected_sha256: str, *, context: str) -> None:
 def describe_pin(revision: str, sha256: str) -> str:
     """One-line provenance summary for a download prompt."""
     parts = []
-    parts.append(f"revision: {revision}" if revision else "revision: UNPINNED (branch head)")
+    parts.append(
+        f"revision: {revision}" if revision else "revision: UNPINNED (branch head)"
+    )
     parts.append(f"sha256: {sha256[:16]}…" if sha256 else "sha256: NOT VERIFIED")
     return "  ".join(parts)
 

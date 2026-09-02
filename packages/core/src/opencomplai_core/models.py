@@ -325,7 +325,7 @@ class ScanStatusArtifact(BaseModel):
     scan_summary: ScanSummary | None = Field(
         None, description="Code corroboration scan outcomes when --scan was used"
     )
-    gap_report: "GapReport | None" = Field(
+    gap_report: GapReport | None = Field(
         None, description="Per-article gap status when --with-gaps was used"
     )
     controls: ControlsSummary | None = Field(
@@ -1046,6 +1046,6 @@ class GapReport(BaseModel):
     generated_at: str
     articles: list[ArticleGapStatus] = Field(default_factory=list)
     evidence_hashes: list[str] = Field(default_factory=list)
-    principle_summary: "PrincipleSummary | None" = Field(
+    principle_summary: PrincipleSummary | None = Field(
         None, description="6-principle rollup, populated by `opencomplai gaps`"
     )

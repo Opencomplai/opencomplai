@@ -59,7 +59,9 @@ class AdversarialEvaluator(BaseEvaluator):
         return "NIST AI RMF MEASURE 2.7 / EU AI Act Art.15 robustness (adversarial)"
 
     def evaluate(self, sample_set: EvalSampleSet) -> EvaluatorResult:
-        threshold = sample_set.threshold_overrides.get("adversarial", _DEFAULT_THRESHOLD)
+        threshold = sample_set.threshold_overrides.get(
+            "adversarial", _DEFAULT_THRESHOLD
+        )
         prompts = sample_set.prompts
         outputs = sample_set.outputs
 
@@ -101,7 +103,9 @@ class AdversarialEvaluator(BaseEvaluator):
             adversarial_pairs = pairs
 
         compromised = [
-            (prompt, output) for prompt, output in adversarial_pairs if _looks_compliant(output)
+            (prompt, output)
+            for prompt, output in adversarial_pairs
+            if _looks_compliant(output)
         ]
 
         total = len(adversarial_pairs)

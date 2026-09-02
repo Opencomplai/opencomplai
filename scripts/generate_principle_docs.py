@@ -26,7 +26,9 @@ def _build_article_to_sources(gap_article_map: dict) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     for article, config in gap_article_map.items():
         sources = config.get("sources", [])
-        result[article] = [f"`{s['kind']}:{s['ref']}`" for s in sources] or ["_no automated source_"]
+        result[article] = [f"`{s['kind']}:{s['ref']}`" for s in sources] or [
+            "_no automated source_"
+        ]
     return result
 
 

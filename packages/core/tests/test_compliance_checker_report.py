@@ -29,7 +29,9 @@ def _decoded_pdf_text(pdf_bytes: bytes) -> str:
     chunks: list[str] = []
     for match in re.finditer(rb"stream\r?\n(.*?)\r?\nendstream", pdf_bytes, re.DOTALL):
         try:
-            chunks.append(zlib.decompress(match.group(1)).decode("latin-1", errors="ignore"))
+            chunks.append(
+                zlib.decompress(match.group(1)).decode("latin-1", errors="ignore")
+            )
         except zlib.error:
             chunks.append(match.group(1).decode("latin-1", errors="ignore"))
     return "\n".join(chunks)

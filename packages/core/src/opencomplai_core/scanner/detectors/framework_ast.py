@@ -14,7 +14,12 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-from opencomplai_core.models import EvidenceItem, EvidenceKind, Reachability, SignalCategory
+from opencomplai_core.models import (
+    EvidenceItem,
+    EvidenceKind,
+    Reachability,
+    SignalCategory,
+)
 from opencomplai_core.scanner.base import BaseDetector
 from opencomplai_core.scanner.detectors._common import build_evidence
 from opencomplai_core.scanner.feature_types import FeatureStore

@@ -19,9 +19,7 @@ _MIN_GROUP_SAMPLES = 20
 _DEFAULT_THRESHOLD = 0.8
 _BINARY_THRESHOLD = 0.5
 
-_BUNDLED_PROBE_PATH = (
-    Path(__file__).parent / "data" / "bundled_bias_probe.json"
-)
+_BUNDLED_PROBE_PATH = Path(__file__).parent / "data" / "bundled_bias_probe.json"
 
 
 @lru_cache(maxsize=1)

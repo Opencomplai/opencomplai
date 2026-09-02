@@ -56,13 +56,17 @@ def test_run_detectors_records_failure_without_aborting_the_scan():
     evidence, detector_errors = run_detectors(features, registry=registry)
 
     assert isinstance(evidence, list)
-    assert detector_errors == ["DET_FAKE_RAISING_V1: RuntimeError: synthetic detector crash"]
+    assert detector_errors == [
+        "DET_FAKE_RAISING_V1: RuntimeError: synthetic detector crash"
+    ]
 
 
 def test_run_detectors_reports_no_errors_when_all_detectors_succeed():
     features = FeatureStore(repo_root=Path("."))
 
-    evidence, detector_errors = run_detectors(features, registry=list(DETECTOR_REGISTRY))
+    evidence, detector_errors = run_detectors(
+        features, registry=list(DETECTOR_REGISTRY)
+    )
 
     assert isinstance(evidence, list)
     assert detector_errors == []

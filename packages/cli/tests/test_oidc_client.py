@@ -33,7 +33,9 @@ def test_acquire_token_success() -> None:
     # Verify the request shape: form-encoded body, client_credentials grant.
     sent_request = mock_urlopen.call_args[0][0]
     assert sent_request.full_url == "https://idp.example.test/oauth/token"
-    assert sent_request.get_header("Content-type") == "application/x-www-form-urlencoded"
+    assert (
+        sent_request.get_header("Content-type") == "application/x-www-form-urlencoded"
+    )
     body = sent_request.data.decode("ascii")
     assert "grant_type=client_credentials" in body
     assert "client_id=client-1" in body
@@ -60,7 +62,11 @@ def test_acquire_token_includes_scope_when_given() -> None:
 def test_acquire_token_raises_on_http_error() -> None:
     with patch("urllib.request.urlopen") as mock_urlopen:
         mock_urlopen.side_effect = urllib.error.HTTPError(
-            "https://idp.example.test/oauth/token", 401, "Unauthorized", {}, io.BytesIO(b"")
+            "https://idp.example.test/oauth/token",
+            401,
+            "Unauthorized",
+            {},
+            io.BytesIO(b""),
         )
         with pytest.raises(OidcTokenError, match="401"):
             acquire_token("https://idp.example.test/oauth/token", "bad", "creds")

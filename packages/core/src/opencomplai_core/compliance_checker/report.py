@@ -6,7 +6,10 @@ import json
 from pathlib import Path
 from typing import Any
 
-from opencomplai_core.compliance_checker.catalog import load_help_content, load_questions
+from opencomplai_core.compliance_checker.catalog import (
+    load_help_content,
+    load_questions,
+)
 from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
 
 _DISCLAIMER = load_help_content()["disclaimer"]["body"]
@@ -48,7 +51,9 @@ def _answer_entries(answers: dict[str, Any]) -> list[tuple[str, str, str]]:
     for key, value in answers.items():
         if key in seen:
             continue
-        entries.append(("", key.replace("_", " ").title(), _format_answer_value(value, None)))
+        entries.append(
+            ("", key.replace("_", " ").title(), _format_answer_value(value, None))
+        )
     return entries
 
 

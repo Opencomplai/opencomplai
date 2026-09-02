@@ -41,7 +41,9 @@ class ModelProviderClient(ABC):
     def provider_id(self) -> str: ...
 
     @abstractmethod
-    def complete(self, prompt: str, *, model: str, api_key: str) -> ProviderCompletion: ...
+    def complete(
+        self, prompt: str, *, model: str, api_key: str
+    ) -> ProviderCompletion: ...
 
 
 class OpenAICompatibleProvider(ModelProviderClient):
@@ -104,7 +106,9 @@ _PROVIDER_REGISTRY: dict[str, type[ModelProviderClient]] = {
 }
 
 
-def get_provider_client(provider: str, *, base_url: str | None = None) -> ModelProviderClient:
+def get_provider_client(
+    provider: str, *, base_url: str | None = None
+) -> ModelProviderClient:
     provider_cls = _PROVIDER_REGISTRY.get(provider)
     if provider_cls is None:
         known = ", ".join(sorted(_PROVIDER_REGISTRY))

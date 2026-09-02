@@ -126,7 +126,9 @@ async def upsert_review_item(
     """
     existing = await session.get(ReviewItemDB, item["review_id"])
     if existing is not None and existing.tenant_id != tenant_id:
-        raise PermissionError(f"review_id {item['review_id']} belongs to another tenant")
+        raise PermissionError(
+            f"review_id {item['review_id']} belongs to another tenant"
+        )
 
     if existing is None:
         row = ReviewItemDB(tenant_id=tenant_id, **item)

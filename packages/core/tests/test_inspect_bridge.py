@@ -28,7 +28,9 @@ def test_eval_log_to_evaluator_result_has_no_hard_inspect_dependency():
 
 
 def test_eval_log_to_evaluator_result_fails_below_threshold():
-    result = eval_log_to_evaluator_result("toxicity", accuracy=0.5, sample_count=100, threshold=0.8)
+    result = eval_log_to_evaluator_result(
+        "toxicity", accuracy=0.5, sample_count=100, threshold=0.8
+    )
     assert result.outcome == EvaluatorOutcome.FAIL
 
 

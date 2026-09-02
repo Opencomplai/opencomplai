@@ -187,7 +187,9 @@ def _stub_article_map(monkeypatch, statuses: list[GapStatus]) -> None:
     monkeypatch.setattr(
         gap_report_module,
         "load_gap_article_map",
-        lambda: {"Art. TEST": {"sources": [{"kind": "artifact", "ref": r} for r in refs]}},
+        lambda: {
+            "Art. TEST": {"sources": [{"kind": "artifact", "ref": r} for r in refs]}
+        },
     )
     monkeypatch.setattr(
         gap_report_module,
@@ -262,8 +264,12 @@ def test_failing_leakage_evaluator_overrides_an_earlier_partial_on_art_15():
     leakage = next(
         r for r in eval_report.results if r.evaluator_id == "EVAL_DATA_LEAKAGE_V1"
     )
-    assert safety.outcome.value == "warn", "precondition: safety must be the PARTIAL source"
-    assert leakage.outcome.value == "fail", "precondition: leakage must be the MISSING source"
+    assert safety.outcome.value == "warn", (
+        "precondition: safety must be the PARTIAL source"
+    )
+    assert leakage.outcome.value == "fail", (
+        "precondition: leakage must be the MISSING source"
+    )
 
     report = build_gap_report(
         "test-sys", "HEAD", risk_result=risk_result, eval_report=eval_report

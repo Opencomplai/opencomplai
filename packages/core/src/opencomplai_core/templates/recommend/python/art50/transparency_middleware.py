@@ -21,7 +21,9 @@ Scope = dict
 class TransparencyMiddleware:
     """Add an AI-disclosure header on every HTTP response."""
 
-    def __init__(self, app: Callable, notice: str = "This service uses AI systems.") -> None:
+    def __init__(
+        self, app: Callable, notice: str = "This service uses AI systems."
+    ) -> None:
         self.app = app
         self.notice = notice
 

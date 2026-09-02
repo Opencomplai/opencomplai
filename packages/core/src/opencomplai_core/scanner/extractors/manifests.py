@@ -88,7 +88,9 @@ def _parse_package_json(
 # ---------------------------------------------------------------------------
 
 
-def _parse_go_mod(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_go_mod(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """
     Module paths from `require` directives, both block and single-line forms.
 
@@ -134,7 +136,9 @@ def _parse_go_mod(text: str, location: str, scope, source: str) -> list[Manifest
     return packages
 
 
-def _parse_go_sum(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_go_sum(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """Module paths from go.sum. Each module appears twice; emit it once."""
     packages: list[ManifestPackage] = []
     seen: set[str] = set()
@@ -157,7 +161,9 @@ _CARGO_SECTION = re.compile(r"^\[([^\]]+)\]\s*$")
 _TOML_KEY = re.compile(r"^([A-Za-z0-9_.-]+)\s*=")
 
 
-def _parse_cargo_toml(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_cargo_toml(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """
     Crate names from any `[dependencies]`-family table.
 
@@ -174,7 +180,9 @@ def _parse_cargo_toml(text: str, location: str, scope, source: str) -> list[Mani
         if header:
             section = header.group(1).strip()
             # `[dependencies.foo]` declares the crate `foo` in its own table.
-            if section.startswith(("dependencies.", "dev-dependencies.", "build-dependencies.")):
+            if section.startswith(
+                ("dependencies.", "dev-dependencies.", "build-dependencies.")
+            ):
                 name = section.split(".", 1)[1].strip().lower()
                 if name:
                     packages.append(
@@ -201,7 +209,9 @@ def _parse_cargo_toml(text: str, location: str, scope, source: str) -> list[Mani
     return packages
 
 
-def _parse_cargo_lock(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_cargo_lock(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """Crate names from `[[package]]` blocks in Cargo.lock."""
     packages: list[ManifestPackage] = []
     in_package = False
@@ -227,14 +237,14 @@ def _parse_cargo_lock(text: str, location: str, scope, source: str) -> list[Mani
     return packages
 
 
-_POM_DEP = re.compile(
-    r"<dependency>(.*?)</dependency>", re.DOTALL | re.IGNORECASE
-)
+_POM_DEP = re.compile(r"<dependency>(.*?)</dependency>", re.DOTALL | re.IGNORECASE)
 _POM_GROUP = re.compile(r"<groupId>\s*([^<]+?)\s*</groupId>", re.IGNORECASE)
 _POM_ARTIFACT = re.compile(r"<artifactId>\s*([^<]+?)\s*</artifactId>", re.IGNORECASE)
 
 
-def _parse_pom_xml(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_pom_xml(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """
     `groupId:artifactId` pairs from Maven `<dependency>` elements.
 
@@ -270,7 +280,9 @@ _GRADLE_DEP = re.compile(
 )
 
 
-def _parse_gradle(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_gradle(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """
     Coordinates from Gradle dependency declarations, Groovy and Kotlin DSL.
 
@@ -292,7 +304,9 @@ def _parse_gradle(text: str, location: str, scope, source: str) -> list[Manifest
     return packages
 
 
-def _parse_pipfile(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_pipfile(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """Package names from Pipfile's `[packages]` / `[dev-packages]` tables."""
     packages: list[ManifestPackage] = []
     section = ""
@@ -319,7 +333,9 @@ def _parse_pipfile(text: str, location: str, scope, source: str) -> list[Manifes
     return packages
 
 
-def _parse_json_lock(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_json_lock(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """
     Package names from an npm/Pipfile JSON lockfile.
 
@@ -357,7 +373,9 @@ def _parse_json_lock(text: str, location: str, scope, source: str) -> list[Manif
     return packages
 
 
-def _parse_poetry_lock(text: str, location: str, scope, source: str) -> list[ManifestPackage]:
+def _parse_poetry_lock(
+    text: str, location: str, scope, source: str
+) -> list[ManifestPackage]:
     """Package names from `[[package]]` blocks in poetry.lock (same shape as Cargo.lock)."""
     return _parse_cargo_lock(text, location, scope, source)
 

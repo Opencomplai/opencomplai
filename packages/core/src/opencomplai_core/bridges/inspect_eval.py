@@ -75,7 +75,9 @@ def eval_log_to_evaluator_result(
         reference=f"Inspect-AI benchmark task: {task_name} (via Inspect bridge, non-deterministic)",
         evidence_hash="",
     )
-    result.evidence_hash = evaluator_evidence_hash(evaluator_id, INSPECT_SUITE_NAME, result)
+    result.evidence_hash = evaluator_evidence_hash(
+        evaluator_id, INSPECT_SUITE_NAME, result
+    )
     return result
 
 
@@ -142,10 +144,7 @@ def run_inspect_suite(
 
     unknown = [t for t in task_names if t not in known]
     if unknown:
-        msg = (
-            f"Unknown Inspect-AI pin task(s): {unknown}. "
-            f"Curated pin: {sorted(known)}"
-        )
+        msg = f"Unknown Inspect-AI pin task(s): {unknown}. Curated pin: {sorted(known)}"
         raise ValueError(msg)
 
     tasks = list(task_names)

@@ -1,6 +1,11 @@
 """Tests for remediation template rendering (opencomplai recommend)."""
 
-from opencomplai_core.models import ArticleGapSource, ArticleGapStatus, GapReport, GapStatus
+from opencomplai_core.models import (
+    ArticleGapSource,
+    ArticleGapStatus,
+    GapReport,
+    GapStatus,
+)
 from opencomplai_core.recommend_engine import render_recommendations
 
 

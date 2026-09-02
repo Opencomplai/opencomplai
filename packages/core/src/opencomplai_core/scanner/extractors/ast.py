@@ -110,7 +110,9 @@ class _FrameworkObjectVisitor(ast.NodeVisitor):
         self.scope = scope
         self.class_names = class_names
         self.results: list[FrameworkObjectRef] = []
-        self._bindings: dict[str, tuple[str, str]] = {}  # var_name -> (class_name, location)
+        self._bindings: dict[
+            str, tuple[str, str]
+        ] = {}  # var_name -> (class_name, location)
 
     def _record_binding(self, target: ast.expr, value: ast.expr) -> None:
         if not isinstance(target, ast.Name) or not isinstance(value, ast.Call):
@@ -180,6 +182,8 @@ def extract_ast_framework_objects(
         if entry.language != "python" or entry.is_binary:
             continue
         results.extend(
-            _parse_framework_objects(Path(entry.path), entry.rel_path, entry.scope, class_names)
+            _parse_framework_objects(
+                Path(entry.path), entry.rel_path, entry.scope, class_names
+            )
         )
     return results

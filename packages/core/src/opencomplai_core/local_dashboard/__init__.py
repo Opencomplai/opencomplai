@@ -22,7 +22,9 @@ def history_dir(project_root: Path) -> Path:
     return path
 
 
-def list_history(project_root: Path, *, limit: int = _HISTORY_LIMIT) -> list[dict[str, Any]]:
+def list_history(
+    project_root: Path, *, limit: int = _HISTORY_LIMIT
+) -> list[dict[str, Any]]:
     root = history_dir(project_root)
     files = sorted(root.glob("*.json"), reverse=True)
     records: list[dict[str, Any]] = []
@@ -56,8 +58,8 @@ def create_app(project_root: Path):
     """Build a FastAPI app bound for loopback use only."""
     try:
         from fastapi import FastAPI
-        from fastapi.responses import HTMLResponse, JSONResponse
         from fastapi.middleware.trustedhost import TrustedHostMiddleware
+        from fastapi.responses import HTMLResponse, JSONResponse
     except ImportError as exc:
         msg = (
             "Local serve requires the optional CLI extra: "
@@ -66,7 +68,9 @@ def create_app(project_root: Path):
         raise ImportError(msg) from exc
 
     app = FastAPI(title="OpenComplAI local dashboard", docs_url=None, redoc_url=None)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"])
+    app.add_middleware(
+        TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"]
+    )
 
     @app.get("/", response_class=HTMLResponse)
     def index() -> str:

@@ -11,7 +11,11 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 FIXTURES = (
-    Path(__file__).resolve().parents[2] / "core" / "tests" / "fixtures" / "checker_golden"
+    Path(__file__).resolve().parents[2]
+    / "core"
+    / "tests"
+    / "fixtures"
+    / "checker_golden"
 )
 
 
@@ -92,7 +96,9 @@ def test_checker_web_local_serves_and_stops_via_page_button() -> None:
 
     def run_cli() -> None:
         with patch("webbrowser.open", side_effect=fake_open):
-            result_holder["result"] = runner.invoke(app, ["checker", "--web", "--local"])
+            result_holder["result"] = runner.invoke(
+                app, ["checker", "--web", "--local"]
+            )
 
     thread = threading.Thread(target=run_cli)
     thread.start()

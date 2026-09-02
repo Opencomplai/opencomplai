@@ -90,7 +90,11 @@ class _FakeVault:
             idem_key = path.rsplit("/", 1)[-1]
             cached = self.accepted_overrides.get(idem_key)
             if cached is None:
-                return {"found": False, "payload_fingerprint": None, "response_json": None}
+                return {
+                    "found": False,
+                    "payload_fingerprint": None,
+                    "response_json": None,
+                }
             return {"found": True, **cached}
         if path == "/v1/hitl/overrides" and method == "POST":
             self.accepted_overrides.setdefault(

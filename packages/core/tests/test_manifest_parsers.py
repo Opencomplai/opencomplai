@@ -323,7 +323,7 @@ def test_empty_input_is_safe_for_every_parser():
 
 def test_locations_are_recorded_for_every_package():
     packages = _parse_cargo_toml(
-        "[dependencies]\nasync-openai = \"0.23\"\n",
+        '[dependencies]\nasync-openai = "0.23"\n',
         "Cargo.toml",
         EvidenceScope.PROD,
         "cargo",

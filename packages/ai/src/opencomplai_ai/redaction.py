@@ -75,7 +75,9 @@ _RULES: tuple[_Rule, ...] = (
     _Rule("stripe_key", re.compile(r"\b(?:sk|pk|rk)_(?:live|test)_[A-Za-z0-9]{10,}\b")),
     _Rule("openai_key", re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b")),
     _Rule("google_api_key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b")),
-    _Rule("jwt", re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]+")),
+    _Rule(
+        "jwt", re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]+")
+    ),
     # Credentials embedded in a URL. Only the userinfo is replaced so the
     # scheme and host still tell the classifier what kind of service it is.
     _Rule(
@@ -98,7 +100,9 @@ _RULES: tuple[_Rule, ...] = (
         group=1,
     ),
     _Rule("email", re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")),
-    _Rule("us_ssn", re.compile(r"\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b")),
+    _Rule(
+        "us_ssn", re.compile(r"\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b")
+    ),
     _Rule(
         "credit_card",
         re.compile(r"\b(?:\d[ -]?){12,18}\d\b"),
@@ -140,7 +144,9 @@ def redact(text: str) -> RedactionResult:
     for rule in _RULES:
         replacement = _PLACEHOLDER.format(kind=rule.kind)
 
-        def _sub(match: re.Match[str], rule: _Rule = rule, replacement: str = replacement) -> str:
+        def _sub(
+            match: re.Match[str], rule: _Rule = rule, replacement: str = replacement
+        ) -> str:
             if rule.guard is not None and not rule.guard(match):
                 return match.group(0)
             counts[rule.kind] = counts.get(rule.kind, 0) + 1

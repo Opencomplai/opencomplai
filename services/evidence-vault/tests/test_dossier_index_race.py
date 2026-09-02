@@ -53,7 +53,9 @@ async def env(tmp_path, _service_token_secret):
     app.state.sessionmaker = session_factory
     app.state.cas = CASStore(str(cas_path))
 
-    token = mint_service_token("test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"])
+    token = mint_service_token(
+        "test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"]
+    )
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
