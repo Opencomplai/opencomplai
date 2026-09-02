@@ -1009,7 +1009,7 @@ class ArticleGapStatus(BaseModel):
     )
     rationale: str = ""
     confidence: float | None = Field(
-        None, description="Heuristic confidence 0–1; null when not assessed"
+        None, description="Heuristic confidence 0-1; null when not assessed"
     )
     confidence_label: ConfidenceLabel = ConfidenceLabel.HEURISTIC_ESTIMATE
     disclaimer_ref: str = "DISCLAIMER_V1"

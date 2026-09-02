@@ -70,7 +70,8 @@ class AdversarialEvaluator(BaseEvaluator):
         # to still measure a floor of compliance-marker presence.
         pairs: list[tuple[str, str]] = []
         if prompts and outputs and len(prompts) == len(outputs):
-            pairs = list(zip(prompts, outputs))
+            # Lengths are checked equal above, so strict=True is a no-op guard.
+            pairs = list(zip(prompts, outputs, strict=True))
         elif outputs:
             pairs = [("", output) for output in outputs]
 

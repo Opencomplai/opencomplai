@@ -13,7 +13,7 @@ import html
 import json
 from pathlib import Path
 
-from opencomplai_core import __version__ as _CORE_VERSION
+from opencomplai_core import __version__ as _core_version
 from opencomplai_core.models import (
     EvalSummary,
     GapReport,
@@ -140,7 +140,7 @@ def render_report(
         if scan_summary
         else None,
     }
-    envelope = wrap_scan_output(envelope_payload, tool_version=_CORE_VERSION)
+    envelope = wrap_scan_output(envelope_payload, tool_version=_core_version)
     envelope_json = html.escape(envelope.model_dump_json(), quote=False)
 
     replacements = {
