@@ -9,6 +9,30 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+- ruff is pinned to 0.15.12 for both uv and pre-commit, which had drifted
+  to different versions; the pin came with a one-time autofix and format
+  pass (#52).
+- README badges are now live instead of committed SVGs (#51).
+
+### Security
+
+- cryptography and pillow are floored at 50.0.0 and 12.3.0, closing the
+  padding-oracle and image-parsing advisories pip-audit flagged (#53).
+- The Python dependency audit also runs weekly, so newly published
+  advisories are caught between pushes.
+- Dependabot now watches the uv lockfile, npm workspaces, and GitHub
+  Actions.
+- CodeQL analysis runs on Python and TypeScript.
+- The transformers advisories are deferred behind the optimum-onnx cap
+  that holds it at 4.57.x; tracked in #54.
+
+### Fixed
+
+- The Node CI workflow never actually started: `pnpm/action-setup` was
+  missing from the Actions allowlist (#50).
+
 ---
 
 ## [0.5.0] — 2026-08-26
