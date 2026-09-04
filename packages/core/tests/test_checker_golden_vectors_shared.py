@@ -21,6 +21,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from opencomplai_core.compliance_checker.engine import evaluate
 from opencomplai_core.compliance_checker.models import CheckerSession
 
@@ -51,6 +53,8 @@ _REQUIRED_CATEGORY_PREFIXES = (
 
 
 def _load_vectors() -> list[dict]:
+    if not FIXTURE_PATH.exists():
+        pytest.skip("dashboard-saas/schemas/checker_golden_vectors.json not reachable")
     doc = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     return doc["vectors"]
 
