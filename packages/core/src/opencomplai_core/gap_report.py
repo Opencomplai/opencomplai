@@ -147,7 +147,9 @@ def _scan_status(
     )
 
 
-def _evaluator_status(evaluator_id: str, eval_report: EvalReport) -> ArticleGapStatus | None:
+def _evaluator_status(
+    evaluator_id: str, eval_report: EvalReport
+) -> ArticleGapStatus | None:
     for result in eval_report.results:
         if result.evaluator_id == evaluator_id:
             if result.outcome.value == "pass":
@@ -155,7 +157,11 @@ def _evaluator_status(evaluator_id: str, eval_report: EvalReport) -> ArticleGapS
             elif result.outcome.value == "skipped":
                 status = GapStatus.UNVERIFIED
             else:
-                status = GapStatus.MISSING if result.outcome.value == "fail" else GapStatus.PARTIAL
+                status = (
+                    GapStatus.MISSING
+                    if result.outcome.value == "fail"
+                    else GapStatus.PARTIAL
+                )
             label = (
                 ConfidenceLabel.NOT_ASSESSED
                 if result.outcome.value == "skipped"

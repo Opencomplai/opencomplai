@@ -68,7 +68,9 @@ _AI_PATH_HINTS = (
 )
 
 _HINT_RE = re.compile(
-    r"(?<![a-z0-9])(" + "|".join(re.escape(h) for h in _AI_PATH_HINTS) + r")(?![a-z0-9])",
+    r"(?<![a-z0-9])("
+    + "|".join(re.escape(h) for h in _AI_PATH_HINTS)
+    + r")(?![a-z0-9])",
     re.IGNORECASE,
 )
 
@@ -86,7 +88,9 @@ class ExclusionFlag:
 
     def describe(self) -> str:
         prefix = "newly-added exclusion" if self.newly_added else "exclusion"
-        return f"{prefix} '{self.pattern}' matches AI-related hint '{self.matched_hint}'"
+        return (
+            f"{prefix} '{self.pattern}' matches AI-related hint '{self.matched_hint}'"
+        )
 
 
 @dataclass

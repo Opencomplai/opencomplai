@@ -46,8 +46,12 @@ def load_project_config(path: Path) -> ProjectConfig:
     return ProjectConfig(
         scan_fail_on=scan_section.get("fail_on"),
         scan_framework_detectors=scan_section.get("framework_detectors"),
-        eval_threshold_overrides=dict(eval_section.get("threshold_overrides", {}) or {}),
-        allowlisted_categories=list(scan_section.get("allowlisted_categories", []) or []),
+        eval_threshold_overrides=dict(
+            eval_section.get("threshold_overrides", {}) or {}
+        ),
+        allowlisted_categories=list(
+            scan_section.get("allowlisted_categories", []) or []
+        ),
     )
 
 

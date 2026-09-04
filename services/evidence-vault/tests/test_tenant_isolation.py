@@ -43,7 +43,9 @@ async def client(tmp_path, _service_token_secret):
     app.state.sessionmaker = session_factory
     app.state.cas = CASStore(str(cas_path))
 
-    token = mint_service_token("test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"])
+    token = mint_service_token(
+        "test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"]
+    )
 
     async with AsyncClient(
         transport=ASGITransport(app=app),
@@ -77,10 +79,14 @@ async def test_ledger_events_scoped_to_tenant(client):
     )
 
     tips_a = (
-        await client.get("/v1/evidence/ledger-history-tips", headers=_headers("tenant-a"))
+        await client.get(
+            "/v1/evidence/ledger-history-tips", headers=_headers("tenant-a")
+        )
     ).json()
     tips_b = (
-        await client.get("/v1/evidence/ledger-history-tips", headers=_headers("tenant-b"))
+        await client.get(
+            "/v1/evidence/ledger-history-tips", headers=_headers("tenant-b")
+        )
     ).json()
 
     # Each tenant sees exactly its own single event, not both.
@@ -114,7 +120,9 @@ async def test_missing_tenant_header_defaults_to_oss_sentinel(client):
     )
     assert resp.status_code == 201
 
-    root_default = (await client.get("/v1/evidence/ledger-root")).json()["ledger_root_hash"]
+    root_default = (await client.get("/v1/evidence/ledger-root")).json()[
+        "ledger_root_hash"
+    ]
     root_a = (
         await client.get("/v1/evidence/ledger-root", headers=_headers("tenant-a"))
     ).json()["ledger_root_hash"]
@@ -159,12 +167,16 @@ async def test_dossier_list_by_system_scoped_to_tenant(client):
     await client.post("/v1/dossiers", json=row, headers=_headers("tenant-a"))
 
     resp_b = await client.get(
-        "/v1/dossiers", params={"system_id": "sys-shared-name"}, headers=_headers("tenant-b")
+        "/v1/dossiers",
+        params={"system_id": "sys-shared-name"},
+        headers=_headers("tenant-b"),
     )
     assert resp_b.json()["count"] == 0
 
     resp_a = await client.get(
-        "/v1/dossiers", params={"system_id": "sys-shared-name"}, headers=_headers("tenant-a")
+        "/v1/dossiers",
+        params={"system_id": "sys-shared-name"},
+        headers=_headers("tenant-a"),
     )
     assert resp_a.json()["count"] == 1
 
@@ -235,7 +247,11 @@ async def test_portfolio_scoped_to_tenant(client):
         json={
             "system_id": "sys-portfolio-a",
             "bundle_checksum": "chk-portfolio-a",
-            "artifact": {**_GOOD_ARTIFACT, "system_id": "sys-portfolio-a", "bundle_checksum": "chk-portfolio-a"},
+            "artifact": {
+                **_GOOD_ARTIFACT,
+                "system_id": "sys-portfolio-a",
+                "bundle_checksum": "chk-portfolio-a",
+            },
         },
         headers=_headers("tenant-a"),
     )
@@ -244,13 +260,21 @@ async def test_portfolio_scoped_to_tenant(client):
         json={
             "system_id": "sys-portfolio-b",
             "bundle_checksum": "chk-portfolio-b",
-            "artifact": {**_GOOD_ARTIFACT, "system_id": "sys-portfolio-b", "bundle_checksum": "chk-portfolio-b"},
+            "artifact": {
+                **_GOOD_ARTIFACT,
+                "system_id": "sys-portfolio-b",
+                "bundle_checksum": "chk-portfolio-b",
+            },
         },
         headers=_headers("tenant-b"),
     )
 
-    portfolio_a = (await client.get("/v1/portfolio", headers=_headers("tenant-a"))).json()
-    portfolio_b = (await client.get("/v1/portfolio", headers=_headers("tenant-b"))).json()
+    portfolio_a = (
+        await client.get("/v1/portfolio", headers=_headers("tenant-a"))
+    ).json()
+    portfolio_b = (
+        await client.get("/v1/portfolio", headers=_headers("tenant-b"))
+    ).json()
 
     assert portfolio_a["count"] == 1
     assert portfolio_a["systems"][0]["system_id"] == "sys-portfolio-a"
@@ -276,8 +300,12 @@ async def test_bias_alert_count_scoped_to_tenant(client):
         headers=_headers("tenant-a"),
     )
 
-    count_a = (await client.get("/v1/bias-alerts/count", headers=_headers("tenant-a"))).json()
-    count_b = (await client.get("/v1/bias-alerts/count", headers=_headers("tenant-b"))).json()
+    count_a = (
+        await client.get("/v1/bias-alerts/count", headers=_headers("tenant-a"))
+    ).json()
+    count_b = (
+        await client.get("/v1/bias-alerts/count", headers=_headers("tenant-b"))
+    ).json()
 
     assert count_a["count"] == 1
     assert count_b["count"] == 0

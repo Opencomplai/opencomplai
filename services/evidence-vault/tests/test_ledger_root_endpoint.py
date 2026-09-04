@@ -38,7 +38,9 @@ async def client(tmp_path, _service_token_secret):
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as ac:
         yield ac
 

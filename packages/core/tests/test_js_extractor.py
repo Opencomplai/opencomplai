@@ -45,7 +45,9 @@ def test_every_import_form_is_detected(source: str):
 
 def test_scoped_packages_keep_both_segments():
     # "@anthropic-ai" alone would be a scope, not a package.
-    assert "@anthropic-ai/sdk" in imports_of('import Anthropic from "@anthropic-ai/sdk";')
+    assert "@anthropic-ai/sdk" in imports_of(
+        'import Anthropic from "@anthropic-ai/sdk";'
+    )
 
 
 def test_deep_import_is_reduced_to_the_package():
@@ -82,7 +84,13 @@ def test_commented_out_imports_are_not_evidence():
 
 @pytest.mark.parametrize(
     "provider",
-    ["cohere-ai", "@mistralai/mistralai", "groq-sdk", "replicate", "@google/generative-ai"],
+    [
+        "cohere-ai",
+        "@mistralai/mistralai",
+        "groq-sdk",
+        "replicate",
+        "@google/generative-ai",
+    ],
 )
 def test_providers_beyond_openai_are_detected(provider: str):
     """The regexes this replaces covered only a handful of providers."""
@@ -150,7 +158,7 @@ def test_computed_imports_are_a_known_blind_spot():
     a specifier that is not a literal cannot be known without evaluating the
     program, and no cheaper approach sees it either.
     """
-    assert imports_of('const mod = await import(someVariable);') == set()
+    assert imports_of("const mod = await import(someVariable);") == set()
 
 
 def test_empty_and_garbage_input_are_safe():

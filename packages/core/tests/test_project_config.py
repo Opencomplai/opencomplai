@@ -13,7 +13,9 @@ def test_find_project_config_returns_none_when_absent(tmp_path):
 
 
 def test_find_project_config_finds_file(tmp_path):
-    (tmp_path / "opencomplai.yaml").write_text("scan:\n  fail_on: major\n", encoding="utf-8")
+    (tmp_path / "opencomplai.yaml").write_text(
+        "scan:\n  fail_on: major\n", encoding="utf-8"
+    )
     found = find_project_config(tmp_path)
     assert found is not None
     assert found.name == "opencomplai.yaml"

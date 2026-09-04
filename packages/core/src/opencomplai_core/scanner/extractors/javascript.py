@@ -118,9 +118,7 @@ def parse_js_source(
     for match in _CALLSITE.finditer(cleaned):
         line = cleaned[: match.start()].count("\n") + 1
         callsites.append(
-            CallsiteRef(
-                name=match.group(1), location=f"{rel_path}:{line}", scope=scope
-            )
+            CallsiteRef(name=match.group(1), location=f"{rel_path}:{line}", scope=scope)
         )
 
     return imports, callsites

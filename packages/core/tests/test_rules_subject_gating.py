@@ -32,17 +32,13 @@ class TestAnnexIIIClassifierRuleSubjectGating:
 
     def test_portfolio_credit_scoring_is_not_high_risk(self):
         rule = AnnexIIIClassifierRule()
-        result = rule.evaluate(
-            _input("credit risk scorecard for our bond portfolio")
-        )
+        result = rule.evaluate(_input("credit risk scorecard for our bond portfolio"))
         assert result.passed is True
         assert "does not apply" in result.rationale or "not apply" in result.rationale
 
     def test_vendor_risk_scoring_is_not_high_risk(self):
         rule = AnnexIIIClassifierRule()
-        result = rule.evaluate(
-            _input("risk score for supplier and vendor onboarding")
-        )
+        result = rule.evaluate(_input("risk score for supplier and vendor onboarding"))
         assert result.passed is True
 
     def test_employee_performance_scoring_is_high_risk(self):
@@ -94,13 +90,13 @@ class TestProfilingDetectionRuleSubjectGating:
     def test_portfolio_scoring_profiling_signal_not_forced(self):
         rule = ProfilingDetectionRule()
         result = rule.evaluate(
-            _input("recidivism-style risk scorecard applied to corporate counterparty risk")
+            _input(
+                "recidivism-style risk scorecard applied to corporate counterparty risk"
+            )
         )
         assert result.passed is True
 
     def test_natural_person_recidivism_scoring_forces_high_risk(self):
         rule = ProfilingDetectionRule()
-        result = rule.evaluate(
-            _input("recidivism prediction for individual offenders")
-        )
+        result = rule.evaluate(_input("recidivism prediction for individual offenders"))
         assert result.passed is False

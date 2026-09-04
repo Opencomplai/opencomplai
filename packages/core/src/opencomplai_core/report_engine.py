@@ -13,18 +13,20 @@ import html
 import json
 from pathlib import Path
 
-from opencomplai_core import __version__ as _CORE_VERSION
+from opencomplai_core import __version__ as _core_version
 from opencomplai_core.models import (
     EvalSummary,
     GapReport,
     RiskResult,
-    ScanSummary,
     ScanStatusArtifact,
+    ScanSummary,
     SystemManifest,
 )
 from opencomplai_core.output_envelope import wrap_scan_output
 
-_TEMPLATE_PATH = Path(__file__).resolve().parent / "templates" / "report" / "report.html"
+_TEMPLATE_PATH = (
+    Path(__file__).resolve().parent / "templates" / "report" / "report.html"
+)
 
 _STATUS_CLASS = {
     "met": "status-met",
@@ -43,7 +45,7 @@ def _render_rule_results_table(risk_result: RiskResult | None) -> str:
         return "<p><em>No rule-engine result supplied.</em></p>"
     rows = "\n".join(
         f"<tr><td>{_esc(r.rule_name)}</td>"
-        f"<td class=\"{'status-met' if r.passed else 'status-missing'}\">"
+        f'<td class="{"status-met" if r.passed else "status-missing"}">'
         f"{'PASS' if r.passed else 'FAIL'}</td>"
         f"<td>{_esc(r.reference)}</td>"
         f"<td>{_esc(r.rationale)}</td></tr>"
@@ -60,7 +62,7 @@ def _render_gap_report_table(gap_report: GapReport | None) -> str:
         return "<p><em>No gap report supplied — run <code>opencomplai gaps</code> first.</em></p>"
     rows = "\n".join(
         f"<tr><td>{_esc(row.article)}</td>"
-        f"<td class=\"{_STATUS_CLASS[row.status.value]}\">{_esc(row.status.value.upper())}</td>"
+        f'<td class="{_STATUS_CLASS[row.status.value]}">{_esc(row.status.value.upper())}</td>'
         f"<td>{_esc(row.source.value)}</td>"
         f"<td>{_esc(row.evidence_ref)}</td>"
         f"<td>{_esc(row.rationale)}</td></tr>"
@@ -90,7 +92,9 @@ def _render_eval_summary_block(eval_summary: EvalSummary | None) -> str:
 
 def _render_scan_summary_block(scan_summary: ScanSummary | None) -> str:
     if scan_summary is None:
-        return "<p><em>No scan summary supplied — run with <code>--scan</code>.</em></p>"
+        return (
+            "<p><em>No scan summary supplied — run with <code>--scan</code>.</em></p>"
+        )
     categories = ", ".join(scan_summary.detected_categories) or "none"
     discrepancies = ", ".join(scan_summary.discrepancies) or "none"
     return (
@@ -129,10 +133,14 @@ def render_report(
         "system_id": manifest.system_id,
         "commit_ref": manifest.commit_ref,
         "gap_report": json.loads(gap_report.model_dump_json()) if gap_report else None,
-        "eval_summary": json.loads(eval_summary.model_dump_json()) if eval_summary else None,
-        "scan_summary": json.loads(scan_summary.model_dump_json()) if scan_summary else None,
+        "eval_summary": json.loads(eval_summary.model_dump_json())
+        if eval_summary
+        else None,
+        "scan_summary": json.loads(scan_summary.model_dump_json())
+        if scan_summary
+        else None,
     }
-    envelope = wrap_scan_output(envelope_payload, tool_version=_CORE_VERSION)
+    envelope = wrap_scan_output(envelope_payload, tool_version=_core_version)
     envelope_json = html.escape(envelope.model_dump_json(), quote=False)
 
     replacements = {

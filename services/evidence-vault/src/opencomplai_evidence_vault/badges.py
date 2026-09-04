@@ -46,7 +46,9 @@ class BadgeDB(_BadgeBase):
         # check issue_badge() does. Without this, the race issue_badge's
         # IntegrityError handling exists to catch could never actually be
         # reproduced or enforced outside a migrated Postgres deployment.
-        UniqueConstraint("tenant_id", "badge_id", name="ux_compliance_badges_tenant_badge"),
+        UniqueConstraint(
+            "tenant_id", "badge_id", name="ux_compliance_badges_tenant_badge"
+        ),
     )
 
     id: Mapped[str] = mapped_column(
@@ -111,9 +113,7 @@ def _verify_badge_signature(artifact: dict, signature: str) -> bool:
     # during a migration window would mean keeping exactly that confusion alive
     # under a flag, and nothing in this repo legitimately produced a badge
     # signature for such a window to protect.
-    return verify_bundle_bytes(
-        serialized, signature, pub_key_path, SigningDomain.BADGE
-    )
+    return verify_bundle_bytes(serialized, signature, pub_key_path, SigningDomain.BADGE)
 
 
 async def issue_badge(

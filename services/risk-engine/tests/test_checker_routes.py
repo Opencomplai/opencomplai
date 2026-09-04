@@ -28,6 +28,8 @@ def _reset_rate_limits():
     yield
     for limiter in limiters:
         limiter.clear()
+
+
 FIXTURES = (
     Path(__file__).resolve().parents[3]
     / "packages"
@@ -76,7 +78,10 @@ def test_checker_email_sends_pdf_to_valid_address() -> None:
     with patch.object(checker_routes, "send_pdf_email") as mock_send:
         resp = client.post(
             "/v1/checker/email",
-            json={"answers": fixture["session"]["answers"], "to_email": "user@example.com"},
+            json={
+                "answers": fixture["session"]["answers"],
+                "to_email": "user@example.com",
+            },
         )
     assert resp.status_code == 200, resp.text
     assert resp.json() == {"sent": True}
@@ -98,7 +103,9 @@ def test_checker_email_rejects_invalid_address() -> None:
 
 def test_checker_email_returns_503_when_mailer_not_configured() -> None:
     with patch.object(
-        checker_routes, "send_pdf_email", side_effect=MailerNotConfiguredError("no host")
+        checker_routes,
+        "send_pdf_email",
+        side_effect=MailerNotConfiguredError("no host"),
     ):
         resp = client.post(
             "/v1/checker/email",

@@ -26,7 +26,9 @@ async def test_override_vault_failure_returns_503_not_201():
         async with AsyncClient(
             transport=ASGITransport(app=app),
             base_url="http://test",
-            headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+            headers={
+                "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+            },
         ) as client:
             r = await client.post(
                 "/v1/hitl/overrides",
@@ -51,7 +53,9 @@ async def test_override_succeeds_only_when_vault_writes():
         async with AsyncClient(
             transport=ASGITransport(app=app),
             base_url="http://test",
-            headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+            headers={
+                "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+            },
         ) as client:
             r = await client.post(
                 "/v1/hitl/overrides",
@@ -83,7 +87,9 @@ async def test_override_idempotency_retry_returns_same_response():
         async with AsyncClient(
             transport=ASGITransport(app=app),
             base_url="http://test",
-            headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+            headers={
+                "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+            },
         ) as client:
             r1 = await client.post("/v1/hitl/overrides", json=payload)
             r2 = await client.post("/v1/hitl/overrides", json=payload)
@@ -102,7 +108,9 @@ async def test_override_idempotency_conflict_returns_409():
         async with AsyncClient(
             transport=ASGITransport(app=app),
             base_url="http://test",
-            headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+            headers={
+                "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+            },
         ) as client:
             await client.post(
                 "/v1/hitl/overrides",

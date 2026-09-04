@@ -4,7 +4,6 @@
 import re
 from pathlib import Path
 
-
 #: Directories whose markdown we do not own and must not gate CI on. The docs
 #: build runs `npm ci` in docs/checker-widget before the link check, so without
 #: this the walk picks up vendored READMEs — ~24 of them carry relative links

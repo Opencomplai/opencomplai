@@ -45,7 +45,9 @@ async def client(tmp_path, _service_token_secret):
     app.state.sessionmaker = session_factory
     app.state.cas = CASStore(str(cas_path))
 
-    token = mint_service_token("test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"])
+    token = mint_service_token(
+        "test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"]
+    )
 
     async with AsyncClient(
         transport=ASGITransport(app=app),
@@ -119,8 +121,12 @@ async def test_empty_queue_summarises_to_zero(client):
 
 
 async def test_counts_and_reasons_reflect_real_items(client):
-    await _put(client, "tenant-a", _item("rev-1", state="queued", reason="evaluator_fail"))
-    await _put(client, "tenant-a", _item("rev-2", state="queued", reason="policy_block"))
+    await _put(
+        client, "tenant-a", _item("rev-1", state="queued", reason="evaluator_fail")
+    )
+    await _put(
+        client, "tenant-a", _item("rev-2", state="queued", reason="policy_block")
+    )
     await _put(
         client,
         "tenant-a",
@@ -149,7 +155,9 @@ async def test_assigned_is_a_subset_of_pending_not_a_disjoint_bucket(client):
 
 
 async def test_decided_and_expired_items_are_not_pending(client):
-    await _put(client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2))
+    await _put(
+        client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2)
+    )
     await _put(client, "tenant-a", _item("rev-2", state="expired"))
     await _put(client, "tenant-a", _item("rev-3", state="queued"))
 
@@ -160,8 +168,12 @@ async def test_decided_and_expired_items_are_not_pending(client):
 
 
 async def test_mean_time_to_decision_averages_decided_items(client):
-    await _put(client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2))
-    await _put(client, "tenant-a", _item("rev-2", state="decided", decided_after_hours=4))
+    await _put(
+        client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2)
+    )
+    await _put(
+        client, "tenant-a", _item("rev-2", state="decided", decided_after_hours=4)
+    )
     # A still-pending item must not drag the mean toward zero.
     await _put(client, "tenant-a", _item("rev-3", state="queued"))
 
@@ -177,11 +189,18 @@ async def test_mean_time_is_none_when_nothing_has_been_decided(client):
 
 
 async def test_unparseable_or_inverted_timestamps_are_skipped_not_fatal(client):
-    await _put(client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2))
+    await _put(
+        client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2)
+    )
     await _put(
         client,
         "tenant-a",
-        _item("rev-2", state="decided", created_at="not-a-timestamp", decided_at="also-not"),
+        _item(
+            "rev-2",
+            state="decided",
+            created_at="not-a-timestamp",
+            decided_at="also-not",
+        ),
     )
     await _put(
         client,
@@ -202,7 +221,9 @@ async def test_mixed_naive_and_aware_timestamps_are_skipped_not_fatal(client):
     ValueError — a distinct escape route from the parse guard, and a 500 if
     it is not caught.
     """
-    await _put(client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2))
+    await _put(
+        client, "tenant-a", _item("rev-1", state="decided", decided_after_hours=2)
+    )
     await _put(
         client,
         "tenant-a",
@@ -221,8 +242,12 @@ async def test_mixed_naive_and_aware_timestamps_are_skipped_not_fatal(client):
 
 async def test_summary_is_tenant_scoped(client):
     await _put(client, "tenant-a", _item("rev-a1", state="queued"))
-    await _put(client, "tenant-a", _item("rev-a2", state="assigned", assigned_to="alice"))
-    await _put(client, "tenant-b", _item("rev-b1", state="queued", reason="policy_block"))
+    await _put(
+        client, "tenant-a", _item("rev-a2", state="assigned", assigned_to="alice")
+    )
+    await _put(
+        client, "tenant-b", _item("rev-b1", state="queued", reason="policy_block")
+    )
 
     a = await _summary(client, "tenant-a")
     b = await _summary(client, "tenant-b")

@@ -59,7 +59,9 @@ def test_principle_rollup_uses_worst_case_status():
     )
     summary = build_principle_summary(report)
     fairness = next(
-        p for p in summary.principles if p.principle_id == "diversity_non_discrimination_fairness"
+        p
+        for p in summary.principles
+        if p.principle_id == "diversity_non_discrimination_fairness"
     )
     assert fairness.status == GapStatus.MISSING
 

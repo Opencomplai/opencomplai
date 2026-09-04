@@ -25,7 +25,10 @@ def test_run_inspect_suite_with_mocked_inspect():
     fake_inspect = MagicMock()
     fake_inspect.eval.return_value = [fake_log, fake_log, fake_log]
 
-    with patch("opencomplai_core.bridges.inspect_eval._require_inspect", return_value=fake_inspect):
+    with patch(
+        "opencomplai_core.bridges.inspect_eval._require_inspect",
+        return_value=fake_inspect,
+    ):
         results = run_inspect_suite(
             ["strong_reject", "bbq", "bigbench_calibration"],
             model="openai/gpt-4o-mini",
@@ -37,6 +40,9 @@ def test_run_inspect_suite_with_mocked_inspect():
 
 
 def test_unknown_task_raises():
-    with patch("opencomplai_core.bridges.inspect_eval._require_inspect", return_value=MagicMock()):
+    with patch(
+        "opencomplai_core.bridges.inspect_eval._require_inspect",
+        return_value=MagicMock(),
+    ):
         with pytest.raises(ValueError, match="Unknown Inspect-AI"):
             run_inspect_suite(["not_a_real_task"], model="m", api_key="")

@@ -20,7 +20,9 @@ def _biometric_repo(tmp_path: Path) -> Path:
 
 def test_report_to_sarif_has_required_top_level_fields(tmp_path):
     repo = _biometric_repo(tmp_path)
-    report = run_scan("test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig())
+    report = run_scan(
+        "test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig()
+    )
     sarif = report_to_sarif(report)
     assert sarif["version"] == "2.1.0"
     assert "$schema" in sarif
@@ -30,7 +32,9 @@ def test_report_to_sarif_has_required_top_level_fields(tmp_path):
 
 def test_report_to_sarif_run_has_tool_driver_and_results(tmp_path):
     repo = _biometric_repo(tmp_path)
-    report = run_scan("test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig())
+    report = run_scan(
+        "test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig()
+    )
     sarif = report_to_sarif(report)
     run = sarif["runs"][0]
     assert run["tool"]["driver"]["name"] == "opencomplai"
@@ -40,7 +44,9 @@ def test_report_to_sarif_run_has_tool_driver_and_results(tmp_path):
 
 def test_sarif_result_has_location_with_line_number(tmp_path):
     repo = _biometric_repo(tmp_path)
-    report = run_scan("test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig())
+    report = run_scan(
+        "test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig()
+    )
     sarif = report_to_sarif(report)
     result = sarif["runs"][0]["results"][0]
     location = result["locations"][0]["physicalLocation"]
@@ -100,7 +106,9 @@ def test_sarif_output_is_valid_json_serializable(tmp_path):
     import json
 
     repo = _biometric_repo(tmp_path)
-    report = run_scan("test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig())
+    report = run_scan(
+        "test-sys", "HEAD", repo, "customer support chatbot", config=ScanConfig()
+    )
     sarif = report_to_sarif(report)
     serialized = json.dumps(sarif)
     reparsed = json.loads(serialized)

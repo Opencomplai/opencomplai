@@ -37,7 +37,9 @@ class AgentsDetector(BaseDetector):
 
     @property
     def supported_languages(self) -> frozenset[str]:
-        return frozenset({"python", "javascript", "typescript", "json", "yaml", "markdown"})
+        return frozenset(
+            {"python", "javascript", "typescript", "json", "yaml", "markdown"}
+        )
 
     @property
     def evidence_kinds(self) -> frozenset[str]:

@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from opencomplai_core.scanner.base import BaseDetector
-from opencomplai_core.scanner.detectors.ai_dependency import AiDependencyDetector
 from opencomplai_core.scanner.detectors.agents import AgentsDetector
+from opencomplai_core.scanner.detectors.ai_dependency import AiDependencyDetector
 from opencomplai_core.scanner.detectors.artifact import ArtifactDetector
 from opencomplai_core.scanner.detectors.ast_usage import AstUsageDetector
 from opencomplai_core.scanner.detectors.biometric import BiometricDetector

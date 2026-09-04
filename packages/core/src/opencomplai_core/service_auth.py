@@ -53,7 +53,9 @@ def _b64decode(data: str) -> bytes:
 
 
 def _sign(payload_b64: str, secret: str) -> str:
-    digest = hmac.new(secret.encode("utf-8"), payload_b64.encode("ascii"), hashlib.sha256).digest()
+    digest = hmac.new(
+        secret.encode("utf-8"), payload_b64.encode("ascii"), hashlib.sha256
+    ).digest()
     return _b64encode(digest)
 
 

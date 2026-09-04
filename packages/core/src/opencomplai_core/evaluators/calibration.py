@@ -58,7 +58,9 @@ class CalibrationEvaluator(BaseEvaluator):
         return "GPAI documentation support / EU AI Act Art.15 accuracy metrics"
 
     def evaluate(self, sample_set: EvalSampleSet) -> EvaluatorResult:
-        threshold = sample_set.threshold_overrides.get("calibration", _DEFAULT_THRESHOLD)
+        threshold = sample_set.threshold_overrides.get(
+            "calibration", _DEFAULT_THRESHOLD
+        )
 
         # Opt-in only: calibration is GPAI-specific, must never run implicitly on a
         # generic sample set that happens to have predictions/labels populated for a
@@ -70,7 +72,9 @@ class CalibrationEvaluator(BaseEvaluator):
         labels = sample_set.labels
 
         if not preds or not labels or len(preds) != len(labels):
-            return self._skipped(sample_set, threshold, "missing_or_mismatched_predictions_labels")
+            return self._skipped(
+                sample_set, threshold, "missing_or_mismatched_predictions_labels"
+            )
 
         ece = _expected_calibration_error(preds, labels)
         score = round(1.0 - ece, 6)
@@ -82,7 +86,10 @@ class CalibrationEvaluator(BaseEvaluator):
         else:
             outcome = EvaluatorOutcome.PASS
 
-        findings = [f"expected_calibration_error={round(ece, 6)}", f"num_bins={_NUM_BINS}"]
+        findings = [
+            f"expected_calibration_error={round(ece, 6)}",
+            f"num_bins={_NUM_BINS}",
+        ]
 
         return self._result(sample_set, threshold, outcome, score, findings)
 

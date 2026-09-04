@@ -64,7 +64,9 @@ _GOOD_ARTIFACT = {
 }
 
 
-async def test_badge_issue_unaffected_when_no_public_key_configured(client, monkeypatch):
+async def test_badge_issue_unaffected_when_no_public_key_configured(
+    client, monkeypatch
+):
     """OSS unsigned mode: OSS_BADGE_PUBLIC_KEY_PATH unset -> any signature value is accepted."""
     monkeypatch.delenv("OSS_BADGE_PUBLIC_KEY_PATH", raising=False)
     resp = await client.post(
@@ -85,7 +87,9 @@ async def test_badge_issue_accepts_valid_signature(client, tmp_path, monkeypatch
     monkeypatch.setenv("OSS_BADGE_PUBLIC_KEY_PATH", str(key_dir / "signing.pub"))
 
     serialized = json.dumps(_GOOD_ARTIFACT, sort_keys=True).encode()
-    signature = sign_bundle_bytes(serialized, key_dir / "signing.key", SigningDomain.BADGE)
+    signature = sign_bundle_bytes(
+        serialized, key_dir / "signing.key", SigningDomain.BADGE
+    )
 
     resp = await client.post(
         "/v1/pro/badges/issue",
@@ -109,7 +113,9 @@ async def test_badge_issue_rejects_invalid_signature(client, tmp_path, monkeypat
     generate_keypair(other_key_dir)
     serialized = json.dumps(_GOOD_ARTIFACT, sort_keys=True).encode()
     # Signed with a DIFFERENT key than the one evidence-vault is configured to verify against.
-    wrong_signature = sign_bundle_bytes(serialized, other_key_dir / "signing.key", SigningDomain.BADGE)
+    wrong_signature = sign_bundle_bytes(
+        serialized, other_key_dir / "signing.key", SigningDomain.BADGE
+    )
 
     resp = await client.post(
         "/v1/pro/badges/issue",
@@ -130,7 +136,9 @@ async def test_badge_issue_rejects_tampered_artifact(client, tmp_path, monkeypat
     monkeypatch.setenv("OSS_BADGE_PUBLIC_KEY_PATH", str(key_dir / "signing.pub"))
 
     serialized = json.dumps(_GOOD_ARTIFACT, sort_keys=True).encode()
-    signature = sign_bundle_bytes(serialized, key_dir / "signing.key", SigningDomain.BADGE)
+    signature = sign_bundle_bytes(
+        serialized, key_dir / "signing.key", SigningDomain.BADGE
+    )
 
     tampered_artifact = {**_GOOD_ARTIFACT, "result": "fail"}
     resp = await client.post(
@@ -156,7 +164,9 @@ async def test_badge_issue_rejects_tampered_field_that_still_passes_gate(
     monkeypatch.setenv("OSS_BADGE_PUBLIC_KEY_PATH", str(key_dir / "signing.pub"))
 
     serialized = json.dumps(_GOOD_ARTIFACT, sort_keys=True).encode()
-    signature = sign_bundle_bytes(serialized, key_dir / "signing.key", SigningDomain.BADGE)
+    signature = sign_bundle_bytes(
+        serialized, key_dir / "signing.key", SigningDomain.BADGE
+    )
 
     tampered_artifact = {**_GOOD_ARTIFACT, "system_id": "sys-tampered"}
     resp = await client.post(

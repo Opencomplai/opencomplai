@@ -59,7 +59,9 @@ def acquire_token(
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             body = json.loads(resp.read())
     except urllib.error.HTTPError as exc:
-        raise OidcTokenError(f"token endpoint returned {exc.code}: {exc.reason}") from exc
+        raise OidcTokenError(
+            f"token endpoint returned {exc.code}: {exc.reason}"
+        ) from exc
     except urllib.error.URLError as exc:
         raise OidcTokenError(f"token endpoint unreachable: {exc.reason}") from exc
     except json.JSONDecodeError as exc:
@@ -74,4 +76,4 @@ def acquire_token(
     return access_token, expires_in
 
 
-__all__ = ["acquire_token", "OidcTokenError"]
+__all__ = ["OidcTokenError", "acquire_token"]

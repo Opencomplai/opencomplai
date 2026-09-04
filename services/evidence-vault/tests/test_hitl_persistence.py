@@ -42,7 +42,9 @@ async def client(tmp_path, _service_token_secret):
     app.state.sessionmaker = session_factory
     app.state.cas = CASStore(str(cas_path))
 
-    token = mint_service_token("test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"])
+    token = mint_service_token(
+        "test-caller", os.environ["INTERNAL_SERVICE_TOKEN_SECRET"]
+    )
 
     async with AsyncClient(
         transport=ASGITransport(app=app),
@@ -104,7 +106,9 @@ async def test_get_review_item_missing_returns_404(client):
 
 
 async def test_upsert_review_item_overwrites_existing_row(client):
-    await client.put("/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a"))
+    await client.put(
+        "/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a")
+    )
     decided = _item()
     decided["state"] = "decided"
     decided["decided_at"] = "2026-07-24T01:00:00+00:00"
@@ -124,7 +128,9 @@ async def test_upsert_review_item_overwrites_existing_row(client):
 
 
 async def test_review_item_not_visible_cross_tenant(client):
-    await client.put("/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a"))
+    await client.put(
+        "/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a")
+    )
 
     resp = await client.get(
         "/v1/hitl/review-items/rev_sha256:abc", headers=_headers("tenant-b")
@@ -133,7 +139,9 @@ async def test_review_item_not_visible_cross_tenant(client):
 
 
 async def test_cross_tenant_upsert_of_same_review_id_is_rejected(client):
-    await client.put("/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a"))
+    await client.put(
+        "/v1/hitl/review-items", json=_item(), headers=_headers("tenant-a")
+    )
 
     resp = await client.put(
         "/v1/hitl/review-items", json=_item(), headers=_headers("tenant-b")
@@ -143,10 +151,14 @@ async def test_cross_tenant_upsert_of_same_review_id_is_rejected(client):
 
 async def test_list_review_items_scoped_to_tenant(client):
     await client.put(
-        "/v1/hitl/review-items", json=_item("rev_sha256:one"), headers=_headers("tenant-a")
+        "/v1/hitl/review-items",
+        json=_item("rev_sha256:one"),
+        headers=_headers("tenant-a"),
     )
     await client.put(
-        "/v1/hitl/review-items", json=_item("rev_sha256:two"), headers=_headers("tenant-b")
+        "/v1/hitl/review-items",
+        json=_item("rev_sha256:two"),
+        headers=_headers("tenant-b"),
     )
 
     resp = await client.get("/v1/hitl/review-items", headers=_headers("tenant-a"))
@@ -160,10 +172,14 @@ async def test_list_review_items_filters_by_state(client):
     decided = _item("rev_sha256:decided")
     decided["state"] = "decided"
     await client.put("/v1/hitl/review-items", json=queued, headers=_headers("tenant-a"))
-    await client.put("/v1/hitl/review-items", json=decided, headers=_headers("tenant-a"))
+    await client.put(
+        "/v1/hitl/review-items", json=decided, headers=_headers("tenant-a")
+    )
 
     resp = await client.get(
-        "/v1/hitl/review-items", params={"state": "decided"}, headers=_headers("tenant-a")
+        "/v1/hitl/review-items",
+        params={"state": "decided"},
+        headers=_headers("tenant-a"),
     )
     ids = [i["review_id"] for i in resp.json()["items"]]
     assert ids == ["rev_sha256:decided"]
@@ -211,7 +227,11 @@ async def test_lookup_accepted_override_miss(client):
         "/v1/hitl/overrides/no-such-key", headers=_headers("tenant-a")
     )
     assert resp.status_code == 200
-    assert resp.json() == {"found": False, "payload_fingerprint": None, "response_json": None}
+    assert resp.json() == {
+        "found": False,
+        "payload_fingerprint": None,
+        "response_json": None,
+    }
 
 
 async def test_store_and_lookup_accepted_override(client):

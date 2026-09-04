@@ -325,7 +325,7 @@ class ScanStatusArtifact(BaseModel):
     scan_summary: ScanSummary | None = Field(
         None, description="Code corroboration scan outcomes when --scan was used"
     )
-    gap_report: "GapReport | None" = Field(
+    gap_report: GapReport | None = Field(
         None, description="Per-article gap status when --with-gaps was used"
     )
     controls: ControlsSummary | None = Field(
@@ -1009,7 +1009,7 @@ class ArticleGapStatus(BaseModel):
     )
     rationale: str = ""
     confidence: float | None = Field(
-        None, description="Heuristic confidence 0–1; null when not assessed"
+        None, description="Heuristic confidence 0-1; null when not assessed"
     )
     confidence_label: ConfidenceLabel = ConfidenceLabel.HEURISTIC_ESTIMATE
     disclaimer_ref: str = "DISCLAIMER_V1"
@@ -1046,6 +1046,6 @@ class GapReport(BaseModel):
     generated_at: str
     articles: list[ArticleGapStatus] = Field(default_factory=list)
     evidence_hashes: list[str] = Field(default_factory=list)
-    principle_summary: "PrincipleSummary | None" = Field(
+    principle_summary: PrincipleSummary | None = Field(
         None, description="6-principle rollup, populated by `opencomplai gaps`"
     )

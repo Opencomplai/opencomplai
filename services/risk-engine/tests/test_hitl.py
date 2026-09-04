@@ -26,7 +26,9 @@ async def test_override_empty_rationale_returns_422():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/hitl/overrides",
@@ -47,7 +49,9 @@ async def test_override_whitespace_only_rationale_returns_422():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/hitl/overrides",
@@ -66,7 +70,9 @@ async def test_override_valid_rationale_returns_201():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/hitl/overrides",
@@ -90,7 +96,9 @@ async def test_override_dual_approval_pending():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r = await client.post(
             "/v1/hitl/overrides",
@@ -118,7 +126,9 @@ async def test_override_rationale_hash_is_deterministic():
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', os.environ['INTERNAL_SERVICE_TOKEN_SECRET'])}"
+        },
     ) as client:
         r1 = await client.post("/v1/hitl/overrides", json=payload)
         r2 = await client.post("/v1/hitl/overrides", json=payload)

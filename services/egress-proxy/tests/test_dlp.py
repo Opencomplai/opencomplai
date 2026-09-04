@@ -130,7 +130,9 @@ async def test_sync_metadata_conformant_payload_returns_200(monkeypatch) -> None
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post("/v1/sync/metadata", json=payload)
     assert response.status_code == 200
@@ -150,7 +152,9 @@ async def test_sync_metadata_forbidden_field_returns_403(monkeypatch) -> None:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post("/v1/sync/metadata", json=payload)
     assert response.status_code == 403
@@ -167,7 +171,9 @@ async def test_sync_metadata_model_weights_blocked(monkeypatch) -> None:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post("/v1/sync/metadata", json=payload)
     assert response.status_code == 403
@@ -182,7 +188,9 @@ async def test_sync_metadata_disallowed_destination_returns_403(monkeypatch) -> 
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post("/v1/sync/metadata", json=payload)
     assert response.status_code == 403
@@ -200,7 +208,9 @@ async def test_sync_metadata_empty_allowlist_blocks_configured_destination(
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post("/v1/sync/metadata", json=payload)
     assert response.status_code == 403
@@ -212,7 +222,9 @@ async def test_sync_metadata_non_json_body_returns_422(monkeypatch) -> None:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.post(
             "/v1/sync/metadata",
@@ -227,7 +239,9 @@ async def test_egress_health_returns_200() -> None:
     async with AsyncClient(
         transport=ASGITransport(app=app),
         base_url="http://test",
-        headers={"Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"},
+        headers={
+            "Authorization": f"Bearer {mint_service_token('test-caller', 'egress-proxy-test-secret')}"
+        },
     ) as client:
         response = await client.get("/egress-health")
     assert response.status_code == 200

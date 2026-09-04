@@ -1,5 +1,6 @@
 """Tests for the combined scan+eval+manifest+gap-report renderer (opencomplai report)."""
 
+import pytest
 from opencomplai_core.engine import assess
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
@@ -71,12 +72,8 @@ def test_pdf_report_produces_valid_pdf_bytes():
 
 def test_unsupported_format_raises():
     manifest = _make_manifest()
-    try:
+    with pytest.raises(ValueError, match="docx"):
         render_report(manifest, fmt="docx")
-    except ValueError as e:
-        assert "docx" in str(e)
-    else:
-        raise AssertionError("expected ValueError for unsupported format")
 
 
 def test_report_does_not_import_networking_modules():
