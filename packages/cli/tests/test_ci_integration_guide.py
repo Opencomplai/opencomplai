@@ -19,6 +19,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _GUIDE = _REPO_ROOT / "docs" / "src" / "guides" / "ci-integration.md"
 _DOCS_CI_DIR = _REPO_ROOT / "dashboard-saas" / "docs" / "ci"
@@ -40,15 +42,19 @@ def test_guide_exists_and_has_two_yaml_blocks():
 
 
 def test_guide_github_actions_block_matches_docs_ci_verbatim():
+    canonical_path = _DOCS_CI_DIR / "github-actions.yml"
+    if not canonical_path.exists():
+        pytest.skip("dashboard-saas/docs/ci/github-actions.yml not reachable")
     blocks = _fenced_yaml_blocks(_GUIDE.read_text(encoding="utf-8"))
-    canonical = (_DOCS_CI_DIR / "github-actions.yml").read_text(encoding="utf-8")
-    assert blocks[0] == canonical
+    assert blocks[0] == canonical_path.read_text(encoding="utf-8")
 
 
 def test_guide_gitlab_ci_block_matches_docs_ci_verbatim():
+    canonical_path = _DOCS_CI_DIR / "gitlab-ci.yml"
+    if not canonical_path.exists():
+        pytest.skip("dashboard-saas/docs/ci/gitlab-ci.yml not reachable")
     blocks = _fenced_yaml_blocks(_GUIDE.read_text(encoding="utf-8"))
-    canonical = (_DOCS_CI_DIR / "gitlab-ci.yml").read_text(encoding="utf-8")
-    assert blocks[1] == canonical
+    assert blocks[1] == canonical_path.read_text(encoding="utf-8")
 
 
 def test_guide_yaml_blocks_use_the_documented_placeholder_host():
