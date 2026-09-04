@@ -22,7 +22,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from opencomplai_core.compliance_checker.engine import evaluate
 from opencomplai_core.compliance_checker.models import CheckerSession
 
