@@ -13,6 +13,10 @@ Wraps ``opencomplai check`` with GitLab CI platform conventions:
   blocked or frozen deployment fails the pipeline rather than passing silently.
 * Publishes the signed status artifact to the dashboard via the standard
   ingest path when configured.
+* Optionally also generates and publishes an Annex IV dossier envelope when
+  ``OPENCOMPLAI_PUSH_DOSSIER=1`` is set (DG-10) -- off by default, since
+  dossier generation is a materially heavier step than the scan-status
+  publish above.
 
 Environment variables consumed
 -------------------------------
@@ -20,21 +24,34 @@ Environment variables consumed
 ``CI_COMMIT_SHA``             — used as ``commit_ref`` in annotations.
 ``CI_JOB_NAME``               — job name surfaced in summary.
 ``GL_ENV_FILE``               — path for dotenv artifact (optional).
-``OPENCOMPLAI_DASHBOARD_URL`` — dashboard ingest base URL.
+``OPENCOMPLAI_DASHBOARD_URL`` — dashboard ingest base URL (this dashboard's
+                                own `/connect` page prints the exact value
+                                to use, together with a copy-paste pipeline
+                                snippet).
 ``OPENCOMPLAI_TENANT_ID``     — tenant ID.
-``OPENCOMPLAI_API_KEY``       — an ``ock_...`` API key (GO-LIVE CORE-3/-4).
-                                Takes precedence over everything below: when
-                                set, the connector sends the key-authed
-                                envelope (no ``install_id``) and never
-                                touches ``OPENCOMPLAI_AUTH_TOKEN`` or OIDC.
-``OPENCOMPLAI_AUTH_TOKEN``    — bearer token (legacy JWT path, only
-                                consulted when OPENCOMPLAI_API_KEY is
-                                unset). Takes precedence over the three
-                                vars below when set.
-``OPENCOMPLAI_CLIENT_ID``       — OIDC client_id from /enroll, used only
-                                   when OPENCOMPLAI_AUTH_TOKEN is unset.
-``OPENCOMPLAI_CLIENT_SECRET``   — OIDC client_secret from /enroll (same gate).
-``OPENCOMPLAI_TOKEN_ENDPOINT``  — the IdP's OAuth2 token endpoint (same gate).
+``OPENCOMPLAI_API_KEY``       — an ``ock_...`` API key issued from a
+                                project's page in the dashboard (GO-LIVE
+                                CORE-3/-4). The only auth setup a new
+                                install needs. Takes precedence over
+                                everything else: when set, the connector
+                                sends the key-authed envelope (no
+                                ``install_id``) and skips every fallback
+                                below.
+``OPENCOMPLAI_PUSH_DOSSIER``    — set to ``"1"`` to also run
+                                   ``opencomplai docs generate --push`` after
+                                   a successful dashboard publish (DG-10).
+                                   Off by default.
+
+Backward-compat auth fallbacks (pre-DG-11, not a setup path for new installs)
+-------------------------------------------------------------------------------
+An install that ran ``opencomplai dashboard enroll`` before it was hidden
+(see that command's own docstring — bootstrap-token minting has no working
+entry point for a new customer today) may hold the legacy bearer-token
+override, or the OIDC client-credentials pair ``enroll`` used to issue,
+still configured. Both remain functional fallbacks, consulted in that order,
+strictly below ``OPENCOMPLAI_API_KEY`` — kept for compatibility with an
+install that already depends on them, not documented as something to newly
+configure.
 
 Exit codes
 ----------
@@ -63,9 +80,13 @@ opencomplai-scan:
   variables:
     OPENCOMPLAI_DASHBOARD_URL: $OPENCOMPLAI_DASHBOARD_URL
     OPENCOMPLAI_TENANT_ID: $OPENCOMPLAI_TENANT_ID
-    OPENCOMPLAI_AUTH_TOKEN: $OPENCOMPLAI_AUTH_TOKEN
+    OPENCOMPLAI_API_KEY: $OPENCOMPLAI_API_KEY
     GL_ENV_FILE: opencomplai.env
 ```
+
+Get ``OPENCOMPLAI_DASHBOARD_URL`` and an ``OPENCOMPLAI_API_KEY`` from the
+dashboard's ``/connect`` page — it generates this exact snippet for your
+project.
 """
 
 from __future__ import annotations
@@ -235,6 +256,9 @@ def run_connector(
     # Dashboard publish.
     _publish_to_dashboard(artifact_result, _env)
 
+    # DG-10: opt-in dossier-envelope push.
+    _push_dossier_if_opted_in(artifact_result, _env)
+
     # Exit code propagation. FINDING 48.8: policy_block and validation_fail
     # are pipeline failures exactly like control_fail and trap_detected --
     # preserve `opencomplai check`'s own exit-code contract instead of
@@ -338,8 +362,8 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
     api_key = env.get("OPENCOMPLAI_API_KEY", "")
     if api_key:
         # ock_ key-authed path (GO-LIVE CORE-3/CORE-4) -- the same auth
-        # `opencomplai push` uses. Takes priority over OPENCOMPLAI_AUTH_TOKEN
-        # and the OIDC client-credentials grant below: a caller who sets
+        # `opencomplai push` uses. Takes priority over the legacy bearer-token
+        # override and the OIDC client-credentials grant below: a caller who sets
         # OPENCOMPLAI_API_KEY has opted into the key-authed contract, which
         # is a different envelope shape (no install_id at all -- the server
         # derives it from the key's own project), not just a different
@@ -358,10 +382,11 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
             )
         return
 
-    # Legacy JWT/OIDC path (pre-CORE-3 envelope contract). An operator-set
-    # OPENCOMPLAI_AUTH_TOKEN always wins. If unset, acquire one via the
-    # OIDC client-credentials grant using the pair /enroll issued
-    # (AUTH-SAAS) -- same trio of env vars, no manual token pasting.
+    # Legacy JWT/OIDC path (pre-CORE-3 envelope contract, not a setup path
+    # for new installs -- see the module docstring). An operator-set legacy
+    # bearer-token override always wins. If unset, acquire one via the OIDC
+    # client-credentials grant using the pair /enroll issued (AUTH-SAAS) --
+    # same trio of env vars, no manual token pasting.
     token = env.get("OPENCOMPLAI_AUTH_TOKEN", "")
     if not token:
         client_id = env.get("OPENCOMPLAI_CLIENT_ID", "")
@@ -395,6 +420,55 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
     if status not in (200, 201):
         print(
             f"WARNING: dashboard publish failed: HTTP {status} {data}",
+            file=sys.stderr,
+        )
+
+
+def _push_dossier_if_opted_in(artifact: dict | None, env: dict[str, str]) -> None:
+    """
+    Opt-in Annex IV dossier-envelope push (DG-10). Off by default --
+    ``OPENCOMPLAI_PUSH_DOSSIER`` must be exactly ``"1"``.
+
+    Shells out to ``opencomplai docs generate --push`` (a separate
+    subprocess, same pattern this connector already uses for ``opencomplai
+    check --sign`` above) rather than duplicating the dossier-envelope
+    mapping/transport here -- ``docs generate --push`` already carries the
+    full env contract (``OPENCOMPLAI_API_KEY``/``OPENCOMPLAI_DASHBOARD_URL``)
+    and exit-code semantics this connector needs, so there is nothing to
+    reimplement. A missing/failed dossier push is reported to stderr, never
+    a pipeline failure -- exactly like the scan-status publish above, which
+    is also best-effort.
+    """
+    if env.get("OPENCOMPLAI_PUSH_DOSSIER") != "1":
+        return
+    if not artifact:
+        return
+    system_id = artifact.get("system_id", "")
+    if not system_id:
+        return
+    commit_ref = artifact.get("commit_ref") or "HEAD"
+    cmd = [
+        "opencomplai",
+        "docs",
+        "generate",
+        "--system-id",
+        str(system_id),
+        "--commit-ref",
+        str(commit_ref),
+        "--push",
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, env=env)
+    except FileNotFoundError:
+        print(
+            "WARNING: dossier push skipped -- opencomplai CLI not found",
+            file=sys.stderr,
+        )
+        return
+    if result.returncode != 0:
+        print(
+            f"WARNING: dossier push failed (exit {result.returncode}) -- "
+            f"{result.stderr.strip()[:300]}",
             file=sys.stderr,
         )
 

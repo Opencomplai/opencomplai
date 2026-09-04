@@ -23,6 +23,8 @@ import uuid
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
+from typing import TYPE_CHECKING
+from urllib.parse import urlparse
 
 import typer
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
@@ -86,6 +88,9 @@ from opencomplai_cli import (
 )
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
 
+if TYPE_CHECKING:
+    from opencomplai_core.dossier import AnnexIVDossier
+
 app = typer.Typer(
     name="opencomplai",
     help=(
@@ -115,7 +120,7 @@ from opencomplai_cli.commands.controls import app as controls_app  # noqa: E402
 from opencomplai_cli.commands.dashboard import app as dashboard_app  # noqa: E402
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
 from opencomplai_cli.commands.interactive_init import run_interactive_init  # noqa: E402
-from opencomplai_cli.commands.push import run_push  # noqa: E402
+from opencomplai_cli.commands.push import run_push, run_push_dossier  # noqa: E402
 from opencomplai_cli.commands.serve import run_serve  # noqa: E402
 
 ai_app = typer.Typer(help="AI intent analysis commands.")
@@ -169,6 +174,13 @@ class FailOnLevel(StrEnum):
     new_major = "new-major"
     major = "major"
     critical = "critical"
+
+
+class PushKind(StrEnum):
+    """``opencomplai push --kind`` -- which artifact shape to publish (DG-10)."""
+
+    scan_status = "scan-status"
+    dossier_envelope = "dossier-envelope"
 
 
 # ---------------------------------------------------------------------------
@@ -3203,14 +3215,24 @@ def serve_cmd(
 
 @app.command("push")
 def push_cmd(
-    artifact_file: Path = typer.Argument(
-        Path("compliance-artifact.json"),
-        help="Path to a compliance-artifact.json (ScanStatusArtifact) to publish",
+    artifact_file: Path | None = typer.Argument(
+        None,
+        help=(
+            "Path to the artifact to publish. Defaults to "
+            "compliance-artifact.json for --kind scan-status, or the most "
+            "recently written dossier_*.json in the current directory for "
+            "--kind dossier-envelope."
+        ),
+    ),
+    kind: PushKind = typer.Option(
+        PushKind.scan_status,
+        "--kind",
+        help="Which artifact shape to publish: scan-status (default) or dossier-envelope.",
     ),
 ) -> None:
     """
-    Publish a signed compliance-artifact.json to the Opencomplai Premium
-    Dashboard (GO-LIVE CORE-4).
+    Publish a signed artifact to the Opencomplai Premium Dashboard
+    (GO-LIVE CORE-4 / DG-10).
 
     Requires OPENCOMPLAI_API_KEY (an `ock_...` key issued by the dashboard)
     and OPENCOMPLAI_DASHBOARD_URL (the dashboard's ingest base URL, e.g.
@@ -3218,8 +3240,32 @@ def push_cmd(
     from `check`/`scan`'s CI-gating exit codes: this command's own exit
     code (0 on success, 3 otherwise) reflects only whether the push
     reached the dashboard, never the scan result itself.
+
+    `--kind dossier-envelope` publishes an Annex IV dossier produced by
+    `opencomplai docs generate` (which can also push directly via its own
+    `--push` flag) instead of a compliance-artifact.json scan status.
     """
-    sys.exit(run_push(artifact_file))
+    if kind is PushKind.dossier_envelope:
+        dossier_file = artifact_file or _latest_dossier_file(Path("."))
+        if dossier_file is None:
+            err_console.print(
+                "[red]Error:[/red] no dossier_*.json found in the current "
+                "directory. Run [bold]opencomplai docs generate[/bold] first, "
+                "or pass an explicit path."
+            )
+            sys.exit(3)
+        sys.exit(run_push_dossier(dossier_file))
+    sys.exit(run_push(artifact_file or Path("compliance-artifact.json")))
+
+
+def _latest_dossier_file(directory: Path) -> Path | None:
+    """Most recently modified ``dossier_*.json`` in *directory*, or None."""
+    candidates = sorted(
+        directory.glob("dossier_*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    return candidates[0] if candidates else None
 
 
 # ---------------------------------------------------------------------------
@@ -3347,6 +3393,18 @@ def docs_generate_cmd(
     ),
     output_dir: Path = typer.Option(Path("."), "--output-dir"),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+    push: bool = typer.Option(
+        False,
+        "--push/--no-push",
+        help=(
+            "Publish the generated dossier's envelope to the Opencomplai "
+            "Premium Dashboard after generation (DG-10). Off by default. "
+            "Requires OPENCOMPLAI_API_KEY and OPENCOMPLAI_DASHBOARD_URL, "
+            "same as `opencomplai push`. Only applies when the dossier is "
+            "produced by the local fallback (no OPENCOMPLAI_API_URL set) -- "
+            "see module notes below."
+        ),
+    ),
 ) -> None:
     """Generate an Annex IV technical documentation dossier (REQ-DOC-001)."""
     # HALT-WIRE / E-12(d): a HALTED_PENDING_REVIEW system refuses dossier
@@ -3472,6 +3530,20 @@ def docs_generate_cmd(
                 "(training_data_description, model_architecture) before audit. "
                 "Re-run with --manifest pointing to a fully populated manifest."
             )
+        if push:
+            # DG-10: --push is only wired for the local-fallback branch
+            # below, which has the full AnnexIVDossier object needed to
+            # build a dossier_envelope. The doc-generator service response
+            # handled here carries only dossier_id/bundle_checksum/etc --
+            # not enough to reshape into an envelope -- so say so honestly
+            # rather than silently doing nothing.
+            err_console.print(
+                "[yellow]Warning:[/yellow] --push has no effect when "
+                "OPENCOMPLAI_API_URL routes generation through the "
+                "doc-generator service; its own pipeline handles dashboard "
+                "persistence separately. --push applies to the local "
+                "fallback (unset OPENCOMPLAI_API_URL)."
+            )
         sys.exit(0)
     except ConnectionError:
         pass
@@ -3546,10 +3618,70 @@ def docs_generate_cmd(
                 "(training_data_description, model_architecture) before audit. "
                 "Re-run with --manifest pointing to a fully populated manifest."
             )
+        if push and not _push_dossier_envelope(
+            dossier, repo_dir=out_file.resolve().parent
+        ):
+            sys.exit(3)
         sys.exit(0)
     except Exception as exc:
         err_console.print(f"[red]Dossier generation failed:[/red] {exc}")
         sys.exit(1)
+
+
+def _push_dossier_envelope(dossier: AnnexIVDossier, *, repo_dir: Path) -> bool:
+    """
+    DG-10: shape *dossier* into a ``dossier_envelope`` and POST it to the
+    dashboard, mirroring ``opencomplai push``'s own env contract and exit
+    semantics (0 success / 3 otherwise) — used by ``docs generate --push``.
+
+    Returns ``True`` on a successful publish (HTTP 200/201), ``False`` on
+    any failure (missing env vars, non-2xx status, network error) — the
+    caller maps that straight onto exit code 3, same as
+    ``commands.push.run_push``/``run_push_dossier``.
+    """
+    from opencomplai_cli.publish import (
+        prepare_dossier_envelope,
+        publish_dossier_envelope,
+    )
+
+    api_key = os.environ.get("OPENCOMPLAI_API_KEY", "")
+    dashboard_url = os.environ.get("OPENCOMPLAI_DASHBOARD_URL", "").rstrip("/")
+    if not api_key or not dashboard_url:
+        err_console.print(
+            "[red]Error:[/red] --push requires OPENCOMPLAI_API_KEY and "
+            "OPENCOMPLAI_DASHBOARD_URL to both be set."
+        )
+        return False
+
+    parsed_url = urlparse(dashboard_url)
+    if parsed_url.scheme == "http" and parsed_url.hostname not in (
+        "localhost",
+        "127.0.0.1",
+    ):
+        err_console.print(
+            f"[yellow]Warning:[/yellow] OPENCOMPLAI_DASHBOARD_URL ({dashboard_url}) "
+            "uses plain http -- the API key will be sent unencrypted over the network. "
+            "Use https unless this is local development."
+        )
+
+    prepared = prepare_dossier_envelope(
+        dossier.model_dump(mode="json"), commit_env=os.environ, repo_dir=repo_dir
+    )
+    envelope = {
+        "system_id": prepared.get("system_id", "unknown"),
+        "artifact": prepared,
+        "signature": "",
+    }
+    status, data = publish_dossier_envelope(dashboard_url, api_key, envelope)
+
+    if status in (200, 201):
+        outcome = str(data.get("outcome", "accepted" if status == 201 else "replayed"))
+        console.print(f"[green]Dossier push {outcome}.[/green]")
+        console.print(f"  content_hash: {data.get('content_hash', '')}")
+        return True
+
+    err_console.print(f"[red]Dossier push failed ({status}):[/red] {data}")
+    return False
 
 
 @sync_app.command("metadata")

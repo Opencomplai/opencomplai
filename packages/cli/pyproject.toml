@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai-cli"
-version = "0.5.0"
+version = "0.6.0"
 description = "Opencomplai command-line interface for EU AI Act compliance assessment"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }

@@ -31,7 +31,9 @@ from rich.markup import escape
 
 from opencomplai_cli.publish import (
     envelope_signature,
+    prepare_dossier_envelope,
     prepare_scan_status_artifact,
+    publish_dossier_envelope,
     publish_scan_status,
 )
 
@@ -150,4 +152,105 @@ def run_push(artifact_file: Path, *, env: dict[str, str] | None = None) -> int:
     return EXIT_PUBLISH_FAILED
 
 
-__all__ = ["EXIT_OK", "EXIT_PUBLISH_FAILED", "run_push"]
+def run_push_dossier(dossier_file: Path, *, env: dict[str, str] | None = None) -> int:
+    """
+    Read ``dossier_file`` (an ``AnnexIVDossier`` JSON -- e.g. the
+    ``dossier_<id>.json`` ``opencomplai docs generate`` writes locally),
+    shape it into a ``dossier_envelope``, and POST it to the dashboard
+    (DG-10).
+
+    Transliterated from ``run_push`` above: same file/env validation, same
+    ``http``-non-local warning, same auth model (``ock_`` API key, no
+    ``install_id``), same ``(0 success / 3 otherwise)`` return contract.
+    Two differences beyond the obvious (path, mapper, transport function):
+
+    * The envelope's own ``signature`` is always ``""``. Unlike a
+      ``ScanStatusArtifact``, an ``AnnexIVDossier``'s own ``signature``
+      field (when present) signs the *dossier bundle* under a scheme
+      unrelated to the ingest envelope's G-5 byte-identity check
+      (``envelope_signature``'s docstring) -- forwarding it would not
+      "sort of" verify, it would deterministically fail closed. A
+      key-authed push already attests via the API key itself, same as
+      scan status's own key-authed path (``dashboard_ingest.routes``).
+    * The error message on a missing file points at ``docs generate``
+      instead of ``check --sign``.
+    """
+    _env = env if env is not None else os.environ
+
+    if not dossier_file.exists():
+        err_console.print(f"[red]Error:[/red] dossier file not found: {dossier_file}")
+        err_console.print(
+            "Run [bold]opencomplai docs generate[/bold] first to produce one."
+        )
+        return EXIT_PUBLISH_FAILED
+
+    try:
+        raw_text = dossier_file.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        err_console.print(f"[red]Error:[/red] could not read {dossier_file}: {exc}")
+        return EXIT_PUBLISH_FAILED
+
+    try:
+        dossier: Any = json.loads(raw_text)
+    except json.JSONDecodeError as exc:
+        err_console.print(f"[red]Error:[/red] {dossier_file} is not valid JSON: {exc}")
+        return EXIT_PUBLISH_FAILED
+
+    if not isinstance(dossier, dict):
+        err_console.print(
+            f"[red]Error:[/red] {dossier_file} must contain a JSON object "
+            "(an AnnexIVDossier), not a "
+            f"{type(dossier).__name__}"
+        )
+        return EXIT_PUBLISH_FAILED
+
+    api_key = _env.get("OPENCOMPLAI_API_KEY", "")
+    dashboard_url = _env.get("OPENCOMPLAI_DASHBOARD_URL", "").rstrip("/")
+    if not api_key or not dashboard_url:
+        err_console.print(
+            "[red]Error:[/red] OPENCOMPLAI_API_KEY and OPENCOMPLAI_DASHBOARD_URL "
+            "must both be set."
+        )
+        return EXIT_PUBLISH_FAILED
+
+    parsed_url = urlparse(dashboard_url)
+    if parsed_url.scheme == "http" and parsed_url.hostname not in _LOCAL_HOSTNAMES:
+        err_console.print(
+            f"[yellow]Warning:[/yellow] OPENCOMPLAI_DASHBOARD_URL ({dashboard_url}) "
+            "uses plain http -- the API key will be sent unencrypted over the network. "
+            "Use https unless this is local development."
+        )
+
+    prepared = prepare_dossier_envelope(
+        dossier, commit_env=_env, repo_dir=dossier_file.resolve().parent
+    )
+
+    envelope = {
+        "system_id": prepared.get("system_id", "unknown"),
+        "artifact": prepared,
+        "signature": "",
+    }
+
+    status, data = publish_dossier_envelope(dashboard_url, api_key, envelope)
+
+    if status in (200, 201):
+        outcome = escape(
+            str(data.get("outcome", "accepted" if status == 201 else "replayed"))
+        )
+        content_hash = escape(str(data.get("content_hash", "")))
+        console.print(f"[green]Push {outcome}.[/green]")
+        console.print(f"  system_id:    {envelope['system_id']}")
+        console.print(f"  content_hash: {content_hash}")
+        console.print(f"\nDashboard: {dashboard_url}")
+        return EXIT_OK
+
+    err_console.print(f"[red]Push failed ({status}):[/red] {escape(str(data))}")
+    return EXIT_PUBLISH_FAILED
+
+
+__all__ = [
+    "EXIT_OK",
+    "EXIT_PUBLISH_FAILED",
+    "run_push",
+    "run_push_dossier",
+]

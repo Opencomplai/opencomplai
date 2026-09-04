@@ -1,26 +1,25 @@
 """
 CLI dashboard sub-commands (C0.8).
 
-Subcommand: ``opencomplai dashboard enroll``
-    Opt an OSS install into the Premium Dashboard.
-
-    1. Validates the bootstrap token against the dashboard
-       ``POST /v1/admin/enroll`` (rate-limited, one-time-use).
-    2. Registers the install's signing key(s) with the tenant.
-    3. Writes an ``EgressConsent`` (``consent_scope=dashboard_metadata``) to
-       the OSS-side ledger.
-    4. Adds the dashboard endpoint to the local egress-proxy allowlist with a
-       per-endpoint policy reference.
-    5. Prints the dashboard URL and an audit-event hash the operator can verify.
-
-    Idempotent: re-running with the same tenant returns the existing enrollment
-    and emits no new ledger event.
+Subcommand: ``opencomplai dashboard enroll`` (hidden — see its own docstring)
+    Opt an OSS install into the Premium Dashboard via a one-time bootstrap
+    token. This is an operator path: the token has to come from somewhere,
+    and as of DG-11 nothing in this repo issues one outside a test (admin-api's
+    ``issue_bootstrap_token`` has zero non-test callers — no route, no web UI).
+    The self-serve onboarding path is the ``/connect`` page + an
+    ``OPENCOMPLAI_API_KEY`` (see ``opencomplai push`` / ``opencomplai docs
+    generate --push``), which needs none of this.
 
 Subcommand: ``opencomplai dashboard withdraw``
-    Remove dashboard enrollment for this install.
-
-    Emits a ``consent_revoked`` ledger event and removes the egress-proxy
-    allowlist entry within the same command run.
+    Clear this install's local enrollment state (egress-allowlist entry +
+    a ``consent_revoked`` ledger event) unconditionally. Also best-effort
+    notifies the dashboard's ``POST /v1/admin/withdraw`` when this install
+    can actually authenticate to it — that endpoint requires a tenant-scoped
+    service JWT (SEC-2) that a plain OSS install typically never has (it is
+    minted from ``enroll``'s OIDC client-credentials pair, and ``enroll`` is
+    the hidden/effectively-dead path described above). When no such token
+    can be produced, the remote call is skipped rather than sent bare and
+    guaranteed a 401 — see ``withdraw()``'s own docstring.
 """
 
 from __future__ import annotations
@@ -53,9 +52,7 @@ except ImportError:
     _console = _FallbackConsole()  # type: ignore[assignment]
     _err_console = _FallbackConsole()  # type: ignore[assignment]
 
-app = typer.Typer(
-    help="Premium Dashboard enrollment and withdrawal.", add_completion=False
-)
+app = typer.Typer(help="Premium Dashboard connection management.", add_completion=False)
 
 _OPENCOMPLAI_DIR = Path.home() / ".opencomplai"
 _CONFIG_FILE = _OPENCOMPLAI_DIR / "config.yaml"
@@ -177,7 +174,7 @@ def _post(url: str, payload: dict, token: str | None = None) -> tuple[int, dict]
 # ---------------------------------------------------------------------------
 
 
-@app.command("enroll")
+@app.command("enroll", hidden=True)
 def enroll(
     tenant: str = typer.Option(
         ..., "--tenant", help="Tenant ID from the dashboard signup"
@@ -192,10 +189,19 @@ def enroll(
     ),
 ) -> None:
     """
-    Enroll this install in the Opencomplai Premium Dashboard.
+    Operator path pending a UI to mint bootstrap tokens.
 
-    Validates the bootstrap token, registers signing keys, writes EgressConsent
-    to the local ledger, and adds the dashboard endpoint to the egress allowlist.
+    Enrolls this install in the Opencomplai Premium Dashboard by validating a
+    one-time bootstrap token, registering signing keys, writing EgressConsent
+    to the local ledger, and adding the dashboard endpoint to the egress
+    allowlist. Hidden from --help as of DG-11: nothing in this product issues
+    a bootstrap token outside a test today (admin-api's
+    ``issue_bootstrap_token`` has zero non-test callers), so this command has
+    no working entry point for a real customer to reach. It is kept, not
+    deleted, for the operator who already has -- or will eventually get a
+    console to mint -- a token. Everyone else wants the self-serve path:
+    an API key from ``/connect`` plus ``opencomplai push`` /
+    ``opencomplai docs generate --push``.
     """
     cfg = _load_config()
     install_id = cfg.get("install_id", "")
@@ -318,6 +324,41 @@ def enroll(
 # ---------------------------------------------------------------------------
 
 
+def _resolve_withdraw_token() -> str | None:
+    """
+    Best-effort bearer token for admin-api's ``POST /v1/admin/withdraw``
+    (SEC-2's ``PrincipalDep`` requires a tenant-scoped service JWT), mirroring
+    the CI connectors' own auth precedence
+    (``connectors/github_actions.py``/``gitlab_ci.py``): an operator-set
+    legacy bearer-token env var wins outright; otherwise this install's own
+    OIDC client-credentials pair (persisted locally by ``enroll`` — see
+    module docstring) is exchanged for a short-lived JWT.
+
+    Returns ``None`` — never raises — when neither path produces a token.
+    That is the *ordinary* outcome for the vast majority of installs, which
+    never went through ``enroll`` (it is hidden and has no working entry
+    point today): callers must treat it as "there is nothing to
+    authenticate a remote withdraw with," not as an error.
+    """
+    token = os.environ.get("OPENCOMPLAI_AUTH_TOKEN", "")
+    if token:
+        return token
+
+    client_id = _load_config().get("client_id", "")
+    client_secret = _read_client_secret() or ""
+    token_endpoint = os.environ.get("OPENCOMPLAI_TOKEN_ENDPOINT", "")
+    if not (client_id and client_secret and token_endpoint):
+        return None
+
+    from opencomplai_cli.oidc_client import OidcTokenError, acquire_token
+
+    try:
+        token, _ = acquire_token(token_endpoint, client_id, client_secret)
+    except OidcTokenError:
+        return None
+    return token
+
+
 @app.command("withdraw")
 def withdraw(
     tenant: str = typer.Option(..., "--tenant", help="Tenant ID to withdraw from"),
@@ -326,11 +367,28 @@ def withdraw(
         "--dashboard-url",
         help="Dashboard base URL (defaults to OPENCOMPLAI_DASHBOARD_URL env var)",
     ),
+    local_only: bool = typer.Option(
+        False,
+        "--local-only",
+        help=(
+            "Clear local state only — never attempt the remote "
+            "/v1/admin/withdraw call, even if a token is available."
+        ),
+    ),
 ) -> None:
     """
     Withdraw dashboard enrollment for this install.
 
-    Emits a consent_revoked ledger event and removes the egress allowlist entry.
+    Always clears local state: emits a consent_revoked ledger event and
+    removes the egress allowlist entry, in this same run. Also best-effort
+    notifies the dashboard, but only when a bearer token can actually be
+    produced for it (see _resolve_withdraw_token) — admin-api's
+    /v1/admin/withdraw requires an authenticated, tenant-scoped service JWT
+    (SEC-2), which most OSS installs have no way to mint. Sending the
+    request anyway would just guarantee a 401 that looks like a real
+    failure; skipping it prints a direct next step instead. A genuine
+    >=400 from the dashboard on a request that *did* carry a token is a
+    real rejection and still gets the loud error message.
     """
     cfg = _load_config()
     install_id = cfg.get("install_id", "")
@@ -344,37 +402,39 @@ def withdraw(
         "OPENCOMPLAI_DASHBOARD_URL", ""
     ).rstrip("/")
 
-    # --- Notify dashboard if URL is available ---
+    # --- Notify dashboard, only if we can actually authenticate to it ---
     # Best-effort and non-fatal by design (an offline install can still clear
-    # its own local state) — but a >=400 response is not the same as being
-    # unreachable: the dashboard *processed* the request and refused it, so
-    # egress consent almost certainly stays active server-side. That case
-    # gets its own louder message below rather than folding into the local
-    # "Withdrawal complete" line, which would otherwise claim a success that
-    # did not happen remotely (admin-api's /v1/admin/withdraw requires an
-    # authenticated, tenant-scoped service JWT as of SEC-2 — this CLI does
-    # not yet mint one, so every call currently gets 401; see HANDOFF.md).
-    # Vacuously true when no dashboard URL is configured at all — a purely
-    # local install has no remote consent state to fall out of sync with.
-    dashboard_notified = not base_url
-    if base_url:
-        try:
-            status, data = _post(
-                f"{base_url}/v1/admin/withdraw",
-                {"tenant_id": tenant, "install_id": install_id},
-            )
-            if status >= 400:
-                _err_console.print(
-                    f"[red]Error:[/red] dashboard rejected the withdraw request "
-                    f"({status}: {data.get('message', data)}) — egress consent was "
-                    "NOT revoked server-side. Clearing local state only."
+    # its own local state). Three distinct outcomes below, each with its own
+    # message: (1) skipped because no token could be minted, or --local-only
+    # was passed, or no dashboard URL is configured at all -- the common
+    # case, not an error; (2) skipped because of an actual bug/note aside;
+    # (3) attempted with a real token and the dashboard rejected it (>=400)
+    # or was unreachable -- a genuine failure, kept loud so it isn't
+    # confused with (1)'s "there was never anything to try" case.
+    dashboard_notified = False
+    skipped_no_token = True
+    if base_url and not local_only:
+        token = _resolve_withdraw_token()
+        if token is not None:
+            skipped_no_token = False
+            try:
+                status, data = _post(
+                    f"{base_url}/v1/admin/withdraw",
+                    {"tenant_id": tenant, "install_id": install_id},
+                    token=token,
                 )
-            else:
-                dashboard_notified = True
-        except ConnectionError as exc:
-            _err_console.print(
-                f"[yellow]Warning:[/yellow] could not reach dashboard: {exc}"
-            )
+                if status >= 400:
+                    _err_console.print(
+                        f"[red]Error:[/red] dashboard rejected the withdraw request "
+                        f"({status}: {data.get('message', data)}) — egress consent was "
+                        "NOT revoked server-side. Clearing local state only."
+                    )
+                else:
+                    dashboard_notified = True
+            except ConnectionError as exc:
+                _err_console.print(
+                    f"[yellow]Warning:[/yellow] could not reach dashboard: {exc}"
+                )
 
     # --- Emit consent_revoked ledger event ---
     from datetime import UTC, datetime
@@ -394,17 +454,26 @@ def withdraw(
     removed = allowlist.pop(key, None)
     _write_egress_allowlist(allowlist)
 
-    if removed:
-        if dashboard_notified:
+    if dashboard_notified:
+        if removed:
             _console.print(
                 f"[green]Withdrawal complete.[/green] Egress allowlist entry removed for tenant {tenant}."
             )
         else:
             _console.print(
-                f"[yellow]Local withdrawal complete[/yellow] — egress allowlist entry removed "
-                f"for tenant {tenant}, but the dashboard was not notified (see error above). "
-                "Server-side egress consent likely remains active."
+                f"[green]Withdrawal complete.[/green] No local egress allowlist entry was present for tenant {tenant}."
             )
+    elif skipped_no_token:
+        _console.print(
+            "[green]Local state cleared.[/green] Remote egress consent must be "
+            "revoked from the dashboard (Projects → Archive project)."
+        )
+    elif removed:
+        _console.print(
+            f"[yellow]Local withdrawal complete[/yellow] — egress allowlist entry removed "
+            f"for tenant {tenant}, but the dashboard was not notified (see error above). "
+            "Server-side egress consent likely remains active."
+        )
     else:
         _console.print(
             f"[dim]No egress allowlist entry found for tenant {tenant} — nothing to remove.[/dim]"

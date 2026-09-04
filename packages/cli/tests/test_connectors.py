@@ -308,8 +308,9 @@ class TestGitHubActionsConnector:
 
     def test_publish_uses_api_key_when_set_no_install_id_no_oidc(self):
         """GO-LIVE CORE-4: OPENCOMPLAI_API_KEY (the ock_ key-authed path)
-        takes priority over OPENCOMPLAI_AUTH_TOKEN and OIDC entirely, and
-        sends the key-authed envelope shape -- no install_id key at all."""
+        takes priority over the legacy bearer-token override and OIDC
+        entirely, and sends the key-authed envelope shape -- no install_id
+        key at all."""
         from opencomplai_cli.connectors.github_actions import _publish_to_dashboard
 
         env = {
@@ -682,8 +683,8 @@ class TestGitLabCIConnector:
 
     def test_publish_uses_api_key_when_set_no_install_id_no_oidc(self):
         """GO-LIVE CORE-4: OPENCOMPLAI_API_KEY takes priority over
-        OPENCOMPLAI_AUTH_TOKEN and OIDC entirely, sending the key-authed
-        envelope shape -- no install_id key at all."""
+        the legacy bearer-token override and OIDC entirely, sending the
+        key-authed envelope shape -- no install_id key at all."""
         from opencomplai_cli.connectors.gitlab_ci import _publish_to_dashboard
 
         env = {

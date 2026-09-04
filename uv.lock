@@ -2151,7 +2151,7 @@ wheels = [
 
 [[package]]
 name = "opencomplai"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "packages/sdk-python" }
 dependencies = [
     { name = "opencomplai-cli" },
@@ -2187,7 +2187,7 @@ provides-extras = ["dev", "reports", "inspect-bridge", "serve"]
 
 [[package]]
 name = "opencomplai-ai"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "packages/ai" }
 dependencies = [
     { name = "huggingface-hub" },
@@ -2229,7 +2229,7 @@ provides-extras = ["deep", "onnx", "dev"]
 
 [[package]]
 name = "opencomplai-cli"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "opencomplai-core", extra = ["reports"] },
@@ -2265,7 +2265,7 @@ provides-extras = ["dev", "serve"]
 
 [[package]]
 name = "opencomplai-core"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "packages/core" }
 dependencies = [
     { name = "cryptography" },

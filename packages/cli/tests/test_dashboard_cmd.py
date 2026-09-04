@@ -444,10 +444,13 @@ def test_withdraw_removes_egress_allowlist_entry() -> None:
 
 
 def test_withdraw_rejected_by_dashboard_does_not_claim_success() -> None:
-    """SEC-2: admin-api's /v1/admin/withdraw now requires an authenticated,
-    tenant-scoped service JWT this CLI does not mint, so a real dashboard
-    call gets 401. Local cleanup still runs (best-effort design), but the
-    command must not print "Withdrawal complete" -- that would tell the
+    """SEC-2: admin-api's /v1/admin/withdraw requires an authenticated,
+    tenant-scoped service JWT (DG-11: _resolve_withdraw_token). With a token
+    available (here via the legacy bearer-token override env var — the
+    simplest way to exercise the "genuine >=400" branch without also
+    mocking OIDC), the remote call is actually attempted and this dashboard
+    rejects it with 401. Local cleanup still runs (best-effort design), but
+    the command must not print "Withdrawal complete" -- that would tell the
     user consent was revoked server-side when it was not."""
     _server, base_url, responses = _start_server()
     responses["/v1/admin/enroll"] = (
@@ -471,7 +474,9 @@ def test_withdraw_rejected_by_dashboard_does_not_claim_success() -> None:
     assert "dashboard:t-007" in _load_egress_allowlist()
 
     result = runner.invoke(
-        app, ["withdraw", "--tenant", "t-007", "--dashboard-url", base_url]
+        app,
+        ["withdraw", "--tenant", "t-007", "--dashboard-url", base_url],
+        env={"OPENCOMPLAI_AUTH_TOKEN": "legacy-bearer-token"},
     )
 
     # Local state still clears -- an install can always stop trusting its
@@ -483,7 +488,68 @@ def test_withdraw_rejected_by_dashboard_does_not_claim_success() -> None:
 
     combined_output = result.output + str(result.exception or "")
     assert "Withdrawal complete." not in result.output
+    assert "Local state cleared." not in result.output
     assert "401" in combined_output or "rejected" in result.output.lower()
+
+
+# ---------------------------------------------------------------------------
+# withdraw — no token can be minted (DG-11: the common case)
+# ---------------------------------------------------------------------------
+
+
+def test_withdraw_no_token_skips_remote_call_prints_local_message_exits_0() -> None:
+    """The overwhelming majority of installs never went through the hidden
+    `enroll` command, so they hold no OIDC client-credentials and have not
+    set the legacy bearer-token override -- _resolve_withdraw_token
+    returns None. withdraw must not send an unauthenticated request that
+    admin-api will always 401; it clears local state, prints the
+    local-success message, and exits 0."""
+    _server, base_url, responses = _start_server()
+    # No enroll call at all -- this install was never enrolled, and no
+    # /v1/admin/withdraw response is registered, so a real POST here would
+    # 404. If the CLI calls it anyway, the assertions below fail loudly.
+
+    result = runner.invoke(
+        app, ["withdraw", "--tenant", "t-008", "--dashboard-url", base_url]
+    )
+
+    assert result.exit_code == 0, result.output
+    # Rich may soft-wrap the line at the terminal width, so check the two
+    # halves independently rather than the exact joined string.
+    assert "Local state cleared." in result.output
+    assert "Remote egress consent must be revoked from the dashboard" in result.output
+    assert "Projects" in result.output
+    assert "Archive project" in result.output
+    events = _ledger_events()
+    revoked = [e for e in events if e.get("event_type") == "consent_revoked"]
+    assert len(revoked) == 1
+    assert not responses  # the fake server never registered /v1/admin/withdraw
+
+
+def test_withdraw_local_only_flag_skips_remote_call_even_with_token() -> None:
+    """--local-only must win even when a token IS available -- an operator
+    asking to stay local should never trigger network egress."""
+    _server, base_url, responses = _start_server()
+    responses["/v1/admin/withdraw"] = (200, {"status": "ok"})
+
+    result = runner.invoke(
+        app,
+        [
+            "withdraw",
+            "--tenant",
+            "t-009",
+            "--dashboard-url",
+            base_url,
+            "--local-only",
+        ],
+        env={"OPENCOMPLAI_AUTH_TOKEN": "legacy-bearer-token"},
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Local state cleared." in result.output
+    events = _ledger_events()
+    revoked = [e for e in events if e.get("event_type") == "consent_revoked"]
+    assert len(revoked) == 1
 
 
 def test_withdraw_after_enroll_makes_re_enroll_possible() -> None:
@@ -525,3 +591,48 @@ def test_withdraw_after_enroll_makes_re_enroll_possible() -> None:
     events = _ledger_events()
     granted = [e for e in events if e.get("event_type") == "consent_granted"]
     assert len(granted) == 2  # original + re-enroll
+
+
+# ---------------------------------------------------------------------------
+# enroll — hidden from --help (DG-11)
+# ---------------------------------------------------------------------------
+
+
+def test_enroll_is_registered_hidden() -> None:
+    """DG-11: enroll has no working entry point for a real customer
+    (issue_bootstrap_token has zero non-test callers) and must not be
+    advertised. It still works when invoked directly (see the enroll tests
+    above) -- hidden only affects --help listings, not execution. Checked
+    against the typer registration itself (not scraped help text), since
+    withdraw's own one-line help legitimately contains the word
+    "enrollment" and a naive substring check on rendered --help output
+    would false-positive on that."""
+    commands_by_name = {c.name: c for c in app.registered_commands}
+    assert "enroll" in commands_by_name
+    assert commands_by_name["enroll"].hidden is True
+    assert "withdraw" in commands_by_name
+    assert commands_by_name["withdraw"].hidden is not True
+
+
+def test_enroll_not_listed_as_a_command_row_in_dashboard_help() -> None:
+    """Black-box check on the actual rendered help: `enroll` must not appear
+    as its own listed command row (withdraw's help text legitimately
+    mentions "enrollment" in prose, so this checks for the row specifically,
+    not a bare substring)."""
+    import re
+
+    result = runner.invoke(app, ["--help"])
+
+    assert result.exit_code == 0, result.output
+    assert not re.search(r"(?m)^\s*(?:│\s*)?enroll\s{2,}", result.output)
+    assert "withdraw" in result.output
+
+
+def test_enroll_hidden_from_top_level_help() -> None:
+    """Same check through the real top-level `opencomplai --help` surface."""
+    from opencomplai_cli.main import app as main_app
+
+    result = runner.invoke(main_app, ["--help"])
+
+    assert result.exit_code == 0, result.output
+    assert "enroll" not in result.output

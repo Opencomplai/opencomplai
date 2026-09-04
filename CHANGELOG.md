@@ -9,6 +9,27 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+---
+
+## [0.6.0] — 2026-09-04
+
+### Added
+
+- `docs generate --push` and `push --kind {scan-status,dossier-envelope}`: a
+  dossier-envelope producer for the dashboard's ingest pipeline, sharing the
+  scan-status pair's commit resolution, redirect-blocking opener, and env
+  contract (`OPENCOMPLAI_PUSH_DOSSIER=1` opts in the CI connectors).
+  Pushing the same envelope twice replays by content hash.
+- CLI documentation now matches what the commands actually do: the README
+  covers `push` and `docs generate --push` with a real self-serve quick
+  start, `enroll` is hidden until a bootstrap-token UI exists, `withdraw
+  --local-only` skips the always-401 remote call explicitly, and the CI
+  integration guide is pinned byte-for-byte to `docs/ci/*.yml` by test.
+- Shared EU AI Act checker golden vectors — 24 cases covering prohibited
+  practices, Annex I/III high-risk, each Art. 6(3) derogation, profiling
+  override, out-of-scope, and every entity type — asserted against both the
+  OSS engine and the vendored dashboard checker.
+
 ### Changed
 
 - ruff is pinned to 0.15.12 for both uv and pre-commit, which had drifted

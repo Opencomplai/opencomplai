@@ -26,7 +26,9 @@ import pytest
 from opencomplai_cli.publish import (
     _resolve_commit_ref,
     envelope_signature,
+    prepare_dossier_envelope,
     prepare_scan_status_artifact,
+    publish_dossier_envelope,
     publish_scan_status,
 )
 
@@ -432,3 +434,256 @@ def test_real_repo_root_artifact_prepared_validates_against_widened_schema():
     assert prepared["gap_report"] == artifact["gap_report"]
     assert prepared["scan_summary"] == artifact["scan_summary"]
     assert prepared["evidence_hashes"] == artifact["evidence_hashes"]
+
+
+# ---------------------------------------------------------------------------
+# prepare_dossier_envelope (DG-10)
+# ---------------------------------------------------------------------------
+
+_SAMPLE_DOSSIER: dict = {
+    "dossier_id": "doss-1234",
+    "system_id": "sys-acme-loan-approval",
+    "commit_ref": "a" * 40,
+    "generated_at": "2026-05-18T18:46:11Z",
+    "compliance_target": "EU_AI_ACT",
+    "bundle_checksum": "sha256:" + "9" * 64,
+    "signature": None,
+    "signature_status": "unsigned",
+    "section1": {"risk_class": "minimal"},
+}
+
+
+class TestPrepareDossierEnvelopeFieldMapping:
+    def test_system_id_and_bundle_checksum_and_compliance_target_pass_through(self):
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert prepared["system_id"] == _SAMPLE_DOSSIER["system_id"]
+        assert prepared["bundle_checksum"] == _SAMPLE_DOSSIER["bundle_checksum"]
+        assert prepared["compliance_target"] == _SAMPLE_DOSSIER["compliance_target"]
+
+    def test_commit_ref_resolved_like_scan_status(self):
+        prepared = prepare_dossier_envelope(
+            {**_SAMPLE_DOSSIER, "commit_ref": "HEAD"},
+            commit_env={"GITHUB_SHA": "b" * 40},
+        )
+        assert prepared["commit_ref"] == "b" * 40
+
+    def test_timestamp_uses_generated_at_when_present(self):
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert prepared["timestamp"] == "2026-05-18T18:46:11Z"
+
+    def test_timestamp_synthesized_when_generated_at_absent(self):
+        dossier = {k: v for k, v in _SAMPLE_DOSSIER.items() if k != "generated_at"}
+        prepared = prepare_dossier_envelope(dossier, commit_env={})
+        ts = prepared["timestamp"]
+        assert ts.endswith("Z")
+        from datetime import datetime
+
+        datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+    def test_bundle_checksum_synthesized_when_absent(self):
+        dossier = {k: v for k, v in _SAMPLE_DOSSIER.items() if k != "bundle_checksum"}
+        prepared = prepare_dossier_envelope(dossier, commit_env={})
+        assert prepared["bundle_checksum"].startswith("sha256:")
+        assert len(prepared["bundle_checksum"]) == len("sha256:") + 64
+
+    def test_policy_bundle_version_synthesized(self):
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert prepared["policy_bundle_version"].startswith("cli-")
+
+    def test_result_is_always_generated(self):
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert prepared["result"] == "generated"
+
+    def test_signed_by_reflects_unsigned_status(self):
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert prepared["signed_by"] == "cli:unsigned"
+
+    def test_signed_by_reflects_hmac_local_status(self):
+        dossier = {**_SAMPLE_DOSSIER, "signature_status": "hmac-local"}
+        prepared = prepare_dossier_envelope(dossier, commit_env={})
+        assert prepared["signed_by"] == "cli:hmac-local"
+
+    def test_signed_by_defaults_to_unsigned_when_status_absent(self):
+        dossier = {k: v for k, v in _SAMPLE_DOSSIER.items() if k != "signature_status"}
+        prepared = prepare_dossier_envelope(dossier, commit_env={})
+        assert prepared["signed_by"] == "cli:unsigned"
+
+    def test_size_bytes_is_positive_int_and_deterministic(self):
+        p1 = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        p2 = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert isinstance(p1["size_bytes"], int)
+        assert p1["size_bytes"] > 0
+        assert p1["size_bytes"] == p2["size_bytes"]
+
+    def test_no_annex_iv_section_content_leaks_into_envelope(self):
+        """Unlike prepare_scan_status_artifact's passthrough, the dossier
+        envelope must carry ONLY the schema's own fields -- no section1-9
+        content, dossier_id, or evidence_hashes (additionalProperties:
+        false on the receiving schema would reject any of those)."""
+        prepared = prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        allowed = {
+            "system_id",
+            "commit_ref",
+            "bundle_checksum",
+            "size_bytes",
+            "signed_by",
+            "timestamp",
+            "compliance_target",
+            "policy_bundle_version",
+            "result",
+        }
+        assert set(prepared.keys()) <= allowed
+        assert "section1" not in prepared
+        assert "dossier_id" not in prepared
+
+    def test_original_dict_is_not_mutated(self):
+        original = dict(_SAMPLE_DOSSIER)
+        prepare_dossier_envelope(_SAMPLE_DOSSIER, commit_env={})
+        assert _SAMPLE_DOSSIER == original
+
+
+# ---------------------------------------------------------------------------
+# publish_dossier_envelope -- transport
+# ---------------------------------------------------------------------------
+
+
+class TestPublishDossierEnvelope:
+    def test_success_returns_status_and_parsed_body(self):
+        response = MagicMock()
+        response.status = 201
+        response.read.return_value = b'{"outcome": "accepted", "content_hash": "abc"}'
+        with patch("urllib.request.urlopen") as mock_urlopen:
+            mock_urlopen.return_value.__enter__.return_value = response
+            status, data = publish_dossier_envelope("http://dash.test", "tok", {"a": 1})
+        assert status == 201
+        assert data == {"outcome": "accepted", "content_hash": "abc"}
+
+    def test_request_shape_targets_dossier_envelope_path(self):
+        response = MagicMock(status=201)
+        response.read.return_value = b"{}"
+        with patch("urllib.request.urlopen") as mock_urlopen:
+            mock_urlopen.return_value.__enter__.return_value = response
+            publish_dossier_envelope("http://dash.test/", "tok", {"system_id": "s1"})
+        sent_request = mock_urlopen.call_args[0][0]
+        assert sent_request.full_url == "http://dash.test/v1/ingest/dossier-envelope"
+        assert sent_request.get_header("Authorization") == "Bearer tok"
+        assert sent_request.get_header("Content-type") == "application/json"
+        assert json.loads(sent_request.data) == {"system_id": "s1"}
+
+    def test_http_error_returns_status_and_parsed_body(self):
+        import urllib.error
+
+        exc = urllib.error.HTTPError(
+            url="http://dash.test/v1/ingest/dossier-envelope",
+            code=422,
+            msg="Unprocessable",
+            hdrs=None,
+            fp=None,
+        )
+        exc.read = MagicMock(return_value=b'{"error_code": "SCHEMA_VIOLATION"}')
+        with patch("urllib.request.urlopen", side_effect=exc):
+            status, data = publish_dossier_envelope("http://dash.test", "tok", {})
+        assert status == 422
+        assert data == {"error_code": "SCHEMA_VIOLATION"}
+
+    def test_network_failure_returns_zero_status_and_error_key(self):
+        with patch("urllib.request.urlopen", side_effect=OSError("connection refused")):
+            status, data = publish_dossier_envelope("http://dash.test", "tok", {})
+        assert status == 0
+        assert "error" in data
+
+
+# ---------------------------------------------------------------------------
+# End-to-end structural proof (DG-10 task 4): the prepared envelope
+# validates against the vendored dashboard-saas dossier_envelope schema,
+# loaded by path -- pins the contract. Soft-skips (never fails) when the
+# schema file or jsonschema isn't reachable from this test environment.
+# ---------------------------------------------------------------------------
+
+
+def _load_dossier_envelope_schema():
+    schema_path = (
+        REPO_ROOT / "dashboard-saas" / "schemas" / "dossier_envelope.schema.json"
+    )
+    if not schema_path.exists():
+        return None
+    return json.loads(schema_path.read_text(encoding="utf-8"))
+
+
+def test_prepared_dossier_envelope_validates_against_vendored_schema():
+    schema = _load_dossier_envelope_schema()
+    if schema is None:
+        pytest.skip("dashboard-saas/schemas/dossier_envelope.schema.json not reachable")
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        pytest.skip("jsonschema not importable from this test environment")
+
+    prepared = prepare_dossier_envelope(
+        _SAMPLE_DOSSIER, commit_env={"GITHUB_SHA": "c" * 40}
+    )
+
+    validator = Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(prepared), key=lambda e: e.path)
+    assert errors == [], (
+        f"prepared dossier envelope fails the vendored schema: "
+        f"{[e.message for e in errors]}"
+    )
+
+
+def test_prepared_dossier_envelope_from_real_generated_dossier_validates(tmp_path):
+    """Same structural proof, but starting from a real AnnexIVDossier
+    produced by opencomplai_doc_generator's own generate_dossier (rather
+    than a hand-built sample dict), the same object docs_generate_cmd's
+    local fallback feeds prepare_dossier_envelope in production."""
+    schema = _load_dossier_envelope_schema()
+    if schema is None:
+        pytest.skip("dashboard-saas/schemas/dossier_envelope.schema.json not reachable")
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        pytest.skip("jsonschema not importable from this test environment")
+
+    try:
+        from opencomplai_core.engine import assess
+        from opencomplai_core.models import (
+            AssessmentInput,
+            ModelMetadata,
+            SystemManifest,
+        )
+        from opencomplai_doc_generator.generator import generate_dossier
+    except ImportError:
+        pytest.skip(
+            "opencomplai_doc_generator not importable from this test environment"
+        )
+
+    manifest = SystemManifest(
+        system_id="sys-dg10-test",
+        intended_purpose="Not specified",
+        compliance_target="EU_AI_ACT",
+        high_risk_presumption=False,
+        commit_ref="HEAD",
+    )
+    risk_result = assess(
+        AssessmentInput(
+            model=ModelMetadata(
+                name="sys-dg10-test",
+                version="HEAD",
+                modality="text",
+                use_case="Not specified",
+                deployment_context="production",
+            )
+        )
+    )
+    dossier = generate_dossier(manifest, risk_result, provider_name="Unknown Provider")
+
+    prepared = prepare_dossier_envelope(
+        dossier.model_dump(mode="json"), commit_env={"GITHUB_SHA": "d" * 40}
+    )
+
+    validator = Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(prepared), key=lambda e: e.path)
+    assert errors == [], (
+        f"prepared dossier envelope fails the vendored schema: "
+        f"{[e.message for e in errors]}"
+    )

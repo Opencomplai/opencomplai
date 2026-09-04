@@ -28,6 +28,7 @@ dropped, renamed, or reshaped.
 
 from __future__ import annotations
 
+import hashlib
 import importlib.metadata
 import json
 import subprocess
@@ -303,8 +304,143 @@ def _parse_json_body(raw: bytes) -> dict[str, Any]:
     return parsed if isinstance(parsed, dict) else {}
 
 
+# ---------------------------------------------------------------------------
+# Dossier-envelope producer (DG-10)
+#
+# Unlike prepare_scan_status_artifact above -- which is mostly a passthrough
+# because the OSS ScanStatusArtifact model and the ingest schema were
+# reconciled field-for-field (G-4) -- the dossier_envelope schema
+# (schemas/dossier_envelope.schema.json) is a deliberately narrow *metadata*
+# envelope, structurally unrelated to opencomplai_core.dossier.AnnexIVDossier
+# (which carries the full nine Annex IV sections). The bundle itself never
+# crosses the egress boundary at C0; only its checksum, size, and a handful
+# of provenance fields do. So this is a genuine reshape, not a passthrough:
+# every dossier_envelope field is either read off the dossier under a
+# different name or synthesized outright, and no Annex IV section content
+# is ever forwarded.
+# ---------------------------------------------------------------------------
+
+
+def prepare_dossier_envelope(
+    dossier: dict[str, Any],
+    *,
+    commit_env: Mapping[str, str] | None = None,
+    repo_dir: Path | str | None = None,
+) -> dict[str, Any]:
+    """
+    Map a locally-generated Annex IV dossier onto a schema-valid
+    ``dossier_envelope`` payload for ``POST /v1/ingest/dossier-envelope``.
+
+    ``dossier`` is the dict ``opencomplai docs generate``'s local fallback
+    already has in hand -- ``AnnexIVDossier.model_dump(mode="json")``, the
+    same object it serializes to ``dossier_<id>.json`` on disk (``main.py``,
+    ``docs_generate_cmd``'s local-fallback branch). Field derivation,
+    mirroring ``prepare_scan_status_artifact``'s doc comment style:
+
+    * ``system_id``, ``bundle_checksum``, ``compliance_target`` -- read
+      straight off the dossier; the two models happen to name these
+      identically.
+    * ``commit_ref`` -- resolved via ``_resolve_commit_ref`` (the same
+      helper scan status uses, for the same reason): ``docs generate``'s
+      own ``commit_ref`` default is the literal ``"HEAD"``, 4 characters,
+      well under the schema's ``minLength: 7``.
+    * ``timestamp`` -- the dossier's own ``generated_at`` when present,
+      else push-time UTC ``now`` (ISO 8601, ``Z`` suffix) -- same fallback
+      ``prepare_scan_status_artifact`` uses for its own ``timestamp``.
+    * ``size_bytes`` -- byte length of ``dossier`` re-serialized as
+      compact, key-sorted JSON. Computed here (not by the caller) so two
+      callers handed the same dossier content always report the same size,
+      the same way ``bundle_checksum`` is already deterministic over the
+      dossier's content. Deliberately independent of whatever indentation
+      ``docs generate`` used to write the sibling ``dossier_<id>.json`` to
+      disk -- that's a presentation choice, not part of the bundle's
+      identity.
+    * ``signed_by`` -- self-describing ``"cli:<signature_status>"`` (e.g.
+      ``cli:unsigned`` in OSS default mode, ``cli:hmac-local`` /
+      ``cli:ed25519`` when a local signing key is configured via
+      ``generate_dossier``) rather than a fabricated key id. Mirrors
+      ``dashboard_ingest.routes``'s own ``"api-key:{key_id}"`` stamping
+      convention for a non-cryptographic attestation of provenance.
+    * ``policy_bundle_version`` -- same ``"cli-<version>"`` stand-in as
+      scan status. Schema-optional here; included for producer parity.
+    * ``result`` -- always ``"generated"`` (schema enum: ``generated`` /
+      ``cached`` / ``failed``) -- this function is only ever called after
+      a dossier was actually produced; ``cached``/``failed`` have no local
+      OSS-CLI equivalent to report honestly, so they are never emitted.
+
+    The returned dict carries *only* the fields the schema defines
+    (``additionalProperties: false``) -- no Annex IV section content,
+    ``dossier_id``, or ``evidence_hashes`` is ever included, unlike
+    ``prepare_scan_status_artifact``'s passthrough of every OSS field.
+    """
+    if commit_env is None:
+        import os
+
+        commit_env = os.environ
+
+    canonical = json.dumps(dossier, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
+    bundle_checksum = dossier.get("bundle_checksum") or (
+        f"sha256:{hashlib.sha256(canonical).hexdigest()}"
+    )
+    signature_status = dossier.get("signature_status") or "unsigned"
+    timestamp = dossier.get("generated_at") or (
+        datetime.now(UTC).isoformat().replace("+00:00", "Z")
+    )
+
+    return {
+        "system_id": dossier.get("system_id", "unknown"),
+        "commit_ref": _resolve_commit_ref(
+            dossier.get("commit_ref"), commit_env, repo_dir=repo_dir
+        ),
+        "bundle_checksum": bundle_checksum,
+        "size_bytes": len(canonical),
+        "signed_by": f"cli:{signature_status}",
+        "timestamp": timestamp,
+        "compliance_target": dossier.get("compliance_target", "EU_AI_ACT"),
+        "policy_bundle_version": f"cli-{_cli_version()}",
+        "result": "generated",
+    }
+
+
+def publish_dossier_envelope(
+    base_url: str, token: str, envelope: dict[str, Any], timeout: int = 30
+) -> tuple[int, dict[str, Any]]:
+    """
+    POST an ingest envelope to ``{base_url}/v1/ingest/dossier-envelope``.
+
+    Transliterated from ``publish_scan_status`` above -- identical headers,
+    identical redirect-blocking opener (installed process-wide at import
+    time, see ``_NoRedirectHandler``), identical ``(status, response_body)``
+    contract, identical swallow-network-failure-as-status-0 behaviour. Only
+    the URL path differs.
+    """
+    data = json.dumps(envelope).encode("utf-8")
+    req = urllib.request.Request(
+        f"{base_url.rstrip('/')}/v1/ingest/dossier-envelope",
+        data=data,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            return response.status, _parse_json_body(response.read())
+    except urllib.error.HTTPError as exc:
+        return exc.code, _parse_json_body(exc.read())
+    except (
+        Exception
+    ) as exc:  # network failure (DNS/connection/timeout) -- reported, not raised
+        return 0, {"error": str(exc)}
+
+
 __all__ = [
     "envelope_signature",
+    "prepare_dossier_envelope",
     "prepare_scan_status_artifact",
+    "publish_dossier_envelope",
     "publish_scan_status",
 ]
