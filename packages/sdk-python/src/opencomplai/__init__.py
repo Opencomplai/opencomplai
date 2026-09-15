@@ -20,7 +20,10 @@ from opencomplai_core.engine import assess
 from opencomplai_core.models import (
     AssessmentInput,
     ModelMetadata,
+    RiskLevel,
     RiskResult,
+    RuleResult,
+    ScanResult,
     ScanStatusArtifact,
     SystemManifest,
 )
@@ -29,7 +32,10 @@ __version__ = "0.6.0"
 __all__ = [
     "AssessmentInput",
     "ModelMetadata",
+    "RiskLevel",
     "RiskResult",
+    "RuleResult",
+    "ScanResult",
     "ScanStatusArtifact",
     "SystemManifest",
     "assess",

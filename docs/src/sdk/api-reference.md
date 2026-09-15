@@ -7,7 +7,10 @@ from opencomplai import (
     assess,
     AssessmentInput,
     ModelMetadata,
+    RiskLevel,
     RiskResult,
+    RuleResult,
+    ScanResult,
     ScanStatusArtifact,
     SystemManifest,
 )
@@ -129,7 +132,7 @@ System-of-record description of the AI system. Created by `opencomplai init`.
 ### `RiskLevel`
 
 ```python
-from opencomplai_core.models import RiskLevel
+from opencomplai import RiskLevel
 
 RiskLevel.UNACCEPTABLE  # "unacceptable"
 RiskLevel.HIGH          # "high"
@@ -140,7 +143,7 @@ RiskLevel.MINIMAL       # "minimal"
 ### `ScanResult`
 
 ```python
-from opencomplai_core.models import ScanResult
+from opencomplai import ScanResult
 
 ScanResult.PASS                 # "pass"
 ScanResult.CONTROL_FAIL         # "control_fail"

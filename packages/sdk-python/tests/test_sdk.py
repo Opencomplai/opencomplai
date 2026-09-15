@@ -1,8 +1,10 @@
 """Tests for the Opencomplai Python SDK."""
 
+from pathlib import Path
+
+import opencomplai
 import pytest
-from opencomplai import AssessmentInput, ModelMetadata, RiskResult, assess
-from opencomplai_core.models import RiskLevel
+from opencomplai import AssessmentInput, ModelMetadata, RiskLevel, RiskResult, assess
 
 
 def _input(use_case: str) -> AssessmentInput:
@@ -42,3 +44,20 @@ def test_assess_evidence_populated():
 def test_assess_raises_on_invalid_input():
     with pytest.raises(Exception):  # noqa: B017, PT011 — asserts invalid input raises at all
         assess(None)
+
+
+def test_sdk_exports_and_pep561():
+    expected_exports = {
+        "AssessmentInput",
+        "ModelMetadata",
+        "RiskLevel",
+        "RiskResult",
+        "RuleResult",
+        "ScanResult",
+        "ScanStatusArtifact",
+        "SystemManifest",
+        "assess",
+    }
+    assert set(opencomplai.__all__) == expected_exports
+    py_typed = Path(opencomplai.__file__).parent / "py.typed"
+    assert py_typed.is_file()
