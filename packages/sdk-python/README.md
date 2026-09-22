@@ -49,7 +49,7 @@ print(result.risk_level)
 ```
 
 Public API re-exported from `opencomplai`: `assess`, `AssessmentInput`, `ModelMetadata`,
-`RiskResult`, `ScanStatusArtifact`, and `SystemManifest`.
+`RiskLevel`, `RiskResult`, `RuleResult`, `ScanResult`, `ScanStatusArtifact`, and `SystemManifest`.
 
 ## Optional: AI intent plugin
 
