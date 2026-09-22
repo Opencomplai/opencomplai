@@ -83,6 +83,34 @@ scan of the current directory with no manifest required and never gates your bui
 opencomplai scan --quick
 ```
 
+### Controlling what the scanner sees (`.ocignore`)
+
+`opencomplai scan` and `opencomplai check` do **not** read `.gitignore` while
+walking the tree. They use a repo-root [`.ocignore`](.ocignore) file instead
+(gitignore-like `fnmatch` patterns plus an optional `[limits]` block).
+
+On first **scan** the CLI can create a default `.ocignore` and copy non-comment
+lines from an existing `.gitignore` once. Pass `--no-ocignore-bootstrap` on
+`opencomplai scan` to disable that (this flag is scan-only; `opencomplai check`
+always bootstraps and does not accept `--ocignore` / `--no-ocignore-bootstrap`).
+After that, `.gitignore` is ignored at scan time — keep secrets and
+build artifacts in `.ocignore` if you want them excluded from inventory.
+
+Minimal example:
+
+```gitignore
+# Pattern lines: ocignore subset v1 (fnmatch; trailing / = directory)
+
+node_modules/
+.venv/
+.git/
+*.pem
+*.key
+```
+
+Full syntax, limits, and CI notes:
+[`.ocignore` scan configuration](https://docs.opencomplai.com/getting-started/scanner/#ocignore).
+
 ### Pre-commit hook
 
 Add Opencomplai to your own `.pre-commit-config.yaml` to run the quick scan (or the

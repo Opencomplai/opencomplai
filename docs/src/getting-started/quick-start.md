@@ -74,6 +74,12 @@ Suggested next step:
   opencomplai init --system-id <your-system-id> --intended-purpose "openai, vector_embedding"
 ```
 
+The first scan also writes a default [`.ocignore`](scanner.md#ocignore) at the
+repo root unless you pass `--no-ocignore-bootstrap`. That file — not `.gitignore`
+— is what the scanner uses to skip directories and cap inventory size. Review
+it before treating scan output as complete. Details and a CI-safe limits
+preset are in the [scanner guide](scanner.md#ocignore).
+
 `scan --quick` always exits `0` and never writes `compliance-artifact.json` — it exists
 purely to answer *"does this repo look like it touches AI at all?"* before you commit to
 declaring a system. Contrast this with `opencomplai check` below: `check` is the
