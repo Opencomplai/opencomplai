@@ -99,6 +99,12 @@ class GenerateDocsRequest(BaseModel):
     provider_name: str = "Unknown Provider"
     compliance_target: str = "EU_AI_ACT"
     high_risk_presumption: bool = False
+    # D-2: fail-closed dossier gate. When False (default) and the generated
+    # dossier fails validate_dossier_schema, generate_docs refuses with a
+    # 422 instead of 200 -- the dossier is still persisted (see
+    # _persist_dossier below) so an auditor can retrieve what failed. Set
+    # True to restore the old always-200 behaviour.
+    allow_incomplete: bool = False
     # Optional Annex IV Section 2 overrides. HIGH-risk providers must set these
     # — defaults leave the section stubbed, which is acceptable only at
     # MINIMAL risk classification.
@@ -389,6 +395,27 @@ async def generate_docs(
 
         if _METRICS_AVAILABLE:
             _DOSSIER_GENERATED.labels(system_id=request.system_id).inc()
+
+        # D-2: fail-closed dossier gate. The dossier is already persisted
+        # above regardless -- an auditor must be able to retrieve what
+        # failed -- but an invalid dossier must not report success to the
+        # caller unless it explicitly opted into the old behaviour.
+        if not schema_valid and not request.allow_incomplete:
+            raise HTTPException(
+                status_code=422,
+                detail={
+                    "error_code": "DOSSIER_SCHEMA_INVALID",
+                    "message": (
+                        "Generated dossier failed Annex IV schema validation; "
+                        "set allow_incomplete=true to accept it anyway."
+                    ),
+                    "dossier_id": dossier.dossier_id,
+                    "bundle_checksum": dossier.bundle_checksum or "",
+                    "content_hash": content_hash,
+                    "ledger_event_id": ledger_event_id,
+                    "schema_valid": False,
+                },
+            )
 
         return GenerateDocsResponse(
             dossier_id=dossier.dossier_id,

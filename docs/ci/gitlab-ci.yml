@@ -1,0 +1,35 @@
+# OpenComplAI compliance scan — GitLab CI
+#
+# Copy this into your .gitlab-ci.yml (or `include:` it) in your AI system
+# repository. Requires a system-manifest.json in your repo root (see the
+# CLI's own `opencomplai init`).
+#
+# Before this runs, add your API key as a masked CI/CD variable:
+#   Settings -> CI/CD -> Variables -> Add variable
+#   Key:   OPENCOMPLAI_API_KEY
+#   Value: the key you issued on the project's page in this dashboard
+#   Flags: Protect variable, Mask variable
+opencomplai-scan:
+  image: python:3.11
+  before_script:
+    - pip install opencomplai
+  script:
+    - opencomplai-gitlab-connector
+  artifacts:
+    reports:
+      junit: opencomplai-report.xml
+    dotenv: opencomplai.env
+  variables:
+    # Exit-code contract (opencomplai check / opencomplai-gitlab-connector):
+    #   0 = pass             scan passed (or degraded_complete in local scan mode)
+    #   1 = control_fail     a required control failed
+    #   2 = validation_fail  manifest or input validation error
+    #   3 = policy_block     prohibited system (EU AI Act Article 5)
+    #   4 = trap_detected    Article 25 substantial-modification freeze
+    #
+    # This dashboard's own ingest endpoint — safe to commit as plain text,
+    # it is not a secret. OPENCOMPLAI_API_KEY is NOT declared here — it
+    # comes from the masked/protected CI/CD variable set above, which
+    # GitLab injects into the job environment automatically.
+    OPENCOMPLAI_DASHBOARD_URL: "https://YOUR-DASHBOARD-HOST/api/ingest"
+    GL_ENV_FILE: opencomplai.env

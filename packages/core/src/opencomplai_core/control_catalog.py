@@ -15,13 +15,20 @@ goes EVIDENCE_STALE from age alone.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 
 @dataclass(frozen=True)
 class ControlCatalogEntry:
     title: str
     default_ttl_days: int | None
+    #: Mapped (not evaluated) ISO/IEC 42001:2023 clause for this article, from
+    #: `data/framework_crosswalk.json` — None when the crosswalk has no row
+    #: for this article. See `framework_crosswalk.py` for what "mapped" means.
+    iso_42001_clause: str | None = None
+    #: Mapped (not evaluated) NIST AI RMF 1.0 function/category for this
+    #: article, from the same crosswalk. None when no row exists.
+    nist_ai_rmf_subcategory: str | None = None
 
 
 # Every article key emitted by gap_report.py / data/gap_article_map.json must
@@ -84,6 +91,10 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
         title="Responsibilities along the AI value chain / substantial modification",
         default_ttl_days=180,
     ),
+    "Art. 27": ControlCatalogEntry(
+        title="Fundamental rights impact assessment",
+        default_ttl_days=180,
+    ),
     "Art. 43": ControlCatalogEntry(
         title="Conformity assessment",
         default_ttl_days=365,
@@ -109,6 +120,41 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
         default_ttl_days=180,
     ),
 }
+
+
+def _with_crosswalk_references(
+    catalog: dict[str, ControlCatalogEntry],
+) -> dict[str, ControlCatalogEntry]:
+    """Best-effort attach `data/framework_crosswalk.json` references.
+
+    Mirrors the doc-generator's best-effort harmonised-standards lookup
+    (`services/doc-generator/.../generator.py::_harmonised_standards_catalogue_ids`):
+    a missing or malformed crosswalk degrades to no references rather than
+    breaking every control_catalog consumer, since this module is imported
+    widely (CLI, engine, tests) and must stay usable on its own.
+    """
+    try:
+        from opencomplai_core.framework_crosswalk import get_crosswalk
+
+        crosswalk = get_crosswalk()
+    except Exception:
+        return catalog
+
+    enriched = dict(catalog)
+    for article, entry in catalog.items():
+        row = crosswalk.get(article)
+        if row is not None:
+            enriched[article] = replace(
+                entry,
+                iso_42001_clause=row.iso_42001_clause,
+                nist_ai_rmf_subcategory=row.nist_ai_rmf_subcategory,
+            )
+    return enriched
+
+
+# Applied as a post-processing step (rather than wrapping the literal above)
+# so the article table stays a plain, easy-to-diff dict literal.
+CONTROL_CATALOG = _with_crosswalk_references(CONTROL_CATALOG)
 
 
 def get_catalog() -> dict[str, ControlCatalogEntry]:

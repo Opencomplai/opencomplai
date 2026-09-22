@@ -123,11 +123,13 @@ nav:
     - Requirements: getting-started/requirements.md
     - Installation: getting-started/installation.md
     - Quick Start: getting-started/quick-start.md
+    - Deployment Journey: getting-started/deployment-journey.md
     - First Project: getting-started/first-project.md
     - EU AI Act Checker: getting-started/eu-ai-act-checker.md
     - Detect AI in your code: getting-started/scanner.md
 
   - Guides:
+    - Overview: guides/index.md
     - Customer Workflow: guides/customer-workflow.md
     - Authentication: guides/authentication.md
     - API Basics: guides/api-basics.md
@@ -136,13 +138,22 @@ nav:
     - Deployment: guides/deployment.md
     - Security: guides/security.md
     - Gap-closure control mapping: security/gap-closure-control-mapping.md
+    - Supply-Chain Security: security/supply-chain.md
     - CI Integration: guides/ci-integration.md
+    - Pre-commit Integration: guides/pre-commit.md
+    - Project Configuration: guides/configuration.md
+    - CI Code Scanning (SARIF): guides/sarif-integration.md
 
   - CLI Reference:
     - init: cli/init.md
     - checker: cli/checker.md
     - validate-manifest: cli/validate-manifest.md
     - check: cli/check.md
+    - scan: cli/scan.md
+    - gaps: cli/gaps.md
+    - controls: cli/controls.md
+    - recommend: cli/recommend.md
+    - report: cli/report.md
     - risk classify: cli/risk-classify.md
     - verify-output: cli/verify-output.md
     - docs generate: cli/docs-generate.md
@@ -167,9 +178,26 @@ nav:
     - Risk levels: concepts/risk-levels.md
     - Rules: concepts/rules.md
     - Control Codes: concepts/control-codes.md
+    - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
+    - NIST AI RMF: concepts/nist-ai-rmf.md
+    - Controls lifecycle: concepts/controls.md
     - Evidence: concepts/evidence.md
+    - Annex IV coverage ledger: concepts/annex-iv-coverage.md
+    - Evaluators: concepts/evaluators.md
     - Scan workflow: concepts/scan-workflow.md
     - "Inspect-AI eval bridge": concepts/inspect-bridge.md
+
+  - API Reference:
+    - Overview: api/index.md
+    - Python SDK:
+      - Overview: api/python-sdk/index.md
+      - Installation: api/python-sdk/installation.md
+      - API Reference: api/python-sdk/api-reference.md
+    - JavaScript/TypeScript SDK:
+      - Overview: api/javascript-sdk/index.md
+      - Installation: api/javascript-sdk/installation.md
+      - API Reference: api/javascript-sdk/api-reference.md
+    - Webhooks: api/webhooks.md
 
   - Gateway API:
     - REST Reference: api/rest-api.md

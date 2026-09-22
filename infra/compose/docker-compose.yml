@@ -243,6 +243,14 @@ services:
       # Python services below — it mints a signed service token per outbound
       # call (SEC-SERVICE-AUTH). Same shared secret as their INTERNAL_SERVICE_TOKEN_SECRET.
       INTERNAL_SERVICE_TOKEN_SECRET: ${INTERNAL_SERVICE_TOKEN_SECRET:?INTERNAL_SERVICE_TOKEN_SECRET is required}
+      # The demo seeder (sync/seed_demo.py) posts ~300-350 requests in a
+      # short burst with no throttling; the production-safe default of 300
+      # req/60s (see services/gateway-api/src/middleware/auth.ts) is too
+      # tight for that burst and was never exercised until this compose
+      # stack's health-check chain could actually run the seeder end to end.
+      # This override applies ONLY to this compose stack (local/demo/CI) —
+      # a real deployment sets its own OPENCOMPLAI_RATE_LIMIT_MAX.
+      OPENCOMPLAI_RATE_LIMIT_MAX: ${OPENCOMPLAI_RATE_LIMIT_MAX:-1000}
     ports:
       - "${GATEWAY_PORT:-8080}:8080"
     networks:
@@ -289,6 +297,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-opencomplai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencomplai}
       PYTHONPATH: /app/services/evidence-vault/src:/app/packages/core/src
       DEMO_TENANT_API_KEY: ${DEMO_TENANT_API_KEY:-demo-api-key-local}
+      INTERNAL_SERVICE_TOKEN_SECRET: ${INTERNAL_SERVICE_TOKEN_SECRET:?INTERNAL_SERVICE_TOKEN_SECRET is required}
     networks:
       - internal
     depends_on:
@@ -296,6 +305,15 @@ services:
         condition: service_healthy
       evidence-vault:
         condition: service_healthy
+    # This service builds from evidence-vault.Dockerfile, which bakes in a
+    # HEALTHCHECK for evidence-vault's own /ready endpoint. Overriding
+    # `command:` above does not override that inherited HEALTHCHECK, but
+    # demo-seeder is a one-shot script that never serves HTTP on 8002, so
+    # that check can never pass. Disable it explicitly — completion is
+    # checked via `docker compose wait demo-seeder` (see demo-smoke.yml),
+    # not via Docker health status.
+    healthcheck:
+      disable: true
     restart: on-failure:3
 
   # -------------------------------------------------------------------------

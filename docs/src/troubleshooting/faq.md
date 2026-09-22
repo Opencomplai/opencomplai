@@ -8,7 +8,7 @@ Opencomplai is an open-source EU AI Act compliance toolkit for AI engineering te
 
 ### Which version of the EU AI Act does Opencomplai implement?
 
-The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default). Future targets (NIST AI RMF, ISO/IEC 42001) are on the roadmap.
+The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default), producing a computed pass/gap verdict per article. `NIST_AI_RMF` is also evaluated — `opencomplai gaps --target NIST_AI_RMF` re-projects that same EU AI Act evidence into a per-subcategory NIST AI RMF 1.0 verdict via `data/framework_crosswalk.json`, citing the EU AI Act article each subcategory verdict was derived from (no new scanner or evaluator; see [NIST AI RMF](../concepts/nist-ai-rmf.md)). ISO/IEC 42001 is mapped, not evaluated: the same crosswalk links each EU AI Act article/control to its corresponding ISO/IEC 42001:2023 clause, and `opencomplai gaps` shows it in the "Mapped" column, but no verdict is computed for it.
 
 ### Is Opencomplai a legal compliance guarantee?
 

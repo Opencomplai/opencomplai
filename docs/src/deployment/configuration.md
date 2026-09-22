@@ -18,6 +18,12 @@ All runtime configuration is provided through environment variables in `infra/co
 |---|---|---|
 | `GATEWAY_PORT` | `8080` | Host port for the gateway API. Change if 8080 is in use. |
 
+### Internal service auth (required)
+
+| Variable | Default | Description |
+|---|---|---|
+| `INTERNAL_SERVICE_TOKEN_SECRET` | *(none — required)* | Shared secret for internal service-to-service authentication between evidence-vault, risk-engine, doc-generator, egress-proxy, and gateway-api. **The stack will not start without this** — docker compose fails closed via `${INTERNAL_SERVICE_TOKEN_SECRET:?...}` before any service starts. Generate with `python -c "import secrets; print(secrets.token_urlsafe(32))"`. |
+
 ### Egress proxy
 
 | Variable | Default | Description |
@@ -141,6 +147,8 @@ address would be the visitor's own machine.
 
 ```bash
 POSTGRES_PASSWORD=use_a_strong_random_password_here
+INTERNAL_SERVICE_TOKEN_SECRET=use_a_strong_random_secret_here
 ```
 
-All other variables have safe defaults.
+These two are fail-closed with no default — the stack will not start without
+them. All other variables have safe defaults.

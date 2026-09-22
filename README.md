@@ -23,12 +23,12 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 
 - **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
 - **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
-- **Framework-Agnostic:** Built to adapt to evolving global standards (EU AI Act, NIST RMF, ISO).
+- **Framework Crosswalk:** EU AI Act obligations are evaluated natively; NIST AI RMF 1.0 is evaluated too, by re-projecting that same EU AI Act evidence per subcategory through a built-in crosswalk (`opencomplai gaps --target NIST_AI_RMF`, no new scanner — see [NIST AI RMF](docs/src/concepts/nist-ai-rmf.md)). ISO/IEC 42001 stays mapped only: a citation via the same crosswalk (`data/framework_crosswalk.json`), with no computed verdict of its own.
 
 ## How It Works (The 3-Minute Setup)
 
 1. **Define:** Create a compliance manifest for your model.
-2. **Integrate:** Add the OpenComplAI action to your GitHub/GitLab pipeline.
+2. **Integrate:** Copy the ready-made [GitHub Actions/GitLab CI workflow](docs/src/guides/ci-integration.md) into your pipeline.
 3. **Ship:** Get an automated "Pass/Fail" result before your code ever hits production.
 
 [**Check out our Dummy Repo (Sandbox)**](examples/sample-system/) – *Test how we catch AI errors without risking your production code.*
@@ -53,82 +53,20 @@ pip install opencomplai
 This installs the CLI, core rule engine, and SDK with a stable API contract (see
 [CHANGELOG](CHANGELOG.md) for exit-code and artifact-schema guarantees).
 
-For contributors who want to work from a checkout instead, install from source — the
-`core`, `cli`, and `sdk-python` packages must be installed together:
-
-```bash
-git clone https://github.com/Opencomplai/opencomplai
-cd opencomplai
-pip install -e packages/core -e packages/cli -e packages/sdk-python
-# or, with uv:  uv sync
-```
-
-`packages/cli` force-includes a committed build artifact,
-`src/opencomplai_cli/data/checker-local.html` (the offline EU AI Act Checker page). It ships
-in the repo so a fresh checkout installs without building it first; regenerate it after
-changing `docs/checker-widget/` with `cd docs/checker-widget && npm ci && node build.mjs &&
-node build-local-html.mjs` — CI verifies it stays in sync with the source.
-
-Then run a first assessment:
-
 ```bash
 opencomplai init --system-id my-model --intended-purpose "customer support chatbot"
 opencomplai check
 ```
 
-Or try it with zero setup first — `opencomplai scan --quick` runs a discovery-only
-scan of the current directory with no manifest required and never gates your build:
+That's the local loop. For the full path — CI gate, optional dashboard push, pre-commit
+hook, and self-hosted Docker Compose — see the
+[Deployment Journey](docs/src/getting-started/deployment-journey.md).
 
-```bash
-opencomplai scan --quick
-```
-
-### Controlling what the scanner sees (`.ocignore`)
-
-`opencomplai scan` and `opencomplai check` do **not** read `.gitignore` while
-walking the tree. They use a repo-root [`.ocignore`](.ocignore) file instead
-(gitignore-like `fnmatch` patterns plus an optional `[limits]` block).
-
-On first **scan** the CLI can create a default `.ocignore` and copy non-comment
-lines from an existing `.gitignore` once. Pass `--no-ocignore-bootstrap` on
-`opencomplai scan` to disable that (this flag is scan-only; `opencomplai check`
-always bootstraps and does not accept `--ocignore` / `--no-ocignore-bootstrap`).
-After that, `.gitignore` is ignored at scan time — keep secrets and
-build artifacts in `.ocignore` if you want them excluded from inventory.
-
-Minimal example:
-
-```gitignore
-# Pattern lines: ocignore subset v1 (fnmatch; trailing / = directory)
-
-node_modules/
-.venv/
-.git/
-*.pem
-*.key
-```
-
-Full syntax, limits, and CI notes:
+`opencomplai scan` inventories files via a repo-root `.ocignore` (not `.gitignore`),
+bootstrapped once from `.gitignore` on first scan unless you pass
+`--no-ocignore-bootstrap`. `opencomplai check --scan` bootstraps and uses it the same
+way; plain `opencomplai check` never touches it. See
 [`.ocignore` scan configuration](https://docs.opencomplai.com/getting-started/scanner/#ocignore).
-
-### Pre-commit hook
-
-Add Opencomplai to your own `.pre-commit-config.yaml` to run the quick scan (or the
-full compliance gate, once you have a manifest) on every commit:
-
-```yaml
-repos:
-  - repo: https://github.com/Opencomplai/opencomplai
-    rev: v0.4.0
-    hooks:
-      - id: opencomplai-quick-scan   # discovery only, never fails the commit
-      # - id: opencomplai-check      # full EU AI Act gate — requires system-manifest.json
-```
-
-[View Full Documentation](https://docs.opencomplai.com/getting-started/quick-start/)
-
-Full Docker-based deployment is documented in
-[docs/src/deployment/quickstart.md](docs/src/deployment/quickstart.md).
 
 ## Community & Feedback
 

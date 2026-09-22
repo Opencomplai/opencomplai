@@ -43,3 +43,27 @@ def test_gap_report_with_repo_root_runs_probes(tmp_path: Path):
     report = build_gap_report("sys", "HEAD", repo_root=tmp_path)
     art9 = next(r for r in report.articles if r.article == "Art. 9")
     assert art9.status in {GapStatus.MISSING, GapStatus.PARTIAL, GapStatus.UNVERIFIED}
+
+
+def test_art_27_fria_wired_end_to_end(tmp_path: Path):
+    """D-1: the checker's 'fria' obligation flows through to gaps + recommend.
+
+    No FRIA docs in the repo -> artifact probe MISSING outranks the obligation's
+    UNVERIFIED (worst-status-wins), so Art. 27 is actionable and `recommend`
+    renders fria_template.md for it, same as every other Missing/Partial row.
+    """
+    from opencomplai_core.control_catalog import get_catalog
+    from opencomplai_core.recommend_engine import render_recommendations
+
+    assert "Art. 27" in get_catalog()
+
+    load_gap_article_map.cache_clear()
+    report = build_gap_report("sys", "HEAD", repo_root=tmp_path)
+    art27 = next(r for r in report.articles if r.article == "Art. 27")
+    assert art27.status == GapStatus.MISSING
+
+    written = render_recommendations(report, tmp_path / "fixes")
+    fria_out = next(p for p in written if p.name == "art27-fria_template.md")
+    content = fria_out.read_text(encoding="utf-8")
+    assert "Art. 27" in content
+    assert "{{" not in content  # every placeholder substituted

@@ -1,0 +1,201 @@
+{
+  "_meta": {
+    "description": "Machine-readable crosswalk from EU AI Act articles (the repo's existing control_catalog universe) to ISO/IEC 42001:2023 clauses/Annex A controls and NIST AI RMF 1.0 (NIST AI 100-1) function-and-category references. This is a MAPPING only — a citation that an article corresponds to a clause/subcategory, with a source and a confidence label. It is not a computed conformity verdict for either ISO/IEC 42001 or NIST AI RMF: only EU_AI_ACT gets a deterministic pass/gap verdict from opencomplai today (see D-3 in PLAN/CLOSE-P1/00-OVERVIEW.md). A smaller initial set focused on the articles packages/core/src/opencomplai_core/control_catalog.py already covers, not exhaustive. Every row is needs_founder_review=true and every confidence is deliberately conservative ('low' unless the mapping is a well-established textbook correspondence) — this is compliance-facing content that has not been confirmed by a human reviewer or legal counsel.",
+    "researched_at": "2026-09-18",
+    "confidence_definitions": {
+      "medium": "A well-established, commonly-cited correspondence between the article's subject matter and the cited clause/category (e.g. Art. 17 quality management <-> ISO/IEC 42001 as a whole).",
+      "low": "A plausible topical correspondence, but the exact clause/sub-clause or subcategory number should be independently verified before being relied on."
+    },
+    "sources": {
+      "iso_42001": "ISO/IEC 42001:2023, Information technology — Artificial intelligence — Management system (ISO, published December 2023).",
+      "nist_ai_rmf": "NIST AI 100-1, Artificial Intelligence Risk Management Framework (AI RMF 1.0), National Institute of Standards and Technology, January 2023."
+    },
+    "not_covered": [
+      "Art. 47",
+      "Art. 48"
+    ],
+    "not_covered_reason": "EU declaration of conformity (Art. 47) and CE marking (Art. 48) are EU product-legislation instruments with no ISO/IEC 42001 or NIST AI RMF equivalent — no row is fabricated for them rather than force a low-value mapping."
+  },
+  "rows": [
+    {
+      "eu_ai_act_article": "Art. 4",
+      "iso_42001_clause": "Clause 7.2 (Competence)",
+      "iso_42001_annex_a_control": "A.4.5 (Human resources for AI systems)",
+      "nist_ai_rmf_subcategory": "GOVERN 2",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "AI-literacy obligation topically corresponds to ISO 42001's competence/resourcing clauses; exact NIST subcategory (e.g. GOVERN 2.2) not independently confirmed."
+    },
+    {
+      "eu_ai_act_article": "Art. 5",
+      "iso_42001_clause": "Clause 5.2 (AI Policy)",
+      "iso_42001_annex_a_control": "A.2.2 (Policies for responsible development/use of AI)",
+      "nist_ai_rmf_subcategory": "GOVERN 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Prohibited-practices screening has no direct ISO 42001 analogue; mapped to the organisation's AI policy clause as the nearest governance hook."
+    },
+    {
+      "eu_ai_act_article": "Art. 6",
+      "iso_42001_clause": "Clause 6.1 (Actions to address risks and opportunities)",
+      "iso_42001_annex_a_control": "A.5.2 (Process for impact assessment)",
+      "nist_ai_rmf_subcategory": "MAP 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "High-risk classification topically maps to ISO 42001's impact-assessment control and NIST's context-establishment category."
+    },
+    {
+      "eu_ai_act_article": "Art. 9",
+      "iso_42001_clause": "Clause 6.1 / Clause 8.2-8.3",
+      "iso_42001_annex_a_control": "A.6.1 (Actions to address AI risks in the AI system life cycle)",
+      "nist_ai_rmf_subcategory": "GOVERN 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "notes": "Well-established correspondence: Art. 9's risk-management-system obligation is the closest EU AI Act analogue to ISO 42001's core risk clauses."
+    },
+    {
+      "eu_ai_act_article": "Art. 10",
+      "iso_42001_clause": "Clause 8.1 (Operational planning and control)",
+      "iso_42001_annex_a_control": "A.7 (Data for AI systems)",
+      "nist_ai_rmf_subcategory": "MAP 2",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "notes": "Data and data-governance obligations correspond well to ISO 42001 Annex A.7's dedicated data-for-AI-systems control set."
+    },
+    {
+      "eu_ai_act_article": "Art. 11",
+      "iso_42001_clause": "Clause 7.5 (Documented information)",
+      "iso_42001_annex_a_control": "A.6.2 (AI system life cycle documentation)",
+      "nist_ai_rmf_subcategory": "GOVERN 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Technical documentation topically maps to ISO 42001's documented-information clause; exact Annex A sub-control not independently confirmed."
+    },
+    {
+      "eu_ai_act_article": "Art. 12",
+      "iso_42001_clause": "Clause 9.1 (Monitoring, measurement, analysis and evaluation)",
+      "iso_42001_annex_a_control": "A.6.2 (AI system event logging)",
+      "nist_ai_rmf_subcategory": "MEASURE 3",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "notes": "Automatic record-keeping/logging corresponds well to ISO 42001's life-cycle logging control."
+    },
+    {
+      "eu_ai_act_article": "Art. 13",
+      "iso_42001_clause": "Clause 7.4 (Communication)",
+      "iso_42001_annex_a_control": "A.8 (Information for interested parties)",
+      "nist_ai_rmf_subcategory": "GOVERN 4",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Transparency obligations to deployers topically map to ISO 42001's interested-parties information controls."
+    },
+    {
+      "eu_ai_act_article": "Art. 14",
+      "iso_42001_clause": "Clause 8.1 (Operational planning and control)",
+      "iso_42001_annex_a_control": "A.9 (Use of AI systems)",
+      "nist_ai_rmf_subcategory": "GOVERN 3",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "notes": "Human-oversight obligation corresponds well to ISO 42001 Annex A.9's AI-system-oversight-process control."
+    },
+    {
+      "eu_ai_act_article": "Art. 15",
+      "iso_42001_clause": "Clause 8.1 (Operational planning and control)",
+      "iso_42001_annex_a_control": "A.6.2 (Verification and validation of AI system design/development)",
+      "nist_ai_rmf_subcategory": "MEASURE 2",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Accuracy/robustness/cybersecurity is a broad article; mapped to ISO 42001's verification-and-validation control as the closest single hook, not exhaustive."
+    },
+    {
+      "eu_ai_act_article": "Art. 16",
+      "iso_42001_clause": "Clause 5 (Leadership)",
+      "iso_42001_annex_a_control": "A.3 (Internal organization)",
+      "nist_ai_rmf_subcategory": "GOVERN 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Provider obligations as a whole map loosely to ISO 42001's leadership/internal-organization clauses; this article's obligations are broader than any single ISO clause."
+    },
+    {
+      "eu_ai_act_article": "Art. 17",
+      "iso_42001_clause": "Clauses 4-10 (the AI management system as a whole)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "GOVERN 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "notes": "The most direct mapping in this file: ISO/IEC 42001:2023 IS an AI management-system standard, so an implemented AIMS is the natural evidence for Art. 17's quality-management-system obligation."
+    },
+    {
+      "eu_ai_act_article": "Art. 24",
+      "iso_42001_clause": "Clause 8.1 (Operational planning and control)",
+      "iso_42001_annex_a_control": "A.10 (Third-party and customer relationships)",
+      "nist_ai_rmf_subcategory": "GOVERN 6",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Distributor conformity obligations map topically to ISO 42001's third-party-relationship controls."
+    },
+    {
+      "eu_ai_act_article": "Art. 25",
+      "iso_42001_clause": "Clause 6.3 (Planning of changes)",
+      "iso_42001_annex_a_control": "A.10 (Third-party and customer relationships)",
+      "nist_ai_rmf_subcategory": "MAP 5",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Value-chain responsibilities and substantial-modification tracking map loosely to ISO 42001's change-planning and third-party clauses."
+    },
+    {
+      "eu_ai_act_article": "Art. 43",
+      "iso_42001_clause": "Clause 9.2 (Internal audit)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "MEASURE 1",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Conformity assessment topically maps to ISO 42001's internal-audit clause, but Art. 43's third-party/notified-body assessment has no ISO 42001 equivalent process."
+    },
+    {
+      "eu_ai_act_article": "Art. 50",
+      "iso_42001_clause": "Clause 7.4 (Communication)",
+      "iso_42001_annex_a_control": "A.8.2 (System documentation and information for users)",
+      "nist_ai_rmf_subcategory": "GOVERN 4",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Transparency obligations for certain AI systems (e.g. chatbots) map topically to ISO 42001's user-information control."
+    },
+    {
+      "eu_ai_act_article": "Art. 53",
+      "iso_42001_clause": "Clause 7.5 (Documented information)",
+      "iso_42001_annex_a_control": "A.6.2 (AI system technical documentation)",
+      "nist_ai_rmf_subcategory": "MAP 3",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "GPAI provider documentation obligations map topically to ISO 42001's technical-documentation control."
+    },
+    {
+      "eu_ai_act_article": "Art. 55",
+      "iso_42001_clause": "Clause 6.1 (Actions to address risks and opportunities)",
+      "iso_42001_annex_a_control": "A.5 (Assessing impacts of AI systems)",
+      "nist_ai_rmf_subcategory": "MEASURE 2",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "GPAI systemic-risk obligations map topically to ISO 42001's risk and impact-assessment controls; systemic-risk-specific sub-controls not independently confirmed."
+    }
+  ]
+}

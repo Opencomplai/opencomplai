@@ -11,9 +11,11 @@ cross-tree half of the drift contract:
 on the dashboard side) guards the *behavior* (both engines must actually
 agree on every vector, not just look byte-identical).
 
-The fixture path is resolved relative to this repo's root rather than
-copied locally — there is exactly one shared file, not two independent
-copies that could drift from each other.
+CP-11 (D-10): the fixture is now vendored into this OSS tree at
+``packages/core/tests/fixtures/checker_golden_vectors_shared.json`` so this
+test is reachable (and runs rather than skips) in the public checkout too.
+A separate enterprise-only test below asserts the vendored copy stays in
+sync with the dashboard-saas/ original.
 """
 
 from __future__ import annotations
@@ -26,6 +28,9 @@ from opencomplai_core.compliance_checker.engine import evaluate
 from opencomplai_core.compliance_checker.models import CheckerSession
 
 FIXTURE_PATH = (
+    Path(__file__).resolve().parent / "fixtures" / "checker_golden_vectors_shared.json"
+)
+_DASHBOARD_FIXTURE_PATH = (
     Path(__file__).resolve().parents[3]
     / "dashboard-saas"
     / "schemas"
@@ -52,8 +57,8 @@ _REQUIRED_CATEGORY_PREFIXES = (
 
 
 def _load_vectors() -> list[dict]:
-    if not FIXTURE_PATH.exists():
-        pytest.skip("dashboard-saas/schemas/checker_golden_vectors.json not reachable")
+    # Vendored into the OSS tree (CP-11/D-10) -- always reachable, public
+    # checkout included, so this no longer needs to skip.
     doc = json.loads(FIXTURE_PATH.read_text(encoding="utf-8"))
     return doc["vectors"]
 
@@ -95,3 +100,20 @@ def test_shared_golden_vectors_cover_required_categories() -> None:
 
     missing = [prefix for prefix in _REQUIRED_CATEGORY_PREFIXES if prefix not in seen]
     assert not missing, f"golden fixture is missing required categories: {missing}"
+
+
+def test_vendored_fixture_matches_dashboard_saas_source_verbatim():
+    """Enterprise-only: the vendored OSS copy must stay byte-identical to
+    the dashboard-saas/schemas/checker_golden_vectors.json original it was
+    vendored from. Skips in the public checkout, where dashboard-saas/ does
+    not exist at all -- intentional, matching the pre-CP-11 skip pattern
+    this file used for the tests above before they were repointed at the
+    OSS-reachable vendored copy."""
+    if not _DASHBOARD_FIXTURE_PATH.exists():
+        pytest.skip(
+            "dashboard-saas/schemas/checker_golden_vectors.json not reachable "
+            "(expected in public checkout)"
+        )
+    assert FIXTURE_PATH.read_text(
+        encoding="utf-8"
+    ) == _DASHBOARD_FIXTURE_PATH.read_text(encoding="utf-8")

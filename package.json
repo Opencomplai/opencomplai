@@ -1,10 +1,18 @@
 {
   "name": "opencomplai-workspace",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "pnpm": {
     "overrides": {
       "fast-uri": "3.1.2",
       "protobufjs": "8.6.5"
+    },
+    "packageExtensions": {
+      "@testing-library/jest-dom": {
+        "peerDependencies": {
+          "vitest": "*"
+        }
+      }
     }
   }
 }

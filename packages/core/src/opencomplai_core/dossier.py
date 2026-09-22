@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field
 
+from opencomplai_core.models import ComplianceTarget
+
 
 class AnnexIVSection1(BaseModel):
     """General description of the AI system (Annex IV, Section 1)."""
@@ -17,7 +19,7 @@ class AnnexIVSection1(BaseModel):
     system_version: str
     provider_name: str
     intended_purpose: str
-    compliance_target: str
+    compliance_target: ComplianceTarget
     risk_class: str
     deployment_context: str
 
@@ -99,6 +101,15 @@ class AnnexIVSection5(BaseModel):
     corroboration_review_status: str | None = None
     corroboration_baseline_ref: str | None = None
     corroboration_report_hash: str | None = None
+    crosswalk_refs: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Framework-crosswalk citations for the risk-management article "
+            "(Art. 9), e.g. an ISO/IEC 42001:2023 clause reference — mapped "
+            "only, not a computed verdict (D-3a). Empty when no crosswalk "
+            "row applies."
+        ),
+    )
 
 
 class AnnexIVSection6(BaseModel):
@@ -117,6 +128,15 @@ class AnnexIVSection7(BaseModel):
     alternative_solutions: str | None = None
     note: str = PROVIDER_SUPPLIED_PLACEHOLDER
     provider_supplied: bool = False
+    crosswalk_refs: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Framework-crosswalk citations (ISO/IEC 42001:2023 clause) for "
+            "each EU AI Act article the supplied harmonised standards cover "
+            "— mapped only, not a computed verdict (D-3a). Empty when no "
+            "crosswalk row applies."
+        ),
+    )
 
 
 class AnnexIVSection8(BaseModel):
@@ -124,10 +144,14 @@ class AnnexIVSection8(BaseModel):
 
     Annex IV point 8 requires a *copy* of the declaration. This dossier records
     a reference to it — the declaration itself is a signed provider document
-    that this engine neither holds nor can produce.
+    that this engine neither holds nor can produce. `declaration_sha256` is
+    the SHA-256 of that signed document as uploaded to the evidence vault, so
+    a verifier can confirm the referenced file matches this dossier without
+    the file itself being embedded here (see docs/src/concepts/annex-iv-coverage.md).
     """
 
     declaration_reference: str | None = None
+    declaration_sha256: str | None = None
     note: str = PROVIDER_SUPPLIED_PLACEHOLDER
     provider_supplied: bool = False
 
@@ -162,7 +186,7 @@ class AnnexIVDossier(BaseModel):
     system_id: str
     commit_ref: str
     generated_at: str = Field(..., description="ISO 8601 timestamp")
-    compliance_target: str = "EU_AI_ACT"
+    compliance_target: ComplianceTarget = ComplianceTarget.EU_AI_ACT
 
     section1: AnnexIVSection1
     section2: AnnexIVSection2
@@ -256,3 +280,66 @@ class AnnexIVDossier(BaseModel):
             "Annex IV technical documentation file."
         ),
     )
+
+
+def validate_dossier_schema(
+    dossier: AnnexIVDossier, presumed_high: bool = False
+) -> bool:
+    """
+    Validate that a dossier contains all required Annex IV sections and fields.
+
+    Returns True if the schema is complete (REQ-DOC-001).
+    This is the validator used in the CI release gate.
+
+    For a HIGH-risk system this requires all nine Annex IV points, including
+    the provider attestations in Sections 6-9. It previously inspected only
+    six Section 1 fields plus two hashes, so a dossier carrying 5 of 9 sections
+    passed the release gate as complete.
+
+    `presumed_high` mirrors the manifest's `high_risk_presumption` used by
+    `generate_dossier` to compute `section2_complete`/`annex_iv_complete`: the
+    dossier itself only carries the assess()-derived `section1.risk_class`,
+    so a caller whose request was declared high-risk (but keyword-classified
+    otherwise by assess()) must pass `presumed_high=True` here too, or this
+    validator would skip the attestation checks below.
+    """
+    required_section1_fields = [
+        "system_name",
+        "system_version",
+        "provider_name",
+        "intended_purpose",
+        "compliance_target",
+        "risk_class",
+    ]
+    for field in required_section1_fields:
+        if not getattr(dossier.section1, field, None):
+            return False
+
+    if not dossier.section5.rationale_hash:
+        return False
+
+    if not dossier.bundle_checksum:
+        return False
+
+    # Article 12 record-keeping must be present and enabled.
+    if dossier.record_keeping is None:
+        return False
+
+    if dossier.section1.risk_class == "high" or presumed_high:
+        # Every Annex IV point must be attested, not merely instantiated.
+        for section in (
+            dossier.section6,
+            dossier.section7,
+            dossier.section8,
+            dossier.section9,
+        ):
+            if not section.provider_supplied:
+                return False
+        if not dossier.annex_iv_complete:
+            return False
+        if not dossier.section4.provider_supplied:
+            return False
+        if not dossier.section3.provider_supplied:
+            return False
+
+    return True

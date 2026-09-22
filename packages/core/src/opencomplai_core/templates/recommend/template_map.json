@@ -83,6 +83,12 @@
     "title": "Human Oversight Checklist",
     "file": "human_oversight_checklist.md"
   },
+  "Art. 27": {
+    "template_id": "fria_template",
+    "kind": "markdown",
+    "title": "Fundamental Rights Impact Assessment (FRIA) Template",
+    "file": "fria_template.md"
+  },
   "Art. 43": {
     "template_id": "annex_iii_applicability_note",
     "kind": "markdown",

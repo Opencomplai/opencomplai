@@ -278,6 +278,11 @@ def test_docs_generate_local_fallback_honors_high_risk_presumption_in_schema_che
     the local fallback called validate_dossier_schema(dossier) with no
     presumed_high argument, so the attestation checks were skipped and the
     CLI printed "schema: valid" for a dossier the service would reject.
+
+    D-2: an invalid dossier like this one is also the fail-closed gate's
+    canonical case — the dossier is still written to disk, but the process
+    now exits 2 (VALIDATION_FAIL) instead of 0 unless --allow-incomplete is
+    passed (see the two tests below).
     """
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
@@ -308,7 +313,7 @@ def test_docs_generate_local_fallback_honors_high_risk_presumption_in_schema_che
             str(output_dir),
         ],
     )
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 2, result.output
 
     dossier = _single_dossier(output_dir)
     # The manifest carries no lifecycle/attestation fields, so with the
@@ -317,3 +322,65 @@ def test_docs_generate_local_fallback_honors_high_risk_presumption_in_schema_che
     assert dossier["annex_iv_complete"] is False
     assert "invalid" in result.output
     assert "valid" not in result.output.replace("invalid", "")
+
+
+def test_docs_generate_invalid_dossier_allow_incomplete_restores_exit_zero(
+    tmp_path, monkeypatch
+):
+    """D-2 escape hatch: the same invalid-schema fixture as the test above
+    must exit 0 (and still write the file, still print "invalid") once
+    --allow-incomplete is passed — the documented compatibility path for
+    existing CI users."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
+
+    manifest_path = tmp_path / "system-manifest.json"
+    manifest_path.write_text(
+        SystemManifest(
+            system_id=_SYSTEM_ID,
+            intended_purpose="Not specified",
+            high_risk_presumption=True,
+            commit_ref=_COMMIT_REF,
+        ).model_dump_json(indent=2)
+    )
+
+    output_dir = tmp_path / "out"
+    result = runner.invoke(
+        app,
+        [
+            "docs",
+            "generate",
+            "--system-id",
+            _SYSTEM_ID,
+            "--commit-ref",
+            _COMMIT_REF,
+            "--manifest",
+            str(manifest_path),
+            "--output-dir",
+            str(output_dir),
+            "--allow-incomplete",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+
+    dossier = _single_dossier(output_dir)
+    assert dossier["annex_iv_complete"] is False
+    assert "invalid" in result.output
+
+
+def test_docs_generate_valid_dossier_exits_zero_without_allow_incomplete(
+    tmp_path, monkeypatch
+):
+    """D-2 must not regress the happy path: a schema-valid dossier (no
+    high_risk_presumption, no manifest) still exits 0 with no flag needed —
+    this is the same fixture as
+    test_docs_generate_without_artifacts_matches_direct_generator_call."""
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
+
+    output_dir = tmp_path / "out"
+    result = _invoke_docs_generate(output_dir)
+    assert result.exit_code == 0, result.output
+
+    dossier = _single_dossier(output_dir)
+    assert dossier["annex_iv_complete"] is True

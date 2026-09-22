@@ -10,7 +10,7 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 
 - **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
 - **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
-- **Framework-Agnostic:** Built to adapt to evolving global standards (EU AI Act, NIST RMF, ISO).
+- **Framework Crosswalk:** EU AI Act obligations are evaluated natively; NIST AI RMF 1.0 is evaluated too, by re-projecting that same EU AI Act evidence per subcategory through a built-in crosswalk (`opencomplai gaps --target NIST_AI_RMF`, no new scanner — see [NIST AI RMF](concepts/nist-ai-rmf.md)). ISO/IEC 42001 stays mapped only: a citation via the same crosswalk (`data/framework_crosswalk.json`), with no computed verdict of its own.
 
 ## How It Works (The 3-Minute Setup)
 

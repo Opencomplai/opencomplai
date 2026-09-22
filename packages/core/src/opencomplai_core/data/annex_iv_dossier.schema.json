@@ -1,0 +1,652 @@
+{
+  "$defs": {
+    "AnnexIVSection1": {
+      "description": "General description of the AI system (Annex IV, Section 1).",
+      "properties": {
+        "compliance_target": {
+          "$ref": "#/$defs/ComplianceTarget"
+        },
+        "deployment_context": {
+          "title": "Deployment Context",
+          "type": "string"
+        },
+        "intended_purpose": {
+          "title": "Intended Purpose",
+          "type": "string"
+        },
+        "provider_name": {
+          "title": "Provider Name",
+          "type": "string"
+        },
+        "risk_class": {
+          "title": "Risk Class",
+          "type": "string"
+        },
+        "system_name": {
+          "title": "System Name",
+          "type": "string"
+        },
+        "system_version": {
+          "title": "System Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "system_name",
+        "system_version",
+        "provider_name",
+        "intended_purpose",
+        "compliance_target",
+        "risk_class",
+        "deployment_context"
+      ],
+      "title": "AnnexIVSection1",
+      "type": "object"
+    },
+    "AnnexIVSection2": {
+      "description": "Description of elements and development process (Annex IV, Section 2).",
+      "properties": {
+        "known_limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Known Limitations",
+          "type": "array"
+        },
+        "model_architecture": {
+          "title": "Model Architecture",
+          "type": "string"
+        },
+        "performance_metrics": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Performance Metrics",
+          "type": "object"
+        },
+        "training_data_description": {
+          "title": "Training Data Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "training_data_description",
+        "model_architecture"
+      ],
+      "title": "AnnexIVSection2",
+      "type": "object"
+    },
+    "AnnexIVSection3": {
+      "description": "Detailed information about monitoring, functioning and control (Annex IV, Section 3).",
+      "properties": {
+        "human_oversight_measures": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Human Oversight Measures",
+          "type": "array"
+        },
+        "incident_response_procedure": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Incident Response Procedure",
+          "type": "string"
+        },
+        "monitoring_approach": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Monitoring Approach",
+          "type": "string"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection3",
+      "type": "object"
+    },
+    "AnnexIVSection4": {
+      "description": "Appropriateness of the performance metrics (Annex IV, point 4).\n\nAnnex IV point 4 asks the provider to justify *why* the chosen metrics are\nappropriate for the intended purpose. It is not a place for logging\ncapability, which is an Article 12 record-keeping obligation \u2014 see\n`ArticleTwelveRecordKeeping`.",
+      "properties": {
+        "appropriateness_rationale": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Appropriateness Rationale",
+          "type": "string"
+        },
+        "known_metric_limitations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Known Metric Limitations",
+          "type": "array"
+        },
+        "metrics_reported": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Metrics Reported",
+          "type": "object"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection4",
+      "type": "object"
+    },
+    "AnnexIVSection5": {
+      "description": "Description of risk management system (Annex IV, Section 5).",
+      "properties": {
+        "corroboration_baseline_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corroboration Baseline Ref"
+        },
+        "corroboration_detected_categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Corroboration Detected Categories",
+          "type": "array"
+        },
+        "corroboration_discrepancies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Corroboration Discrepancies",
+          "type": "array"
+        },
+        "corroboration_report_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corroboration Report Hash"
+        },
+        "corroboration_review_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corroboration Review Status"
+        },
+        "corroboration_severity": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corroboration Severity"
+        },
+        "crosswalk_refs": {
+          "description": "Framework-crosswalk citations for the risk-management article (Art. 9), e.g. an ISO/IEC 42001:2023 clause reference \u2014 mapped only, not a computed verdict (D-3a). Empty when no crosswalk row applies.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Crosswalk Refs",
+          "type": "array"
+        },
+        "eval_evidence_hashes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Eval Evidence Hashes",
+          "type": "array"
+        },
+        "eval_overall_outcome": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eval Overall Outcome"
+        },
+        "eval_set_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Eval Set Version"
+        },
+        "failed_rule_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failed Rule Ids",
+          "type": "array"
+        },
+        "rationale_hash": {
+          "title": "Rationale Hash",
+          "type": "string"
+        },
+        "risk_assessment_id": {
+          "title": "Risk Assessment Id",
+          "type": "string"
+        },
+        "risk_level": {
+          "title": "Risk Level",
+          "type": "string"
+        },
+        "rules_evaluated": {
+          "title": "Rules Evaluated",
+          "type": "integer"
+        },
+        "rules_failed": {
+          "title": "Rules Failed",
+          "type": "integer"
+        },
+        "rules_passed": {
+          "title": "Rules Passed",
+          "type": "integer"
+        },
+        "scanner_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scanner Version"
+        }
+      },
+      "required": [
+        "risk_assessment_id",
+        "risk_level",
+        "rules_evaluated",
+        "rules_passed",
+        "rules_failed",
+        "rationale_hash"
+      ],
+      "title": "AnnexIVSection5",
+      "type": "object"
+    },
+    "AnnexIVSection6": {
+      "description": "Relevant changes made to the system through its lifecycle (Annex IV, point 6).",
+      "properties": {
+        "change_log_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Change Log Reference"
+        },
+        "changes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Changes",
+          "type": "array"
+        },
+        "note": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Note",
+          "type": "string"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection6",
+      "type": "object"
+    },
+    "AnnexIVSection7": {
+      "description": "Harmonised standards applied, or other solutions adopted (Annex IV, point 7).",
+      "properties": {
+        "alternative_solutions": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alternative Solutions"
+        },
+        "crosswalk_refs": {
+          "description": "Framework-crosswalk citations (ISO/IEC 42001:2023 clause) for each EU AI Act article the supplied harmonised standards cover \u2014 mapped only, not a computed verdict (D-3a). Empty when no crosswalk row applies.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Crosswalk Refs",
+          "type": "array"
+        },
+        "harmonised_standards": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Harmonised Standards",
+          "type": "array"
+        },
+        "note": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Note",
+          "type": "string"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection7",
+      "type": "object"
+    },
+    "AnnexIVSection8": {
+      "description": "EU declaration of conformity (Annex IV, point 8; Article 47).\n\nAnnex IV point 8 requires a *copy* of the declaration. This dossier records\na reference to it \u2014 the declaration itself is a signed provider document\nthat this engine neither holds nor can produce. `declaration_sha256` is\nthe SHA-256 of that signed document as uploaded to the evidence vault, so\na verifier can confirm the referenced file matches this dossier without\nthe file itself being embedded here (see docs/src/concepts/annex-iv-coverage.md).",
+      "properties": {
+        "declaration_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declaration Reference"
+        },
+        "declaration_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declaration Sha256"
+        },
+        "note": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Note",
+          "type": "string"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection8",
+      "type": "object"
+    },
+    "AnnexIVSection9": {
+      "description": "Post-market monitoring plan (Annex IV, point 9; Article 72).",
+      "properties": {
+        "monitoring_plan_reference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Monitoring Plan Reference"
+        },
+        "note": {
+          "default": "Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository.",
+          "title": "Note",
+          "type": "string"
+        },
+        "plan_summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Plan Summary"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
+          "type": "boolean"
+        }
+      },
+      "title": "AnnexIVSection9",
+      "type": "object"
+    },
+    "ArticleTwelveRecordKeeping": {
+      "description": "Automatic logging and record-keeping (Article 12).\n\nWas previously emitted as \"Annex IV Section 4\", which conflated two\ndistinct obligations: Art. 12 requires high-risk systems to log\nautomatically over their lifetime, while Annex IV point 4 concerns the\nappropriateness of performance metrics.",
+      "properties": {
+        "evidence_vault_enabled": {
+          "title": "Evidence Vault Enabled",
+          "type": "boolean"
+        },
+        "ledger_root_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ledger Root Hash"
+        },
+        "log_retention_days": {
+          "title": "Log Retention Days",
+          "type": "integer"
+        },
+        "logging_enabled": {
+          "title": "Logging Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "logging_enabled",
+        "log_retention_days",
+        "evidence_vault_enabled"
+      ],
+      "title": "ArticleTwelveRecordKeeping",
+      "type": "object"
+    },
+    "ComplianceTarget": {
+      "description": "Compliance framework a system is assessed against (D-3c).\n\n`EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a\ndeterministic per-article verdict for it. `NIST_AI_RMF` is mapped only \u2014\n`data/framework_crosswalk.json` links EU AI Act articles to NIST AI RMF\n1.0 subcategories with a source/confidence per row, but no subcategory\nverdict is computed yet (that re-projection is a separate future epic).\nISO/IEC 42001:2023 is mapped the same way via the same crosswalk file,\nbut has no member here since nothing sets it as a `compliance_target` \u2014\nit is surfaced only as a per-article reference (see `control_catalog`\nand `opencomplai gaps`'s Mapped column), never as an assessment target.",
+      "enum": [
+        "EU_AI_ACT",
+        "NIST_AI_RMF"
+      ],
+      "title": "ComplianceTarget",
+      "type": "string"
+    }
+  },
+  "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
+  "properties": {
+    "annex_iv_complete": {
+      "default": true,
+      "description": "False when a HIGH-risk dossier still carries placeholder content for any of Annex IV Sections 6-9 (lifecycle changes, harmonised standards, EU declaration of conformity, post-market monitoring plan). These require provider attestation and cannot be derived from the repository. Do not present such a dossier as a complete Annex IV technical documentation file.",
+      "title": "Annex Iv Complete",
+      "type": "boolean"
+    },
+    "assessed_against": {
+      "default": "Reg. (EU) 2024/1689",
+      "description": "Regulation or standard this dossier was assessed against.",
+      "title": "Assessed Against",
+      "type": "string"
+    },
+    "bundle_checksum": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SHA-256 checksum of the serialised dossier bundle JSON.",
+      "title": "Bundle Checksum"
+    },
+    "commit_ref": {
+      "title": "Commit Ref",
+      "type": "string"
+    },
+    "compliance_target": {
+      "$ref": "#/$defs/ComplianceTarget",
+      "default": "EU_AI_ACT"
+    },
+    "dossier_id": {
+      "description": "UUID identifying this dossier",
+      "title": "Dossier Id",
+      "type": "string"
+    },
+    "evidence_hashes": {
+      "description": "SHA-256 hashes of evidence objects included in this dossier",
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Hashes",
+      "type": "array"
+    },
+    "generated_at": {
+      "description": "ISO 8601 timestamp",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "record_keeping": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArticleTwelveRecordKeeping"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "rule_version": {
+      "default": "1.0.0",
+      "description": "Rule set version used for this assessment (RULE_SET_VERSION in rules.py).",
+      "title": "Rule Version",
+      "type": "string"
+    },
+    "scope_disclaimer": {
+      "default": "This assessment was generated by Opencomplai (rule-based, deterministic engine). It constitutes structured evidence, not legal advice. Assessment against Reg. (EU) 2024/1689.",
+      "description": "Mandatory scope disclaimer per EU AI Act Recital 27 / Art. 11. Must appear on all dossier outputs and dashboard views.",
+      "title": "Scope Disclaimer",
+      "type": "string"
+    },
+    "section1": {
+      "$ref": "#/$defs/AnnexIVSection1"
+    },
+    "section2": {
+      "$ref": "#/$defs/AnnexIVSection2"
+    },
+    "section2_complete": {
+      "default": true,
+      "description": "False when the dossier was generated with stub Section 2 content for a HIGH-risk system. Auditors must not rely on Section 2 for conformity evidence when this field is False.",
+      "title": "Section2 Complete",
+      "type": "boolean"
+    },
+    "section3": {
+      "$ref": "#/$defs/AnnexIVSection3"
+    },
+    "section4": {
+      "$ref": "#/$defs/AnnexIVSection4"
+    },
+    "section5": {
+      "$ref": "#/$defs/AnnexIVSection5"
+    },
+    "section6": {
+      "$ref": "#/$defs/AnnexIVSection6"
+    },
+    "section7": {
+      "$ref": "#/$defs/AnnexIVSection7"
+    },
+    "section8": {
+      "$ref": "#/$defs/AnnexIVSection8"
+    },
+    "section9": {
+      "$ref": "#/$defs/AnnexIVSection9"
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Base64 signature. None in OSS unsigned mode.",
+      "title": "Signature"
+    },
+    "signature_status": {
+      "default": "unsigned",
+      "description": "Trust level of this dossier: 'unsigned' (OSS default), 'hmac-local' (HMAC fallback with a local key), or 'signed' (Pro/Enterprise asymmetric signing via HSM/KMS).",
+      "title": "Signature Status",
+      "type": "string"
+    },
+    "system_id": {
+      "title": "System Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "dossier_id",
+    "system_id",
+    "commit_ref",
+    "generated_at",
+    "section1",
+    "section2",
+    "section3",
+    "section4",
+    "section5"
+  ],
+  "title": "AnnexIVDossier",
+  "type": "object"
+}

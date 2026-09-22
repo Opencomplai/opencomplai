@@ -71,6 +71,33 @@ class SystemState(StrEnum):
     INCIDENT_MODE = "incident_mode"
 
 
+class ComplianceTarget(StrEnum):
+    """Compliance framework a system is assessed against (D-3c).
+
+    `EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a
+    deterministic per-article verdict for it. `NIST_AI_RMF` is mapped only —
+    `data/framework_crosswalk.json` links EU AI Act articles to NIST AI RMF
+    1.0 subcategories with a source/confidence per row, but no subcategory
+    verdict is computed yet (that re-projection is a separate future epic).
+    ISO/IEC 42001:2023 is mapped the same way via the same crosswalk file,
+    but has no member here since nothing sets it as a `compliance_target` —
+    it is surfaced only as a per-article reference (see `control_catalog`
+    and `opencomplai gaps`'s Mapped column), never as an assessment target.
+    """
+
+    EU_AI_ACT = "EU_AI_ACT"
+    NIST_AI_RMF = "NIST_AI_RMF"
+
+
+class RmfFunction(StrEnum):
+    """NIST AI RMF 1.0 core function (Table 1-4 of NIST AI 100-1)."""
+
+    GOVERN = "GOVERN"
+    MAP = "MAP"
+    MEASURE = "MEASURE"
+    MANAGE = "MANAGE"
+
+
 # ---------------------------------------------------------------------------
 # Core assessment models (used by packages/core engine, CLI, SDK)
 # ---------------------------------------------------------------------------
@@ -142,8 +169,8 @@ class SystemManifest(BaseModel):
         ...,
         description="Primary intended purpose (maps to Annex III categories)",
     )
-    compliance_target: str = Field(
-        "EU_AI_ACT", description="Compliance framework target"
+    compliance_target: ComplianceTarget = Field(
+        ComplianceTarget.EU_AI_ACT, description="Compliance framework target"
     )
     high_risk_presumption: bool = Field(
         False,
@@ -244,6 +271,15 @@ class SystemManifest(BaseModel):
             "Required for Annex IV Section 8 in HIGH-risk dossiers."
         ),
     )
+    eu_declaration_of_conformity_sha256: str | None = Field(
+        None,
+        description=(
+            "SHA-256 of the signed EU declaration of conformity as uploaded "
+            "to the evidence vault (Art. 47). Lets a verifier confirm the "
+            "referenced document matches this dossier without embedding the "
+            "document itself. Annex IV Section 8."
+        ),
+    )
     post_market_monitoring_plan_ref: str | None = Field(
         None,
         description=(
@@ -327,6 +363,14 @@ class ScanStatusArtifact(BaseModel):
     )
     gap_report: GapReport | None = Field(
         None, description="Per-article gap status when --with-gaps was used"
+    )
+    nist_rmf_report: NistRmfReport | None = Field(
+        None,
+        description=(
+            "Per-subcategory NIST AI RMF re-projection (CP-16) — present only "
+            "when --with-gaps was used and the manifest's compliance_target "
+            "is NIST_AI_RMF; None otherwise (including OSS/EU_AI_ACT mode)"
+        ),
     )
     controls: ControlsSummary | None = Field(
         None,
@@ -1049,3 +1093,52 @@ class GapReport(BaseModel):
     principle_summary: PrincipleSummary | None = Field(
         None, description="6-principle rollup, populated by `opencomplai gaps`"
     )
+
+
+class RmfSubcategoryStatus(BaseModel):
+    """Met/Partial/Missing/Unverified status for one NIST AI RMF 1.0
+    subcategory (CP-16, D-3c).
+
+    Purely a re-projection of `ArticleGapStatus` rows already computed for
+    `EU_AI_ACT` by `gap_report.py`, keyed through
+    `data/framework_crosswalk.json` — no new scanner or evaluator backs this.
+    A crosswalk row's `confidence` never gets upgraded when re-projected here
+    (see `nist_rmf_report.py`), and `needs_founder_review` is always `True`:
+    this content has not been confirmed by a human reviewer.
+    """
+
+    subcategory: str = Field(..., description="e.g. 'GOVERN 1.1'")
+    function: RmfFunction
+    category: str = Field(..., description="e.g. 'GOVERN 1'")
+    status: GapStatus
+    mapping_confidence: str | None = Field(
+        None,
+        description=(
+            "The framework_crosswalk.json row confidence ('low'|'medium'|'high') "
+            "this verdict was re-projected through; None when no crosswalk row "
+            "maps to this subcategory's category."
+        ),
+    )
+    confidence_label: ConfidenceLabel = ConfidenceLabel.NOT_ASSESSED
+    source_eu_ai_act_articles: list[str] = Field(
+        default_factory=list,
+        description="EU AI Act articles this verdict was derived from (citation trail)",
+    )
+    rationale: str = ""
+    needs_founder_review: bool = True
+    disclaimer_ref: str = "DISCLAIMER_V1"
+
+
+class NistRmfReport(BaseModel):
+    """Per-subcategory NIST AI RMF 1.0 gap report (`opencomplai gaps --target
+    NIST_AI_RMF`), re-projected from an existing EU_AI_ACT `GapReport`.
+
+    Introduces no new analysis: every row cites the EU AI Act evidence
+    (`source_eu_ai_act_articles`) it was derived from via the framework
+    crosswalk. See `nist_rmf_report.py`.
+    """
+
+    system_id: str
+    commit_ref: str
+    generated_at: str
+    subcategories: list[RmfSubcategoryStatus] = Field(default_factory=list)

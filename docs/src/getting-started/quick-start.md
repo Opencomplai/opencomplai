@@ -37,17 +37,20 @@ Python 3.11+ and pip.
     [Installation](installation.md#install-from-source). The local `core` and `cli`
     packages must be installed in the **same command** as the SDK.
 
-The install provides the `opencomplai` command. Verify it (there is **no**
-`--version` flag — use `--help`):
+The install provides the `opencomplai` command. Verify it with `--help` (lists
+the available commands) or `--version`/`-V` (prints the installed version and
+exits — `opencomplai version` prints the same string):
 
 === "macOS / Linux"
     ```bash
     opencomplai --help
+    opencomplai --version
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     opencomplai --help
+    opencomplai --version
     ```
 
 ## Try it with zero setup first

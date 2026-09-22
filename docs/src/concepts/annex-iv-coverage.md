@@ -31,7 +31,7 @@ below).
 | 5 | Risk management system (Section 5) | Automated + wired evidence | `risk_assessment_id`, `risk_level`, `rules_evaluated/passed/failed`, `failed_rule_ids`, `rationale_hash` are automated output of the deterministic rule engine. `eval_set_version`, `eval_overall_outcome`, `eval_evidence_hashes` are wired evidence, populated only when `eval-report.json` is loaded. `scanner_version`, `corroboration_detected_categories`, `corroboration_discrepancies`, `corroboration_severity`, `corroboration_baseline_ref`, `corroboration_report_hash` are wired evidence, populated only when `scan-report.json` is loaded. `corroboration_review_status` is always `null` in this generator — no code path sets it yet. |
 | 6 | Relevant lifecycle changes (Section 6) | Provider attestation | `lifecycle_changes` (list) and/or `change_log_reference` — manifest fields. Placeholder when both are empty. |
 | 7 | Harmonised standards / alternative solutions (Section 7) | Provider attestation | `harmonised_standards` (list) and/or `alternative_solutions` — manifest fields. Placeholder when both are empty. |
-| 8 | EU declaration of conformity (Section 8) | Provider attestation | `eu_declaration_of_conformity_ref` — a **reference** to the declaration, not a copy of it (Annex IV point 8 technically asks for the document itself; this engine records a pointer). Placeholder when absent. |
+| 8 | EU declaration of conformity (Section 8) | Provider attestation | `eu_declaration_of_conformity_ref` — a **reference** to the declaration, not a copy of it (Annex IV point 8 technically asks for the document itself; this engine records a pointer). `eu_declaration_of_conformity_sha256` — the SHA-256 of that signed document as uploaded to the evidence vault, letting a verifier check the referenced file without the file being embedded in the dossier JSON (see below). Both placeholder when the reference is absent. |
 | 9 | Post-market monitoring plan (Section 9) | Provider attestation | `post_market_monitoring_plan_ref` and/or `post_market_monitoring_summary` — manifest fields. Placeholder when both are empty. |
 | 10 | Article 12 record-keeping | Automated (partially fixed) | `log_retention_days` is configurable via `LOG_RETENTION_DAYS` (default `2555`, 7 years). `ledger_root_hash` reflects the real evidence-vault Merkle root in service-backed mode, or `null` otherwise. **`logging_enabled` and `evidence_vault_enabled` are currently emitted as fixed `true` values on every dossier** — they are not derived from whether a vault is actually configured or reachable at generation time. Treat these two booleans as "the feature exists in this build," not as a live status check of your deployment. |
 
@@ -65,6 +65,19 @@ A HIGH-risk dossier that still carries any placeholder in those sections
 **fails the release gate**. A non-HIGH-risk dossier passes with placeholders
 present — the gate is deliberately scoped to where the regulation's stakes are
 highest, not to every dossier ever generated.
+
+## Why Section 8 references the declaration instead of embedding it
+
+The signed EU declaration of conformity is a provider-issued legal document,
+not something this engine generates. When a provider uploads it as evidence,
+the file itself goes to the evidence vault and Section 8 records only
+`eu_declaration_of_conformity_ref` (where to find it) and
+`eu_declaration_of_conformity_sha256` (the uploaded file's hash) — never the
+document's bytes. This keeps the dossier JSON small and diffable, avoids
+duplicating a legal document across every dossier generated for the same
+release, and still lets a verifier confirm the referenced file is the exact
+one this dossier was generated against by recomputing its hash. See
+[Evidence](evidence.md) for how the vault stores and hashes uploaded evidence.
 
 ## Why sidecar loading matters
 

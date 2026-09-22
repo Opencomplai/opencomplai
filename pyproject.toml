@@ -59,7 +59,7 @@ constraint-dependencies = [
 
 [dependency-groups]
 dev = [
-    "anyio>=4.14.1",
+    "anyio>=4.14.2",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     # Pinned to the exact version CI resolves so local, pre-commit and CI agree; Dependabot bumps it.

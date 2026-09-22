@@ -49,6 +49,11 @@ _PROBE_PATTERNS: dict[str, tuple[str, ...]] = {
         "QUALITY_MANAGEMENT.md",
         "docs/**/quality-management*",
     ),
+    "provider_fria": (
+        "docs/fria*",
+        "docs/**/fria*",
+        "FRIA.md",
+    ),
     "distributor_conformity": (
         "docs/conformity*",
         "CONFORMITY*",
@@ -60,7 +65,104 @@ _PROBE_PATTERNS: dict[str, tuple[str, ...]] = {
         "CONFORMITY*",
         "docs/**/assessment*",
     ),
+    # Art. 17(1)(a)-(m) per-clause probes. `provider_qms` above stays as the
+    # whole-article convenience probe; these are narrower, clause-appropriate
+    # glob sets so a partially-documented QMS shows which sub-points are
+    # actually covered instead of one pass/fail for the whole article.
+    "provider_qms_17_1_a": (  # (a) regulatory-compliance strategy
+        "docs/qms/regulatory-compliance-strategy*",
+        "docs/**/regulatory-compliance*",
+        "docs/**/compliance-strategy*",
+        "REGULATORY_COMPLIANCE_STRATEGY.md",
+    ),
+    "provider_qms_17_1_b": (  # (b) design and design-control procedures
+        "docs/qms/design-control*",
+        "docs/**/design-control*",
+        "docs/**/design-verification*",
+        "DESIGN_CONTROL.md",
+    ),
+    "provider_qms_17_1_c": (  # (c) development, QC and QA procedures
+        "docs/qms/quality-management-procedures*",
+        "docs/**/quality-assurance*",
+        "docs/**/quality-control*",
+        "QUALITY_MANAGEMENT_PROCEDURES.md",
+    ),
+    "provider_qms_17_1_d": (  # (d) examination, test and validation procedures
+        "docs/qms/testing-validation*",
+        "docs/**/test-validation*",
+        "docs/**/validation-procedures*",
+        "TESTING_VALIDATION.md",
+    ),
+    "provider_qms_17_1_e": (  # (e) technical specifications / harmonised standards
+        "docs/qms/technical-documentation*",
+        "docs/**/technical-specifications*",
+        "docs/**/harmonised-standards*",
+        "TECHNICAL_DOCUMENTATION.md",
+    ),
+    "provider_qms_17_1_f": (  # (f) data-management systems and procedures
+        "docs/qms/data-governance*",
+        "docs/**/data-governance*",
+        "docs/**/data-management*",
+        "DATA_GOVERNANCE.md",
+    ),
+    "provider_qms_17_1_g": (  # (g) risk-management system (Art. 9)
+        "docs/qms/risk-management-system*",
+        "docs/**/risk-management-system*",
+        "RISK_MANAGEMENT_SYSTEM.md",
+    ),
+    "provider_qms_17_1_h": (  # (h) post-market monitoring system (Art. 72)
+        "docs/qms/post-market-monitoring*",
+        "docs/**/post-market-monitoring*",
+        "POST_MARKET_MONITORING.md",
+    ),
+    "provider_qms_17_1_i": (  # (i) serious-incident reporting (Art. 73)
+        "docs/qms/serious-incident-reporting*",
+        "docs/**/incident-reporting*",
+        "docs/**/serious-incident*",
+        "INCIDENT_REPORTING.md",
+    ),
+    "provider_qms_17_1_j": (  # (j) communication with competent authorities/actors
+        "docs/qms/regulatory-communication*",
+        "docs/**/regulatory-communication*",
+        "docs/**/transparency*",
+        "TRANSPARENCY.md",
+    ),
+    "provider_qms_17_1_k": (  # (k) record-keeping of documentation/communication
+        "docs/qms/record-keeping*",
+        "docs/**/record-keeping*",
+        "RECORD_KEEPING.md",
+    ),
+    "provider_qms_17_1_l": (  # (l) resource management, incl. security of supply
+        "docs/qms/resource-management*",
+        "docs/**/resource-management*",
+        "docs/**/security-of-supply*",
+        "RESOURCE_MANAGEMENT.md",
+    ),
+    "provider_qms_17_1_m": (  # (m) accountability framework
+        "docs/qms/accountability-framework*",
+        "docs/**/accountability*",
+        "ACCOUNTABILITY_FRAMEWORK.md",
+    ),
 }
+
+# Art. 17(1)(a)-(m), in article order — (clause letter, probe ref, short title).
+# Both the qms_outline.md template renderer and the CLI reuse this single
+# ordered list instead of hard-coding the 13 clauses twice.
+QMS_17_1_CLAUSES: tuple[tuple[str, str, str], ...] = (
+    ("a", "provider_qms_17_1_a", "Regulatory-compliance strategy"),
+    ("b", "provider_qms_17_1_b", "Design and design-control procedures"),
+    ("c", "provider_qms_17_1_c", "Development, QC and QA procedures"),
+    ("d", "provider_qms_17_1_d", "Testing and validation procedures"),
+    ("e", "provider_qms_17_1_e", "Technical specifications and standards applied"),
+    ("f", "provider_qms_17_1_f", "Data-management systems and procedures"),
+    ("g", "provider_qms_17_1_g", "Risk-management system (Art. 9)"),
+    ("h", "provider_qms_17_1_h", "Post-market monitoring system (Art. 72)"),
+    ("i", "provider_qms_17_1_i", "Serious-incident reporting procedures (Art. 73)"),
+    ("j", "provider_qms_17_1_j", "Communication with national competent authorities"),
+    ("k", "provider_qms_17_1_k", "Record-keeping of relevant documentation"),
+    ("l", "provider_qms_17_1_l", "Resource management, incl. security of supply"),
+    ("m", "provider_qms_17_1_m", "Accountability framework"),
+)
 
 _CODE_HINTS: dict[str, re.Pattern[str]] = {
     "human_oversight_construct": re.compile(
@@ -245,3 +347,19 @@ def artifact_gap_status(ref: str, repo_root: Path | None) -> ArticleGapStatus:
         confidence=0.4,
         confidence_label=ConfidenceLabel.HEURISTIC_ESTIMATE,
     )
+
+
+def qms_article_17_clause_statuses(
+    repo_root: Path | None,
+) -> list[ArticleGapStatus]:
+    """Per-clause Art. 17(1)(a)-(m) gap rows, in clause order.
+
+    One `artifact_gap_status()` call per clause probe — same honesty rules
+    (Partial/Missing/Unverified, never a fabricated Met) as every other
+    artifact-sourced row, just at clause granularity instead of whole-article.
+    """
+    rows = []
+    for letter, ref, _title in QMS_17_1_CLAUSES:
+        status = artifact_gap_status(ref, repo_root)
+        rows.append(status.model_copy(update={"article": f"Art. 17(1)({letter})"}))
+    return rows

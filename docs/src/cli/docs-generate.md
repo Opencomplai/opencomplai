@@ -24,6 +24,7 @@ Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 | `--provider-name` | `Unknown Provider` | Legal name of the AI system provider for the dossier cover page. |
 | `--output-dir` | `.` | Directory where the generated `dossier_<id>.json` file is written (local mode only). |
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
+| `--allow-incomplete` | off | Exit `0` even when the generated dossier fails Annex IV schema validation. Off by default — see [Fail-closed dossier gate](#fail-closed-dossier-gate) below. |
 
 ## Modes
 
@@ -92,6 +93,21 @@ as empty as they are without them — nothing is fabricated to fill the gap.
 See the [Annex IV coverage ledger](../concepts/annex-iv-coverage.md) for
 which dossier fields are automated, wired evidence, or provider attestation.
 
+## Fail-closed dossier gate
+
+An invalid Annex IV dossier (`schema_valid: false` — see
+[`validate_dossier_schema`](../concepts/annex-iv-coverage.md)) is refused by
+default: the dossier is still written to `--output-dir` (or persisted
+server-side in service-backed mode) so an auditor can see exactly what
+failed, but the process exits `2` (`VALIDATION_FAIL`) instead of `0`. This
+also applies to the doc-generator service, which returns HTTP `422` instead
+of `200` for the same case.
+
+Existing CI pipelines that relied on `docs generate` always exiting `0` must
+add `--allow-incomplete` (CLI) or `allow_incomplete: true` (service request
+body) to restore the old behaviour — the dossier is generated and written
+identically either way; only the exit code / HTTP status changes.
+
 ## Halt / resume
 
 If the system is currently `HALTED_PENDING_REVIEW` (see
@@ -104,8 +120,8 @@ retrying.
 
 | Code | Meaning |
 |---|---|
-| 0 | Dossier generated successfully. |
+| 0 | Dossier generated successfully (or generated-but-invalid with `--allow-incomplete`). |
 | 1 | Dossier generation failed (local mode error). |
-| 2 | Validation error (invalid options or missing `opencomplai-doc-generator`). |
+| 2 | Validation error (invalid options, missing `opencomplai-doc-generator`, **or** the generated dossier failed Annex IV schema validation without `--allow-incomplete` — see [Fail-closed dossier gate](#fail-closed-dossier-gate)). |
 | 3 | Service unreachable or policy blocked (service-backed mode only). |
 | 4 | The system is `HALTED_PENDING_REVIEW` — dossier generation refused until resumed. |

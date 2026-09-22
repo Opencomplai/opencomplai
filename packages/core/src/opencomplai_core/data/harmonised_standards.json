@@ -1,0 +1,94 @@
+{
+  "_meta": {
+    "description": "CEN-CENELEC JTC 21 standards developed to support EU AI Act conformity (Art. 40 harmonised standards) plus their current standardisation status. Researched live, not pre-baked — see source_url per row. As of this research date, no JTC 21 deliverable has been cited in the Official Journal of the EU (OJEU), so none currently grants a legal presumption of conformity; 'harmonised' below is reserved for that future state. Every row is needs_founder_review=true: this is compliance-facing content and none of it has been confirmed by a human reviewer.",
+    "researched_at": "2026-09-18",
+    "status_definitions": {
+      "harmonised": "Reference cited in the OJEU under the AI Act — grants legal presumption of conformity. None as of researched_at.",
+      "published": "CEN/CENELEC has approved and published the definitive EN text, but it has not yet been cited in the OJEU.",
+      "draft": "Still a prEN under development (drafting, enquiry, or formal-vote stage) — not yet a published EN."
+    }
+  },
+  "standards": [
+    {
+      "id": "EN-18286",
+      "title": "Artificial intelligence — Quality management system for EU AI Act regulatory purposes",
+      "status": "published",
+      "source_url": "https://www.cencenelec.eu/news-events/news/2026/en-in-the-spotlight/2026-07-30-ai-quality-management/",
+      "articles_covered": ["Art. 17"],
+      "needs_founder_review": true,
+      "notes": "CEN distributed the definitive EN 18286:2026 text 22 Jul 2026 (first published JTC 21 deliverable). CEN's own announcement calls it 'the first harmonized European standard for the AI Act' — that is CEN's generic EN/national-adoption sense of 'harmonized', not the AI Act Art. 40 legal term; no OJEU citation has been found, so status is recorded as published, not harmonised. CEN members must adopt nationally by 2027-01-31."
+    },
+    {
+      "id": "prEN-18228",
+      "title": "Artificial intelligence — Risk management",
+      "status": "draft",
+      "source_url": "https://aistandardshub.org/events/ai-quality-and-risk-management-for-the-eu-ai-act-exploring-the-draft-cen-cenelec-standards-pren-18228-and-pren-18286/",
+      "articles_covered": ["Art. 9"],
+      "needs_founder_review": true,
+      "notes": "Public Enquiry stage; enquiry vote closed ~30 Jul 2026. Not yet a published EN."
+    },
+    {
+      "id": "prEN-18284",
+      "title": "Artificial intelligence — Quality and governance of datasets in AI",
+      "status": "draft",
+      "source_url": "https://aistandardshub.org/ai-standards/artificial-intelligence-quality-and-governance-of-datasets-in-ai/",
+      "articles_covered": ["Art. 10"],
+      "needs_founder_review": true,
+      "notes": "Under drafting/committee stage as of last snapshot; builds on the bias-management standard (prEN 18283) for Art. 10(2)(f)-(g)."
+    },
+    {
+      "id": "prEN-18283",
+      "title": "Artificial intelligence — Concepts, measures and requirements for managing bias in AI systems",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 10"],
+      "needs_founder_review": true,
+      "notes": "Drafting stage per tracker snapshot; not independently confirmed against the primary CEN-CENELEC register (dynamic project pages did not render for direct fetch during this research pass)."
+    },
+    {
+      "id": "prEN-18229-1",
+      "title": "Artificial intelligence trustworthiness framework — Part 1: Logging",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 12"],
+      "needs_founder_review": true,
+      "notes": "Enquiry stage per tracker snapshot; not independently confirmed against the primary CEN-CENELEC register."
+    },
+    {
+      "id": "prEN-18229-2",
+      "title": "Artificial intelligence trustworthiness framework — Part 2: Accuracy and robustness",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 15"],
+      "needs_founder_review": true,
+      "notes": "Drafting stage per tracker snapshot; not independently confirmed against the primary CEN-CENELEC register."
+    },
+    {
+      "id": "prEN-18229-3",
+      "title": "Artificial intelligence trustworthiness framework — Part 3: Transparency and human oversight",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 13", "Art. 14"],
+      "needs_founder_review": true,
+      "notes": "Drafting stage per tracker snapshot; not independently confirmed against the primary CEN-CENELEC register."
+    },
+    {
+      "id": "prEN-18282",
+      "title": "Cybersecurity specifications for AI systems",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 15"],
+      "needs_founder_review": true,
+      "notes": "Enquiry stage per tracker snapshot; not independently confirmed against the primary CEN-CENELEC register."
+    },
+    {
+      "id": "prEN-18285",
+      "title": "Artificial intelligence — Conformity assessment framework",
+      "status": "draft",
+      "source_url": "https://kla.digital/blog/jtc-21-standards-tracker",
+      "articles_covered": ["Art. 43"],
+      "needs_founder_review": true,
+      "notes": "Drafting stage per tracker snapshot; supports Annex VII conformity assessment; not independently confirmed against the primary CEN-CENELEC register."
+    }
+  ]
+}

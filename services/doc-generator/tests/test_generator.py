@@ -2,6 +2,7 @@
 
 import os
 
+import pytest
 from opencomplai_core.dossier import PROVIDER_SUPPLIED_PLACEHOLDER
 from opencomplai_core.engine import assess
 from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
@@ -441,13 +442,19 @@ def _make_high_risk_manifest_with_annex_iv_attestations() -> SystemManifest:
         metrics_appropriateness_rationale=(
             "Precision/recall are appropriate for a binary screening decision."
         ),
-        lifecycle_changes=["v1.1: recalibrated decision threshold"],
+        lifecycle_changes=[
+            "2026-03-01: Recalibrated decision threshold after Q1 drift review"
+        ],
         change_log_reference="CHANGELOG.md#v1.1",
-        harmonised_standards=["EN ISO/IEC 42001:2023"],
+        harmonised_standards=[
+            "EN ISO/IEC 42001:2023 — AI management system controls applied organisation-wide"
+        ],
         alternative_solutions=None,
         eu_declaration_of_conformity_ref="DoC-2026-001",
         post_market_monitoring_plan_ref="docs/pmm-plan.md",
-        post_market_monitoring_summary="Quarterly drift review with sign-off.",
+        post_market_monitoring_summary=(
+            "2026-01-15: Quarterly drift review completed with sign-off from the AI safety lead."
+        ),
     )
 
 
@@ -469,6 +476,33 @@ def test_annex_iv_attestations_supplied_marks_sections_complete_for_high_risk():
         assert section.provider_supplied is True
     assert dossier.annex_iv_complete is True
     assert validate_dossier_schema(dossier) is True
+
+
+def test_section8_declaration_sha256_round_trips_with_reference():
+    """A manifest carrying both the DoC reference and its evidence-vault
+    upload hash must surface both, unchanged, on Section 8 (D-6)."""
+    manifest = _make_manifest().model_copy(
+        update={
+            "eu_declaration_of_conformity_ref": "DoC-2026-001",
+            "eu_declaration_of_conformity_sha256": "a" * 64,
+        }
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+
+    assert dossier.section8.declaration_reference == "DoC-2026-001"
+    assert dossier.section8.declaration_sha256 == "a" * 64
+
+
+def test_section8_declaration_sha256_absent_without_reference():
+    """A hash with nothing to hash-check against is meaningless: it must not
+    surface unless a declaration_reference is also present."""
+    manifest = _make_manifest().model_copy(
+        update={"eu_declaration_of_conformity_sha256": "a" * 64}
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+
+    assert dossier.section8.declaration_reference is None
+    assert dossier.section8.declaration_sha256 is None
 
 
 def test_annex_iv_attestations_absent_keeps_high_risk_dossier_incomplete():
@@ -598,3 +632,127 @@ def test_annex_iv_attestations_absent_does_not_affect_minimal_risk():
     assert dossier.section1.risk_class != "high"
     assert dossier.annex_iv_complete is True
     assert validate_dossier_schema(dossier) is True
+
+
+# ---------------------------------------------------------------------------
+# D-7 — `provider_supplied` honesty: a single arbitrary string must not be
+# enough to flip Section 4/6/7/9's provider_supplied to True.
+# ---------------------------------------------------------------------------
+
+
+def test_section4_bare_string_rationale_does_not_flip_provider_supplied():
+    """A too-short, non-stub string in metrics_appropriateness_rationale
+    must not count as a real justification."""
+    manifest = _make_manifest().model_copy(
+        update={"metrics_appropriateness_rationale": "x"}
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section4.provider_supplied is False
+
+
+def test_section6_bare_string_change_without_ref_does_not_flip_provider_supplied():
+    """A bare arbitrary change entry, with no change-log reference either,
+    must not count as a lifecycle-change attestation."""
+    manifest = _make_manifest().model_copy(update={"lifecycle_changes": ["x"]})
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section6.provider_supplied is False
+
+
+def test_section6_dated_entry_without_ref_flips_provider_supplied_true():
+    """A properly dated change entry is sufficient on its own, with no
+    change-log reference needed."""
+    manifest = _make_manifest().model_copy(
+        update={"lifecycle_changes": ["2026-02-01: Rolled back a risky feature flag"]}
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section6.provider_supplied is True
+
+
+def test_section7_bare_string_standard_does_not_flip_provider_supplied():
+    """Accept criterion: harmonised_standards: ["x"] — a bare arbitrary
+    string matching no catalogue id and no documented pattern — must leave
+    provider_supplied False."""
+    manifest = _make_manifest().model_copy(update={"harmonised_standards": ["x"]})
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section7.provider_supplied is False
+
+
+def test_section7_documented_pattern_flips_provider_supplied_true():
+    """Accept criterion: an entry matching the documented free-text pattern
+    "<standard id/name> — <one-line reason>" must flip provider_supplied
+    True, with no catalogue involved (CP-4 hasn't landed yet)."""
+    manifest = _make_manifest().model_copy(
+        update={
+            "harmonised_standards": [
+                "EN ISO/IEC 42001:2023 — AI management system controls applied"
+            ]
+        }
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section7.provider_supplied is True
+
+
+def test_section9_bare_string_summary_without_ref_does_not_flip_provider_supplied():
+    """A bare arbitrary plan_summary, with no monitoring-plan reference
+    either, must not count as a post-market-monitoring attestation."""
+    manifest = _make_manifest().model_copy(
+        update={"post_market_monitoring_summary": "x"}
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section9.provider_supplied is False
+
+
+# ---------------------------------------------------------------------------
+# CP-4 — harmonised-standards catalogue match warning (alongside CP-2's D-7
+# provider_supplied checks above, which these tests must not disturb).
+# ---------------------------------------------------------------------------
+
+
+def test_section7_catalogue_id_match_is_silent(recwarn):
+    """A harmonised_standards entry matching a catalogue id emits no
+    warning."""
+    manifest = _make_manifest().model_copy(
+        update={"harmonised_standards": ["EN-18286"]}
+    )
+    generate_dossier(manifest, _make_risk_result())
+    assert len(recwarn) == 0
+
+
+def test_section7_unmatched_entry_emits_warning():
+    """A harmonised_standards entry that matches no catalogue id emits a
+    warning — not a hard fail; generation still succeeds and
+    provider_supplied is computed exactly as before (CP-2 untouched)."""
+    manifest = _make_manifest().model_copy(update={"harmonised_standards": ["x"]})
+    with pytest.warns(UserWarning, match="does not match a known"):
+        dossier = generate_dossier(manifest, _make_risk_result())
+    # CP-2's structural check is unaffected by the new warning.
+    assert dossier.section7.provider_supplied is False
+
+
+def test_section7_documented_pattern_entry_still_warns_if_not_a_catalogue_id():
+    """The documented free-text pattern satisfies CP-2's provider_supplied
+    honesty check, but is still a separate, unmatched catalogue id and so
+    still warns — only a literal catalogue id match is silent."""
+    manifest = _make_manifest().model_copy(
+        update={
+            "harmonised_standards": [
+                "EN ISO/IEC 42001:2023 — AI management system controls applied"
+            ]
+        }
+    )
+    with pytest.warns(UserWarning, match="does not match a known"):
+        dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section7.provider_supplied is True
+
+
+def test_section7_alternative_solutions_free_text_never_warns(recwarn):
+    """The separate alternative_solutions field is never checked against the
+    catalogue — free-text alternative solutions stay legitimate."""
+    manifest = _make_manifest().model_copy(
+        update={
+            "harmonised_standards": [],
+            "alternative_solutions": "Bespoke internal control framework applied",
+        }
+    )
+    generate_dossier(manifest, _make_risk_result())
+    assert len(recwarn) == 0

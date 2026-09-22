@@ -32,6 +32,7 @@ from demo.dossiers import DOSSIER_MANIFESTS, dossier_ingest_metadata
 from demo.ledger_events import HITL_EVENTS, RISK_CLASSIFICATION_EVENTS
 from demo.scan_events import generate_scan_events
 from demo.systems import DEMO_SYSTEMS, HIGH_RISK_SYSTEM_IDS
+from opencomplai_core.service_auth import load_shared_secret, mint_service_token
 
 # ---------------------------------------------------------------------------
 # Config / defaults
@@ -77,16 +78,43 @@ def _post(url: str, body: dict, *, dry_run: bool, api_key: str) -> dict | None:
         return None
 
 
+def _vault_auth_headers() -> dict[str, str]:
+    """
+    evidence-vault requires a signed internal service token on every /v1/*
+    route (SEC-SERVICE-AUTH). This script talks to it directly, so it mints
+    its own token the same way gateway-api does (see reset_demo.py's
+    _service_auth_headers for the donor pattern).
+
+    Unlike that donor, this fails loud when the secret is absent: callers
+    only invoke this outside --dry-run, where a real request is about to be
+    sent, and a silent unauthenticated POST would just come back as a 401
+    instead of a clear, actionable error.
+    """
+    secret = load_shared_secret()
+    if secret is None:
+        print(
+            "[ERROR] INTERNAL_SERVICE_TOKEN_SECRET is not set — evidence-vault "
+            "requires a signed service token on every /v1/* route "
+            "(SEC-SERVICE-AUTH). Set it in infra/compose/.env (see "
+            ".env.example) before running seed_demo.py outside --dry-run.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    token = mint_service_token("seed-demo-script", secret)
+    return {"Authorization": f"Bearer {token}"}
+
+
 def _post_vault(url: str, body: dict, *, dry_run: bool) -> dict | None:
-    """POST directly to evidence-vault (no API-key auth required internally)."""
+    """POST directly to evidence-vault (signed internal service token required)."""
     payload = json.dumps(body).encode()
     if dry_run:
         print(f"  [DRY-RUN] POST {url}")
         return {"_dry_run": True}
+    headers = {"Content-Type": "application/json", **_vault_auth_headers()}
     req = urllib.request.Request(
         url,
         data=payload,
-        headers={"Content-Type": "application/json"},
+        headers=headers,
         method="POST",
     )
     try:

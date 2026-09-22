@@ -8,6 +8,8 @@ overrides:
   fast-uri: 3.1.2
   protobufjs: 8.6.5
 
+packageExtensionsChecksum: 0d8ebff6937835ce4468ebd033cdf6bd
+
 importers:
 
   .: {}

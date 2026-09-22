@@ -76,6 +76,12 @@
       { "kind": "rule", "ref": "EU_AIA_ART25_MODIFICATION_TRAP" }
     ]
   },
+  "Art. 27": {
+    "sources": [
+      { "kind": "obligation", "ref": "fria" },
+      { "kind": "artifact", "ref": "provider_fria" }
+    ]
+  },
   "Art. 43": {
     "sources": [
       { "kind": "artifact", "ref": "conformity_assessment_docs" }

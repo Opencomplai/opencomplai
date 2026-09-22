@@ -1,12 +1,16 @@
 # CI integration
 
-OpenComplAI runs in GitHub Actions and GitLab CI via the CLI and connector scripts.
+OpenComplAI runs in GitHub Actions and GitLab CI via the CLI and connector scripts, no
+dashboard account required: `pip install opencomplai`, run `opencomplai init` to write a
+`system-manifest.json`, then copy the workflow file for your platform below as a CI step —
+it runs `opencomplai check` on every push/PR and fails the build on a control failure.
 
-Setup starts on the dashboard, not in this guide: open **`/connect`** for your project
-(**Projects → your project → Connect**) and it generates the two snippets below with your
-own dashboard host already filled in — copy the tab for your platform, add
-`OPENCOMPLAI_API_KEY` as a secret, and you're done. The copies here use
-`https://YOUR-DASHBOARD-HOST` as a placeholder for that value.
+> **Optional — hosted dashboard:** if you also use the dashboard, open **`/connect`** for
+> your project (**Projects → your project → Connect**) instead of copying the snippet by
+> hand — it generates the same file with your own dashboard host already filled in, so you
+> only need to add `OPENCOMPLAI_API_KEY` as a secret. The copies below use
+> `https://YOUR-DASHBOARD-HOST` as a placeholder for that value; without it, drop the
+> `OPENCOMPLAI_DASHBOARD_URL`/`push` step and rely on the CLI's own exit code as the CI gate.
 
 ## GitHub Actions
 
@@ -21,8 +25,8 @@ Settings → Secrets and variables → Actions → New repository secret — nam
 # OpenComplAI compliance scan — GitHub Actions
 #
 # Copy this file to .github/workflows/opencomplai-scan.yml in your AI system
-# repository. Requires a manifest.yaml in your repo root (see the CLI's own
-# `opencomplai init`).
+# repository. Requires a system-manifest.json in your repo root (see the
+# CLI's own `opencomplai init`).
 #
 # Before this runs, add your API key as a repository secret:
 #   Settings -> Secrets and variables -> Actions -> New repository secret
@@ -82,8 +86,8 @@ project's page in the dashboard, flags Protect variable + Mask variable.
 # OpenComplAI compliance scan — GitLab CI
 #
 # Copy this into your .gitlab-ci.yml (or `include:` it) in your AI system
-# repository. Requires a manifest.yaml in your repo root (see the CLI's own
-# `opencomplai init`).
+# repository. Requires a system-manifest.json in your repo root (see the
+# CLI's own `opencomplai init`).
 #
 # Before this runs, add your API key as a masked CI/CD variable:
 #   Settings -> CI/CD -> Variables -> Add variable

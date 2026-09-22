@@ -1,0 +1,49 @@
+# OpenComplAI compliance scan — GitHub Actions
+#
+# Copy this file to .github/workflows/opencomplai-scan.yml in your AI system
+# repository. Requires a system-manifest.json in your repo root (see the
+# CLI's own `opencomplai init`).
+#
+# Before this runs, add your API key as a repository secret:
+#   Settings -> Secrets and variables -> Actions -> New repository secret
+#   Name:  OPENCOMPLAI_API_KEY
+#   Value: the key you issued on the project's page in this dashboard
+name: OpenComplAI compliance scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  opencomplai-scan:
+    name: OpenComplAI compliance scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install OpenComplAI CLI
+        run: pip install opencomplai
+
+      - name: Run OpenComplAI compliance scan
+        run: opencomplai-gha-connector
+        env:
+          # Exit-code contract (opencomplai check / opencomplai-gha-connector):
+          #   0 = pass             scan passed (or degraded_complete in local scan mode)
+          #   1 = control_fail     a required control failed
+          #   2 = validation_fail  manifest or input validation error
+          #   3 = policy_block     prohibited system (EU AI Act Article 5)
+          #   4 = trap_detected    Article 25 substantial-modification freeze
+          #
+          # This dashboard's own ingest endpoint — safe to commit as plain
+          # text, it is not a secret.
+          OPENCOMPLAI_DASHBOARD_URL: https://YOUR-DASHBOARD-HOST/api/ingest
+          # Set in this repository's (or organization's) Actions secrets —
+          # never commit the key itself.
+          OPENCOMPLAI_API_KEY: ${{ secrets.OPENCOMPLAI_API_KEY }}

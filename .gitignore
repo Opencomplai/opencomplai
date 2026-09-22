@@ -86,3 +86,5 @@ tmp/
 
 # Scratch worktrees created by local agent tooling.
 .harness-worktrees/
+
+.vercel

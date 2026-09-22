@@ -27,14 +27,18 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 import typer
+from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
 from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
+from opencomplai_core.fria import generate_fria, render_fria_markdown
+from opencomplai_core.gap_probes import qms_article_17_clause_statuses
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.models import (
     AssessmentInput,
+    ComplianceTarget,
     ControlInstance,
     ControlState,
     CorroborationReport,
@@ -53,6 +57,7 @@ from opencomplai_core.models import (
     SystemManifest,
     SystemState,
 )
+from opencomplai_core.nist_rmf_report import build_nist_rmf_report
 from opencomplai_core.output_envelope import wrap_scan_output
 from opencomplai_core.principle_report import build_principle_summary
 from opencomplai_core.recommend_engine import render_recommendations
@@ -102,6 +107,7 @@ app = typer.Typer(
 )
 risk_app = typer.Typer(help="Risk classification commands.")
 docs_app = typer.Typer(help="Documentation generation commands.")
+fria_app = typer.Typer(help="Fundamental rights impact assessment (Art. 27) commands.")
 sync_app = typer.Typer(help="Metadata sync commands.")
 keys_app = typer.Typer(
     help="Signing key management (ISO 27001 A.8.24 / FedRAMP SC-12)."
@@ -121,6 +127,7 @@ from opencomplai_cli.commands.dashboard import app as dashboard_app  # noqa: E40
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
 from opencomplai_cli.commands.interactive_init import run_interactive_init  # noqa: E402
 from opencomplai_cli.commands.push import run_push, run_push_dossier  # noqa: E402
+from opencomplai_cli.commands.qms import app as qms_app  # noqa: E402
 from opencomplai_cli.commands.serve import run_serve  # noqa: E402
 
 ai_app = typer.Typer(help="AI intent analysis commands.")
@@ -132,11 +139,13 @@ install_ascii_fallback(sys.stdout, sys.stderr)
 
 app.add_typer(risk_app, name="risk")
 app.add_typer(docs_app, name="docs")
+app.add_typer(fria_app, name="fria")
 app.add_typer(sync_app, name="sync")
 app.add_typer(dashboard_app, name="dashboard")
 app.add_typer(keys_app, name="keys")
 app.add_typer(ai_app, name="ai")
 app.add_typer(controls_app, name="controls")
+app.add_typer(qms_app, name="qms")
 # HALT-WIRE: `approve`/`resume` are top-level commands (not a sub-typer),
 # implemented in commands/halt.py and registered here to avoid a circular
 # import (halt.py needs `console`/`_emit_event` from this module, lazily).
@@ -1184,6 +1193,15 @@ def gaps_cmd(
         "--repo-root",
         help="Repository root for artifact path probes (Arts. 9/13/14/16/24/43)",
     ),
+    target: ComplianceTarget = typer.Option(
+        ComplianceTarget.EU_AI_ACT,
+        "--target",
+        help=(
+            "EU_AI_ACT (default, evaluated natively) or NIST_AI_RMF "
+            "(evaluated by re-projecting the EU_AI_ACT evidence below through "
+            "data/framework_crosswalk.json — see docs/src/concepts/nist-ai-rmf.md)"
+        ),
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """
@@ -1191,6 +1209,8 @@ def gaps_cmd(
 
     Purely a projection of already-computed rule/obligation/scan/eval results —
     informational only, never gates CI (see `opencomplai check` for the CI gate).
+    `--target NIST_AI_RMF` re-projects the same evidence into a per-subcategory
+    NIST AI RMF 1.0 profile instead — no new scanner or evaluator involved.
     """
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
@@ -1250,13 +1270,56 @@ def gaps_cmd(
 
     _sync_controls_to_vault(report, manifest, quiet=(output == OutputFormat.json))
 
+    nist_report = (
+        build_nist_rmf_report(report)
+        if target == ComplianceTarget.NIST_AI_RMF
+        else None
+    )
+
     if output == OutputFormat.json:
+        envelope_payload = json.loads(report.model_dump_json())
+        if nist_report is not None:
+            envelope_payload["nist_rmf_report"] = json.loads(
+                nist_report.model_dump_json()
+            )
         envelope = wrap_scan_output(
-            json.loads(report.model_dump_json()),
+            envelope_payload,
             scan_errors=[],
             tool_version=__version__,
         )
         console.print_json(envelope.model_dump_json(indent=2))
+        return
+
+    if nist_report is not None:
+        console.print(
+            f"\n[bold]Opencomplai NIST AI RMF Gap Report[/bold] — {manifest.system_id}\n"
+        )
+        console.print(
+            "[dim]Re-projected from EU AI Act evidence via the framework crosswalk "
+            "(data/framework_crosswalk.json) — heuristic estimates, not a legal "
+            "determination. See docs/src/concepts/nist-ai-rmf.md for the "
+            "methodology; no new scanner or evaluator backs this.[/dim]\n"
+        )
+        rmf_table = Table(show_header=True, header_style="bold")
+        rmf_table.add_column("Subcategory", style="dim")
+        rmf_table.add_column("Status", min_width=10)
+        rmf_table.add_column("Mapping conf.", style="dim")
+        rmf_table.add_column("From (EU AI Act)", style="dim")
+        rmf_table.add_column("Rationale")
+        for row in nist_report.subcategories:
+            rmf_table.add_row(
+                row.subcategory,
+                _GAP_STATUS_STYLE[row.status],
+                row.mapping_confidence or "—",
+                ", ".join(row.source_eu_ai_act_articles) or "—",
+                row.rationale,
+            )
+        console.print(rmf_table)
+        console.print(
+            "\n[dim]NIST AI RMF report is informational only — it does not gate "
+            "CI. Every row cites the EU AI Act evidence it was derived from; "
+            "UNVERIFIED rows have no framework_crosswalk.json coverage yet.[/dim]\n"
+        )
         return
 
     console.print(f"\n[bold]Opencomplai Gap Report[/bold] — {manifest.system_id}\n")
@@ -1265,19 +1328,29 @@ def gaps_cmd(
     )
     table = Table(show_header=True, header_style="bold")
     table.add_column("Article", style="dim")
+    table.add_column("Mapped", style="dim")
     table.add_column("Status", min_width=10)
     table.add_column("Source", style="dim")
     table.add_column("Evidence", style="dim")
     table.add_column("Rationale")
+    catalog = get_catalog()
     for row in report.articles:
+        catalog_entry = catalog.get(row.article)
+        mapped = catalog_entry.iso_42001_clause if catalog_entry else None
         table.add_row(
             row.article,
+            mapped or "—",
             _GAP_STATUS_STYLE[row.status],
             row.source.value,
             row.evidence_ref,
             row.rationale,
         )
     console.print(table)
+    console.print(
+        "[dim]Mapped: ISO/IEC 42001:2023 clause from the framework crosswalk "
+        "(data/framework_crosswalk.json) — a citation, not a computed "
+        "conformity verdict.[/dim]\n"
+    )
 
     console.print("\n[bold]Principle Summary[/bold]\n")
     principle_table = Table(show_header=True, header_style="bold")
@@ -1325,6 +1398,12 @@ def recommend_cmd(
         "--output",
         "-o",
         help="Directory to write remediation templates to",
+    ),
+    repo_root: Path = typer.Option(
+        Path("."),
+        "--repo-root",
+        help="Repository root for artifact path probes (Arts. 9/13/14/16/17/24/43), "
+        "including the Art. 17 QMS per-clause breakdown",
     ),
 ) -> None:
     """
@@ -1391,9 +1470,11 @@ def recommend_cmd(
             risk_result=risk_result,
             corroboration_report=corroboration_report,
             eval_report=eval_report,
+            repo_root=repo_root.resolve(),
         )
 
-    written = render_recommendations(report, output_dir)
+    resolved_repo_root = repo_root.resolve()
+    written = render_recommendations(report, output_dir, repo_root=resolved_repo_root)
 
     if not written:
         console.print(
@@ -1406,6 +1487,140 @@ def recommend_cmd(
     )
     for path in written:
         console.print(f"  {path}")
+
+    if any(row.article == "Art. 17" for row in report.articles):
+        qms_rows = qms_article_17_clause_statuses(resolved_repo_root)
+        present = sum(1 for r in qms_rows if r.status == GapStatus.PARTIAL)
+        missing = sum(1 for r in qms_rows if r.status == GapStatus.MISSING)
+        console.print(
+            f"\n[bold]Art. 17 QMS per-clause:[/bold] {present}/13 present, "
+            f"{missing}/13 missing (see the qms_outline.md written above for detail)",
+            soft_wrap=True,
+        )
+
+
+@fria_app.command("generate")
+def fria_generate_cmd(
+    manifest_file: Path = typer.Option(
+        Path("system-manifest.json"),
+        "--manifest",
+        "-m",
+        help="Path to system manifest JSON file",
+    ),
+    commit_ref: str = typer.Option("HEAD", "--commit-ref", help="Git commit reference"),
+    checker_report_file: Path | None = typer.Option(
+        None,
+        "--checker-report",
+        help=(
+            "Path to a checker JSON report (written by `opencomplai checker "
+            "--export-json ...`). Defaults to the manifest's own "
+            "checker_session.report_json_path when set. When neither is "
+            "available, Art. 27(1)(c) stays honestly unpopulated."
+        ),
+    ),
+    repo_root: Path = typer.Option(
+        Path("."),
+        "--repo-root",
+        help="Repository root for the Art. 27 control-register probe (provider_fria)",
+    ),
+    output_dir: Path = typer.Option(Path("./fria"), "--output-dir"),
+    output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+) -> None:
+    """Draft an Art. 27 fundamental rights impact assessment (D-1, CP-14).
+
+    Populates Art. 27(1)(a)-(f) from the system manifest, the checker's own
+    persisted session/obligations when one was run, and the Art. 27 row
+    `opencomplai gaps` already computes (CP-6's control-register wiring) --
+    not just CP-6's fill-in-only template. A point with no real data behind
+    it is labelled "not captured", never fabricated.
+    """
+    if not manifest_file.exists():
+        err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
+        err_console.print("Run [bold]opencomplai init[/bold] first.")
+        sys.exit(2)
+    try:
+        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+    except Exception as e:
+        err_console.print(f"[red]Validation error:[/red] {e}")
+        sys.exit(2)
+
+    # The checker persists its own session/obligations as a plain
+    # ComplianceCheckerResult JSON export (opencomplai checker --export-json,
+    # or the file `opencomplai init --interactive` writes and references via
+    # manifest.checker_session.report_json_path) -- read it the same way,
+    # no new storage mechanism.
+    resolved_checker_path = checker_report_file
+    if resolved_checker_path is None and manifest.checker_session is not None:
+        candidate = manifest.checker_session.report_json_path
+        if candidate:
+            resolved_checker_path = Path(candidate)
+
+    checker_result: ComplianceCheckerResult | None = None
+    if resolved_checker_path is not None:
+        if resolved_checker_path.exists():
+            try:
+                checker_result = ComplianceCheckerResult.model_validate_json(
+                    resolved_checker_path.read_text(encoding="utf-8")
+                )
+            except Exception as exc:
+                err_console.print(
+                    f"[yellow]Warning:[/yellow] failed to parse checker report "
+                    f"{resolved_checker_path}: {exc}"
+                )
+        else:
+            console.print(
+                f"[dim]No checker report found at {resolved_checker_path} -- "
+                "Art. 27(1)(c) stays unpopulated (run 'opencomplai checker' "
+                "first, or pass --checker-report).[/dim]"
+            )
+
+    # Control register: the Art. 27 row CP-6 already wires into gaps.json
+    # (obligation 'fria' + artifact probe 'provider_fria', worst-status-wins).
+    resolved_repo_root = repo_root.resolve()
+    assessment_input = AssessmentInput(
+        model=ModelMetadata(
+            name=manifest.system_id,
+            version=commit_ref,
+            modality="text",
+            use_case=manifest.intended_purpose,
+            deployment_context="local",
+        )
+    )
+    risk_result = assess(assessment_input)
+    report = build_gap_report(
+        system_id=manifest.system_id,
+        commit_ref=commit_ref,
+        risk_result=risk_result,
+        repo_root=resolved_repo_root,
+    )
+    gap_row = next((r for r in report.articles if r.article == "Art. 27"), None)
+
+    document = generate_fria(manifest, gap_row=gap_row, checker_result=checker_result)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / f"fria_{document.fria_id}.json"
+    md_path = output_dir / f"fria_{document.fria_id}.md"
+    json_path.write_text(document.model_dump_json(indent=2), encoding="utf-8")
+    md_path.write_text(render_fria_markdown(document), encoding="utf-8")
+
+    if output == OutputFormat.json:
+        console.print_json(document.model_dump_json(indent=2))
+        return
+
+    console.print("\n[bold]Fundamental Rights Impact Assessment Draft (Art. 27)[/bold]")
+    console.print(f"  fria_id:   {document.fria_id}")
+    console.print(
+        f"  populated: {document.populated_point_count}/{document.total_points} points"
+    )
+    console.print(f"  json:      {json_path}")
+    console.print(f"  markdown:  {md_path}")
+    for point in document.points:
+        marker = (
+            "[green]populated[/green]"
+            if point.populated
+            else "[yellow]not captured[/yellow]"
+        )
+        console.print(f"    ({point.point}) {marker} -- source: {point.source}")
 
 
 @app.command("report")
@@ -2591,8 +2806,17 @@ def check_cmd(
             if derived_controls is not None
             else None
         )
+        nist_rmf_report = (
+            build_nist_rmf_report(gap_report)
+            if manifest.compliance_target == ComplianceTarget.NIST_AI_RMF
+            else None
+        )
         artifact = artifact.model_copy(
-            update={"gap_report": gap_report, "controls": controls_block}
+            update={
+                "gap_report": gap_report,
+                "controls": controls_block,
+                "nist_rmf_report": nist_rmf_report,
+            }
         )
 
     # Write artifact to disk for CI consumption
@@ -3405,6 +3629,18 @@ def docs_generate_cmd(
             "see module notes below."
         ),
     ),
+    allow_incomplete: bool = typer.Option(
+        False,
+        "--allow-incomplete",
+        help=(
+            "Exit 0 even when the generated dossier fails Annex IV schema "
+            "validation. Off by default: an invalid dossier is still "
+            "written to disk (or persisted server-side in service-backed "
+            "mode) so an auditor can see what failed, but the process exits "
+            "2 (VALIDATION_FAIL) to fail CI closed. Pass this flag to "
+            "restore the old always-exit-0 behaviour."
+        ),
+    ),
 ) -> None:
     """Generate an Annex IV technical documentation dossier (REQ-DOC-001)."""
     # HALT-WIRE / E-12(d): a HALTED_PENDING_REVIEW system refuses dossier
@@ -3477,6 +3713,7 @@ def docs_generate_cmd(
         "commit_ref": commit_ref,
         "intended_purpose": intended_purpose,
         "provider_name": provider_name,
+        "allow_incomplete": allow_incomplete,
     }
     if loaded_manifest is not None:
         payload.update(
@@ -3622,6 +3859,12 @@ def docs_generate_cmd(
             dossier, repo_dir=out_file.resolve().parent
         ):
             sys.exit(3)
+        # Fail-closed dossier gate (D-2): the file above is always written
+        # first so an auditor can see what failed, but an invalid dossier
+        # must not report success unless the caller explicitly opted into
+        # the old always-exit-0 behaviour via --allow-incomplete.
+        if not schema_valid and not allow_incomplete:
+            sys.exit(HARD_FAIL_EXIT_CODES[ScanResult.VALIDATION_FAIL])
         sys.exit(0)
     except Exception as exc:
         err_console.print(f"[red]Dossier generation failed:[/red] {exc}")

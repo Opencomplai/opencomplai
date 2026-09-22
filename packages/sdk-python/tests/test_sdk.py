@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import opencomplai
+import opencomplai_core
 import pytest
 from opencomplai import AssessmentInput, ModelMetadata, RiskLevel, RiskResult, assess
 
@@ -61,3 +62,5 @@ def test_sdk_exports_and_pep561():
     assert set(opencomplai.__all__) == expected_exports
     py_typed = Path(opencomplai.__file__).parent / "py.typed"
     assert py_typed.is_file()
+    core_py_typed = Path(opencomplai_core.__file__).parent / "py.typed"
+    assert core_py_typed.is_file()

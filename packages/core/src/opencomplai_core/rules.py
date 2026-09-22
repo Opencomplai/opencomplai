@@ -619,4 +619,4 @@ RULE_REGISTRY: list[BaseRule] = [
 # Bump when any rule logic, keyword list, or reference changes.
 # Every generated dossier references this version for Annex IV traceability
 # per EU AI Act Art. 11 and post-market monitoring (Art. 72).
-RULE_SET_VERSION = "1.4.0"
+RULE_SET_VERSION = "1.5.0"

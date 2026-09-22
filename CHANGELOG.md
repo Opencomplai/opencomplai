@@ -11,6 +11,111 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.7.0] — 2026-09-19
+
+### Added
+
+- `opencomplai fria generate`: drafts an Art. 27 fundamental-rights impact
+  assessment from the system manifest, the checker's `r5_fria` answers when
+  present, and the control register, in Markdown and JSON.
+- `opencomplai qms generate`: renders an Art. 17(1)(a)-(m) quality-management
+  document with per-clause evidence status (present/missing/partial), reusing
+  the same 13-clause probes `opencomplai recommend`/`gaps` already report.
+- Art. 27 (fundamental rights impact assessment) and per-clause Art. 17
+  tracking join the control register, gap reporting, and `opencomplai
+  recommend` (previously Art. 17 was tracked only at the whole-article level).
+- NIST AI RMF 1.0 is now an **evaluated** compliance target:
+  `opencomplai gaps --target NIST_AI_RMF` and `opencomplai check` emit a
+  verdict per RMF subcategory, deterministically re-projected from existing
+  EU AI Act evidence via a new framework crosswalk — no new scanner or
+  evaluator was added. Coverage is partial today (the `MANAGE` function has
+  no crosswalk rows yet); see `docs/concepts/nist-ai-rmf.md`.
+- A machine-readable EU AI Act ↔ ISO/IEC 42001:2023 ↔ NIST AI RMF 1.0
+  framework crosswalk; `opencomplai gaps`'s output gains a "Mapped" column
+  citing the ISO/IEC 42001 clause per article. `compliance_target` is now a
+  proper enum (`EU_AI_ACT` | `NIST_AI_RMF`) instead of a free string.
+- A harmonised-standards catalogue for Annex IV Section 7, validated against
+  Section 7 entries (warns on an unmatched entry, never a hard fail).
+- `docs/src/getting-started/deployment-journey.md`: one canonical
+  install → init → check → CI gate → dashboard → pre-commit → self-hosted
+  deployment sequence, replacing several partially-overlapping pages.
+- Annex IV Section 8 gains `declaration_sha256`, populated when a signed
+  declaration of conformity is uploaded as evidence, so the reference can be
+  verified against the attached document without embedding it in the dossier.
+- A generated, versioned JSON Schema for the Annex IV dossier
+  (`data/annex_iv_dossier.schema.json`), with a drift test.
+- `opencomplai` SDK ships a PEP 561 `py.typed` marker (also added to
+  `opencomplai_core`, the package that actually defines the re-exported
+  types) and re-exports `RiskLevel`, `RuleResult`, and `ScanResult` from
+  `opencomplai_core.models`, so SDK consumers no longer need to reach into
+  the core package for result inspection and enum checks (#80).
+
+### Changed
+
+- **Breaking for CI pipelines that ignore exit codes:** `docs generate` and
+  the doc-generator service now refuse an invalid HIGH-risk Annex IV dossier
+  by default (exit 2 / HTTP 422) instead of always succeeding — existing CI
+  pipelines that relied on always-zero-exit must add `--allow-incomplete`
+  (CLI) or `allow_incomplete: true` (service) to keep the old behaviour. The
+  invalid dossier is still written/persisted either way, so an auditor can
+  see what failed.
+- Annex IV `provider_supplied` fields (Sections 4, 6, 7, 9) now require real
+  structure — a dated entry, a recognised harmonised standard, or
+  non-placeholder attestation text — instead of accepting any non-empty
+  string.
+- `RULE_SET_VERSION` bumped to `1.5.0` (the Art. 27 gap-mapping addition is a
+  rule-set change under Annex IV traceability).
+- `docs/src/guides/ci-integration.md` now leads with the OSS-native path
+  (install → manifest → `opencomplai check` as a CI step); the hosted
+  dashboard's `/connect` step is now an explicitly optional callout. The
+  guide's CI YAML is vendored into `docs/ci/` so it's byte-pinned and
+  testable without the enterprise checkout.
+- README's Quick Start is trimmed to install + init + check + a link to the
+  new deployment-journey page; the pre-commit hook's pinned tag now matches
+  the actual latest release instead of a stale `v0.4.0`.
+- `docs/src/contributing/release-process.md` rewritten to describe the real
+  four-package (`core`/`cli`/`ai`/`sdk-python`), Trusted-Publishing-based
+  release process — it previously described a single pre-1.0 package never
+  published to PyPI.
+- README documents `.ocignore`: how scan-time file exclusion differs from
+  `.gitignore`, first-scan bootstrap, and the `--no-ocignore-bootstrap` /
+  `--ocignore PATH` flags on `opencomplai scan` (#81).
+
+### Fixed
+
+- `docs/src/getting-started/quick-start.md` no longer claims the CLI has no
+  `--version` flag (it has had one, plus `version`/`info` subcommands, for
+  several releases).
+- `docs/src/guides/ci-integration.md`'s manifest filename is now consistent
+  (`system-manifest.json` everywhere; it previously also said `manifest.yaml`
+  in one place).
+- README no longer promises a GitHub/GitLab composite `action.yml` that
+  doesn't exist — it points at the copy-paste workflow YAML instead.
+- All previously-orphaned documentation pages (the API reference, several
+  CLI/concepts/guides pages, and the new deployment-journey page) are now
+  linked from the docs navigation; the stale, unused repo-root `mkdocs.yml`
+  is removed.
+- egress-proxy's Docker HEALTHCHECK now probes its own `/egress-health`
+  liveness endpoint instead of the gateway-proxied `/health`, matching
+  docker-compose and gateway-api's probe path (closes #73, #82).
+
+### Security
+
+- anyio is floored at 4.14.2, closing CVE-2026-63374, CVE-2026-63349 and
+  CVE-2026-64847 that pip-audit flagged against 4.14.1 (dev/services
+  dependency only — the published wheels do not depend on it).
+
+Thanks to [@anvitha1633](https://github.com/anvitha1633) for the
+[#82](https://github.com/Opencomplai/opencomplai/pull/82) contribution
+(issue #73). Thanks to [@DYNOSuprovo](https://github.com/DYNOSuprovo) for
+the [#80](https://github.com/Opencomplai/opencomplai/pull/80) contribution
+(issue #78). Thanks to
+[@HarshRajSinghania](https://github.com/HarshRajSinghania) for the
+[#81](https://github.com/Opencomplai/opencomplai/pull/81) contribution
+(issue #59).
+
+---
+
 ## [0.6.0] — 2026-09-04
 
 ### Added
@@ -45,14 +150,8 @@ project follows [Semantic Versioning](https://semver.org/).
   advisories are caught between pushes.
 - Dependabot now watches the uv lockfile, npm workspaces, and GitHub
   Actions.
-- CodeQL analysis runs on Python and TypeScript.
 - The transformers advisories are deferred behind the optimum-onnx cap
-  that holds it at 4.57.x; tracked in #54.
-
-### Fixed
-
-- The Node CI workflow never actually started: `pnpm/action-setup` was
-  missing from the Actions allowlist (#50).
+  that holds it at 4.57.x; tracked in Opencomplai/opencomplai#54.
 
 ---
 
