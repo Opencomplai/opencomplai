@@ -236,6 +236,18 @@ jobs:
             exit 1
           fi
 
+  wheel-smoke:
+    name: CLI / wheel install smoke test
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.11"
+      - run: bash scripts/smoke_wheel_install.sh
+
   egress-dlp:
     name: DLP / egress-proxy allowlist
     if: github.event_name != 'schedule'
