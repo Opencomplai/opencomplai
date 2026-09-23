@@ -31,9 +31,9 @@ Step  4 — trap-gate check (substantial modification / profiling)
 Step  5 — run controls                    POST /v1/verify/claims
 Step  6 — poll for verification results   GET  /v1/verify/claims/{id}
 Step  7 — generate Annex IV dossier       POST /v1/docs/generate
-Step  8 — finalise + sign ScanStatusArtifact
+Step  8 — finalise ScanStatusArtifact
 Step  9 — emit compliance_check_completed POST /v1/evidence/events
-Step 10 — write compliance-artifact.json, exit
+Step 10 — sign (if --sign), append artifact to ledger, write compliance-artifact.json, exit
 ```
 
 ## Network topology (Docker Compose)

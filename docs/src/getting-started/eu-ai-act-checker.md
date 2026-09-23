@@ -69,7 +69,7 @@ Once you know your role and risk tier, the next step is declaring a manifest:
 === "macOS / Linux"
     ```bash
     # Let the checker pre-fill the manifest for you
-    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
 
     # Or initialise interactively (runs the checker first)
     opencomplai init --interactive
@@ -78,7 +78,7 @@ Once you know your role and risk tier, the next step is declaring a manifest:
 === "Windows (PowerShell)"
     ```powershell
     # Let the checker pre-fill the manifest for you
-    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
 
     # Or initialise interactively (runs the checker first)
     opencomplai init --interactive

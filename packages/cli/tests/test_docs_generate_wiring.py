@@ -14,6 +14,7 @@ sidecar reads/writes never touch the repo root.
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 from opencomplai_cli.main import app
@@ -155,9 +156,9 @@ def test_docs_generate_without_artifacts_matches_direct_generator_call(
 
     dossier = _single_dossier(output_dir)
 
+    from opencomplai_core.dossier_generator import generate_dossier
     from opencomplai_core.engine import assess
     from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
-    from opencomplai_doc_generator.generator import generate_dossier
 
     manifest = SystemManifest(
         system_id=_SYSTEM_ID,
@@ -384,3 +385,24 @@ def test_docs_generate_valid_dossier_exits_zero_without_allow_incomplete(
 
     dossier = _single_dossier(output_dir)
     assert dossier["annex_iv_complete"] is True
+
+
+def test_docs_generate_local_fallback_needs_only_published_packages(
+    tmp_path, monkeypatch
+):
+    """A PyPI install has opencomplai-core but never the unpublished
+    doc-generator service package, so the local fallback must not import it.
+    Submodules cached by earlier tests are blocked too, otherwise the import
+    would be served from sys.modules without looking at the parent."""
+    for name in [m for m in sys.modules if m.startswith("opencomplai_doc_generator")]:
+        monkeypatch.setitem(sys.modules, name, None)
+    monkeypatch.setitem(sys.modules, "opencomplai_doc_generator", None)
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
+
+    output_dir = tmp_path / "out"
+    result = _invoke_docs_generate(output_dir)
+    assert result.exit_code == 0, result.output
+
+    dossier = _single_dossier(output_dir)
+    assert dossier["system_id"] == _SYSTEM_ID

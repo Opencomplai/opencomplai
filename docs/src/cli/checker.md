@@ -26,6 +26,7 @@ Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
 | `--export-pdf` | Write PDF report (requires `opencomplai-core[reports]`) |
 | `--export-all` | Base path for `.json`, `.md`, and `.pdf` exports |
 | `--write-manifest` | Write a manifest pre-filled from checker results |
+| `--intended-purpose` | With `--write-manifest`: what the system does, written to `intended_purpose` (prompted when omitted) |
 | `--web` | Open the interactive checker in your browser (hosted docs page) |
 | `--web --local` | Serve the checker locally and open it — no internet required |
 
@@ -49,7 +50,7 @@ Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
     opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
 
     # Pre-fill a manifest from checker results
-    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
     ```
 
 === "Windows (PowerShell)"
@@ -70,8 +71,18 @@ Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
     opencomplai checker --answers answers.json --export-all ./reports/eu-ai-act-result
 
     # Pre-fill a manifest from checker results
-    opencomplai checker --answers answers.json --write-manifest system-manifest.json
+    opencomplai checker --answers answers.json --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
     ```
+
+## Manifest fields
+
+`--write-manifest` records the checker's tier label (`prohibited_practice`,
+`high_risk_ai_system`, `limited_risk_transparency`, `general_purpose_ai_model`,
+`in_scope_ai_system` or `out_of_scope`) as `checker_session.verdict`, and
+writes your `--intended-purpose` text to `intended_purpose`, which the EU rules
+classify. `opencomplai check` fails a `prohibited_practice` or
+`high_risk_ai_system` verdict even when the purpose text matches no rule; see
+[check](check.md).
 
 ## Init integration
 

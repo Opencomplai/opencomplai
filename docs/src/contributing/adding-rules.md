@@ -38,9 +38,9 @@ Add a new class to `rules.py`. Use the naming convention `EU_AIA_<ARTICLE>_<DESC
 
 ```python
 class TransparencyObligationRule(BaseRule):
-    rule_id = "EU_AIA_ART52_TRANSPARENCY"
-    rule_name = "Transparency Obligation (Article 52)"
-    reference = "EU AI Act, Article 52"
+    rule_id = "EU_AIA_ART50_TRANSPARENCY"
+    rule_name = "Transparency Obligation (Article 50)"
+    reference = "EU AI Act, Article 50"
 
     CHATBOT_SIGNALS: frozenset[str] = frozenset([
         "chatbot", "conversational", "virtual assistant",
@@ -59,7 +59,7 @@ class TransparencyObligationRule(BaseRule):
                 passed=False,
                 rationale=(
                     f"Use case '{input.model.use_case}' indicates a chatbot / conversational "
-                    "system. Article 52 requires disclosure to users that they are interacting "
+                    "system. Article 50 requires disclosure to users that they are interacting "
                     "with an AI. Set answers['chatbot_disclosure'] = True to confirm compliance."
                 ),
                 reference=self.reference,
@@ -114,19 +114,19 @@ def _make_input(use_case: str, answers: dict | None = None) -> AssessmentInput:
 
 def test_transparency_chatbot_without_disclosure():
     result = assess(_make_input("customer support chatbot"))
-    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART52_TRANSPARENCY")
+    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART50_TRANSPARENCY")
     assert not rule.passed
 
 
 def test_transparency_chatbot_with_disclosure():
     result = assess(_make_input("customer support chatbot", {"chatbot_disclosure": True}))
-    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART52_TRANSPARENCY")
+    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART50_TRANSPARENCY")
     assert rule.passed
 
 
 def test_transparency_non_chatbot():
     result = assess(_make_input("image classifier for quality control"))
-    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART52_TRANSPARENCY")
+    rule = next(r for r in result.rule_results if r.rule_id == "EU_AIA_ART50_TRANSPARENCY")
     assert rule.passed
 ```
 

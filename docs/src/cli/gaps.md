@@ -43,7 +43,7 @@ with `opencomplai check`.
 |---|---|
 | **MET** | The mapped rule passed, or the mapped scan/evaluator source found no discrepancy. |
 | **PARTIAL** | A mapped evaluator returned a `warn` outcome. |
-| **MISSING** | A mapped rule failed, a scan found a discrepancy against the declared purpose, or a mapped evaluator failed. |
+| **MISSING** | A mapped rule failed, a scan finding in a mapped signal category maps to an Annex III area the declared purpose does not cover (a scan discrepancy), or a mapped evaluator failed. |
 | **UNVERIFIED** | No automated source was run for this article in this invocation — not the same as "failing." An obligation-only article (e.g. Art. 11, Art. 12) is always `UNVERIFIED`, since Opencomplai has no automated check for it; a rule/scan/evaluator-backed article is `UNVERIFIED` only when you didn't supply the input needed to resolve it (`--scan-report` and/or `--sample-set`). |
 
 **This distinction is deliberate, not a limitation to work around silently:** the rule

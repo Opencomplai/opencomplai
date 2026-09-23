@@ -5,12 +5,13 @@ Tests for GO-LIVE CORE-4's shared publish layer
 Covers the mapper (``prepare_scan_status_artifact``) field-by-field, the
 transport helper (``publish_scan_status``) against mocked HTTP, and --
 where the vendored dashboard schema is importable from this test
-environment -- an end-to-end structural check that a real repo-root
-``compliance-artifact.json`` run through the mapper actually validates
-against the widened ``first_scan_status.schema.json`` (G-4). This last
-check is deliberately soft (skips rather than fails) when the schema file
-or ``jsonschema`` isn't reachable from wherever this suite happens to run,
-since packages/cli's own dependency surface intentionally excludes
+environment -- an end-to-end structural check that artifacts built from
+the live ``ScanStatusArtifact`` model, run through the mapper, actually
+validate against the widened ``first_scan_status.schema.json`` (G-4),
+plus a guard that the schema names every field of every embedded model.
+These checks are deliberately soft (skip rather than fail) when the schema
+file or ``jsonschema`` isn't reachable from wherever this suite happens to
+run, since packages/cli's own dependency surface intentionally excludes
 ``jsonschema`` -- the real, hard proof of schema-validity lives in the
 cross-package ingest-api test instead
 (``dashboard-saas/services/ingest-api/tests/test_core_loop_e2e.py``).
@@ -31,6 +32,26 @@ from opencomplai_cli.publish import (
     publish_dossier_envelope,
     publish_scan_status,
 )
+from opencomplai_core.gap_report import build_gap_report
+from opencomplai_core.models import (
+    ArticleGapStatus,
+    ControlsSummary,
+    ControlState,
+    ControlSummaryRow,
+    DiscrepancySeverity,
+    EvalSummary,
+    EvaluatorOutcome,
+    GapReport,
+    NistRmfReport,
+    PrincipleStatus,
+    PrincipleSummary,
+    RmfSubcategoryStatus,
+    ScanResult,
+    ScanStatusArtifact,
+    ScanSummary,
+)
+from opencomplai_core.nist_rmf_report import build_nist_rmf_report
+from opencomplai_core.principle_report import build_principle_summary
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -388,10 +409,14 @@ class TestEnvelopeSignature:
 
 
 # ---------------------------------------------------------------------------
-# End-to-end structural proof: the real repo-root artifact, prepared,
-# validates against the widened vendored schema (soft-skips if unreachable
-# from this test environment -- the hard proof lives in ingest-api's own
-# cross-package test).
+# End-to-end structural proof: artifacts built from the live
+# ScanStatusArtifact model, serialized the way `opencomplai check` writes
+# them and prepared the way `opencomplai push` sends them, validate against
+# the widened vendored schema. Built from the model rather than read from
+# the tracked repo-root compliance-artifact.json, which can predate a new
+# model field and so hide exactly the drift this guards against (v0.7.0's
+# nist_rmf_report). Skips where the schema file isn't shipped (public repo)
+# -- the ingest round trip lives in ingest-api's own cross-package test.
 # ---------------------------------------------------------------------------
 
 
@@ -404,46 +429,123 @@ def _load_widened_schema():
     return json.loads(schema_path.read_text(encoding="utf-8"))
 
 
-@pytest.mark.xfail(
-    reason=(
-        "known pre-existing drift: dashboard-saas/schemas/first_scan_status.schema.json "
-        "does not yet allowlist the additive 'nist_rmf_report' field CP-16 added to "
-        "ScanStatusArtifact -- the same paired-schema-update pattern the 'controls' "
-        "field needed from a separate CTRL-DASH change. dashboard-saas/ is read-only "
-        "for this round; fixing the schema there is a follow-up, not this test."
-    ),
-    strict=False,
-)
-def test_real_repo_root_artifact_prepared_validates_against_widened_schema():
-    artifact_path = REPO_ROOT / "compliance-artifact.json"
-    if not artifact_path.exists():
-        pytest.skip("repo-root compliance-artifact.json not present in this checkout")
-
+def _widened_schema_or_skip():
     schema = _load_widened_schema()
     if schema is None:
         pytest.skip(
             "dashboard-saas/schemas/first_scan_status.schema.json not reachable"
         )
+    return schema
 
+
+def _model_built_artifact(populated: bool) -> ScanStatusArtifact:
+    base = {
+        "install_id": "install-1",
+        "system_id": "sys-nist",
+        "commit_ref": "a" * 40,
+        "result": ScanResult.PASS,
+        "rationale_hash": "sha256:" + "c" * 64,
+        "duration_ms": 12,
+    }
+    if not populated:
+        return ScanStatusArtifact(**base)
+    gap_report = build_gap_report("sys-nist", "a" * 40)
+    gap_report.principle_summary = build_principle_summary(gap_report)
+    nist_rmf_report = build_nist_rmf_report(gap_report)
+    assert nist_rmf_report.subcategories  # the $def's rows are really exercised
+    return ScanStatusArtifact(
+        **base,
+        evidence_hashes=["sha256:" + "e" * 64],
+        scan_summary=ScanSummary(
+            scan_id="scan-1",
+            scanner_version="1.0.0",
+            severity=DiscrepancySeverity.MINOR,
+            report_hash="sha256:" + "d" * 64,
+        ),
+        eval_summary=EvalSummary(
+            eval_set_id="evals-1",
+            eval_set_version="1",
+            threshold_policy_hash="sha256:" + "f" * 64,
+            overall_outcome=EvaluatorOutcome.WARN,
+            skipped_evaluators={"toxicity": "no samples"},
+        ),
+        gap_report=gap_report,
+        nist_rmf_report=nist_rmf_report,
+        controls=ControlsSummary(
+            summary={state.value: 0 for state in ControlState}
+            | {ControlState.PENDING_REVIEW.value: 1},
+            items=[
+                ControlSummaryRow(
+                    control_id="ctrl-1",
+                    article_ref="Art. 9",
+                    state=ControlState.PENDING_REVIEW,
+                    owner="owner@example.test",
+                    due_at="2026-10-01",
+                )
+            ],
+        ),
+    )
+
+
+@pytest.mark.parametrize(
+    "populated",
+    [False, True],
+    ids=["optional_blocks_null", "optional_blocks_populated"],
+)
+def test_model_built_artifact_prepared_validates_against_widened_schema(populated):
+    schema = _widened_schema_or_skip()
     try:
         from jsonschema import Draft202012Validator
     except ImportError:
         pytest.skip("jsonschema not importable from this test environment")
 
-    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    # `opencomplai check` writes model_dump_json(), so every model field --
+    # nist_rmf_report included, null or not -- reaches the mapper.
+    artifact = json.loads(_model_built_artifact(populated).model_dump_json())
+    assert "nist_rmf_report" in artifact
     prepared = prepare_scan_status_artifact(
         artifact, commit_env={"GITHUB_SHA": "i" * 40}
     )
 
-    validator = Draft202012Validator(schema)
-    errors = sorted(validator.iter_errors(prepared), key=lambda e: e.path)
-    assert errors == [], (
-        f"prepared artifact still fails the widened schema: {[e.message for e in errors]}"
-    )
+    errors = [e.message for e in Draft202012Validator(schema).iter_errors(prepared)]
+    assert errors == [], f"prepared artifact fails the widened schema: {errors}"
     # And every evidentiary field is still there -- the whole point of G-4.
-    assert prepared["gap_report"] == artifact["gap_report"]
-    assert prepared["scan_summary"] == artifact["scan_summary"]
-    assert prepared["evidence_hashes"] == artifact["evidence_hashes"]
+    for field in ("gap_report", "nist_rmf_report", "scan_summary", "controls"):
+        assert prepared[field] == artifact[field]
+
+
+# (pydantic model, $defs name) -- None means the schema's top-level properties.
+_SCHEMA_COVERED_MODELS = [
+    (ScanStatusArtifact, None),
+    (ScanSummary, "ScanSummary"),
+    (EvalSummary, "EvalSummary"),
+    (GapReport, "GapReport"),
+    (ArticleGapStatus, "ArticleGapStatus"),
+    (PrincipleSummary, "PrincipleSummary"),
+    (PrincipleStatus, "PrincipleStatus"),
+    (NistRmfReport, "NistRmfReport"),
+    (RmfSubcategoryStatus, "RmfSubcategoryStatus"),
+    (ControlsSummary, "ControlsSummary"),
+    (ControlSummaryRow, "ControlSummaryRow"),
+]
+
+
+@pytest.mark.parametrize(
+    ("model", "def_name"),
+    _SCHEMA_COVERED_MODELS,
+    ids=lambda v: getattr(v, "__name__", v),
+)
+def test_schema_covers_every_model_field(model, def_name):
+    """additionalProperties: false means any field added to these models
+    without a paired schema widening gets every push rejected with
+    SCHEMA_VIOLATION -- fail here first instead."""
+    schema = _widened_schema_or_skip()
+    node = schema if def_name is None else schema["$defs"].get(def_name, {})
+    missing = set(model.model_fields) - set(node.get("properties", {}))
+    assert not missing, (
+        f"first_scan_status.schema.json {def_name or '(top level)'} lacks "
+        f"{model.__name__} field(s) {sorted(missing)}; widen it and re-pin"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -643,7 +745,7 @@ def test_prepared_dossier_envelope_validates_against_vendored_schema():
 
 def test_prepared_dossier_envelope_from_real_generated_dossier_validates(tmp_path):
     """Same structural proof, but starting from a real AnnexIVDossier
-    produced by opencomplai_doc_generator's own generate_dossier (rather
+    produced by opencomplai_core's own generate_dossier (rather
     than a hand-built sample dict), the same object docs_generate_cmd's
     local fallback feeds prepare_dossier_envelope in production."""
     schema = _load_dossier_envelope_schema()
@@ -654,18 +756,13 @@ def test_prepared_dossier_envelope_from_real_generated_dossier_validates(tmp_pat
     except ImportError:
         pytest.skip("jsonschema not importable from this test environment")
 
-    try:
-        from opencomplai_core.engine import assess
-        from opencomplai_core.models import (
-            AssessmentInput,
-            ModelMetadata,
-            SystemManifest,
-        )
-        from opencomplai_doc_generator.generator import generate_dossier
-    except ImportError:
-        pytest.skip(
-            "opencomplai_doc_generator not importable from this test environment"
-        )
+    from opencomplai_core.dossier_generator import generate_dossier
+    from opencomplai_core.engine import assess
+    from opencomplai_core.models import (
+        AssessmentInput,
+        ModelMetadata,
+        SystemManifest,
+    )
 
     manifest = SystemManifest(
         system_id="sys-dg10-test",

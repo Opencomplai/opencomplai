@@ -88,6 +88,15 @@ def test_checker_email_sends_pdf_to_valid_address() -> None:
     assert mock_send.call_count == 1
     assert mock_send.call_args.kwargs["to_email"] == "user@example.com"
     assert isinstance(mock_send.call_args.kwargs["pdf_bytes"], bytes)
+    # Branded HTML part alongside the plain text, both saying why it was sent.
+    html = mock_send.call_args.kwargs["html_body"]
+    assert html.startswith("<!DOCTYPE html>")
+    assert "Your EU AI Act Checker result" in html
+    assert "entered in the OpenComplAI EU AI Act checker" in html
+    assert (
+        "entered in the OpenComplAI EU AI Act checker"
+        in (mock_send.call_args.kwargs["body"])
+    )
 
 
 def test_checker_email_rejects_invalid_address() -> None:

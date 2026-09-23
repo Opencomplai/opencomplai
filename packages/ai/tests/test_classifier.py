@@ -1,12 +1,20 @@
 """Tests for opencomplai_ai.classifier (deterministic code_signals matcher)."""
 
+from typing import get_args
+
 import pytest
 from opencomplai_ai.classifier import (
     IntentClassifier,
     _match_annex_iii,
     _match_prohibited,
 )
-from opencomplai_ai.models import IntentAnnotation
+from opencomplai_ai.models import (
+    Consequential,
+    DecisionAutonomy,
+    IntentAnnotation,
+    SubjectType,
+    derive_eu_obligations,
+)
 
 
 @pytest.fixture
@@ -177,3 +185,18 @@ def test_classify_gemini_rest_route_is_limited_risk(classifier):
     assert result.risk_tier == "limited_risk"
     assert result.explanation
     assert result.needed_action
+
+
+def test_derive_eu_obligations_cites_art50_for_transparency():
+    """Transparency duties are Art. 50 of Regulation (EU) 2024/1689; Art. 52 is
+    the proposal-era number (and in the final text, GPAI notification)."""
+    obligations = [
+        o
+        for autonomy in get_args(DecisionAutonomy)
+        for subject in get_args(SubjectType)
+        for consequential in get_args(Consequential)
+        for area in (None, 5)
+        for o in derive_eu_obligations(autonomy, subject, consequential, area)
+    ]
+    assert not [o for o in obligations if "Art.52" in o]
+    assert "Art.50 disclosure if user-facing" in obligations

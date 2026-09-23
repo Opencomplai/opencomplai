@@ -206,7 +206,7 @@ For each gated callsite, the intent classifier evaluates three dimensions direct
 | `subject_type` | `natural_person` / `legal_entity` / `system` | Determines whether Articles 13–15 apply |
 | `consequential` | `yes` / `no` | Whether the AI output causes a real-world effect on rights, access, or benefits |
 
-These three dimensions are combined into a per-callsite `eu_obligation` list. For example, `autonomous` + `natural_person` + `yes` maps to `["Art.6(2)+Annex III", "technical dossier required", "conformity assessment", "EU DB registration"]` (HIGH_RISK). `display_only` + `legal_entity` + `yes` maps to `["Art.52 disclosure if user-facing"]` (MINIMAL_RISK).
+These three dimensions are combined into a per-callsite `eu_obligation` list. For example, `autonomous` + `natural_person` + `yes` maps to `["Art.6(2)+Annex III", "technical dossier required", "conformity assessment", "EU DB registration"]` (HIGH_RISK). `display_only` + `legal_entity` + `yes` maps to `["Art.50 disclosure if user-facing"]` (MINIMAL_RISK).
 
 ### Prerequisites
 

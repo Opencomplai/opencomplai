@@ -20,7 +20,11 @@ from opencomplai_core.compliance_checker import (
 from opencomplai_core.compliance_checker.catalog import load_help_content
 from pydantic import BaseModel, Field
 
-from opencomplai_risk_engine.mailer import MailerNotConfiguredError, send_pdf_email
+from opencomplai_risk_engine.mailer import (
+    MailerNotConfiguredError,
+    render_branded_html,
+    send_pdf_email,
+)
 
 router = APIRouter(prefix="/v1/checker", tags=["checker"])
 
@@ -225,13 +229,30 @@ def checker_email(body: EmailRequest, request: Request) -> dict[str, Any]:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
 
     try:
+        reason = (
+            "You received this because this address was entered in the "
+            "OpenComplAI EU AI Act checker."
+        )
         send_pdf_email(
             to_email=body.to_email,
             subject="Your EU AI Act Checker result",
             body=(
                 "Attached is a PDF copy of your EU AI Act Checker result, "
                 "including the answers you gave. This is not legal advice — "
-                "see the disclaimer in the attached PDF."
+                "see the disclaimer in the attached PDF.\n\n"
+                f"--\n{reason}\n"
+                "OpenComplAI - EU AI Act evidence, generated from your CI"
+            ),
+            html_body=render_branded_html(
+                heading="Your EU AI Act Checker result",
+                paragraphs=[
+                    "Attached is a PDF copy of your EU AI Act Checker result, "
+                    "including the answers you gave."
+                ],
+                note=(
+                    "This is not legal advice. See the disclaimer in the attached PDF."
+                ),
+                reason=reason,
             ),
             pdf_bytes=pdf_bytes,
         )

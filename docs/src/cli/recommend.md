@@ -52,7 +52,7 @@ Reuse a gap report you already generated (avoids re-running the rule engine/scan
 |------|---------|-------------|
 | `--manifest` / `-m` | `system-manifest.json` | System manifest path — used only when `--gap-report` is not supplied |
 | `--commit-ref` | `HEAD` | Commit reference for provenance |
-| `--gap-report` | *(none)* | Path to a `GapReport` JSON from a prior `opencomplai gaps --output json` — when set, `--manifest`/`--scan-report`/`--sample-set` are ignored |
+| `--gap-report` | *(none)* | Path to the output of a prior `opencomplai gaps --output json` (or a bare `GapReport` JSON); UTF-8, UTF-16 or the system code page, so a `>` redirect from any Windows shell works — when set, `--manifest`/`--scan-report`/`--sample-set` are ignored |
 | `--scan-report` | *(none)* | Path to a `CorroborationReport` JSON — only used when `--gap-report` is not supplied |
 | `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON — only used when `--gap-report` is not supplied |
 | `--output` / `-o` | `./fixes` | Directory to write remediation templates to |

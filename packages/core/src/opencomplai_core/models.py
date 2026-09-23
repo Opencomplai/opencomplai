@@ -75,14 +75,14 @@ class ComplianceTarget(StrEnum):
     """Compliance framework a system is assessed against (D-3c).
 
     `EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a
-    deterministic per-article verdict for it. `NIST_AI_RMF` is mapped only —
-    `data/framework_crosswalk.json` links EU AI Act articles to NIST AI RMF
-    1.0 subcategories with a source/confidence per row, but no subcategory
-    verdict is computed yet (that re-projection is a separate future epic).
-    ISO/IEC 42001:2023 is mapped the same way via the same crosswalk file,
-    but has no member here since nothing sets it as a `compliance_target` —
-    it is surfaced only as a per-article reference (see `control_catalog`
-    and `opencomplai gaps`'s Mapped column), never as an assessment target.
+    deterministic per-article verdict for it. `NIST_AI_RMF` is evaluated by
+    re-projecting that same EU AI Act evidence through
+    `data/framework_crosswalk.json` into per-subcategory NIST AI RMF 1.0
+    verdicts (`nist_rmf_report.py`). Coverage is partial: a subcategory with
+    no crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 is
+    mapped only, not a target: it has no member here and is surfaced solely
+    as a per-article reference (see `control_catalog` and
+    `opencomplai gaps`'s Mapped column), never as an assessment target.
     """
 
     EU_AI_ACT = "EU_AI_ACT"
@@ -318,6 +318,13 @@ class CheckerSessionRef(BaseModel):
     report_json_path: str = Field(
         default="",
         description="Optional path to exported checker JSON report",
+    )
+    verdict: str | None = Field(
+        default=None,
+        description=(
+            "Checker tier label, e.g. prohibited_practice or high_risk_ai_system. "
+            "`check` fails a prohibited or high-risk verdict."
+        ),
     )
 
 

@@ -228,7 +228,7 @@ def derive_eu_obligations(
                     f"person ({entry.title} is scoped to natural persons per "
                     "Annex III). Re-verify if the manifest's declared purpose "
                     "changes.",
-                    "Art.52 disclosure if user-facing",
+                    "Art.50 disclosure if user-facing",
                 ]
             base = list(entry.obligation_articles)
             # Art.14 human oversight is already in every pack entry; for human_in_loop
@@ -249,7 +249,7 @@ def derive_eu_obligations(
                 "Art.43 conformity assessment",
                 "Art.49 EU DB registration",
             ]
-        return ["Art.13 transparency", "Art.14 human oversight", "Art.52 disclosure"]
+        return ["Art.13 transparency", "Art.14 human oversight", "Art.50 disclosure"]
 
     if decision_autonomy == "advisory" and subject_type == "natural_person":
         if consequential in ("yes", "unknown"):
@@ -261,7 +261,7 @@ def derive_eu_obligations(
                 "Art.43 conformity assessment",
                 "Art.49 EU DB registration",
             ]
-        return ["Art.13 transparency", "Art.52 disclosure if user-facing"]
+        return ["Art.13 transparency", "Art.50 disclosure if user-facing"]
 
     if decision_autonomy == "human_in_loop" and subject_type == "natural_person":
         return [
@@ -276,9 +276,9 @@ def derive_eu_obligations(
         return ["Art.13 transparency", "logging required"]
 
     if decision_autonomy == "autonomous":
-        return ["Art.52 disclosure", "human oversight recommended"]
+        return ["Art.50 disclosure", "human oversight recommended"]
 
-    return ["Art.52 disclosure if user-facing"]
+    return ["Art.50 disclosure if user-facing"]
 
 
 def apply_subject_gate_backstop(

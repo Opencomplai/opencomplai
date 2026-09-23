@@ -30,7 +30,7 @@ Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 
 **Service-backed mode** (when `OPENCOMPLAI_API_URL` is set): sends `POST /v1/docs/generate` to the `doc-generator` service. The dossier is stored server-side and its metadata is returned.
 
-**Local mode** (when `OPENCOMPLAI_API_URL` is unset): generates the dossier using the local `opencomplai-doc-generator` package and writes `dossier_<id>.json` to `--output-dir`.
+**Local mode** (when `OPENCOMPLAI_API_URL` is unset): generates the dossier in-process with the Annex IV generator shipped in `opencomplai-core` (installed with `opencomplai-cli`, so this works from a plain `pip install`) and writes `dossier_<id>.json` to `--output-dir`.
 
 ## Examples
 
@@ -122,6 +122,6 @@ retrying.
 |---|---|
 | 0 | Dossier generated successfully (or generated-but-invalid with `--allow-incomplete`). |
 | 1 | Dossier generation failed (local mode error). |
-| 2 | Validation error (invalid options, missing `opencomplai-doc-generator`, **or** the generated dossier failed Annex IV schema validation without `--allow-incomplete` — see [Fail-closed dossier gate](#fail-closed-dossier-gate)). |
+| 2 | Validation error (invalid options **or** the generated dossier failed Annex IV schema validation without `--allow-incomplete` — see [Fail-closed dossier gate](#fail-closed-dossier-gate)). |
 | 3 | Service unreachable or policy blocked (service-backed mode only). |
 | 4 | The system is `HALTED_PENDING_REVIEW` — dossier generation refused until resumed. |

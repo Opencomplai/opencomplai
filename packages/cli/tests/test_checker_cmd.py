@@ -120,3 +120,95 @@ def test_checker_web_local_serves_and_stops_via_page_button() -> None:
 
     assert not thread.is_alive(), "CLI did not stop after the shutdown route was hit"
     assert result_holder["result"].exit_code == 0, result_holder["result"].stdout
+
+
+def _isolate(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
+    monkeypatch.setenv("OPENCOMPLAI_STATE_DIR", str(tmp_path / "state"))
+
+
+def _write_checker_manifest(tmp_path: Path, fixture_name: str) -> Path:
+    fixture = json.loads((FIXTURES / fixture_name).read_text(encoding="utf-8"))
+    answers_path = tmp_path / "answers.json"
+    answers_path.write_text(json.dumps(fixture["session"]), encoding="utf-8")
+    manifest_path = tmp_path / "system-manifest.json"
+
+    result = runner.invoke(
+        app,
+        [
+            "checker",
+            "--answers",
+            str(answers_path),
+            "--write-manifest",
+            str(manifest_path),
+            "--intended-purpose",
+            "Summarises internal documents",
+        ],
+        input="doc-summariser\n",
+    )
+    assert result.exit_code == 0, result.output
+    return manifest_path
+
+
+def test_checker_write_manifest_keeps_purpose_and_records_verdict(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """The tier label belongs in checker_session.verdict: the EU rules
+    keyword-match intended_purpose, so a label there classifies nothing."""
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = _write_checker_manifest(tmp_path, "05_prohibited.json")
+
+    data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert data["system_id"] == "doc-summariser"
+    assert data["intended_purpose"] == "Summarises internal documents"
+    assert data["checker_session"]["verdict"] == "prohibited_practice"
+
+
+def test_check_blocks_prohibited_checker_verdict(tmp_path: Path, monkeypatch) -> None:
+    """A purpose the rules find harmless must not PASS a system the checker
+    classified prohibited."""
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = _write_checker_manifest(tmp_path, "05_prohibited.json")
+
+    result = runner.invoke(app, ["check", "-m", str(manifest_path), "-o", "json"])
+    assert result.exit_code == 3, result.output
+    artifact = json.loads((tmp_path / "compliance-artifact.json").read_text())
+    assert artifact["result"] == "policy_block"
+    assert artifact["failed_controls"].count("EU_AIA_ART5_UNACCEPTABLE") == 1
+
+
+def test_check_honours_legacy_verdict_in_intended_purpose(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """0.7.0 wrote the verdict into intended_purpose; check still fails on
+    it and tells the user to put the real purpose there."""
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = tmp_path / "system-manifest.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "system_id": "legacy-sys",
+                "intended_purpose": "high_risk_ai_system",
+                "compliance_target": "EU_AI_ACT",
+                "high_risk_presumption": True,
+                "commit_ref": "HEAD",
+                "operator_role": "provider",
+                "checker_session": {
+                    "checker_version": "checker-2026-07-24",
+                    "session_id": "legacy-session",
+                    "completed_at": "2026-09-01T00:00:00+00:00",
+                    "report_json_path": "",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(app, ["check", "-m", str(manifest_path), "-o", "json"])
+    assert result.exit_code == 1, result.output
+    assert "WARN" in result.stderr
+    assert "high_risk_ai_system" in result.stderr
+    artifact = json.loads(result.stdout)
+    assert artifact["result"] == "control_fail"
+    assert "EU_AIA_ART6_HIGH_RISK" in artifact["failed_controls"]

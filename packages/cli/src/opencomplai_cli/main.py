@@ -11,8 +11,10 @@ Exit codes (contractual — never deviate):
 
 from __future__ import annotations
 
+import codecs
 import importlib.metadata
 import json
+import locale
 import os
 import re
 import sys
@@ -27,6 +29,7 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 import typer
+from opencomplai_core.compliance_checker import CHECKER_VERDICTS
 from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
 from opencomplai_core.control_catalog import get_catalog
@@ -586,6 +589,58 @@ def _result_from_local(risk_result) -> tuple[ScanResult, list[str]]:
     return ScanResult.PASS, failed_ids
 
 
+# Checker verdicts `check` enforces, and the result + control each one fails.
+_VERDICT_FAILURES: dict[str, tuple[ScanResult, str]] = {
+    "prohibited_practice": (ScanResult.POLICY_BLOCK, "EU_AIA_ART5_UNACCEPTABLE"),
+    "high_risk_ai_system": (ScanResult.CONTROL_FAIL, "EU_AIA_ART6_HIGH_RISK"),
+}
+# Results a verdict may raise, by severity. TRAP_DETECTED and VALIDATION_FAIL
+# are absent on purpose: a verdict never replaces them.
+_VERDICT_RAISABLE_RANK = {
+    ScanResult.PASS: 0,
+    ScanResult.DEGRADED_COMPLETE: 0,
+    ScanResult.CONTROL_FAIL: 1,
+    ScanResult.POLICY_BLOCK: 2,
+}
+
+
+def _apply_checker_verdict(
+    artifact: ScanStatusArtifact, manifest: SystemManifest
+) -> tuple[ScanStatusArtifact, bool]:
+    """Fail the artifact on a prohibited or high-risk applicability verdict.
+
+    The EU rules only keyword-match `intended_purpose`, so a system the
+    checker classified prohibited or high-risk would otherwise pass. The
+    verdict comes from `checker_session.verdict`; a 0.7.0 manifest wrote it
+    into `intended_purpose` instead, which is still honoured with a warning.
+    Only ever escalates the result. Returns `(artifact, escalated)`, with
+    `escalated` True when the verdict is prohibited or high-risk.
+    """
+    cs = manifest.checker_session
+    verdict = cs.verdict if cs is not None else None
+    if manifest.intended_purpose in CHECKER_VERDICTS:
+        err_console.print(
+            "[yellow]WARN:[/yellow] intended_purpose is the checker verdict "
+            f"'{manifest.intended_purpose}', not a purpose. Replace it with what "
+            "the system does so the EU rules can classify it."
+        )
+        verdict = verdict or manifest.intended_purpose
+    if verdict not in _VERDICT_FAILURES:
+        return artifact, False
+    result, control = _VERDICT_FAILURES[verdict]
+    if artifact.result not in _VERDICT_RAISABLE_RANK:
+        return artifact, True
+    if _VERDICT_RAISABLE_RANK[artifact.result] >= _VERDICT_RAISABLE_RANK[result]:
+        result = artifact.result
+    failed_controls = list(dict.fromkeys([*artifact.failed_controls, control]))
+    return (
+        artifact.model_copy(
+            update={"result": result, "failed_controls": failed_controls}
+        ),
+        True,
+    )
+
+
 def _maybe_halt_system(system_id: str, commit_ref: str, reason: str) -> None:
     """HALT-WIRE / E-12(a): persist HALTED_PENDING_REVIEW when this `check`
     run hit a trap or an unresolved HIGH-risk corroboration gap, via the
@@ -1030,6 +1085,11 @@ def checker_cmd(
     write_manifest: Path | None = typer.Option(
         None, "--write-manifest", help="Write bridged fields into manifest at this path"
     ),
+    intended_purpose: str | None = typer.Option(
+        None,
+        "--intended-purpose",
+        help="With --write-manifest: what the system does (prompted when omitted)",
+    ),
     web: bool = typer.Option(
         False, "--web", help="Open the browser-based checker on the docs site"
     ),
@@ -1083,9 +1143,12 @@ def checker_cmd(
         report_path = export_json or (
             export_all_base.with_suffix(".json") if export_all_base else None
         )
+        system_id = typer.prompt("System ID", default="my-ai-system")
+        if intended_purpose is None:
+            intended_purpose = typer.prompt("Intended purpose (what the system does)")
         payload: dict = {
-            "system_id": typer.prompt("System ID", default="my-ai-system"),
-            "intended_purpose": bridged["intended_purpose"],
+            "system_id": system_id,
+            "intended_purpose": intended_purpose,
             "compliance_target": "EU_AI_ACT",
             "high_risk_presumption": bridged["high_risk_presumption"],
             "commit_ref": "HEAD",
@@ -1159,6 +1222,29 @@ def _load_sample_set(
         )
         sys.exit(2)
     return sample
+
+
+def _read_gap_report(path: Path) -> GapReport:
+    """Load a `--gap-report` file: a bare GapReport or the envelope that
+    `opencomplai gaps --output json` prints (report nested under `payload`).
+
+    Windows PowerShell 5.1 `>` redirection writes UTF-16LE with a BOM, so a
+    UTF-16 BOM selects UTF-16; anything else is read as UTF-8 (BOM optional),
+    falling back to the locale encoding: a cmd.exe or Git Bash `>` redirect on
+    Windows writes the ANSI code page (cp1252), e.g. an em dash as 0x97.
+    """
+    data = path.read_bytes()
+    if data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        text = data.decode("utf-16")
+    else:
+        try:
+            text = data.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            text = data.decode(locale.getpreferredencoding(False))
+    raw = json.loads(text)
+    if isinstance(raw, dict) and "payload" in raw and "tool_version" in raw:
+        raw = raw["payload"]
+    return GapReport.model_validate(raw)
 
 
 _GAP_STATUS_STYLE = {
@@ -1418,7 +1504,7 @@ def recommend_cmd(
                 f"[red]Error:[/red] gap report not found: {gap_report_file}"
             )
             sys.exit(2)
-        report = GapReport.model_validate(json.loads(gap_report_file.read_text()))
+        report = _read_gap_report(gap_report_file)
     else:
         if not manifest_file.exists():
             err_console.print(
@@ -1639,7 +1725,8 @@ def report_cmd(
     gap_report_file: Path | None = typer.Option(
         None,
         "--gap-report",
-        help="Path to a GapReport JSON file (overrides any gap_report embedded in --artifact)",
+        help="Path to a GapReport JSON file, e.g. from `opencomplai gaps --output json` "
+        "(overrides any gap_report embedded in --artifact)",
     ),
     output_file: Path = typer.Option(
         Path("report.html"), "--output", "-o", help="Output path (.html or .pdf)"
@@ -1676,7 +1763,7 @@ def report_cmd(
                 f"[red]Error:[/red] gap report not found: {gap_report_file}"
             )
             sys.exit(2)
-        gap_report = GapReport.model_validate(json.loads(gap_report_file.read_text()))
+        gap_report = _read_gap_report(gap_report_file)
 
     assessment_input = AssessmentInput(
         model=ModelMetadata(
@@ -2632,7 +2719,14 @@ def check_cmd(
     run_code_scan: bool = typer.Option(
         False, "--scan", help="Run code corroboration scan (opt-in)"
     ),
-    repo_root: Path = typer.Option(Path("."), "--repo-root"),
+    repo_root: Path = typer.Option(
+        Path("."),
+        "--repo-root",
+        help=(
+            "Repository root for the --scan code scan and the --with-gaps "
+            "artifact path probes (Arts. 9/13/14/16/24/43)"
+        ),
+    ),
     emit_scan_evidence: bool = typer.Option(True, "--emit-evidence/--no-emit-evidence"),
     scan_fail_on: FailOnLevel = typer.Option(
         FailOnLevel.none,
@@ -2734,7 +2828,6 @@ def check_cmd(
             commit_ref,
             scan_mode,
             install_id,
-            sign,
             eval_summary,
             eval_failed,
             eval_hashes,
@@ -2747,7 +2840,6 @@ def check_cmd(
             commit_ref,
             scan_mode,
             install_id,
-            sign,
             eval_summary,
             eval_failed,
             eval_hashes,
@@ -2760,6 +2852,9 @@ def check_cmd(
         artifact.failed_controls = list(
             dict.fromkeys([*artifact.failed_controls, "CODE_CORROBORATION_GAP"])
         )
+
+    artifact, escalated = _apply_checker_verdict(artifact, manifest)
+    risk_high |= escalated
 
     # HALT-WIRE / E-12(a): halt trigger — trap always halts; an unresolved
     # HIGH-risk corroboration gap (--scan --fail-on ... failed) halts too,
@@ -2797,6 +2892,7 @@ def check_cmd(
             risk_result=gap_risk_result,
             corroboration_report=scan_report,
             eval_report=gap_eval_report,
+            repo_root=repo_root.resolve(),
         )
         derived_controls = _sync_controls_to_vault(
             gap_report, manifest, quiet=(output == OutputFormat.json)
@@ -2817,6 +2913,17 @@ def check_cmd(
                 "controls": controls_block,
                 "nist_rmf_report": nist_rmf_report,
             }
+        )
+
+    # Sign only now: the scan override, checker verdict and --with-gaps
+    # blocks above all change the bytes the signature has to cover.
+    artifact = _sign_artifact(artifact, sign)
+
+    if api_available:
+        # Step 8 — append the final artifact to the ledger
+        _emit_event(
+            "scan_status_artifact",
+            json.loads(artifact.model_dump_json()),
         )
 
     # Write artifact to disk for CI consumption
@@ -2842,7 +2949,6 @@ def _run_service_check(
     commit_ref: str,
     scan_mode: str,
     install_id: str,
-    sign: bool,
     eval_summary: EvalSummary | None = None,
     eval_failed: list[str] | None = None,
     eval_hashes: list[str] | None = None,
@@ -2898,7 +3004,6 @@ def _run_service_check(
                     "sha256:validation_failed",
                     0,
                     int((time.monotonic() - start_ms) * 1000),
-                    sign,
                 ),
                 False,
             )
@@ -2929,7 +3034,6 @@ def _run_service_check(
                     "sha256:classify_failed",
                     0,
                     int((time.monotonic() - start_ms) * 1000),
-                    sign,
                 ),
                 False,
             )
@@ -2975,7 +3079,6 @@ def _run_service_check(
                 rationale_hash,
                 0,
                 int((time.monotonic() - start_ms) * 1000),
-                sign,
             ),
             risk_high,
         )
@@ -3057,7 +3160,6 @@ def _run_service_check(
         rationale_hash,
         pending_verifications_count,
         duration_ms,
-        sign,
         eval_summary=eval_summary,
         scan_summary=scan_summary,
     )
@@ -3084,12 +3186,8 @@ def _run_service_check(
         },
     )
 
-    # Step 8 — append artifact to ledger
-    _emit_event(
-        "scan_status_artifact",
-        json.loads(artifact.model_dump_json()),
-    )
-
+    # Step 8 (appending the artifact to the ledger) happens in `check_cmd`,
+    # once the artifact is final and signed.
     return artifact, risk_high
 
 
@@ -3098,7 +3196,6 @@ def _run_local_check(
     commit_ref: str,
     scan_mode: str,
     install_id: str,
-    sign: bool,
     eval_summary: EvalSummary | None = None,
     eval_failed: list[str] | None = None,
     eval_hashes: list[str] | None = None,
@@ -3151,7 +3248,6 @@ def _run_local_check(
             rationale_hash,
             0,
             duration_ms,
-            sign,
             eval_summary=eval_summary,
             scan_summary=scan_summary,
         ),
@@ -3170,12 +3266,11 @@ def _finalize_artifact(
     rationale_hash: str,
     pending_verifications_count: int,
     duration_ms: int,
-    sign: bool,
     eval_summary: EvalSummary | None = None,
     scan_summary: ScanSummary | None = None,
 ) -> ScanStatusArtifact:
-    """Build and optionally sign the ScanStatusArtifact."""
-    artifact = ScanStatusArtifact(
+    """Build the unsigned ScanStatusArtifact (`check_cmd` signs it last)."""
+    return ScanStatusArtifact(
         install_id=install_id,
         system_id=system_id,
         commit_ref=commit_ref,
@@ -3190,15 +3285,23 @@ def _finalize_artifact(
         scan_summary=scan_summary,
     )
 
-    if sign and _SIGNING_KEY.exists():
-        try:
-            from opencomplai_core.signing import sign_artifact
 
-            artifact.signature = sign_artifact(artifact, _SIGNING_KEY)
-        except Exception as exc:
-            err_console.print(f"[yellow]Warning: signing failed — {exc}[/yellow]")
+def _sign_artifact(artifact: ScanStatusArtifact, sign: bool) -> ScanStatusArtifact:
+    """Return a signed copy of `artifact` when `sign` is set and a key exists.
 
-    return artifact
+    The signature covers every other field, so this must run only once the
+    artifact is final — anything changed afterwards no longer verifies.
+    """
+    if not (sign and _SIGNING_KEY.exists()):
+        return artifact
+    try:
+        from opencomplai_core.signing import sign_artifact
+
+        signature = sign_artifact(artifact, _SIGNING_KEY)
+    except Exception as exc:
+        err_console.print(f"[yellow]Warning: signing failed — {exc}[/yellow]")
+        return artifact
+    return artifact.model_copy(update={"signature": signature})
 
 
 def _print_artifact_human(artifact: ScanStatusArtifact) -> None:
@@ -3787,11 +3890,9 @@ def docs_generate_cmd(
 
     # Local fallback
     try:
+        from opencomplai_core.dossier import validate_dossier_schema
+        from opencomplai_core.dossier_generator import generate_dossier
         from opencomplai_core.engine import assess as _assess
-        from opencomplai_doc_generator.generator import (
-            generate_dossier,
-            validate_dossier_schema,
-        )
 
         manifest = (
             loaded_manifest.model_copy(update={"commit_ref": commit_ref})

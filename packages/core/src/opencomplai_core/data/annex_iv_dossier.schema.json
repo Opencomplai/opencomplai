@@ -494,7 +494,7 @@
       "type": "object"
     },
     "ComplianceTarget": {
-      "description": "Compliance framework a system is assessed against (D-3c).\n\n`EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a\ndeterministic per-article verdict for it. `NIST_AI_RMF` is mapped only \u2014\n`data/framework_crosswalk.json` links EU AI Act articles to NIST AI RMF\n1.0 subcategories with a source/confidence per row, but no subcategory\nverdict is computed yet (that re-projection is a separate future epic).\nISO/IEC 42001:2023 is mapped the same way via the same crosswalk file,\nbut has no member here since nothing sets it as a `compliance_target` \u2014\nit is surfaced only as a per-article reference (see `control_catalog`\nand `opencomplai gaps`'s Mapped column), never as an assessment target.",
+      "description": "Compliance framework a system is assessed against (D-3c).\n\n`EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a\ndeterministic per-article verdict for it. `NIST_AI_RMF` is evaluated by\nre-projecting that same EU AI Act evidence through\n`data/framework_crosswalk.json` into per-subcategory NIST AI RMF 1.0\nverdicts (`nist_rmf_report.py`). Coverage is partial: a subcategory with\nno crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 is\nmapped only, not a target: it has no member here and is surfaced solely\nas a per-article reference (see `control_catalog` and\n`opencomplai gaps`'s Mapped column), never as an assessment target.",
       "enum": [
         "EU_AI_ACT",
         "NIST_AI_RMF"

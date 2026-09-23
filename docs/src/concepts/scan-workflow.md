@@ -11,7 +11,7 @@ When the gateway URL is not set, the check runs entirely locally:
 2. Construct AssessmentInput from manifest fields
 3. Run the rule engine (assess()) RiskResult
 4. Build a ScanStatusArtifact from the RiskResult
-5. Write compliance-artifact.json
+5. Sign it (if --sign) and write compliance-artifact.json
 6. Print human-readable output (or JSON if --output json)
 7. Exit with the appropriate exit code
 ```
@@ -28,9 +28,10 @@ Step 4  — trap-gate check (Phase 12)
 Step 5  — POST /v1/verify/claims run control checks
 Step 6  — GET  /v1/verify/claims/{id} poll for completion
 Step 7  — POST /v1/docs/generate generate Annex IV dossier
-Step 8  — finalize ScanStatusArtifact (sign if --sign)
+Step 8  — finalize ScanStatusArtifact
 Step 9  — POST /v1/evidence/events emit compliance_check_completed
-Step 10 — write compliance-artifact.json, print output, exit
+Step 10 — sign (if --sign), append the artifact to the ledger, write
+          compliance-artifact.json, print output, exit
 ```
 
 ## Output: `ScanStatusArtifact`

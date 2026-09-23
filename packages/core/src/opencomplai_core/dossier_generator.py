@@ -32,15 +32,11 @@ from opencomplai_core.dossier import (
     AnnexIVSection8,
     AnnexIVSection9,
     ArticleTwelveRecordKeeping,
-    validate_dossier_schema,
 )
 from opencomplai_core.models import CorroborationReport, RiskResult, SystemManifest
 from opencomplai_core.rules import RULE_SET_VERSION
 
-# Re-exported so `from opencomplai_doc_generator.generator import
-# validate_dossier_schema` (main.py's CLI and service import path) keeps
-# resolving now that the validator itself lives in packages/core.
-__all__ = ["generate_dossier", "validate_dossier_schema"]
+__all__ = ["generate_dossier"]
 
 
 def _manifest_str(manifest: SystemManifest, field: str) -> str | None:

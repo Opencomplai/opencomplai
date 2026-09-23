@@ -4,6 +4,15 @@ Run a full compliance check against EU AI Act rules.
 
 If the manifest has no `checker_session`, `check` prints a **non-blocking** warning recommending `opencomplai checker` or `opencomplai init --interactive`. When a session is present, human output includes a one-line applicability summary.
 
+A `checker_session.verdict` of `prohibited_practice` fails the check with
+`POLICY_BLOCK` (exit `3`, `EU_AIA_ART5_UNACCEPTABLE`); `high_risk_ai_system`
+fails it with at least `CONTROL_FAIL` (exit `1`, `EU_AIA_ART6_HIGH_RISK`). The
+verdict only ever raises the result: it never replaces `TRAP_DETECTED` or
+`VALIDATION_FAIL`. Manifests written by 0.7.0 `opencomplai checker
+--write-manifest` hold the verdict in `intended_purpose` instead; `check`
+still applies it and warns you to replace `intended_purpose` with what the
+system does.
+
 ## Synopsis
 
 === "macOS / Linux"
@@ -25,6 +34,8 @@ If the manifest has no `checker_session`, `check` prints a **non-blocking** warn
 | `--scan-mode` | `local` | Scan mode: `ci`, `local`, or `airgap`. |
 | `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON to run the safety / bias / data-leakage evaluators. Its `system_id` must match the manifest. |
 | `--sign` / `--no-sign` | `--no-sign` | Sign the status artifact using `~/.opencomplai/signing.key`. |
+| `--with-gaps` | off | Attach a per-article `gap_report` to the artifact (additive, informational only). Artifact-backed articles are probed under `--repo-root`, as in [`gaps`](gaps.md). |
+| `--repo-root` | `.` | Repo root for the `--scan` code scan and the `--with-gaps` artifact path probes (Arts. 9/13/14/16/24/43). |
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
 
 ## Environment variables
@@ -128,7 +139,10 @@ With `--sample-set`, the `Evals: ...skipped` line is replaced by an
 ```
 
 `eval_summary` is populated only when `--sample-set` is supplied; `signature` is
-populated only when `--sign` is supplied (and a signing key exists).
+populated only when `--sign` is supplied (and a signing key exists). The
+signature is computed last, over the artifact exactly as written — including
+the `--scan --fail-on` result, the checker verdict and the `--with-gaps`
+blocks — so `compliance-artifact.json` verifies against `signing.pub` as-is.
 
 `check` also writes `scan-report.json` / `eval-report.json` sidecars next to
 `compliance-artifact.json` whenever a scan (`--scan`) or eval (`--sample-set`)

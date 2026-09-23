@@ -1,6 +1,9 @@
 """EU AI Act Compliance Checker — deterministic decision engine."""
 
-from opencomplai_core.compliance_checker.bridge import bridge_to_manifest_fields
+from opencomplai_core.compliance_checker.bridge import (
+    CHECKER_VERDICTS,
+    bridge_to_manifest_fields,
+)
 from opencomplai_core.compliance_checker.engine import CHECKER_VERSION, evaluate
 from opencomplai_core.compliance_checker.models import (
     CheckerSession,
@@ -15,6 +18,7 @@ from opencomplai_core.compliance_checker.report import (
 )
 
 __all__ = [
+    "CHECKER_VERDICTS",
     "CHECKER_VERSION",
     "CheckerSession",
     "ComplianceCheckerResult",

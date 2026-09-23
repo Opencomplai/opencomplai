@@ -14,6 +14,7 @@ from opencomplai_core.compliance_checker import (
     CheckerSession,
     ComplianceCheckerResult,
     EntityType,
+    bridge_to_manifest_fields,
     evaluate,
     export_all,
     render_json,
@@ -363,4 +364,5 @@ def build_checker_session_ref(
         "session_id": result.session_id or str(uuid.uuid4()),
         "completed_at": datetime.now(UTC).isoformat(),
         "report_json_path": str(report_json_path) if report_json_path else "",
+        "verdict": str(bridge_to_manifest_fields(result)["checker_verdict"]),
     }

@@ -28,7 +28,7 @@ stakeholder who doesn't want to read raw JSON.
 |------|---------|-------------|
 | `--manifest` / `-m` | `system-manifest.json` | System manifest path |
 | `--artifact` | `compliance-artifact.json` | Path to a `ScanStatusArtifact` (from `opencomplai check`) — optional; supplies rule results and, if present, embedded `gap_report`/`eval_summary`/`scan_summary` |
-| `--gap-report` | *(none)* | Path to a `GapReport` JSON — overrides any `gap_report` embedded in `--artifact` |
+| `--gap-report` | *(none)* | Path to the output of `opencomplai gaps --output json` (or a bare `GapReport` JSON); UTF-8, UTF-16 or the system code page, so a `>` redirect from any Windows shell works — overrides any `gap_report` embedded in `--artifact` |
 | `--output` / `-o` | `report.html` | Output path — format is inferred from the file extension |
 
 ## HTML vs. PDF

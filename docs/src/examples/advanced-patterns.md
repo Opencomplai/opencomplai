@@ -85,7 +85,7 @@ Some rules check `AssessmentInput.answers` for explicit signal declarations:
 |---|---|---|
 | `profiling_detected` | `bool` | Set `True` forces `EU_AIA_ART6_PROFILING` to fail |
 | `substantial_modification` | `bool` | Set `True` triggers `EU_AIA_ART25_MODIFICATION_TRAP` |
-| `chatbot_disclosure` | `bool` | Set `True` satisfies `EU_AIA_ART52_TRANSPARENCY` (if implemented) |
+| `chatbot_disclosure` | `bool` | Set `True` satisfies `EU_AIA_ART50_TRANSPARENCY` (if implemented) |
 
 ```python
 from opencomplai import assess, AssessmentInput, ModelMetadata

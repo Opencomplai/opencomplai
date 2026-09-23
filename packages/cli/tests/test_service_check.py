@@ -68,7 +68,6 @@ def test_change_context_forwarded_to_risk_classify_payload(monkeypatch):
         "HEAD",
         "local",
         "install-1",
-        sign=False,
         change_context="model_retrain",
     )
 
@@ -95,7 +94,6 @@ def test_service_trap_detected_maps_to_exit_code_4(monkeypatch):
         "HEAD",
         "local",
         "install-1",
-        sign=False,
         change_context="model_retrain",
     )
 
@@ -127,7 +125,6 @@ def test_fabricated_evidence_event_id_excluded_from_signed_evidence_hashes(
         "HEAD",
         "local",
         "install-1",
-        sign=False,
     )
 
     assert artifact.result == ScanResult.PASS

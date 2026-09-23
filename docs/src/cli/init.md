@@ -85,7 +85,8 @@ Section 2/3 fields (with `null`/empty defaults when not supplied):
     "checker_version": "checker-2026-07-24",
     "session_id": "uuid",
     "completed_at": "2026-06-09T12:00:00+00:00",
-    "report_json_path": "./eu-ai-act-result.json"
+    "report_json_path": "./eu-ai-act-result.json",
+    "verdict": "high_risk_ai_system"
   }
 }
 ```

@@ -88,7 +88,7 @@ Use the Conventional Commits format: `<type>(<scope>): <short summary>`
 **Examples:**
 
 ```
-feat(core): add Art. 52 transparency obligation rule
+feat(core): add Art. 50 transparency obligation rule
 fix(cli): correct exit code for DEGRADED_COMPLETE in local mode
 docs(deployment): add Grafana port to env-var table
 test(core): add regression test for profiling detection rule

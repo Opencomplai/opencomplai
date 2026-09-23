@@ -11,6 +11,69 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.7.1] — 2026-09-23
+
+### Added
+
+- `scripts/smoke_wheel_install.sh` builds the `opencomplai-core`,
+  `opencomplai-cli` and `opencomplai` wheels the way the PyPI release does,
+  installs them into a clean venv and runs `--version`, `init`, `check
+  --with-gaps` and an offline `docs generate`, so a module or data file the
+  wheels fail to ship is caught before a pip user hits it.
+
+### Changed
+
+- `bridge_to_manifest_fields()` returns the checker's tier label as
+  `checker_verdict`; its `intended_purpose` key is deprecated and will be
+  removed in 0.8.0.
+- `opencomplai-cli` now requires `opencomplai-core>=0.7.1`, and the
+  `opencomplai` meta-package requires `opencomplai-core` and
+  `opencomplai-cli` `>=0.7.1`, so `pip install -U opencomplai` picks up
+  these fixes.
+
+### Fixed
+
+- `opencomplai checker --write-manifest` no longer writes the checker's tier
+  label (`prohibited_practice`, `high_risk_ai_system`, ...) into
+  `intended_purpose`; it asks for the real purpose (or takes
+  `--intended-purpose`) and records the verdict in
+  `checker_session.verdict`. `init --interactive` no longer pre-fills the
+  purpose with the label. `check` honours the verdict: `prohibited_practice`
+  fails with `POLICY_BLOCK` (exit 3), `high_risk_ai_system` with at least
+  `CONTROL_FAIL` (exit 1), where 0.7.0 could return `PASS`. Manifests written
+  by 0.7.0 are recognised by the tier label in `intended_purpose` and gated
+  the same way, with a warning to replace it. **CI using such a manifest may
+  start failing; that is the fix.**
+- `check --sign` signed the artifact before `--scan --fail-on` and
+  `--with-gaps` changed it, so `compliance-artifact.json` did not verify
+  against `signing.pub`. It is now signed once, after its last change; in
+  service mode the ledger entry also records the final signed artifact
+  rather than the draft.
+- `check --with-gaps` now runs the documentation/code probes against
+  `--repo-root` (default: the current directory), like `gaps`, so the
+  artifact-backed rows that were always `unverified` can become `partial` or
+  `missing`.
+- A code-scan discrepancy (a finding mapping to an Annex III area the
+  manifest does not declare) marks the article `missing` for every signal
+  category, not only biometric, so Art. 6 and Art. 10 rows can newly become
+  `missing`.
+- `recommend --gap-report` and `report --gap-report` accept `gaps --output
+  json` output (the envelope, not only a bare gap report), including UTF-16
+  files from a PowerShell redirect and ANSI code-page files from cmd.exe.
+- `docs generate` without `OPENCOMPLAI_API_URL` works from a PyPI install; it
+  failed with "No module named 'opencomplai_doc_generator'". The Annex IV
+  generator moved into `opencomplai-core` as
+  `opencomplai_core.dossier_generator`.
+- `opencomplai push` of a 0.7.0 artifact is no longer rejected by the hosted
+  dashboard with `SCHEMA_VIOLATION` (fixed server-side).
+- Transparency obligations cite Art. 50 (they cited Art. 52, their number in
+  the Commission proposal); the `ComplianceTarget` description no longer
+  says NIST AI RMF is only mapped, and the Annex IV dossier JSON Schema is
+  regenerated to match. `exit-codes.md` now describes `TRAP_DETECTED` and
+  exit 3 correctly.
+
+---
+
 ## [0.7.0] — 2026-09-19
 
 ### Added
@@ -378,6 +441,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.7.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.7.1
 [0.3.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.3.0
 [0.1.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.2
 [0.1.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.0

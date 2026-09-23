@@ -3,13 +3,13 @@
 import os
 
 import pytest
-from opencomplai_core.dossier import PROVIDER_SUPPLIED_PLACEHOLDER
-from opencomplai_core.engine import assess
-from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
-from opencomplai_doc_generator.generator import (
-    generate_dossier,
+from opencomplai_core.dossier import (
+    PROVIDER_SUPPLIED_PLACEHOLDER,
     validate_dossier_schema,
 )
+from opencomplai_core.dossier_generator import generate_dossier
+from opencomplai_core.engine import assess
+from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
 
 
 def _make_manifest(system_id: str = "test", purpose: str = "chatbot") -> SystemManifest:

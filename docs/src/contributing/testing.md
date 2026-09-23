@@ -176,6 +176,12 @@ Tests run automatically on every pull request via `.github/workflows/ci-python.y
 Both must be green before a PR can merge. There is no `ci-docker.yml` workflow yet — the
 Docker Compose stack is not currently built or smoke-tested in CI.
 
+The test suites import from source, so they cannot see a module, dependency or data file
+the published wheels fail to ship. `bash scripts/smoke_wheel_install.sh` covers that: it
+builds the core, CLI and SDK wheels, installs only those into a clean venv and runs
+`--version`, `init`, `check --with-gaps` and an offline `docs generate` from outside the
+repo. It needs `uv` and runs on Linux and Git Bash on Windows.
+
 ---
 
 ## Pre-commit hooks

@@ -86,10 +86,19 @@ def test_gap_report_round_trips_through_json():
     assert restored == report
 
 
-def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
-    risk_result = _make_risk_result("customer support chatbot")
+def _corroboration_report(
+    signal_category: str,
+    mapped_taxonomy: list[str],
+    *,
+    declared: list[str],
+    discrepancies: list[str],
+) -> CorroborationReport:
+    """A one-finding scan report shaped like `scan_engine` output.
 
-    corroboration_report = CorroborationReport.model_validate(
+    `declared_categories`, `detected_categories` and `discrepancies` hold Annex
+    III taxonomy keys, while the finding carries a signal category.
+    """
+    return CorroborationReport.model_validate(
         {
             "scan_id": "scan-1",
             "system_id": "test-sys",
@@ -99,15 +108,15 @@ def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
             "config_hash": "sha256:def",
             "detector_versions": {},
             "declared_purpose": "customer support chatbot",
-            "declared_categories": [],
+            "declared_categories": declared,
             "evidence": [],
             "findings": [
                 {
                     "finding_id": "find_1",
-                    "signal_category": "biometric",
+                    "signal_category": signal_category,
                     "evidence_ids": [],
-                    "locations": ["src/face.py:1"],
-                    "mapped_taxonomy": [],
+                    "locations": ["src/model.py:1"],
+                    "mapped_taxonomy": mapped_taxonomy,
                     "strength": 1.0,
                     "scope": "prod",
                     "reachability": "reachable_entrypoint",
@@ -115,10 +124,10 @@ def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
                     "reviewer_prompt": "",
                 }
             ],
-            "detected_categories": ["biometric"],
-            "discrepancies": ["biometric"],
+            "detected_categories": mapped_taxonomy,
+            "discrepancies": discrepancies,
             "score_breakdown": {},
-            "severity": "major",
+            "severity": "major" if discrepancies else "none",
             "feature_summary": {},
             "cache_summary": {},
             "skipped_paths": [],
@@ -131,6 +140,13 @@ def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
         }
     )
 
+
+def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
+    risk_result = _make_risk_result("customer support chatbot")
+    corroboration_report = _corroboration_report(
+        "biometric", ["biometric"], declared=[], discrepancies=["biometric"]
+    )
+
     report = build_gap_report(
         "test-sys",
         "HEAD",
@@ -139,6 +155,48 @@ def test_scan_discrepancy_surfaces_as_missing_even_when_rule_passes():
     )
     art6 = next(row for row in report.articles if row.article == "Art. 6")
     assert art6.status == GapStatus.MISSING
+    assert art6.source.value == "scan"
+
+
+@pytest.mark.parametrize(
+    ("signal_category", "area", "article"),
+    [
+        ("scoring_profiling", "employment", "Art. 6"),
+        ("pii_dataflow", "essential_services", "Art. 10"),
+    ],
+)
+def test_scan_discrepancy_is_matched_on_the_findings_taxonomy(
+    signal_category, area, article
+):
+    """A discrepancy names the undeclared Annex III area, not the signal category.
+
+    Only "biometric" is spelled the same in both vocabularies, so matching the
+    signal category against `discrepancies` left every other category MET.
+    """
+    corroboration_report = _corroboration_report(
+        signal_category, [area], declared=[], discrepancies=[area]
+    )
+
+    report = build_gap_report(
+        "test-sys", "HEAD", corroboration_report=corroboration_report
+    )
+    row = next(row for row in report.articles if row.article == article)
+    assert row.status == GapStatus.MISSING
+    assert row.source.value == "scan"
+    assert row.evidence_ref == "find_1"
+    assert area in row.rationale
+
+
+def test_scan_finding_in_a_declared_area_is_met():
+    corroboration_report = _corroboration_report(
+        "scoring_profiling", ["employment"], declared=["employment"], discrepancies=[]
+    )
+
+    report = build_gap_report(
+        "test-sys", "HEAD", corroboration_report=corroboration_report
+    )
+    art6 = next(row for row in report.articles if row.article == "Art. 6")
+    assert art6.status == GapStatus.MET
     assert art6.source.value == "scan"
 
 

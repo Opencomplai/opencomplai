@@ -41,23 +41,19 @@ def run_interactive_init(
             report_path = output_file.parent / "eu-ai-act-result.json"
             write_exports(checker_result, export_json=report_path)
             bridged = bridge_to_manifest_fields(checker_result)
-            default_purpose = bridged.get("intended_purpose", "")
             default_role = bridged.get("operator_role", "")
             default_hr = bridged.get("high_risk_presumption", False)
         else:
-            default_purpose = ""
             default_role = ""
             default_hr = False
     else:
-        default_purpose = ""
         default_role = ""
         default_hr = False
 
     system_id = typer.prompt("System ID", default="my-ai-system")
-    intended_purpose = typer.prompt(
-        "Intended purpose (Annex III mapping)",
-        default=str(default_purpose) if default_purpose else "",
-    )
+    # The checker verdict travels in checker_session.verdict; the purpose is
+    # the text the EU rules keyword-match, so it has no checker default.
+    intended_purpose = typer.prompt("Intended purpose (Annex III mapping)", default="")
     high_risk = typer.confirm(
         "Presume high-risk classification?",
         default=bool(default_hr),

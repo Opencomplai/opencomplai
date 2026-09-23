@@ -7,8 +7,8 @@ Opencomplai uses fixed, contractual exit codes so CI pipelines can reliably gate
 | `0` | `PASS` | All critical controls passed. |
 | `1` | `CONTROL_FAIL` | One or more critical controls failed (e.g. an Annex III high-risk use case, or a failed pipeline evaluator). |
 | `2` | `VALIDATION_FAIL` | Input or manifest validation failed (e.g., missing or invalid `system-manifest.json`). |
-| `3` | `POLICY_BLOCK` | A prohibited (Article 5) practice was detected, e.g. `social scoring`. Works in **local** mode. |
-| `4` | `TRAP_DETECTED` | Substantial-modification / profiling trap triggered. Raised only in **service-backed mode** (the Docker stack), not by the local CLI engine. |
+| `3` | `POLICY_BLOCK` | A prohibited (Article 5) practice was detected in the declared purpose, e.g. `social scoring`, or the manifest's checker verdict is `prohibited_practice`. |
+| `4` | `TRAP_DETECTED` | Article 25 substantial-modification trap: the change makes you a provider. Raised locally by `--change-context model_retrain`, `purpose_change` or `capability_extension`, and by the risk engine in service-backed mode. |
 
 ## Typical CI usage
 
@@ -24,8 +24,8 @@ Opencomplai uses fixed, contractual exit codes so CI pipelines can reliably gate
 |---|---|
 | `1` | Review failed rules in the human output. Fix the compliance gap, then re-run. |
 | `2` | Run `opencomplai init` first, or check that `system-manifest.json` is valid. |
-| `3` | Review the policy configuration. Ensure egress destinations are allowed. |
-| `4` | Contact your compliance team — a trap may indicate a supply-chain issue. |
+| `3` | The system as declared is a prohibited practice under Article 5. Review the intended purpose with your compliance team; it cannot be placed on the EU market as described. |
+| `4` | The system is halted pending review (see below). Complete the provider obligations for the modified system, then `approve` and `resume`. |
 
 ## Control register (`opencomplai controls`)
 

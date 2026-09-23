@@ -45,10 +45,8 @@ try:
 except ImportError:
     _METRICS_AVAILABLE = False
 
-from opencomplai_doc_generator.generator import (
-    generate_dossier,
-    validate_dossier_schema,
-)
+from opencomplai_core.dossier import validate_dossier_schema
+from opencomplai_core.dossier_generator import generate_dossier
 
 EVIDENCE_VAULT_URL = os.environ.get("EVIDENCE_VAULT_URL", "http://evidence-vault:8002")
 

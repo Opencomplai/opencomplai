@@ -209,3 +209,37 @@ def test_check_with_gaps_and_eu_target_omits_nist_rmf_report(tmp_path, monkeypat
 
     artifact = json.loads((tmp_path / "compliance-artifact.json").read_text())
     assert artifact["nist_rmf_report"] is None
+
+
+def test_check_with_gaps_runs_artifact_probes_against_repo_root(tmp_path, monkeypatch):
+    """`check --with-gaps` probes --repo-root like `gaps` does, so the CI
+    artifact's probe-backed rows are evaluated instead of all UNVERIFIED."""
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "risk_register.md").write_text(
+        "# Risk register\n\nRisk identification: prompt injection.\n"
+        "Mitigation: input filtering.\n",
+        encoding="utf-8",
+    )
+    manifest_file = _write_manifest(
+        tmp_path, "sys-check-probes", "customer support chatbot"
+    )
+    result = runner.invoke(
+        app,
+        [
+            "check",
+            "--manifest",
+            str(manifest_file),
+            "--repo-root",
+            str(tmp_path),
+            "--with-gaps",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+
+    artifact = json.loads((tmp_path / "compliance-artifact.json").read_text())
+    rows = artifact["gap_report"]["articles"]
+    assert not any("no repo root supplied" in row["rationale"] for row in rows)
+    art9 = next(row for row in rows if row["article"] == "Art. 9")
+    assert art9["source"] == "artifact"
+    assert art9["evidence_ref"] == "docs/risk_register.md"

@@ -115,17 +115,29 @@ def _scan_status(
     if not matched:
         return None
 
-    is_discrepancy = signal_category in corroboration_report.discrepancies
-    if is_discrepancy:
+    # `discrepancies` holds Annex III taxonomy keys (e.g. "employment"), not
+    # signal categories, so a finding is discrepant when one of the areas it
+    # maps to is undeclared.
+    discrepancies = set(corroboration_report.discrepancies)
+    discrepant = [
+        finding for finding in matched if discrepancies & set(finding.mapped_taxonomy)
+    ]
+    if discrepant:
+        areas = sorted(
+            discrepancies.intersection(
+                t for finding in discrepant for t in finding.mapped_taxonomy
+            )
+        )
         return _with_honesty(
             ArticleGapStatus(
                 article="",
                 status=GapStatus.MISSING,
                 source=ArticleGapSource.SCAN,
-                evidence_ref=matched[0].finding_id,
+                evidence_ref=discrepant[0].finding_id,
                 rationale=(
-                    f"Scan detected '{signal_category}' evidence not reflected in the "
-                    f"declared manifest purpose ({len(matched)} finding(s))."
+                    f"Scan detected '{signal_category}' evidence mapping to "
+                    f"{', '.join(areas)}, not reflected in the declared manifest "
+                    f"purpose ({len(discrepant)} finding(s))."
                 ),
             ),
             confidence=0.6,

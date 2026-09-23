@@ -8,7 +8,7 @@ Opencomplai reports one of four EU AI Act-aligned risk levels for every assessed
 |---|---|---|---|
 | Unacceptable | `UNACCEPTABLE` | Title II (Art. 5) — prohibited practices | `policy_block` |
 | High | `HIGH` | Title III (Art. 6 + Annex III) — high-risk systems | `control_fail` (if controls incomplete) |
-| Limited | `LIMITED` | Art. 52 — transparency obligations | `pass` with transparency controls |
+| Limited | `LIMITED` | Art. 50 — transparency obligations | `pass` with transparency controls |
 | Minimal | `MINIMAL` | All other AI systems | `pass` |
 
 ## Level definitions
@@ -33,7 +33,7 @@ High-risk systems must comply with obligations in Title III Chapter 2 (risk mana
 
 ### Limited
 
-Systems subject to transparency obligations under Art. 52 — e.g., chatbots that must disclose they are AI, deep-fake generators that must watermark outputs.
+Systems subject to transparency obligations under Art. 50 — e.g., chatbots that must disclose they are AI, deep-fake generators that must watermark outputs.
 
 ### Minimal
 
