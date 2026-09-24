@@ -5,6 +5,8 @@ The Opencomplai gateway API is the HTTP entry point for the Docker Compose stack
 **Base URL (default):** `http://localhost:8080`
 **Content-Type:** `application/json` for all request and response bodies.
 
+A manifest can name several frameworks to assess side by side (`compliance_targets`). Risk classification (`/v1/risk/classify`), dossier generation (`/v1/docs/generate`) and the risk engine's public `/v1/checker/*` routes are **EU AI Act only**.
+
 ---
 
 ## Error envelope
@@ -68,7 +70,12 @@ Validate a system manifest against the `SystemManifest` schema and forward to th
 {
   "system_id": "loan-decision-model",
   "intended_purpose": "automated credit scoring for retail lending",
-  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"],
+  "framework_inputs": {
+    "NIST_AI_RMF": {
+      "excluded": {"NIST_AI_RMF:MAP 1.1": "Internal tool, no external users"}
+    }
+  },
   "high_risk_presumption": false,
   "commit_ref": "abc1234"
 }
@@ -78,19 +85,21 @@ Validate a system manifest against the `SystemManifest` schema and forward to th
 |---|---|---|---|---|
 | `system_id` | `string` | | — | Unique system identifier. |
 | `intended_purpose` | `string` | | — | Primary intended purpose. |
-| `compliance_target` | `string` | | `EU_AI_ACT` | Compliance framework. |
+| `compliance_target` | `string` | | `EU_AI_ACT` | Legacy single framework (`EU_AI_ACT` or `NIST_AI_RMF`). Ignored when `compliance_targets` is set. |
+| `compliance_targets` | `string[]` | | — | Frameworks to assess side by side, e.g. `["EU_AI_ACT", "NIST_AI_RMF"]`. Must be non-empty. |
+| `framework_inputs` | `object` | | `{}` | Per framework id: `excluded` (requirement id → reason) and `attested` (requirement id → `{statement, attested_by, attested_at}`). Requirement ids carry the framework prefix, e.g. `NIST_AI_RMF:GOVERN 1.1`. |
 | `high_risk_presumption` | `bool` | | `false` | Provider presumes high risk. |
 | `commit_ref` | `string` | | `HEAD` | Git commit reference. |
 
 **Response `200`:** validated manifest object (same shape as request).
 
-**Response `422`:** `VALIDATION_ERROR` — one or more required fields missing or wrong type.
+**Response `422`:** `VALIDATION_ERROR` — one or more required fields missing or wrong type, an empty `compliance_targets` list, or an unknown framework id.
 
 ---
 
 ## `POST /v1/risk/classify`
 
-Classify the risk level of an AI system under EU AI Act Annex III.
+**EU AI Act only.** Classify the risk level of an AI system under EU AI Act Annex III.
 
 **Request body:**
 
@@ -162,7 +171,7 @@ Submit a ground-truth verification task (REQ-GTVG-001).
 
 ## `POST /v1/docs/generate`
 
-Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
+**EU AI Act only.** Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 
 **Request body:**
 
@@ -264,8 +273,8 @@ Sync allowlisted metadata to the Premium Dashboard via the egress proxy.
 |---|---|---|---|
 | `GET` | `/health` | gateway-api | Health check |
 | `POST` | `/v1/manifests/validate` | risk-engine | Validate system manifest |
-| `POST` | `/v1/risk/classify` | risk-engine | Classify risk level |
+| `POST` | `/v1/risk/classify` | risk-engine | Classify risk level (EU AI Act only) |
 | `POST` | `/v1/verify/claims` | risk-engine | Submit verification task |
-| `POST` | `/v1/docs/generate` | doc-generator | Generate Annex IV dossier |
+| `POST` | `/v1/docs/generate` | doc-generator | Generate Annex IV dossier (EU AI Act only) |
 | `POST` | `/v1/evidence/events` | evidence-vault | Append ledger event |
 | `POST` | `/v1/sync/metadata` | egress-proxy | Sync metadata to dashboard |

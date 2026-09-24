@@ -4,10 +4,11 @@
 [![PyPI](https://img.shields.io/pypi/v/opencomplai-core.svg)](https://pypi.org/project/opencomplai-core/)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 
-The EU AI Act compliance risk engine at the heart of [Opencomplai](https://opencomplai.com).
+The compliance engine at the heart of [Opencomplai](https://opencomplai.com).
 `opencomplai-core` turns a declared `system-manifest.json` and your source tree into a
-deterministic, rule-based risk classification — no LLM calls, no network access, fully
-reproducible.
+deterministic, rule-based EU AI Act risk classification and gap report — no LLM calls,
+no network access, fully reproducible. The same evidence also yields a NIST AI RMF 1.0
+view, re-projected through a built-in crosswalk rather than measured separately.
 
 It powers risk classification (`UnacceptableRiskRule`, `AnnexIIIClassifierRule`,
 `ProfilingDetectionRule`, `SubstantialModificationRule`) and the code-corroboration scan
@@ -71,6 +72,25 @@ for finding in report.findings:
 The scan engine extracts features from the repository, fuses evidence across detectors,
 and maps findings to EU AI Act taxonomy (Annex III high-risk areas, Article 5 prohibited
 practices, profiling under Article 6).
+
+### Assess several frameworks side by side
+
+```python
+from opencomplai_core import FRAMEWORKS, SystemManifest, evaluate_targets
+
+manifest = SystemManifest(
+    system_id="loan-scorer",
+    intended_purpose="creditworthiness scoring for consumer loans",
+    compliance_targets=["EU_AI_ACT", "NIST_AI_RMF"],
+)
+reports = evaluate_targets(manifest, ["EU_AI_ACT", "NIST_AI_RMF"], commit_ref="HEAD")
+for framework, report in reports.items():
+    print(FRAMEWORKS[framework].label, len(report.report.articles), "requirements")
+```
+
+`FRAMEWORKS` lists what this release can assess: `EU_AI_ACT` (evaluated) and
+`NIST_AI_RMF` (derived from the EU AI Act evidence). See
+[Frameworks](https://docs.opencomplai.com/frameworks/).
 
 ## What you get
 

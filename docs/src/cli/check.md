@@ -1,6 +1,8 @@
 # check
 
-Run a full compliance check against EU AI Act rules.
+Run a full compliance check against EU AI Act rules. Other target frameworks can be
+assessed alongside (`--with-gaps`) and, if you opt in, gate the check too (see
+[Gating other frameworks](#gating-other-frameworks) and [Frameworks](../frameworks/index.md)).
 
 If the manifest has no `checker_session`, `check` prints a **non-blocking** warning recommending `opencomplai checker` or `opencomplai init --interactive`. When a session is present, human output includes a one-line applicability summary.
 
@@ -36,6 +38,9 @@ system does.
 | `--sign` / `--no-sign` | `--no-sign` | Sign the status artifact using `~/.opencomplai/signing.key`. |
 | `--with-gaps` | off | Attach a per-article `gap_report` to the artifact (additive, informational only). Artifact-backed articles are probed under `--repo-root`, as in [`gaps`](gaps.md). |
 | `--repo-root` | `.` | Repo root for the `--scan` code scan and the `--with-gaps` artifact path probes (Arts. 9/13/14/16/24/43). |
+| `--target` | manifest | Framework `--with-gaps` and `--gate` assess; repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. `NIST_AI_RMF` attaches `nist_rmf_report`. Any set other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF` also attaches `framework_reports`, one report per target. |
+| `--gate` | `opencomplai.yaml` | Target framework other than the EU AI Act whose failing rows fail the check; repeat for several. Replaces `gate.frameworks` from `opencomplai.yaml`. See [Gating other frameworks](#gating-other-frameworks). |
+| `--gate-fail-on` | `missing` | `missing` or `partial`: which rows of a gated framework fail. Replaces `gate.fail_on` from `opencomplai.yaml`. |
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
 
 ## Environment variables
@@ -54,6 +59,9 @@ system does.
     # Run pipeline evaluators against your own model outputs
     opencomplai check --sample-set eval-set.json
 
+    # Assess the EU AI Act and NIST AI RMF side by side, and let NIST AI RMF gate too
+    opencomplai check --with-gaps --target EU_AI_ACT --target NIST_AI_RMF --gate NIST_AI_RMF
+
     # CI-mode with JSON output piped to jq
     opencomplai check --scan-mode ci --output json | jq .result
 
@@ -71,6 +79,9 @@ system does.
 
     # Run pipeline evaluators against your own model outputs
     opencomplai check --sample-set eval-set.json
+
+    # Assess the EU AI Act and NIST AI RMF side by side, and let NIST AI RMF gate too
+    opencomplai check --with-gaps --target EU_AI_ACT --target NIST_AI_RMF --gate NIST_AI_RMF
 
     # CI-mode with JSON output (pipe to ConvertFrom-Json for parsing)
     opencomplai check --scan-mode ci --output json | ConvertFrom-Json | Select-Object -ExpandProperty result
@@ -144,11 +155,45 @@ signature is computed last, over the artifact exactly as written — including
 the `--scan --fail-on` result, the checker verdict and the `--with-gaps`
 blocks — so `compliance-artifact.json` verifies against `signing.pub` as-is.
 
+With `--with-gaps`, the artifact also carries `gap_report` (the EU AI Act, per
+article) and, when `NIST_AI_RMF` is a target, `nist_rmf_report`, both exactly as in
+earlier releases. When the targets are anything other than exactly `EU_AI_ACT` or
+exactly `NIST_AI_RMF`, it adds `framework_reports`: one framework report per target,
+in target order, the same shape as the `frameworks` block of
+[`gaps --output json`](gaps.md#several-frameworks), with `gated: true` on each gated
+framework. Otherwise the key is left out, so the artifact's bytes and signature are
+the same as before.
+
 `check` also writes `scan-report.json` / `eval-report.json` sidecars next to
 `compliance-artifact.json` whenever a scan (`--scan`) or eval (`--sample-set`)
 actually ran — these are what `opencomplai docs generate` picks up
 automatically to populate the Annex IV dossier's wired-evidence fields. See
 [Annex IV coverage ledger](../concepts/annex-iv-coverage.md).
+
+## Gating other frameworks
+
+Only the EU AI Act gates `check` by default. To make another target framework
+fail CI as well, list it under `gate` in `opencomplai.yaml` (read from
+`--repo-root`) or pass `--gate`:
+
+```yaml
+gate:
+  frameworks: [NIST_AI_RMF]
+  fail_on: missing   # or partial
+```
+
+`check` then assesses the targets even without `--with-gaps`. A row of a gated
+framework fails when it is **Missing**, or **Missing** or **Partial** with
+`fail_on: partial`. Rows excluded in the manifest's `framework_inputs` never
+fail, and neither do **Unverified** or **Met** rows. Failing ids, prefixed
+`<FW>:` (e.g. `NIST_AI_RMF:GOVERN 1.1`), follow the EU AI Act ids in
+`failed_controls`. The only result a gate changes is `PASS`, which becomes
+`CONTROL_FAIL` (exit `1`); a gate never halts the system. With `--with-gaps`,
+each gated framework's entry in `framework_reports` has `gated: true`.
+
+A bad gate exits `2` before anything is written: the EU AI Act listed (its
+controls already gate), an unknown framework, a framework that is not among
+the targets, or a `fail_on` other than `missing` or `partial`.
 
 ## Halt on trap / unresolved HIGH-risk gap
 

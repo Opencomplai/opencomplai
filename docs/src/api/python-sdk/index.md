@@ -1,6 +1,6 @@
 # Python SDK
 
-The Opencomplai Python SDK provides a programmatic interface to the EU AI Act compliance assessment engine.
+The Opencomplai Python SDK provides a programmatic interface to the compliance assessment engine: the EU AI Act, evaluated natively, and NIST AI RMF 1.0, derived from the same evidence.
 
 ## Installation
 

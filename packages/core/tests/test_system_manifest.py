@@ -1,17 +1,23 @@
 """
 Unit tests for the ANNEX-FIELDS SystemManifest additions (Annex IV Sections
-4, 6-9 provider attestations).
+4, 6-9 provider attestations) and the multi-framework fields
+(compliance_targets, framework_inputs).
 
 Covers: the eight fields round-trip through JSON, and a legacy manifest JSON
 written before these fields existed still validates, falling back to the
-documented defaults (None / empty list).
+documented defaults (None / empty list). A manifest that leaves the
+multi-framework fields unset serialises to the same bytes as before they
+existed; set, they round-trip; FrameworkInputs rejects unknown keys and
+empty strings.
 """
 
 from __future__ import annotations
 
 import json
 
-from opencomplai_core.models import SystemManifest
+import pytest
+from opencomplai_core.models import FrameworkInputs, SystemManifest
+from pydantic import ValidationError
 
 
 def _manifest_kwargs(**overrides: object) -> dict:
@@ -78,3 +84,170 @@ def test_legacy_manifest_json_without_annex_iv_fields_still_validates():
     assert manifest.eu_declaration_of_conformity_ref is None
     assert manifest.post_market_monitoring_plan_ref is None
     assert manifest.post_market_monitoring_summary is None
+
+
+# Every key `opencomplai init` wrote before compliance_targets/framework_inputs
+# existed, in the order it wrote them.
+_LEGACY_MANIFEST = {
+    "system_id": "sys-1",
+    "intended_purpose": "credit scoring",
+    "compliance_target": "EU_AI_ACT",
+    "high_risk_presumption": True,
+    "commit_ref": "abc123",
+    "training_data_description": "internal loan applications 2018-2024",
+    "model_architecture": "gradient boosted trees",
+    "performance_metrics": {"auc": 0.91},
+    "known_limitations": [],
+    "human_oversight_measures": [],
+    "monitoring_approach": None,
+    "incident_response_procedure": None,
+    "metrics_appropriateness_rationale": None,
+    "lifecycle_changes": [],
+    "change_log_reference": None,
+    "harmonised_standards": [],
+    "alternative_solutions": None,
+    "eu_declaration_of_conformity_ref": None,
+    "eu_declaration_of_conformity_sha256": None,
+    "post_market_monitoring_plan_ref": None,
+    "post_market_monitoring_summary": None,
+    "operator_role": None,
+    "checker_session": None,
+}
+
+
+def test_manifest_without_framework_fields_serialises_to_identical_bytes():
+    legacy_json = json.dumps(_LEGACY_MANIFEST, indent=2)
+
+    manifest = SystemManifest.model_validate_json(legacy_json)
+
+    assert manifest.compliance_targets is None
+    assert manifest.framework_inputs == {}
+    assert manifest.model_dump_json(indent=2) == legacy_json
+    assert json.dumps(manifest.model_dump(mode="json"), indent=2) == legacy_json
+    assert list(manifest.model_dump()) == list(_LEGACY_MANIFEST)
+
+
+def test_framework_fields_round_trip_through_json():
+    manifest = SystemManifest(
+        **_manifest_kwargs(
+            compliance_targets=["EU_AI_ACT", "NIST_AI_RMF"],
+            framework_inputs={
+                "NIST_AI_RMF": {
+                    "excluded": {"NIST_AI_RMF:MAP 5.2": "No external deployment."},
+                    "attested": {
+                        "NIST_AI_RMF:GOVERN 1.1": {
+                            "statement": "Legal review of AI obligations done.",
+                            "attested_by": "jane.doe@example.com",
+                            "attested_at": "2026-09-01",
+                        }
+                    },
+                }
+            },
+        )
+    )
+
+    dumped = manifest.model_dump(mode="json")
+    assert dumped["compliance_targets"] == ["EU_AI_ACT", "NIST_AI_RMF"]
+    assert dumped["framework_inputs"]["NIST_AI_RMF"]["excluded"] == {
+        "NIST_AI_RMF:MAP 5.2": "No external deployment."
+    }
+
+    round_tripped = SystemManifest.model_validate_json(manifest.model_dump_json())
+
+    assert round_tripped == manifest
+    attestation = round_tripped.framework_inputs["NIST_AI_RMF"].attested[
+        "NIST_AI_RMF:GOVERN 1.1"
+    ]
+    assert attestation.attested_by == "jane.doe@example.com"
+
+
+def test_empty_compliance_targets_is_rejected():
+    with pytest.raises(ValidationError):
+        SystemManifest(**_manifest_kwargs(compliance_targets=[]))
+
+
+@pytest.mark.parametrize(
+    "inputs",
+    [
+        {"waived": {}},
+        {
+            "attested": {
+                "FIXTURE:REQ-1": {
+                    "statement": "s",
+                    "attested_by": "a",
+                    "attested_at": "2026-09-01",
+                    "signature": "x",
+                }
+            }
+        },
+    ],
+    ids=["unknown-framework-inputs-key", "unknown-attestation-key"],
+)
+def test_framework_inputs_rejects_extra_keys(inputs):
+    with pytest.raises(ValidationError, match="Extra inputs are not permitted"):
+        FrameworkInputs.model_validate(inputs)
+
+
+@pytest.mark.parametrize(
+    "inputs",
+    [
+        {"excluded": {"FIXTURE:REQ-1": ""}},
+        {"excluded": {"": "not applicable"}},
+        {
+            "attested": {
+                "": {
+                    "statement": "s",
+                    "attested_by": "a",
+                    "attested_at": "2026-09-01",
+                }
+            }
+        },
+        {
+            "attested": {
+                "FIXTURE:REQ-1": {
+                    "statement": "",
+                    "attested_by": "a",
+                    "attested_at": "2026-09-01",
+                }
+            }
+        },
+        {
+            "attested": {
+                "FIXTURE:REQ-1": {
+                    "statement": "s",
+                    "attested_by": "",
+                    "attested_at": "2026-09-01",
+                }
+            }
+        },
+        {
+            "attested": {
+                "FIXTURE:REQ-1": {
+                    "statement": "s",
+                    "attested_by": "a",
+                    "attested_at": "",
+                }
+            }
+        },
+    ],
+    ids=[
+        "empty-exclusion-reason",
+        "empty-excluded-id",
+        "empty-attested-id",
+        "empty-statement",
+        "empty-attested-by",
+        "empty-attested-at",
+    ],
+)
+def test_framework_inputs_rejects_empty_strings(inputs):
+    with pytest.raises(ValidationError, match="at least 1 character"):
+        FrameworkInputs.model_validate(inputs)
+
+
+def test_manifest_rejects_invalid_framework_inputs():
+    with pytest.raises(ValidationError):
+        SystemManifest(
+            **_manifest_kwargs(
+                framework_inputs={"NIST_AI_RMF": {"excluded": {"x": ""}}}
+            )
+        )

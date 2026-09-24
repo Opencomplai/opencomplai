@@ -1,0 +1,49 @@
+{
+  "install_id": "0f6c1d2e-3b4a-4c5d-8e9f-a0b1c2d3e4f5",
+  "system_id": "loan-approval",
+  "commit_ref": "3f2a9c1d8e7b6a5f4e3d2c1b0a9f8e7d6c5b4a39",
+  "result": "control_fail",
+  "failed_controls": [
+    "Art. 14"
+  ],
+  "evidence_hashes": [
+    "sha256:abababababababababababababababababababababababababababababababab"
+  ],
+  "rationale_hash": "sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+  "duration_ms": 842,
+  "pending_verifications_count": 0,
+  "signature": "Xsn/BrhvOdhrlybouqcefZn6RPR9pojigTO8dJHpH78FipdAczn35R88QL0hunljeRmDsfCRHG1ULOgf43cJAQ==",
+  "eval_summary": null,
+  "scan_summary": null,
+  "gap_report": {
+    "system_id": "loan-approval",
+    "commit_ref": "3f2a9c1d8e7b6a5f4e3d2c1b0a9f8e7d6c5b4a39",
+    "generated_at": "2026-09-22T10:15:00+00:00",
+    "articles": [
+      {
+        "article": "Art. 9",
+        "status": "met",
+        "source": "artifact",
+        "evidence_ref": "docs/risk_register.md",
+        "rationale": "Risk register found.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "obligation",
+        "evidence_ref": "EU_AIA_ART14_HUMAN_OVERSIGHT",
+        "rationale": "",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": null
+  },
+  "nist_rmf_report": null,
+  "controls": null
+}

@@ -14,8 +14,13 @@ import json
 from pathlib import Path
 
 from opencomplai_core import __version__ as _core_version
+from opencomplai_core.control_catalog import get_catalog
+from opencomplai_core.frameworks import EU_AI_ACT
 from opencomplai_core.models import (
+    DISCLAIMER_V1,
+    DISCLAIMER_V2,
     EvalSummary,
+    FrameworkReport,
     GapReport,
     RiskResult,
     ScanStatusArtifact,
@@ -74,6 +79,36 @@ def _render_gap_report_table(gap_report: GapReport | None) -> str:
     )
 
 
+def _render_framework_section(framework_report: FrameworkReport) -> str:
+    """One non-EU framework's heading, rows, exclusions and disclaimer."""
+    catalog = get_catalog()
+    rows = "\n".join(
+        f"<tr><td>{_esc(row.article)}</td>"
+        f"<td>{_esc(catalog[row.article].title if row.article in catalog else '—')}</td>"
+        f'<td class="{_STATUS_CLASS[row.status.value]}">{_esc(row.status.value.upper())}</td>'
+        f"<td>{_esc(row.source.value)}</td>"
+        f"<td>{_esc(row.evidence_ref)}</td>"
+        f"<td>{_esc(row.rationale)}</td></tr>"
+        for row in framework_report.report.articles
+    )
+    meta = f"Data version {_esc(framework_report.data_version)}"
+    if framework_report.derived_from:
+        meta += f" &middot; derived from {_esc(framework_report.derived_from)}"
+    excluded = "".join(
+        f"<li>{_esc(rid)}: {_esc(reason)}</li>"
+        for rid, reason in framework_report.excluded.items()
+    )
+    return (
+        f"\n\n<h2>{_esc(framework_report.label)}</h2>\n"
+        f'<p class="meta">{meta}</p>\n'
+        "<table><thead><tr><th>Requirement</th><th>Title</th><th>Status</th>"
+        "<th>Source</th><th>Evidence</th><th>Rationale</th></tr></thead>"
+        f"<tbody>{rows}</tbody></table>\n"
+        + (f"<p>Excluded</p><ul>{excluded}</ul>\n" if excluded else "")
+        + f'<p class="meta">{_esc(DISCLAIMER_V2)}</p>'
+    )
+
+
 def _render_eval_summary_block(eval_summary: EvalSummary | None) -> str:
     if eval_summary is None:
         return "<p><em>No eval summary supplied — run with <code>--sample-set</code>.</em></p>"
@@ -114,18 +149,25 @@ def render_report(
     risk_result: RiskResult | None = None,
     eval_summary: EvalSummary | None = None,
     scan_summary: ScanSummary | None = None,
+    framework_reports: dict[str, FrameworkReport] | None = None,
     fmt: str = "html",
 ) -> bytes | str:
     """Render a combined report. `fmt` is "html" or "pdf".
 
-    `gap_report`/`eval_summary`/`scan_summary` default to whatever is embedded on
-    `artifact` when not passed explicitly, so a single `compliance-artifact.json`
-    (optionally produced with `check --with-gaps --scan`) is sufficient input.
+    `gap_report`/`eval_summary`/`scan_summary`/`framework_reports` default to
+    whatever is embedded on `artifact` when not passed explicitly, so a single
+    `compliance-artifact.json` (optionally produced with `check --with-gaps
+    --scan`) is sufficient input.
+
+    `framework_reports` (a multi-framework run's reports) adds one section per
+    framework other than the EU AI Act, whose rows are the gap report table,
+    and is embedded in the JSON envelope. Without it the output is unchanged.
     """
     if artifact is not None:
         gap_report = gap_report or artifact.gap_report
         eval_summary = eval_summary or artifact.eval_summary
         scan_summary = scan_summary or artifact.scan_summary
+        framework_reports = framework_reports or artifact.framework_reports
 
     template = _TEMPLATE_PATH.read_text(encoding="utf-8")
 
@@ -140,7 +182,21 @@ def render_report(
         if scan_summary
         else None,
     }
-    envelope = wrap_scan_output(envelope_payload, tool_version=_core_version)
+    sections = [
+        framework_report
+        for framework, framework_report in (framework_reports or {}).items()
+        if framework != EU_AI_ACT
+    ]
+    if framework_reports:
+        envelope_payload["framework_reports"] = {
+            framework: json.loads(framework_report.model_dump_json())
+            for framework, framework_report in framework_reports.items()
+        }
+    envelope = wrap_scan_output(
+        envelope_payload,
+        tool_version=_core_version,
+        disclaimer=DISCLAIMER_V2 if framework_reports else DISCLAIMER_V1,
+    )
     envelope_json = html.escape(envelope.model_dump_json(), quote=False)
 
     replacements = {
@@ -152,6 +208,9 @@ def render_report(
         "{{high_risk_presumption}}": _esc(manifest.high_risk_presumption),
         "{{rule_results_table}}": _render_rule_results_table(risk_result),
         "{{gap_report_table}}": _render_gap_report_table(gap_report),
+        "{{framework_reports_section}}": "".join(
+            _render_framework_section(framework_report) for framework_report in sections
+        ),
         "{{eval_summary_block}}": _render_eval_summary_block(eval_summary),
         "{{scan_summary_block}}": _render_scan_summary_block(scan_summary),
         "{{envelope_json}}": envelope_json,
@@ -186,6 +245,13 @@ def render_report(
         if gap_report is not None:
             write_line("Gap report:")
             for row in gap_report.articles:
+                write_line(
+                    f"{row.article}: {row.status.value.upper()} "
+                    f"({row.source.value}: {row.evidence_ref})"
+                )
+        for framework_report in sections:
+            write_line(f"{framework_report.label}:")
+            for row in framework_report.report.articles:
                 write_line(
                     f"{row.article}: {row.status.value.upper()} "
                     f"({row.source.value}: {row.evidence_ref})"

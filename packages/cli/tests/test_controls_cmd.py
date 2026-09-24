@@ -12,15 +12,28 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+from pathlib import Path
 
 import opencomplai_cli.main as main_module
 from opencomplai_cli.main import app
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
 from typer.testing import CliRunner
 
 runner = CliRunner()
 
 SYSTEM_ID = "sys-controls"
 TENANT_ID = "oss-default"
+
+FIXTURE_PACK = FrameworkPack(
+    "FIXTURE",
+    "Fixture framework",
+    requirements=Path(__file__).resolve().parents[2]
+    / "core"
+    / "tests"
+    / "fixtures"
+    / "framework_pack"
+    / "requirements.json",
+)
 
 
 def _control(
@@ -405,3 +418,74 @@ def test_status_json_output_parses(monkeypatch):
     assert payload["system_id"] == SYSTEM_ID
     assert payload["exit_code"] == 1
     assert payload["summary"]["evidence_missing"] == 1
+
+
+def _seed_eu_satisfied_and_fixture_missing(monkeypatch) -> None:
+    monkeypatch.setenv("OPENCOMPLAI_VAULT_URL", "http://fake-vault.invalid")
+    monkeypatch.setitem(FRAMEWORKS, "FIXTURE", FIXTURE_PACK)
+    fake_vault = _FakeVault()
+    monkeypatch.setattr(main_module, "_vault_request", fake_vault)
+    fake_vault.seed(
+        _control(
+            "ctrl-eu",
+            state="satisfied",
+            evidence_refs=["sha256:aaaa"],
+            last_evidence_at="2026-01-01T00:00:00+00:00",
+            due_at="2099-01-01T00:00:00+00:00",
+        ),
+        _control("ctrl-fixture", article_ref="FIXTURE:REQ-1"),
+    )
+
+
+def test_status_counts_only_eu_ai_act_controls_by_default(monkeypatch):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.exit_code == 0, result.output
+    assert "controls: 1 total · 1 satisfied · 0 evidence_missing" in result.output
+
+
+def test_status_framework_flag_selects_the_frameworks_counted(monkeypatch):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    base = ["controls", "status", "--system-id", SYSTEM_ID]
+
+    fixture_only = runner.invoke(app, [*base, "--framework", "FIXTURE"])
+    assert fixture_only.exit_code == 1
+    assert "controls: 1 total · 0 satisfied · 1 evidence_missing" in (
+        fixture_only.output
+    )
+
+    both = runner.invoke(
+        app,
+        [*base, "--framework", "EU_AI_ACT", "--framework", "FIXTURE", "-o", "json"],
+    )
+    assert both.exit_code == 1
+    payload = json.loads(both.stdout)
+    assert set(payload) == {"system_id", "summary", "stale_count", "exit_code"}
+    assert payload["summary"] == {"satisfied": 1, "evidence_missing": 1}
+
+
+def test_status_unknown_framework_exits_2(monkeypatch):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+
+    result = runner.invoke(
+        app,
+        ["controls", "status", "--system-id", SYSTEM_ID, "--framework", "ISO_42001"],
+    )
+
+    assert result.exit_code == 2
+    assert "ISO_42001" in result.output
+
+
+def test_status_counts_gated_frameworks_by_default(monkeypatch, tmp_path):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [FIXTURE]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.exit_code == 1, result.output
+    assert "controls: 2 total · 1 satisfied · 1 evidence_missing" in result.output

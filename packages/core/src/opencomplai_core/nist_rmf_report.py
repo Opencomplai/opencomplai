@@ -25,6 +25,7 @@ from __future__ import annotations
 from opencomplai_core.framework_crosswalk import CrosswalkEntry, get_crosswalk
 from opencomplai_core.gap_report import STATUS_SEVERITY
 from opencomplai_core.models import (
+    ArticleGapSource,
     ArticleGapStatus,
     ConfidenceLabel,
     GapReport,
@@ -165,4 +166,33 @@ def build_nist_rmf_report(gap_report: GapReport) -> NistRmfReport:
         commit_ref=gap_report.commit_ref,
         generated_at=gap_report.generated_at,
         subcategories=rows,
+    )
+
+
+def nist_rmf_as_gap_report(gap_report: GapReport) -> GapReport:
+    """The NIST AI RMF re-projection as a GapReport, for side-by-side runs.
+
+    One row per subcategory, id prefixed "NIST_AI_RMF:", sourced CROSSWALK and
+    citing the EU AI Act articles it was derived from. Verdicts and labels come
+    unchanged from `build_nist_rmf_report`; a re-projection carries no numeric
+    confidence of its own.
+    """
+    nist = build_nist_rmf_report(gap_report)
+    return GapReport(
+        system_id=nist.system_id,
+        commit_ref=nist.commit_ref,
+        generated_at=nist.generated_at,
+        articles=[
+            ArticleGapStatus(
+                article=f"NIST_AI_RMF:{row.subcategory}",
+                status=row.status,
+                source=ArticleGapSource.CROSSWALK,
+                evidence_ref=", ".join(row.source_eu_ai_act_articles) or "none",
+                rationale=row.rationale,
+                confidence=None,
+                confidence_label=row.confidence_label,
+                disclaimer_ref="DISCLAIMER_V2",
+            )
+            for row in nist.subcategories
+        ],
     )

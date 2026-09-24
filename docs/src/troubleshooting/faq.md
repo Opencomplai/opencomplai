@@ -4,11 +4,11 @@
 
 ### What is Opencomplai?
 
-Opencomplai is an open-source EU AI Act compliance toolkit for AI engineering teams. It classifies risk, generates evidence, and gates CI/CD pipelines — not a document processing or upload platform.
+Opencomplai is an open-source AI compliance toolkit for AI engineering teams, built around the EU AI Act. It classifies risk, generates evidence, and gates CI/CD pipelines — not a document processing or upload platform.
 
 ### Which version of the EU AI Act does Opencomplai implement?
 
-The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default), producing a computed pass/gap verdict per article. `NIST_AI_RMF` is also evaluated — `opencomplai gaps --target NIST_AI_RMF` re-projects that same EU AI Act evidence into a per-subcategory NIST AI RMF 1.0 verdict via `data/framework_crosswalk.json`, citing the EU AI Act article each subcategory verdict was derived from (no new scanner or evaluator; see [NIST AI RMF](../concepts/nist-ai-rmf.md)). ISO/IEC 42001 is mapped, not evaluated: the same crosswalk links each EU AI Act article/control to its corresponding ISO/IEC 42001:2023 clause, and `opencomplai gaps` shows it in the "Mapped" column, but no verdict is computed for it.
+The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default), producing a computed pass/gap verdict per article. `NIST_AI_RMF` is derived rather than evaluated on its own — `opencomplai gaps --target NIST_AI_RMF` re-projects that same EU AI Act evidence into a per-subcategory NIST AI RMF 1.0 verdict via `data/framework_crosswalk.json`, citing the EU AI Act article each subcategory verdict was derived from (no new scanner or evaluator; see [NIST AI RMF](../concepts/nist-ai-rmf.md)). ISO/IEC 42001 is mapped, not evaluated: the same crosswalk links each EU AI Act article/control to its corresponding ISO/IEC 42001:2023 clause, and `opencomplai gaps` shows it in the "Mapped" column, but no verdict is computed for it. To assess several frameworks side by side, see [Frameworks](../frameworks/index.md).
 
 ### Is Opencomplai a legal compliance guarantee?
 

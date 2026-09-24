@@ -69,6 +69,28 @@ def test_validate_manifest_valid(tmp_path):
     assert result.exit_code == 0
 
 
+def test_validate_manifest_lists_compliance_targets(tmp_path):
+    manifest_file = _write_manifest(tmp_path, "test", "customer support chatbot")
+    data = json.loads(manifest_file.read_text())
+    manifest_file.write_text(
+        json.dumps({**data, "compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"]})
+    )
+    result = runner.invoke(app, ["validate-manifest", str(manifest_file)])
+    assert result.exit_code == 0
+    assert "compliance_targets:    EU_AI_ACT, NIST_AI_RMF" in result.output
+
+
+def test_validate_manifest_rejects_an_unknown_framework(tmp_path):
+    manifest_file = _write_manifest(tmp_path, "test", "customer support chatbot")
+    data = json.loads(manifest_file.read_text())
+    manifest_file.write_text(
+        json.dumps({**data, "compliance_targets": ["EU_AI_ACT", "ISO_42001"]})
+    )
+    result = runner.invoke(app, ["validate-manifest", str(manifest_file)])
+    assert result.exit_code == 2
+    assert "ISO_42001" in result.output
+
+
 def test_validate_manifest_missing_file():
     result = runner.invoke(app, ["validate-manifest", "nonexistent.json"])
     assert result.exit_code == 2
@@ -184,6 +206,25 @@ def test_info_command_populates_all_fields():
     assert "Opencomplai" in out
     assert "hello@opencomplai.com" in out
     assert "AGPL-3.0-only" in out
+
+
+def test_info_summary_falls_back_to_the_sdk_description(monkeypatch):
+    """Without installed metadata, `info` shows the SDK's own description."""
+    import tomllib
+
+    from opencomplai_cli import main
+
+    pyproject = Path(__file__).parents[2] / "sdk-python" / "pyproject.toml"
+    description = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"][
+        "description"
+    ]
+    real = main._distribution_info
+    monkeypatch.setattr(
+        main, "_distribution_info", lambda name: {**real(name), "summary": ""}
+    )
+    result = runner.invoke(app, ["info"])
+    assert result.exit_code == 0
+    assert description in " ".join(result.output.split())
 
 
 def test_info_command_json():

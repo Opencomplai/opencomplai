@@ -1,6 +1,6 @@
 site_name: Opencomplai
 site_url: https://docs.opencomplai.com/
-site_description: Open-source EU AI Act compliance toolkit for AI engineering teams.
+site_description: Open-source AI compliance toolkit for AI engineering teams — the EU AI Act evaluated natively, NIST AI RMF derived from the same evidence.
 repo_url: https://github.com/Opencomplai/opencomplai
 repo_name: Opencomplai/opencomplai
 edit_uri: edit/main/docs/src/
@@ -125,8 +125,17 @@ nav:
     - Quick Start: getting-started/quick-start.md
     - Deployment Journey: getting-started/deployment-journey.md
     - First Project: getting-started/first-project.md
-    - EU AI Act Checker: getting-started/eu-ai-act-checker.md
     - Detect AI in your code: getting-started/scanner.md
+
+  # Pages stay where they are: `opencomplai checker --web` opens
+  # /getting-started/eu-ai-act-checker/.
+  - Frameworks:
+    - Overview: frameworks/index.md
+    - EU AI Act:
+      - Applicability Checker: getting-started/eu-ai-act-checker.md
+      - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
+      - Annex IV coverage ledger: concepts/annex-iv-coverage.md
+    - NIST AI RMF: concepts/nist-ai-rmf.md
 
   - Guides:
     - Overview: guides/index.md
@@ -178,11 +187,8 @@ nav:
     - Risk levels: concepts/risk-levels.md
     - Rules: concepts/rules.md
     - Control Codes: concepts/control-codes.md
-    - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
-    - NIST AI RMF: concepts/nist-ai-rmf.md
     - Controls lifecycle: concepts/controls.md
     - Evidence: concepts/evidence.md
-    - Annex IV coverage ledger: concepts/annex-iv-coverage.md
     - Evaluators: concepts/evaluators.md
     - Scan workflow: concepts/scan-workflow.md
     - "Inspect-AI eval bridge": concepts/inspect-bridge.md
@@ -222,6 +228,7 @@ nav:
     - Code Review: contributing/code-review.md
     - Release Process: contributing/release-process.md
     - Adding Rules: contributing/adding-rules.md
+    - Adding Framework Packs: contributing/adding-framework-packs.md
 
   - Troubleshooting:
     - Overview: troubleshooting/index.md

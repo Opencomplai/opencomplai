@@ -1,0 +1,187 @@
+
+Opencomplai NIST AI RMF Gap Report — golden-sys
+
+Re-projected from EU AI Act evidence via the framework crosswalk (data/framework_crosswalk.json) — heuristic estimates, not a legal determination. See docs/src/concepts/nist-ai-rmf.md for the
+methodology; no new scanner or evaluator backs this.
+
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Subcategory  ┃ Status     ┃ Mapping conf. ┃ From (EU AI Act)                          ┃ Rationale                                                                                                    ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ GOVERN 1.1   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.2   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.3   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.4   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.5   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.6   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 1.7   │ MISSING    │ low           │ Art. 5, Art. 9, Art. 11, Art. 16, Art. 17 │ Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, │
+│              │            │               │                                           │ evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing      │
+│              │            │               │                                           │ (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md). │
+│ GOVERN 2.1   │ UNVERIFIED │ low           │ Art. 4                                    │ Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).                                    │
+│ GOVERN 2.2   │ UNVERIFIED │ low           │ Art. 4                                    │ Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).                                    │
+│ GOVERN 2.3   │ UNVERIFIED │ low           │ Art. 4                                    │ Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).                                    │
+│ GOVERN 3.1   │ MISSING    │ medium        │ Art. 14                                   │ Re-projected via data/framework_crosswalk.json (GOVERN 3, mapping confidence=medium) from existing EU AI Act │
+│              │            │               │                                           │ evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).                          │
+│ GOVERN 3.2   │ MISSING    │ medium        │ Art. 14                                   │ Re-projected via data/framework_crosswalk.json (GOVERN 3, mapping confidence=medium) from existing EU AI Act │
+│              │            │               │                                           │ evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).                          │
+│ GOVERN 4.1   │ PARTIAL    │ low           │ Art. 13, Art. 50                          │ Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified              │
+│              │            │               │                                           │ (source=obligation, evidence=transparency).                                                                  │
+│ GOVERN 4.2   │ PARTIAL    │ low           │ Art. 13, Art. 50                          │ Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified              │
+│              │            │               │                                           │ (source=obligation, evidence=transparency).                                                                  │
+│ GOVERN 4.3   │ PARTIAL    │ low           │ Art. 13, Art. 50                          │ Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified              │
+│              │            │               │                                           │ (source=obligation, evidence=transparency).                                                                  │
+│ GOVERN 5.1   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to GOVERN 5 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ GOVERN 5.2   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to GOVERN 5 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ GOVERN 6.1   │ MISSING    │ low           │ Art. 24                                   │ Re-projected via data/framework_crosswalk.json (GOVERN 6, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 24 -> missing (source=artifact, evidence=distributor_conformity).                             │
+│ GOVERN 6.2   │ MISSING    │ low           │ Art. 24                                   │ Re-projected via data/framework_crosswalk.json (GOVERN 6, mapping confidence=low) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 24 -> missing (source=artifact, evidence=distributor_conformity).                             │
+│ MAP 1.1      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 1.2      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 1.3      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 1.4      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 1.5      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 1.6      │ MISSING    │ low           │ Art. 6                                    │ Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 6 -> missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).                                   │
+│ MAP 2.1      │ UNVERIFIED │ medium        │ Art. 10                                   │ Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 10 -> unverified (source=evaluator, evidence=none).                                           │
+│ MAP 2.2      │ UNVERIFIED │ medium        │ Art. 10                                   │ Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 10 -> unverified (source=evaluator, evidence=none).                                           │
+│ MAP 2.3      │ UNVERIFIED │ medium        │ Art. 10                                   │ Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act    │
+│              │            │               │                                           │ evidence: Art. 10 -> unverified (source=evaluator, evidence=none).                                           │
+│ MAP 3.1      │ UNVERIFIED │ low           │ Art. 53                                   │ Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).                                 │
+│ MAP 3.2      │ UNVERIFIED │ low           │ Art. 53                                   │ Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).                                 │
+│ MAP 3.3      │ UNVERIFIED │ low           │ Art. 53                                   │ Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).                                 │
+│ MAP 3.4      │ UNVERIFIED │ low           │ Art. 53                                   │ Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).                                 │
+│ MAP 3.5      │ UNVERIFIED │ low           │ Art. 53                                   │ Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).                                 │
+│ MAP 4.1      │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MAP 4 -- there is no EU-AI-Act-native  │
+│              │            │               │                                           │ evidence to re-project onto this subcategory.                                                                │
+│ MAP 4.2      │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MAP 4 -- there is no EU-AI-Act-native  │
+│              │            │               │                                           │ evidence to re-project onto this subcategory.                                                                │
+│ MAP 5.1      │ MET        │ low           │ Art. 25                                   │ Re-projected via data/framework_crosswalk.json (MAP 5, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).                             │
+│ MAP 5.2      │ MET        │ low           │ Art. 25                                   │ Re-projected via data/framework_crosswalk.json (MAP 5, mapping confidence=low) from existing EU AI Act       │
+│              │            │               │                                           │ evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).                             │
+│ MEASURE 1.1  │ MISSING    │ low           │ Art. 43                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).                         │
+│ MEASURE 1.2  │ MISSING    │ low           │ Art. 43                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).                         │
+│ MEASURE 1.3  │ MISSING    │ low           │ Art. 43                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).                         │
+│ MEASURE 2.1  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.2  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.3  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.4  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.5  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.6  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.7  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.8  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.9  │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.10 │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.11 │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.12 │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 2.13 │ UNVERIFIED │ low           │ Art. 15, Art. 55                          │ Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act   │
+│              │            │               │                                           │ evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, │
+│              │            │               │                                           │ evidence=gpai_systemic_risk).                                                                                │
+│ MEASURE 3.1  │ UNVERIFIED │ medium        │ Art. 12                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI    │
+│              │            │               │                                           │ Act evidence: Art. 12 -> unverified (source=rule, evidence=none).                                            │
+│ MEASURE 3.2  │ UNVERIFIED │ medium        │ Art. 12                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI    │
+│              │            │               │                                           │ Act evidence: Art. 12 -> unverified (source=rule, evidence=none).                                            │
+│ MEASURE 3.3  │ UNVERIFIED │ medium        │ Art. 12                                   │ Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI    │
+│              │            │               │                                           │ Act evidence: Art. 12 -> unverified (source=rule, evidence=none).                                            │
+│ MEASURE 4.1  │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no               │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MEASURE 4.2  │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no               │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MEASURE 4.3  │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no               │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 1.1   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 1.2   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 1.3   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 1.4   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 2.1   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 2.2   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 2.3   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 2.4   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 3.1   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 3 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 3.2   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 3 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 4.1   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 4.2   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+│ MANAGE 4.3   │ UNVERIFIED │ —             │ —                                         │ No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no                │
+│              │            │               │                                           │ EU-AI-Act-native evidence to re-project onto this subcategory.                                               │
+└──────────────┴────────────┴───────────────┴───────────────────────────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+NIST AI RMF report is informational only — it does not gate CI. Every row cites the EU AI Act evidence it was derived from; UNVERIFIED rows have no framework_crosswalk.json coverage yet.
+

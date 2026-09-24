@@ -1,11 +1,18 @@
 """Tests for Ed25519 signing — generate keypair, sign, verify round-trip."""
 
+import json
 from pathlib import Path
 
 import pytest
-from opencomplai_core.models import ScanResult, ScanStatusArtifact
+from opencomplai_core.models import (
+    FrameworkReport,
+    GapReport,
+    ScanResult,
+    ScanStatusArtifact,
+)
 from opencomplai_core.signing import (
     SigningDomain,
+    _canonical_payload,
     canonical_json_bytes,
     domain_separated,
     generate_keypair,
@@ -111,6 +118,50 @@ def test_different_results_produce_different_signatures(
     )
     sig_fail = sign_artifact(fail_artifact, keypair / "signing.key")
     assert sig_pass != sig_fail
+
+
+def test_stored_pre_framework_reports_artifact_still_verifies() -> None:
+    """An artifact signed and written by v0.7.1, before framework_reports
+    existed, re-serialises to the same bytes and its signature verifies."""
+    fixture = Path(__file__).parent / "fixtures" / "signed_artifact_v071"
+    stored = (fixture / "artifact.json").read_text(encoding="utf-8")
+    artifact = ScanStatusArtifact.model_validate_json(stored)
+
+    assert artifact.framework_reports is None
+    assert artifact.model_dump_json(indent=2) == stored.rstrip("\n")
+    unsigned = json.loads(stored)
+    del unsigned["signature"]
+    assert _canonical_payload(artifact) == canonical_json_bytes(unsigned)
+    assert verify_artifact(artifact, fixture / "signing.pub") is True
+
+
+def test_signature_covers_framework_reports(
+    keypair: Path, sample_artifact: ScanStatusArtifact
+) -> None:
+    report = FrameworkReport(
+        framework="NIST_AI_RMF",
+        label="NIST AI RMF 1.0",
+        data_version="aaaaaaaaaaaa",
+        derived_from="EU_AI_ACT",
+        disclaimer_ref="DISCLAIMER_V2",
+        report=GapReport(system_id="test-sys", commit_ref="abc123", generated_at="t"),
+    )
+    artifact = sample_artifact.model_copy(
+        update={"framework_reports": {"NIST_AI_RMF": report}}
+    )
+    signed = artifact.model_copy(
+        update={"signature": sign_artifact(artifact, keypair / "signing.key")}
+    )
+    assert verify_artifact(signed, keypair / "signing.pub") is True
+
+    tampered = signed.model_copy(
+        update={
+            "framework_reports": {
+                "NIST_AI_RMF": report.model_copy(update={"gated": True})
+            }
+        }
+    )
+    assert verify_artifact(tampered, keypair / "signing.pub") is False
 
 
 # --- domain separation (EVID-CRYPTO) ---------------------------------------

@@ -90,6 +90,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from opencomplai_cli.connectors import summarize_failed_controls
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
 
 # `check --sign` (main.py's check_cmd) always writes its artifact here,
@@ -274,7 +275,7 @@ def _failed_controls_summary(artifact: dict | None) -> str:
     controls = artifact.get("failed_controls", [])
     if not controls:
         return "see output"
-    return ", ".join(str(c) for c in controls[:5])
+    return summarize_failed_controls(controls, limit=5)
 
 
 def _build_summary(artifact: dict | None, stdout: str, stderr: str) -> str:

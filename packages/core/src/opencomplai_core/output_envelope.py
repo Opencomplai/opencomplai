@@ -17,11 +17,12 @@ def wrap_scan_output(
     *,
     scan_errors: list[str] | None = None,
     tool_version: str | None = None,
+    disclaimer: str = DISCLAIMER_V1,
 ) -> ScanOutputEnvelope:
     """Wrap a CLI payload in a versioned envelope (not a signed artifact)."""
     return ScanOutputEnvelope(
         tool_version=tool_version or __version__,
-        disclaimer=DISCLAIMER_V1,
+        disclaimer=disclaimer,
         generated_at=datetime.now(UTC).isoformat(),
         scan_errors=list(scan_errors or []),
         payload=payload,

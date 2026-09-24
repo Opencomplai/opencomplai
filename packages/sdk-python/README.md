@@ -4,9 +4,10 @@
 [![PyPI](https://img.shields.io/pypi/v/opencomplai.svg)](https://pypi.org/project/opencomplai/)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 
-The convenience meta-package for [Opencomplai](https://opencomplai.com) — EU AI Act
-compliance for your AI systems. Installing `opencomplai` gives you both the risk engine
-and the command-line tool in one step.
+The convenience meta-package for [Opencomplai](https://opencomplai.com) — AI compliance
+for your AI systems: the EU AI Act, and a NIST AI RMF 1.0 view derived from the same
+evidence. Installing `opencomplai` gives you both the risk engine and the command-line
+tool in one step.
 
 ## Install
 
@@ -49,7 +50,9 @@ print(result.risk_level)
 ```
 
 Public API re-exported from `opencomplai`: `assess`, `AssessmentInput`, `ModelMetadata`,
-`RiskLevel`, `RiskResult`, `RuleResult`, `ScanResult`, `ScanStatusArtifact`, and `SystemManifest`.
+`RiskLevel`, `RiskResult`, `RuleResult`, `ScanResult`, `ScanStatusArtifact`, `SystemManifest`,
+and, for assessing several frameworks side by side, `evaluate_targets`, `resolve_targets`,
+`FRAMEWORKS`, `FrameworkPack`, `FrameworkReport` and `GapReport`.
 
 ## Optional: AI intent plugin
 

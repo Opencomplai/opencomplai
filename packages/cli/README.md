@@ -4,9 +4,10 @@
 [![PyPI](https://img.shields.io/pypi/v/opencomplai-cli.svg)](https://pypi.org/project/opencomplai-cli/)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 
-The `opencomplai` command-line tool for EU AI Act compliance assessment. It scans your
-repository, classifies your AI system against the EU AI Act, and produces an auditable,
-CI-gateable compliance artifact.
+The `opencomplai` command-line tool for AI compliance assessment. It scans your
+repository, classifies your AI system against the EU AI Act, reports gaps for every
+framework your manifest targets (NIST AI RMF 1.0 is derived from the EU AI Act evidence),
+and produces an auditable, CI-gateable compliance artifact.
 
 Built on [`opencomplai-core`](https://pypi.org/project/opencomplai-core/) — the same
 deterministic, rule-based risk engine, with a rich terminal UX.
@@ -30,7 +31,7 @@ meta-package instead.
 | `opencomplai check` | Run the compliance gate and write `compliance-artifact.json` |
 | `opencomplai push` | Publish a signed artifact (scan status or Annex IV dossier) to the Premium Dashboard |
 | `opencomplai checker` | Run the interactive EU AI Act applicability checker |
-| `opencomplai gaps` | Print a per-article EU AI Act gap report (informational — never gates CI) |
+| `opencomplai gaps` | Print a gap report for every target framework, the EU AI Act by default (informational — never gates CI) |
 | `opencomplai recommend` | Write copy-paste remediation templates for Missing/Partial gap-report rows |
 | `opencomplai report` | Render a single shareable HTML/PDF compliance report |
 | `opencomplai eval` | Run safety, bias, and data-leakage pipeline evaluators |

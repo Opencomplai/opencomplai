@@ -1,6 +1,7 @@
 # validate-manifest
 
-Validate a system manifest file against the required schema.
+Validate a system manifest file against the required schema, including the framework
+keys in `compliance_targets`.
 
 ## Synopsis
 
@@ -58,6 +59,12 @@ Manifest is valid.
   high_risk_presumption: False
 ```
 
+A manifest with `compliance_targets` adds a line after `compliance_target`:
+
+```text
+  compliance_targets:    EU_AI_ACT, NIST_AI_RMF
+```
+
 **JSON (`--output json`):**
 
 ```json
@@ -75,4 +82,9 @@ Manifest is valid.
 | Code | Meaning |
 |---|---|
 | 0 | Manifest is valid. |
-| 2 | Manifest file not found or schema validation failed. |
+| 2 | Manifest file not found or schema validation failed: for example an empty `compliance_targets` list, an unknown framework key in it, or a malformed `framework_inputs` entry. |
+
+`validate-manifest` checks the shape of `framework_inputs`. Whether each key is a
+known framework, and each excluded or attested id a requirement of it, is checked when
+the targets are assessed, by [`gaps`](gaps.md) or `check --with-gaps`. See
+[Frameworks](../frameworks/index.md).

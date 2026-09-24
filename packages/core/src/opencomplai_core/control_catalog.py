@@ -157,8 +157,35 @@ def _with_crosswalk_references(
 CONTROL_CATALOG = _with_crosswalk_references(CONTROL_CATALOG)
 
 
+def _framework_pack_entries() -> dict[str, ControlCatalogEntry]:
+    """Entries for the requirements of every native non-EU framework pack.
+
+    Their ids are prefixed ("<FW>:<id>"), so they never collide with the EU
+    AI Act articles above. Derived packs (NIST AI RMF) have no controls of
+    their own: their rows re-project the EU AI Act's.
+    """
+    from opencomplai_core.frameworks import (
+        EU_AI_ACT,
+        FRAMEWORKS,
+        load_requirements_map,
+    )
+
+    return {
+        requirement_id: ControlCatalogEntry(
+            title=config.get("title", ""),
+            default_ttl_days=config.get("default_ttl_days"),
+        )
+        for pack in FRAMEWORKS.values()
+        if pack.requirements is not None and pack.id != EU_AI_ACT
+        for requirement_id, config in load_requirements_map(pack.requirements).items()
+    }
+
+
 def get_catalog() -> dict[str, ControlCatalogEntry]:
     """Return the validated control catalog.
+
+    The EU AI Act articles above, plus the requirements of any native non-EU
+    framework pack (CONTROL_CATALOG itself when there are none).
 
     Fails loud (raises ValueError) rather than returning a silently empty or
     malformed catalog, mirroring the knowledge-pack loading convention in
@@ -168,7 +195,10 @@ def get_catalog() -> dict[str, ControlCatalogEntry]:
     if not CONTROL_CATALOG:
         raise ValueError("control_catalog: CONTROL_CATALOG is empty")
 
-    for article_ref, entry in CONTROL_CATALOG.items():
+    pack_entries = _framework_pack_entries()
+    catalog = {**CONTROL_CATALOG, **pack_entries} if pack_entries else CONTROL_CATALOG
+
+    for article_ref, entry in catalog.items():
         if not isinstance(article_ref, str) or not article_ref.strip():
             raise ValueError(f"control_catalog: malformed article key {article_ref!r}")
         if not isinstance(entry, ControlCatalogEntry):
@@ -187,7 +217,7 @@ def get_catalog() -> dict[str, ControlCatalogEntry]:
                 f"default_ttl_days {entry.default_ttl_days!r}"
             )
 
-    return CONTROL_CATALOG
+    return catalog
 
 
 # Alias matching the "loader" naming used in the epic task description.

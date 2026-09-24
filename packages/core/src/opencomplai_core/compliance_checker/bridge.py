@@ -23,12 +23,9 @@ def bridge_to_manifest_fields(result: ComplianceCheckerResult) -> dict[str, obje
     """Map checker output to SystemManifest-compatible fields.
 
     ``checker_verdict`` is the checker's tier label (one of
-    ``CHECKER_VERDICTS``); it belongs in ``checker_session.verdict``.
-
-    ``intended_purpose`` carries the same label and is deprecated (removed in
-    0.8.0): the EU rules keyword-match ``intended_purpose`` as the system's
-    purpose text, so a tier label there classifies nothing. Callers must ask
-    for the real purpose instead.
+    ``CHECKER_VERDICTS``); it belongs in ``checker_session.verdict``. There is
+    no ``intended_purpose``: the EU rules keyword-match it as the system's
+    purpose text, so callers must ask for the real purpose.
     """
     entity = result.effective_entity
     operator_role = entity.value if entity is not None else "unknown"
@@ -49,6 +46,5 @@ def bridge_to_manifest_fields(result: ComplianceCheckerResult) -> dict[str, obje
     return {
         "operator_role": operator_role,
         "checker_verdict": verdict,
-        "intended_purpose": verdict,
         "high_risk_presumption": result.is_high_risk,
     }

@@ -10,9 +10,15 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel, Field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    SerializerFunctionWrapHandler,
+    model_serializer,
+)
 
 # ---------------------------------------------------------------------------
 # Enumerations
@@ -157,6 +163,40 @@ class RiskResult(BaseModel):
 # PRD entity models (used by services and CLI for the full workflow)
 # ---------------------------------------------------------------------------
 
+_NonEmptyStr = Annotated[str, Field(min_length=1)]
+
+
+class Attestation(BaseModel):
+    """A provider's recorded statement that a framework requirement is met.
+
+    Recorded verbatim from the manifest; the engine never fabricates one.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    statement: _NonEmptyStr
+    attested_by: _NonEmptyStr
+    attested_at: _NonEmptyStr = Field(..., description="ISO 8601 date or timestamp")
+
+
+class FrameworkInputs(BaseModel):
+    """Per-framework compliance declarations carried in the manifest.
+
+    Keys are requirement ids as the framework spells them (e.g.
+    "NIST_AI_RMF:GOVERN 1.1").
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    excluded: dict[_NonEmptyStr, _NonEmptyStr] = Field(
+        default_factory=dict,
+        description="Requirement id -> reason the requirement does not apply",
+    )
+    attested: dict[_NonEmptyStr, Attestation] = Field(
+        default_factory=dict,
+        description="Requirement id -> provider attestation that it is met",
+    )
+
 
 class SystemManifest(BaseModel):
     """
@@ -171,6 +211,22 @@ class SystemManifest(BaseModel):
     )
     compliance_target: ComplianceTarget = Field(
         ComplianceTarget.EU_AI_ACT, description="Compliance framework target"
+    )
+    compliance_targets: list[str] | None = Field(
+        None,
+        min_length=1,
+        description=(
+            "Frameworks to assess side by side, as framework registry keys "
+            "(e.g. ['EU_AI_ACT', 'NIST_AI_RMF']). When set it takes precedence "
+            "over compliance_target. Left out of the serialised manifest when unset."
+        ),
+    )
+    framework_inputs: dict[str, FrameworkInputs] = Field(
+        default_factory=dict,
+        description=(
+            "Exclusions and attestations per framework, keyed by framework "
+            "registry key. Left out of the serialised manifest when empty."
+        ),
     )
     high_risk_presumption: bool = Field(
         False,
@@ -304,6 +360,19 @@ class SystemManifest(BaseModel):
         description="Reference to the EU AI Act applicability checker session, if run.",
     )
 
+    @model_serializer(mode="wrap")
+    def _omit_unset_framework_fields(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        # A manifest that never used the multi-framework fields must serialise
+        # to the same bytes as before they existed.
+        data = handler(self)
+        if self.compliance_targets is None:
+            data.pop("compliance_targets", None)
+        if not self.framework_inputs:
+            data.pop("framework_inputs", None)
+        return data
+
 
 class CheckerSessionRef(BaseModel):
     """Embedded reference to a completed checker run."""
@@ -375,8 +444,8 @@ class ScanStatusArtifact(BaseModel):
         None,
         description=(
             "Per-subcategory NIST AI RMF re-projection (CP-16) — present only "
-            "when --with-gaps was used and the manifest's compliance_target "
-            "is NIST_AI_RMF; None otherwise (including OSS/EU_AI_ACT mode)"
+            "when --with-gaps was used and NIST_AI_RMF is one of the resolved "
+            "targets; None otherwise (including OSS/EU_AI_ACT mode)"
         ),
     )
     controls: ControlsSummary | None = Field(
@@ -387,6 +456,25 @@ class ScanStatusArtifact(BaseModel):
             "mode or when the sync failed"
         ),
     )
+    framework_reports: dict[str, FrameworkReport] | None = Field(
+        None,
+        description=(
+            "One FrameworkReport per target framework, in target order — present "
+            "only when --with-gaps assessed a target set other than exactly "
+            "EU_AI_ACT or exactly NIST_AI_RMF; omitted from the JSON otherwise"
+        ),
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_framework_reports(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        # An artifact without framework reports must serialise, and so be
+        # signed, byte-for-byte as it was before the field existed.
+        data = handler(self)
+        if self.framework_reports is None:
+            data.pop("framework_reports", None)
+        return data
 
 
 class LedgerEvent(BaseModel):
@@ -977,6 +1065,13 @@ DISCLAIMER_V1 = (
     "It does not certify EU AI Act compliance or constitute legal advice."
 )
 
+# Framework-neutral wording for every framework other than the EU AI Act.
+DISCLAIMER_V2 = (
+    "OpenComplAI produces structured compliance evidence and heuristics. "
+    "It does not certify compliance with any law, regulation or framework, "
+    "or constitute legal advice."
+)
+
 
 class ScanOutputEnvelope(BaseModel):
     """Versioned JSON wrapper for CLI scan/gaps/report output.
@@ -1038,6 +1133,8 @@ class ArticleGapSource(StrEnum):
     SCAN = "scan"
     EVALUATOR = "evaluator"
     ARTIFACT = "artifact"
+    ATTESTATION = "attestation"  # provider attestation from the manifest
+    CROSSWALK = "crosswalk"  # re-projected from another framework's rows
 
 
 class ConfidenceLabel(StrEnum):
@@ -1046,6 +1143,7 @@ class ConfidenceLabel(StrEnum):
     HEURISTIC_ESTIMATE = "heuristic_estimate"
     NOT_ASSESSED = "not_assessed"
     MEASURED = "measured"
+    ATTESTED = "attested"
 
 
 class ArticleGapStatus(BaseModel):
@@ -1149,3 +1247,33 @@ class NistRmfReport(BaseModel):
     commit_ref: str
     generated_at: str
     subcategories: list[RmfSubcategoryStatus] = Field(default_factory=list)
+
+
+class FrameworkReport(BaseModel):
+    """One framework's per-requirement verdicts in a multi-framework run.
+
+    `report.articles` carries one row per requirement; ids other than the
+    EU AI Act's are prefixed with the framework key (e.g. "NIST_AI_RMF:GOVERN 1.1").
+    """
+
+    framework: str = Field(
+        ..., description="Framework registry key, e.g. 'NIST_AI_RMF'"
+    )
+    label: str = Field(..., description="Human-readable framework name")
+    data_version: str = Field(
+        ..., description="Short hash of the framework data the verdicts came from"
+    )
+    derived_from: str | None = Field(
+        None,
+        description=(
+            "Framework whose evidence these verdicts were re-projected from; "
+            "None when the framework was evaluated natively"
+        ),
+    )
+    disclaimer_ref: str
+    gated: bool = Field(False, description="True when this framework gates the run")
+    excluded: dict[str, str] = Field(
+        default_factory=dict,
+        description="Requirement id -> reason, as declared in framework_inputs",
+    )
+    report: GapReport

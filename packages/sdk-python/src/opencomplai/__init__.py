@@ -14,11 +14,23 @@ Quickstart:
         )
     ))
     print(result.risk_level)
+
+To assess a manifest against several frameworks side by side, pass
+resolve_targets(manifest) to evaluate_targets; FRAMEWORKS lists the
+frameworks this release knows.
 """
 
 from opencomplai_core.engine import assess
+from opencomplai_core.frameworks import (
+    FRAMEWORKS,
+    FrameworkPack,
+    evaluate_targets,
+    resolve_targets,
+)
 from opencomplai_core.models import (
     AssessmentInput,
+    FrameworkReport,
+    GapReport,
     ModelMetadata,
     RiskLevel,
     RiskResult,
@@ -28,9 +40,13 @@ from opencomplai_core.models import (
     SystemManifest,
 )
 
-__version__ = "0.7.1"
+__version__ = "0.8.0"
 __all__ = [
+    "FRAMEWORKS",
     "AssessmentInput",
+    "FrameworkPack",
+    "FrameworkReport",
+    "GapReport",
     "ModelMetadata",
     "RiskLevel",
     "RiskResult",
@@ -39,4 +55,6 @@ __all__ = [
     "ScanStatusArtifact",
     "SystemManifest",
     "assess",
+    "evaluate_targets",
+    "resolve_targets",
 ]

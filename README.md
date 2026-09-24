@@ -2,7 +2,7 @@
 
 **Stop manual audits → Start shipping.**
 
-OpenComplAI brings EU AI Act compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks."
+OpenComplAI brings AI compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks." The EU AI Act is evaluated natively; NIST AI RMF 1.0 is derived from the same evidence.
 
 [![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933)](https://nodejs.org/)
 
@@ -23,7 +23,7 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 
 - **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
 - **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
-- **Framework Crosswalk:** EU AI Act obligations are evaluated natively; NIST AI RMF 1.0 is evaluated too, by re-projecting that same EU AI Act evidence per subcategory through a built-in crosswalk (`opencomplai gaps --target NIST_AI_RMF`, no new scanner — see [NIST AI RMF](docs/src/concepts/nist-ai-rmf.md)). ISO/IEC 42001 stays mapped only: a citation via the same crosswalk (`data/framework_crosswalk.json`), with no computed verdict of its own.
+- **Frameworks Side by Side:** Assess one system against the EU AI Act and NIST AI RMF 1.0 side by side (`compliance_targets` in the manifest, or `opencomplai gaps --target EU_AI_ACT --target NIST_AI_RMF`). The EU AI Act is evaluated natively; NIST AI RMF is re-projected per subcategory from that same EU AI Act evidence through a built-in crosswalk, with no scanner of its own (see [NIST AI RMF](docs/src/concepts/nist-ai-rmf.md)). ISO/IEC 42001 stays mapped only: a clause citation via the same crosswalk (`data/framework_crosswalk.json`), with no computed verdict. See [Frameworks](docs/src/frameworks/index.md).
 
 ## How It Works (The 3-Minute Setup)
 

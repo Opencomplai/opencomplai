@@ -34,8 +34,8 @@ def _bridge(fixture: str) -> dict[str, object]:
 def test_bridge_returns_verdict(fixture: str, verdict: str):
     bridged = _bridge(fixture)
     assert bridged["checker_verdict"] == verdict
-    # Deprecated 0.7.x alias, kept until 0.8.0.
-    assert bridged["intended_purpose"] == verdict
+    # The 0.7.x intended_purpose alias of the verdict was removed in 0.8.0.
+    assert "intended_purpose" not in bridged
 
 
 @pytest.mark.parametrize("fixture", sorted(p.name for p in FIXTURES_DIR.glob("*.json")))

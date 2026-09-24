@@ -10,6 +10,12 @@ from the command line.
 **When:** after at least one `opencomplai gaps`/`check` run has derived
 controls for a system into the vault.
 
+Controls come from the EU AI Act gap report and from every natively evaluated
+target framework besides it, whose requirement ids carry a `<FW>:` prefix; a
+requirement excluded in the manifest's `framework_inputs` becomes a waived
+control with its reason as the rationale. NIST AI RMF is derived from the EU
+AI Act evidence and adds no controls. See [Frameworks](../frameworks/index.md).
+
 **Requires:** `OPENCOMPLAI_VAULT_URL`. Every `controls` subcommand refuses
 with exit `2` if it isn't set — the register has no vault-less local
 fallback (unlike `gaps`/`check`, where vault sync is an optional side
@@ -136,6 +142,7 @@ system's real state.
 |---|---|---|
 | `--system-id` | *(required)* | System identifier. |
 | `--fail-on-missing` / `--no-fail-on-missing` | `--fail-on-missing` (on) | Whether `evidence_missing` controls also gate exit code `1`. Turn off to only gate on `evidence_stale` / `pending_review` / TTL-expired. |
+| `--framework` | `EU_AI_ACT` plus gated frameworks | Count only this framework's controls; repeat for several. Controls of other frameworks have requirement ids prefixed `<FW>:`. Without the flag, the frameworks listed under `gate.frameworks` in `./opencomplai.yaml` (see [`check`](check.md#gating-other-frameworks)) are counted too. An unknown framework exits `2`. |
 | `--output` / `-o` | `human` | `human` or `json`. |
 
 Machine-readable form:

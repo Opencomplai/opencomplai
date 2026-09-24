@@ -7,16 +7,26 @@ render time. Every output cites the article/gap row that triggered it.
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from functools import lru_cache
 from pathlib import Path
 
+from opencomplai_core.control_catalog import get_catalog
+from opencomplai_core.frameworks import EU_AI_ACT, framework_of
 from opencomplai_core.gap_probes import QMS_17_1_CLAUSES, qms_article_17_clause_statuses
 from opencomplai_core.models import ArticleGapStatus, GapReport, GapStatus
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "recommend"
 
 _ACTIONABLE_STATUSES = frozenset({GapStatus.MISSING, GapStatus.PARTIAL})
+
+# Rows of other frameworks with no template of their own get this one.
+_GENERIC_MAPPING = {
+    "template_id": "generic_requirement",
+    "kind": "markdown",
+    "file": "generic_requirement.md",
+}
 
 # Labels for the qms_outline.md per-clause Status column — mirrors the
 # Met/Partial/Missing/Unverified honesty model, worded for a human reading a
@@ -93,6 +103,9 @@ def render_recommendations(
 ) -> list[Path]:
     """Write one remediation template per Missing/Partial article row.
 
+    EU AI Act rows without a template_map.json entry are skipped; rows of
+    other frameworks ("<FW>:<id>") fall back to generic_requirement.md.
+
     Returns the list of files written. Python templates are copied (optionally
     with a short header comment noting the triggering article). Markdown templates
     get placeholder substitution. `repo_root`, when supplied, additionally
@@ -106,13 +119,19 @@ def render_recommendations(
     for row in gap_report.articles:
         if row.status not in _ACTIONABLE_STATUSES:
             continue
+        framework = framework_of(row.article)
         mapping = template_map.get(row.article)
         if mapping is None:
-            continue
+            if framework == EU_AI_ACT:
+                continue
+            mapping = _GENERIC_MAPPING
 
         kind = mapping.get("kind", "markdown")
         template_path = _TEMPLATES_DIR / mapping["file"]
-        article_slug = row.article.lower().replace(" ", "").replace(".", "")
+        # "Art. 9" -> "art9", "FIXTURE:REQ-1" -> "fixture--req-1".
+        article_slug = re.sub(
+            r"[^a-z0-9_-]", "", row.article.lower().replace(":", "--")
+        )
         template_id = mapping["template_id"]
 
         if kind == "python":
@@ -140,6 +159,11 @@ def render_recommendations(
                 rendered = _render_qms_clause_table(rendered, repo_root)
             elif template_id == "fria_template":
                 rendered = _render_fria_fill_in(rendered)
+            elif template_id == "generic_requirement":
+                entry = get_catalog().get(row.article)
+                rendered = rendered.replace("{{framework}}", framework).replace(
+                    "{{title}}", entry.title if entry is not None else row.article
+                )
             out_path = output_dir / f"{article_slug}-{template_id}.md"
             out_path.write_text(rendered, encoding="utf-8")
             written.append(out_path)

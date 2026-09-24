@@ -5,6 +5,12 @@ Each entry is a **control code** — a stable, machine-readable identifier that 
 specific EU AI Act obligation or pipeline evaluator check.
 
 This page defines every code the tool can emit, what triggers it, and how to clear it.
+All of them are EU AI Act codes. When `check` gates another framework (see
+[Gating other frameworks](../cli/check.md#gating-other-frameworks)), its failing rows
+follow these codes in `failed_controls` as prefixed requirement ids, for example
+`NIST_AI_RMF:GOVERN 1.1`. To clear one, close the gap its row reports (for NIST AI
+RMF, the EU AI Act gap the row is derived from), or exclude the requirement, with a
+reason, in the manifest's `framework_inputs` (see [Frameworks](../frameworks/index.md)).
 
 ---
 

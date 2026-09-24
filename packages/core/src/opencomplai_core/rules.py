@@ -264,7 +264,7 @@ class _CompiledKeywordMatcher:
                         found_norms.add(stem)
                         break
         matched: list[str] = []
-        for norm in found_norms:
+        for norm in sorted(found_norms):
             matched.extend(self._by_normalized[norm])
         return matched
 

@@ -65,10 +65,27 @@ Created by `opencomplai init`. Consumed by `opencomplai check`.
 class SystemManifest(BaseModel):
     system_id: str
     intended_purpose: str
-    compliance_target: str = "EU_AI_ACT"
+    compliance_target: ComplianceTarget = "EU_AI_ACT"  # legacy single target
+    compliance_targets: list[str] | None = None        # frameworks to assess
+    framework_inputs: dict[str, FrameworkInputs] = {}  # per-framework declarations
     high_risk_presumption: bool = False
     commit_ref: str = "HEAD"
+    # ... Annex IV fields, operator_role, checker_session
+
+class FrameworkInputs(BaseModel):  # rejects unknown keys and empty strings
+    excluded: dict[str, str] = {}           # requirement id -> reason
+    attested: dict[str, Attestation] = {}   # requirement id -> statement
+
+class Attestation(BaseModel):
+    statement: str
+    attested_by: str
+    attested_at: str  # ISO 8601 date or timestamp
 ```
+
+`compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`); when
+it is unset, the single `compliance_target` is the target. Both new fields are dropped
+from the serialised manifest when unset, so a manifest that does not use them keeps its
+exact bytes. See [Frameworks](../frameworks/index.md).
 
 ### `ScanStatusArtifact`
 
@@ -86,7 +103,41 @@ class ScanStatusArtifact(BaseModel):
     duration_ms: int
     pending_verifications_count: int = 0
     signature: str | None      # Base64-encoded Ed25519 signature; None = unsigned
+    eval_summary: EvalSummary | None = None
+    scan_summary: ScanSummary | None = None
+    gap_report: GapReport | None = None           # EU AI Act, with --with-gaps
+    nist_rmf_report: NistRmfReport | None = None  # with --with-gaps, NIST_AI_RMF targeted
+    controls: ControlsSummary | None = None
+    framework_reports: dict[str, FrameworkReport] | None = None  # omitted when None
 ```
+
+`gap_report` and `nist_rmf_report` are permanent: every `check --with-gaps` writes them
+exactly as earlier releases did, whatever else it adds. `framework_reports` is added
+beside them, one entry per target in target order, only when the targets are something
+other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF`. When it is `None` the key is
+left out of the JSON, so such an artifact serialises, and verifies against its
+signature, byte for byte as before the field existed.
+
+### `FrameworkReport`
+
+One framework's verdicts in a multi-framework run.
+
+```python
+class FrameworkReport(BaseModel):
+    framework: str               # registry key, e.g. "NIST_AI_RMF"
+    label: str                   # human-readable name
+    data_version: str            # short hash of the framework data used
+    derived_from: str | None     # e.g. "EU_AI_ACT"; None when evaluated natively
+    disclaimer_ref: str          # "DISCLAIMER_V1" (EU AI Act) or "DISCLAIMER_V2"
+    gated: bool = False          # True when this framework gated the run
+    excluded: dict[str, str] = {}  # requirement id -> reason, from framework_inputs
+    report: GapReport            # rows; ids other than the EU AI Act's are "<FW>:<id>"
+```
+
+`GapReport` is the same model for every framework. A row's `source` can also be
+`attestation` (a provider statement from `framework_inputs`) or `crosswalk`
+(re-projected from another framework's rows), and its `confidence_label` can be
+`attested`.
 
 ## Service models (gateway API, evidence vault)
 

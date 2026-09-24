@@ -15,8 +15,10 @@ import urllib.request as urlreq
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from opencomplai_core.engine import assess
+from opencomplai_core.frameworks import resolve_targets
 from opencomplai_core.models import (
     AssessmentInput,
+    FrameworkInputs,
     ModelMetadata,
     SystemManifest,
 )
@@ -122,6 +124,8 @@ class ManifestValidateRequest(BaseModel):
     system_id: str
     intended_purpose: str
     compliance_target: str = "EU_AI_ACT"
+    compliance_targets: list[str] | None = None
+    framework_inputs: dict[str, FrameworkInputs] = {}
     high_risk_presumption: bool = False
     commit_ref: str = "HEAD"
 
@@ -199,13 +203,8 @@ async def metrics():
 @router.post("/v1/manifests/validate")
 async def validate_manifest(request: ManifestValidateRequest) -> dict:
     try:
-        manifest = SystemManifest(
-            system_id=request.system_id,
-            intended_purpose=request.intended_purpose,
-            compliance_target=request.compliance_target,
-            high_risk_presumption=request.high_risk_presumption,
-            commit_ref=request.commit_ref,
-        )
+        manifest = SystemManifest.model_validate(request.model_dump(exclude_none=True))
+        resolve_targets(manifest)  # rejects unknown framework ids
         return {"valid": True, "manifest": manifest.model_dump()}
     except Exception as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

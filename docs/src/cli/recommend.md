@@ -1,7 +1,8 @@
 # `opencomplai recommend`
 
-Write one remediation file per **Missing**/**Partial** article — Markdown checklists
-or compile-checked Python examples.
+Write one remediation file per **Missing**/**Partial** requirement — Markdown
+checklists or compile-checked Python examples. EU AI Act articles get their own
+templates; see below for other frameworks.
 
 **What:** starting-point fixes you can copy into your repo.
 
@@ -63,6 +64,13 @@ One file per `MISSING`/`PARTIAL` article row, named `<article-slug>-<template_id
 (e.g. `art6-annex_iii_applicability_note.md`). `MET` and `UNVERIFIED` rows produce no
 output — if your gap report has none, `recommend` prints
 `No Missing/Partial gap-report rows — nothing to recommend.` and exits cleanly.
+
+When the manifest targets a natively evaluated framework besides the EU AI Act, its
+rows follow the EU AI Act's; a row with no template of its own gets
+`generic_requirement.md`, written as `<fw>--<id>-generic_requirement.md` for
+`<FW>:<id>`. NIST AI RMF rows are re-projected from EU AI Act evidence, so they add no
+files. With `--gap-report`, the same frameworks are read from the file's `frameworks`
+block.
 
 Every rendered template embeds the triggering `{{article}}`, `{{status}}`, `{{source}}`,
 `{{evidence_ref}}`, and `{{rationale}}`, so the output file is traceable back to the

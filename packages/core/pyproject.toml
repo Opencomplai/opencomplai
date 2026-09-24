@@ -1,7 +1,7 @@
 [project]
 name = "opencomplai-core"
-version = "0.7.1"
-description = "Opencomplai core risk assessment engine for EU AI Act compliance"
+version = "0.8.0"
+description = "Opencomplai core engine for AI compliance: the EU AI Act, and NIST AI RMF derived from the same evidence"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]

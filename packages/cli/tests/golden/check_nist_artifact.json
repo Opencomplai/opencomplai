@@ -1,0 +1,1233 @@
+{
+  "install_id": "<INSTALL_ID>",
+  "system_id": "golden-sys",
+  "commit_ref": "HEAD",
+  "result": "pass",
+  "failed_controls": [],
+  "evidence_hashes": [],
+  "rationale_hash": "sha256:990fa9a8524f9a4f82e7d440c2b2298138e5f5026311571b08c4a1cfb7b27b6a",
+  "duration_ms": <DURATION>,
+  "pending_verifications_count": 0,
+  "signature": null,
+  "eval_summary": null,
+  "scan_summary": null,
+  "gap_report": {
+    "system_id": "golden-sys",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "ai_literacy",
+        "rationale": "Obligation 'AI literacy' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'customer support chatbot for an online shop' does not match any Annex III high-risk categories.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/risk_register.md",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (2 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "unverified",
+        "source": "rule",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "unverified",
+        "source": "rule",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "INSTRUCTIONS.md",
+        "rationale": "Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.55,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "human_oversight_construct",
+        "rationale": "No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/qms.md",
+        "rationale": "Found candidate artifact/signal for 'provider_qms' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.55,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "transparency",
+        "rationale": "Obligation 'Transparency obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": null
+  },
+  "nist_rmf_report": {
+    "system_id": "golden-sys",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "subcategories": [
+      {
+        "subcategory": "GOVERN 1.1",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.2",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.3",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.4",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.5",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.6",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 1.7",
+        "function": "GOVERN",
+        "category": "GOVERN 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 5",
+          "Art. 9",
+          "Art. 11",
+          "Art. 16",
+          "Art. 17"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 2.1",
+        "function": "GOVERN",
+        "category": "GOVERN 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 4"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 2.2",
+        "function": "GOVERN",
+        "category": "GOVERN 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 4"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 2.3",
+        "function": "GOVERN",
+        "category": "GOVERN 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 4"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 2, mapping confidence=low) from existing EU AI Act evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 3.1",
+        "function": "GOVERN",
+        "category": "GOVERN 3",
+        "status": "missing",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 14"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 3.2",
+        "function": "GOVERN",
+        "category": "GOVERN 3",
+        "status": "missing",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 14"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 4.1",
+        "function": "GOVERN",
+        "category": "GOVERN 4",
+        "status": "partial",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 13",
+          "Art. 50"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 4.2",
+        "function": "GOVERN",
+        "category": "GOVERN 4",
+        "status": "partial",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 13",
+          "Art. 50"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 4.3",
+        "function": "GOVERN",
+        "category": "GOVERN 4",
+        "status": "partial",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 13",
+          "Art. 50"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 5.1",
+        "function": "GOVERN",
+        "category": "GOVERN 5",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to GOVERN 5 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 5.2",
+        "function": "GOVERN",
+        "category": "GOVERN 5",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to GOVERN 5 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 6.1",
+        "function": "GOVERN",
+        "category": "GOVERN 6",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 24"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 6, mapping confidence=low) from existing EU AI Act evidence: Art. 24 -> missing (source=artifact, evidence=distributor_conformity).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "GOVERN 6.2",
+        "function": "GOVERN",
+        "category": "GOVERN 6",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 24"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 6, mapping confidence=low) from existing EU AI Act evidence: Art. 24 -> missing (source=artifact, evidence=distributor_conformity).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.1",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.2",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.3",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.4",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.5",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 1.6",
+        "function": "MAP",
+        "category": "MAP 1",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 6"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 1, mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 2.1",
+        "function": "MAP",
+        "category": "MAP 2",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 10"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 2.2",
+        "function": "MAP",
+        "category": "MAP 2",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 10"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 2.3",
+        "function": "MAP",
+        "category": "MAP 2",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 10"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 2, mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 3.1",
+        "function": "MAP",
+        "category": "MAP 3",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 53"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 3.2",
+        "function": "MAP",
+        "category": "MAP 3",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 53"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 3.3",
+        "function": "MAP",
+        "category": "MAP 3",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 53"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 3.4",
+        "function": "MAP",
+        "category": "MAP 3",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 53"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 3.5",
+        "function": "MAP",
+        "category": "MAP 3",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 53"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 4.1",
+        "function": "MAP",
+        "category": "MAP 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MAP 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 4.2",
+        "function": "MAP",
+        "category": "MAP 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MAP 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 5.1",
+        "function": "MAP",
+        "category": "MAP 5",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 25"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 5, mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MAP 5.2",
+        "function": "MAP",
+        "category": "MAP 5",
+        "status": "met",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 25"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 5, mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 1.1",
+        "function": "MEASURE",
+        "category": "MEASURE 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 43"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 1.2",
+        "function": "MEASURE",
+        "category": "MEASURE 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 43"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 1.3",
+        "function": "MEASURE",
+        "category": "MEASURE 1",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 43"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 1, mapping confidence=low) from existing EU AI Act evidence: Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.1",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.2",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.3",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.4",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.5",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.6",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.7",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.8",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.9",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.10",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.11",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.12",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 2.13",
+        "function": "MEASURE",
+        "category": "MEASURE 2",
+        "status": "unverified",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 15",
+          "Art. 55"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 2, mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 3.1",
+        "function": "MEASURE",
+        "category": "MEASURE 3",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 12"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 3.2",
+        "function": "MEASURE",
+        "category": "MEASURE 3",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 12"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 3.3",
+        "function": "MEASURE",
+        "category": "MEASURE 3",
+        "status": "unverified",
+        "mapping_confidence": "medium",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 12"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 4.1",
+        "function": "MEASURE",
+        "category": "MEASURE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 4.2",
+        "function": "MEASURE",
+        "category": "MEASURE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MEASURE 4.3",
+        "function": "MEASURE",
+        "category": "MEASURE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MEASURE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 1.1",
+        "function": "MANAGE",
+        "category": "MANAGE 1",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 1.2",
+        "function": "MANAGE",
+        "category": "MANAGE 1",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 1.3",
+        "function": "MANAGE",
+        "category": "MANAGE 1",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 1.4",
+        "function": "MANAGE",
+        "category": "MANAGE 1",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 1 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 2.1",
+        "function": "MANAGE",
+        "category": "MANAGE 2",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 2.2",
+        "function": "MANAGE",
+        "category": "MANAGE 2",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 2.3",
+        "function": "MANAGE",
+        "category": "MANAGE 2",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 2.4",
+        "function": "MANAGE",
+        "category": "MANAGE 2",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 2 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 3.1",
+        "function": "MANAGE",
+        "category": "MANAGE 3",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 3 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 3.2",
+        "function": "MANAGE",
+        "category": "MANAGE 3",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 3 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 4.1",
+        "function": "MANAGE",
+        "category": "MANAGE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 4.2",
+        "function": "MANAGE",
+        "category": "MANAGE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "subcategory": "MANAGE 4.3",
+        "function": "MANAGE",
+        "category": "MANAGE 4",
+        "status": "unverified",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "needs_founder_review": true,
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ]
+  },
+  "controls": null
+}

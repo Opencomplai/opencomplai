@@ -6,6 +6,10 @@ and control catalog coverage of every article emitted by gap_report.py.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
+import pytest
 from opencomplai_core.control_catalog import (
     CONTROL_CATALOG,
     ControlCatalogEntry,
@@ -16,8 +20,18 @@ from opencomplai_core.control_identity import (
     fingerprint_manifest,
     make_control_id,
 )
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
 from opencomplai_core.gap_report import load_gap_article_map
 from opencomplai_core.models import ControlInstance, ControlState, SystemManifest
+
+FIXTURE_PACK = FrameworkPack(
+    "FIXTURE",
+    "Fixture framework",
+    requirements=Path(__file__).parent
+    / "fixtures"
+    / "framework_pack"
+    / "requirements.json",
+)
 
 
 def _manifest_kwargs(**overrides: object) -> dict:
@@ -131,6 +145,33 @@ class TestControlCatalog:
             raise AssertionError("expected ValueError on empty catalog")
         except ValueError:
             pass
+
+    def test_native_framework_pack_requirements_join_the_catalog(self, monkeypatch):
+        monkeypatch.setitem(FRAMEWORKS, "FIXTURE", FIXTURE_PACK)
+        catalog = get_catalog()
+
+        assert catalog is not CONTROL_CATALOG
+        assert catalog["FIXTURE:REQ-1"] == ControlCatalogEntry(
+            "Risk register maintained", 180
+        )
+        assert catalog["FIXTURE:REQ-2"] == ControlCatalogEntry(
+            "Governance policy approved", None
+        )
+        assert catalog["FIXTURE:REQ-3"].default_ttl_days == 365
+        assert {k: v for k, v in catalog.items() if ":" not in k} == CONTROL_CATALOG
+        assert "FIXTURE:REQ-1" not in CONTROL_CATALOG
+
+    def test_malformed_framework_pack_entry_fails_loud(self, monkeypatch, tmp_path):
+        requirements = tmp_path / "requirements.json"
+        requirements.write_text(
+            json.dumps({"BAD:REQ-1": {"title": "Bad", "default_ttl_days": 0}}),
+            encoding="utf-8",
+        )
+        monkeypatch.setitem(
+            FRAMEWORKS, "BAD", FrameworkPack("BAD", "Bad", requirements=requirements)
+        )
+        with pytest.raises(ValueError, match="BAD:REQ-1"):
+            get_catalog()
 
 
 class TestControlInstance:

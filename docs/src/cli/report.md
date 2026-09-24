@@ -2,7 +2,9 @@
 
 Render a single shareable HTML or PDF document combining the manifest, rule results, a
 gap report, and eval/scan summaries — a human-readable snapshot to hand to a
-stakeholder who doesn't want to read raw JSON.
+stakeholder who doesn't want to read raw JSON. When the run assessed several
+[frameworks](../frameworks/index.md), the report adds one section per framework other
+than the EU AI Act.
 
 !!! tip "Read-only, no network, no second CI gate"
     `report` only reads already-local files (`--manifest`, `--artifact`,
@@ -27,8 +29,8 @@ stakeholder who doesn't want to read raw JSON.
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--manifest` / `-m` | `system-manifest.json` | System manifest path |
-| `--artifact` | `compliance-artifact.json` | Path to a `ScanStatusArtifact` (from `opencomplai check`) — optional; supplies rule results and, if present, embedded `gap_report`/`eval_summary`/`scan_summary` |
-| `--gap-report` | *(none)* | Path to the output of `opencomplai gaps --output json` (or a bare `GapReport` JSON); UTF-8, UTF-16 or the system code page, so a `>` redirect from any Windows shell works — overrides any `gap_report` embedded in `--artifact` |
+| `--artifact` | `compliance-artifact.json` | Path to a `ScanStatusArtifact` (from `opencomplai check`) — optional; supplies rule results and, if present, embedded `gap_report`/`eval_summary`/`scan_summary`/`framework_reports` |
+| `--gap-report` | *(none)* | Path to the output of `opencomplai gaps --output json` (or a bare `GapReport` JSON); UTF-8, UTF-16 or the system code page, so a `>` redirect from any Windows shell works — overrides any `gap_report` embedded in `--artifact`. A multi-framework file (with a `frameworks` block) adds one section per framework other than the EU AI Act, as does an artifact carrying `framework_reports`. Each of `gap_report` and `framework_reports` falls back to the artifact separately, so a file holding only a `gap_report` renders next to the artifact's framework sections, which may come from a different run |
 | `--output` / `-o` | `report.html` | Output path — format is inferred from the file extension |
 
 ## HTML vs. PDF

@@ -161,7 +161,7 @@ def prepare_scan_status_artifact(
     ``commit_ref``, ``result``, ``failed_controls``, ``evidence_hashes``,
     ``rationale_hash``, ``duration_ms``, ``pending_verifications_count``,
     ``signature``, ``eval_summary``, ``scan_summary``, ``gap_report``,
-    ``nist_rmf_report``, ``controls``) passes through unchanged -- the widened schema (G-4) now accepts all of
+    ``nist_rmf_report``, ``controls``, ``framework_reports``) passes through unchanged -- the widened schema (G-4) now accepts all of
     them. Only the fields the OSS model has no concept of at all are
     synthesized here, and each synthesis is documented:
 

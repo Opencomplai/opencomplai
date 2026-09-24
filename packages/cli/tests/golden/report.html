@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Opencomplai Compliance Report — golden-sys</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Helvetica, Arial, sans-serif; margin: 2rem; color: #1a1a1a; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.15rem; border-bottom: 1px solid #ddd; padding-bottom: 0.25rem; margin-top: 2rem; }
+  table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+  th, td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; text-align: left; font-size: 0.9rem; }
+  th { background: #f5f5f5; }
+  .status-met { color: #1a7f37; font-weight: 600; }
+  .status-missing { color: #cf222e; font-weight: 600; }
+  .status-partial { color: #9a6700; font-weight: 600; }
+  .status-unverified { color: #6e7781; }
+  .meta { color: #57606a; font-size: 0.9rem; }
+  .disclaimer { color: #6e7781; font-size: 0.8rem; margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 0.5rem; }
+  .filters { margin: 0.75rem 0; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+  .filters input, .filters select { padding: 0.3rem 0.5rem; }
+  .hidden-row { display: none; }
+</style>
+</head>
+<body>
+<h1>Opencomplai Compliance Report</h1>
+<p class="meta">
+  System: <strong>golden-sys</strong> &middot;
+  Commit: HEAD &middot;
+  Generated: <TIMESTAMP>
+</p>
+<p class="meta">
+  Heuristic aid only — not legal certification. The signed CI gate is
+  <code>compliance-artifact.json</code> from <code>opencomplai check</code>,
+  not this HTML file.
+</p>
+
+<div class="filters">
+  <label>Status
+    <select id="statusFilter">
+      <option value="">All</option>
+      <option value="MET">Met</option>
+      <option value="PARTIAL">Partial</option>
+      <option value="MISSING">Missing</option>
+      <option value="UNVERIFIED">Unverified</option>
+    </select>
+  </label>
+  <label>Search <input id="textFilter" type="search" placeholder="article or rationale"></label>
+</div>
+
+<h2>Manifest summary</h2>
+<table>
+  <tr><th>Field</th><th>Value</th></tr>
+  <tr><td>system_id</td><td>golden-sys</td></tr>
+  <tr><td>intended_purpose</td><td>credit scoring for loan applications</td></tr>
+  <tr><td>compliance_target</td><td>EU_AI_ACT</td></tr>
+  <tr><td>high_risk_presumption</td><td>False</td></tr>
+</table>
+
+<h2>Rule / control results</h2>
+<table><tr><th>Rule</th><th>Status</th><th>Reference</th><th>Rationale</th></tr><tr><td>Prohibited AI Practice Detection (Article 5)</td><td class="status-met">PASS</td><td>EU AI Act, Article 5</td><td>No prohibited practice signals detected in &#x27;credit scoring for loan applications&#x27;.</td></tr>
+<tr><td>High-Risk System Classification (Article 6 / Annex III)</td><td class="status-missing">FAIL</td><td>EU AI Act, Article 6, Annex III</td><td>Use case &#x27;credit scoring for loan applications&#x27; matches Annex III categories: essential_services.</td></tr>
+<tr><td>Profiling Detection — Force High-Risk (Article 6(3))</td><td class="status-missing">FAIL</td><td>EU AI Act, Article 6(3), Recital 34</td><td>Profiling signals detected in use case: credit, credit scoring, scoring. System is classified as high-risk per Article 6(3).</td></tr>
+<tr><td>Substantial Modification Trap (Article 25 / Article 3(23))</td><td class="status-met">PASS</td><td>EU AI Act, Article 25, Article 3(23), Recital 66</td><td>No substantial modification declared in assessment answers.</td></tr></table>
+
+<h2>Gap report</h2>
+<table id="gap-table"><thead><tr><th>Article</th><th>Status</th><th>Source</th><th>Evidence</th><th>Rationale</th></tr></thead><tbody><tr><td>Art. 4</td><td class="status-unverified">UNVERIFIED</td><td>obligation</td><td>ai_literacy</td><td>Obligation &#x27;AI literacy&#x27; applies; no automated verification run.</td></tr>
+<tr><td>Art. 5</td><td class="status-unverified">UNVERIFIED</td><td>obligation</td><td>prohibited</td><td>Obligation &#x27;Prohibited AI practices&#x27; applies; no automated verification run.</td></tr>
+<tr><td>Art. 6</td><td class="status-missing">MISSING</td><td>rule</td><td>EU_AIA_ART6_HIGH_RISK</td><td>Use case &#x27;credit scoring for loan applications&#x27; matches Annex III categories: essential_services.</td></tr>
+<tr><td>Art. 9</td><td class="status-partial">PARTIAL</td><td>artifact</td><td>docs/risk_register.md</td><td>Found candidate artifact/signal for &#x27;risk_register&#x27; (2 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.</td></tr>
+<tr><td>Art. 10</td><td class="status-unverified">UNVERIFIED</td><td>evaluator</td><td>none</td><td>No source data supplied for this article in this run.</td></tr>
+<tr><td>Art. 11</td><td class="status-unverified">UNVERIFIED</td><td>rule</td><td>none</td><td>No source data supplied for this article in this run.</td></tr>
+<tr><td>Art. 12</td><td class="status-unverified">UNVERIFIED</td><td>rule</td><td>none</td><td>No source data supplied for this article in this run.</td></tr>
+<tr><td>Art. 13</td><td class="status-partial">PARTIAL</td><td>artifact</td><td>INSTRUCTIONS.md</td><td>Found candidate artifact/signal for &#x27;deployer_instructions&#x27; (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.</td></tr>
+<tr><td>Art. 14</td><td class="status-missing">MISSING</td><td>artifact</td><td>human_oversight_construct</td><td>No conventional documentation/code probe matched for &#x27;human_oversight_construct&#x27;. Add the expected file or construct, then re-run gaps.</td></tr>
+<tr><td>Art. 15</td><td class="status-unverified">UNVERIFIED</td><td>evaluator</td><td>none</td><td>No source data supplied for this article in this run.</td></tr>
+<tr><td>Art. 16</td><td class="status-missing">MISSING</td><td>artifact</td><td>provider_qms_bundle</td><td>No conventional documentation/code probe matched for &#x27;provider_qms_bundle&#x27;. Add the expected file or construct, then re-run gaps.</td></tr>
+<tr><td>Art. 17</td><td class="status-partial">PARTIAL</td><td>artifact</td><td>docs/qms.md</td><td>Found candidate artifact/signal for &#x27;provider_qms&#x27; (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.</td></tr>
+<tr><td>Art. 24</td><td class="status-missing">MISSING</td><td>artifact</td><td>distributor_conformity</td><td>No conventional documentation/code probe matched for &#x27;distributor_conformity&#x27;. Add the expected file or construct, then re-run gaps.</td></tr>
+<tr><td>Art. 25</td><td class="status-met">MET</td><td>rule</td><td>EU_AIA_ART25_MODIFICATION_TRAP</td><td>No substantial modification declared in assessment answers.</td></tr>
+<tr><td>Art. 27</td><td class="status-missing">MISSING</td><td>artifact</td><td>provider_fria</td><td>No conventional documentation/code probe matched for &#x27;provider_fria&#x27;. Add the expected file or construct, then re-run gaps.</td></tr>
+<tr><td>Art. 43</td><td class="status-missing">MISSING</td><td>artifact</td><td>conformity_assessment_docs</td><td>No conventional documentation/code probe matched for &#x27;conformity_assessment_docs&#x27;. Add the expected file or construct, then re-run gaps.</td></tr>
+<tr><td>Art. 50</td><td class="status-unverified">UNVERIFIED</td><td>obligation</td><td>transparency</td><td>Obligation &#x27;Transparency obligations&#x27; applies; no automated verification run.</td></tr>
+<tr><td>Art. 53</td><td class="status-unverified">UNVERIFIED</td><td>obligation</td><td>gpai_provider</td><td>Obligation &#x27;General-purpose AI model provider obligations&#x27; applies; no automated verification run.</td></tr>
+<tr><td>Art. 55</td><td class="status-unverified">UNVERIFIED</td><td>obligation</td><td>gpai_systemic_risk</td><td>Obligation &#x27;GPAI model with systemic risk obligations&#x27; applies; no automated verification run.</td></tr></tbody></table>
+
+<h2>Eval summary</h2>
+<p><em>No eval summary supplied — run with <code>--sample-set</code>.</em></p>
+
+<h2>Scan corroboration summary</h2>
+<p><em>No scan summary supplied — run with <code>--scan</code>.</em></p>
+
+<script id="oc-envelope" type="application/json">{"schema_version":"1.0","tool_name":"opencomplai","tool_version":"<VERSION>","disclaimer":"OpenComplAI produces structured compliance evidence and heuristics. It does not certify EU AI Act compliance or constitute legal advice.","generated_at":"<TIMESTAMP>","scan_errors":[],"payload":{"system_id":"golden-sys","commit_ref":"HEAD","gap_report":{"system_id":"golden-sys","commit_ref":"HEAD","generated_at":"<TIMESTAMP>","articles":[{"article":"Art. 4","status":"unverified","source":"obligation","evidence_ref":"ai_literacy","rationale":"Obligation 'AI literacy' applies; no automated verification run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 5","status":"unverified","source":"obligation","evidence_ref":"prohibited","rationale":"Obligation 'Prohibited AI practices' applies; no automated verification run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 6","status":"missing","source":"rule","evidence_ref":"EU_AIA_ART6_HIGH_RISK","rationale":"Use case 'credit scoring for loan applications' matches Annex III categories: essential_services.","confidence":0.9,"confidence_label":"measured","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 9","status":"partial","source":"artifact","evidence_ref":"docs/risk_register.md","rationale":"Found candidate artifact/signal for 'risk_register' (2 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.","confidence":0.6,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 10","status":"unverified","source":"evaluator","evidence_ref":"none","rationale":"No source data supplied for this article in this run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 11","status":"unverified","source":"rule","evidence_ref":"none","rationale":"No source data supplied for this article in this run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 12","status":"unverified","source":"rule","evidence_ref":"none","rationale":"No source data supplied for this article in this run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 13","status":"partial","source":"artifact","evidence_ref":"INSTRUCTIONS.md","rationale":"Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.","confidence":0.55,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 14","status":"missing","source":"artifact","evidence_ref":"human_oversight_construct","rationale":"No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.","confidence":0.4,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 15","status":"unverified","source":"evaluator","evidence_ref":"none","rationale":"No source data supplied for this article in this run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 16","status":"missing","source":"artifact","evidence_ref":"provider_qms_bundle","rationale":"No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.","confidence":0.4,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 17","status":"partial","source":"artifact","evidence_ref":"docs/qms.md","rationale":"Found candidate artifact/signal for 'provider_qms' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.","confidence":0.55,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 24","status":"missing","source":"artifact","evidence_ref":"distributor_conformity","rationale":"No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.","confidence":0.4,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 25","status":"met","source":"rule","evidence_ref":"EU_AIA_ART25_MODIFICATION_TRAP","rationale":"No substantial modification declared in assessment answers.","confidence":0.9,"confidence_label":"measured","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 27","status":"missing","source":"artifact","evidence_ref":"provider_fria","rationale":"No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.","confidence":0.4,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 43","status":"missing","source":"artifact","evidence_ref":"conformity_assessment_docs","rationale":"No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.","confidence":0.4,"confidence_label":"heuristic_estimate","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 50","status":"unverified","source":"obligation","evidence_ref":"transparency","rationale":"Obligation 'Transparency obligations' applies; no automated verification run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 53","status":"unverified","source":"obligation","evidence_ref":"gpai_provider","rationale":"Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"},{"article":"Art. 55","status":"unverified","source":"obligation","evidence_ref":"gpai_systemic_risk","rationale":"Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.","confidence":null,"confidence_label":"not_assessed","disclaimer_ref":"DISCLAIMER_V1"}],"evidence_hashes":[],"principle_summary":null},"eval_summary":null,"scan_summary":null}}</script>
+<script>
+(function () {
+  const statusFilter = document.getElementById('statusFilter');
+  const textFilter = document.getElementById('textFilter');
+  const table = document.querySelector('#gap-table');
+  if (!table) return;
+  function apply() {
+    const status = (statusFilter.value || '').toUpperCase();
+    const q = (textFilter.value || '').toLowerCase();
+    for (const row of table.querySelectorAll('tbody tr')) {
+      const cells = row.querySelectorAll('td');
+      const rowStatus = (cells[1]?.textContent || '').trim().toUpperCase();
+      const hay = row.textContent.toLowerCase();
+      const okStatus = !status || rowStatus === status;
+      const okText = !q || hay.includes(q);
+      row.classList.toggle('hidden-row', !(okStatus && okText));
+    }
+  }
+  statusFilter.addEventListener('change', apply);
+  textFilter.addEventListener('input', apply);
+})();
+</script>
+
+<p class="disclaimer">
+  Generated by <code>opencomplai report</code>. Informational only — the canonical CI gate
+  is <code>compliance-artifact.json</code> produced by <code>opencomplai check</code>. This
+  report does not replace the Annex IV dossier (<code>opencomplai docs generate</code>).
+  Embedded JSON is a CLI envelope, <strong>not</strong> a signed ScanStatusArtifact.
+</p>
+</body>
+</html>

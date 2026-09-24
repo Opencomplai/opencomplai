@@ -7,6 +7,11 @@ info:
     All routes proxy to the appropriate Python service.
     This spec is the source of truth for the API contract.
 
+    Manifests can name several frameworks (compliance_targets). Risk
+    classification, dossier generation and the risk engine's public
+    /v1/checker/* routes (called by the docs widget, not proxied here) are
+    EU AI Act only.
+
 servers:
   - url: http://localhost:8080
     description: Local Docker Compose deployment
@@ -28,6 +33,9 @@ paths:
     post:
       operationId: validateManifest
       summary: Validate a system manifest (idempotent)
+      description: >-
+        Validates the manifest with the core SystemManifest model. Rejects a
+        compliance_targets list that is empty or names an unknown framework.
       requestBody:
         required: true
         content:
@@ -38,7 +46,7 @@ paths:
         "200":
           description: Manifest is valid
         "422":
-          description: Validation error
+          description: Validation error, including an unknown framework id
           content:
             application/json:
               schema:
@@ -47,7 +55,8 @@ paths:
   /v1/risk/classify:
     post:
       operationId: classifyRisk
-      summary: Classify system risk level (deterministic, idempotent)
+      summary: Classify system risk level (EU AI Act only; deterministic, idempotent)
+      description: Classifies against EU AI Act Annex III and Art. 5/6 rules only.
       requestBody:
         required: true
         content:
@@ -121,7 +130,8 @@ paths:
   /v1/docs/generate:
     post:
       operationId: generateDocs
-      summary: Generate Annex IV technical documentation dossier (idempotent by system_id + commit_ref)
+      summary: Generate Annex IV technical documentation dossier (EU AI Act only; idempotent by system_id + commit_ref)
+      description: Builds the EU AI Act Annex IV dossier; other frameworks have no dossier.
       requestBody:
         required: true
         content:
@@ -205,11 +215,64 @@ components:
         compliance_target:
           type: string
           default: EU_AI_ACT
+          description: >-
+            Legacy single framework target (EU_AI_ACT or NIST_AI_RMF).
+            Ignored when compliance_targets is set.
+        compliance_targets:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
+          description: >-
+            Frameworks to assess side by side, as framework ids
+            (e.g. [EU_AI_ACT, NIST_AI_RMF]). Takes precedence over
+            compliance_target.
+        framework_inputs:
+          type: object
+          description: >-
+            Exclusions and attestations per framework, keyed by framework id.
+            Requirement ids are prefixed with the framework id
+            (e.g. "NIST_AI_RMF:GOVERN 1.1").
+          additionalProperties:
+            $ref: "#/components/schemas/FrameworkInputs"
         high_risk_presumption:
           type: boolean
           default: false
         commit_ref:
           type: string
+
+    FrameworkInputs:
+      type: object
+      additionalProperties: false
+      properties:
+        excluded:
+          type: object
+          description: Requirement id -> reason the requirement does not apply
+          additionalProperties:
+            type: string
+            minLength: 1
+        attested:
+          type: object
+          description: Requirement id -> provider attestation that it is met
+          additionalProperties:
+            $ref: "#/components/schemas/Attestation"
+
+    Attestation:
+      type: object
+      additionalProperties: false
+      required: [statement, attested_by, attested_at]
+      properties:
+        statement:
+          type: string
+          minLength: 1
+        attested_by:
+          type: string
+          minLength: 1
+        attested_at:
+          type: string
+          minLength: 1
+          description: ISO 8601 date or timestamp
 
     RiskClassifyRequest:
       type: object

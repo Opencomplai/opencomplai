@@ -8,9 +8,13 @@ the GapReport -> ControlInstance projection in `control_assessment.py`.
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
+from pathlib import Path
+
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
 from opencomplai_core.control_catalog import ControlCatalogEntry, get_catalog
 from opencomplai_core.control_identity import make_control_id
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
@@ -24,6 +28,15 @@ from opencomplai_core.models import (
 
 TENANT_ID = "tenant-a"
 NOW = "2026-08-17T00:00:00+00:00"
+
+FIXTURE_PACK = FrameworkPack(
+    "FIXTURE",
+    "Fixture framework",
+    requirements=Path(__file__).parent
+    / "fixtures"
+    / "framework_pack"
+    / "requirements.json",
+)
 
 
 def _manifest(**overrides: object) -> SystemManifest:
@@ -464,3 +477,96 @@ def test_build_controls_block_empty_list_zero_fills_every_state():
         "waived": 0,
     }
     assert block.items == []
+
+
+# ---------------------------------------------------------------------------
+# Other frameworks: prefixed ids, catalog TTLs and manifest exclusions.
+# ---------------------------------------------------------------------------
+
+
+def test_native_pack_row_uses_its_prefixed_id_and_pack_ttl(monkeypatch):
+    monkeypatch.setitem(FRAMEWORKS, "FIXTURE", FIXTURE_PACK)
+    row = _row(
+        "FIXTURE:REQ-1",
+        GapStatus.MET,
+        "docs/risk_register.md",
+        source=ArticleGapSource.ARTIFACT,
+    )
+
+    [control] = derive_controls(
+        _gap_report([row]), _manifest(), get_catalog(), tenant_id=TENANT_ID, now=NOW
+    )
+
+    assert control.control_id == make_control_id(TENANT_ID, "sys-1", "FIXTURE:REQ-1")
+    assert control.obligation_id == control.article_ref == "FIXTURE:REQ-1"
+    assert control.state == ControlState.SATISFIED
+    # FIXTURE:REQ-1 has default_ttl_days 180 in the fixture requirements map.
+    expected_due = datetime.fromisoformat(NOW) + timedelta(days=180)
+    assert control.due_at == expected_due.isoformat()
+
+
+def test_excluded_requirements_become_waived_controls_after_the_rows():
+    row = _row(
+        "FIXTURE:REQ-1",
+        GapStatus.MISSING,
+        "risk_register",
+        source=ArticleGapSource.ARTIFACT,
+    )
+
+    derived = derive_controls(
+        _gap_report([row]),
+        _manifest(),
+        get_catalog(),
+        tenant_id=TENANT_ID,
+        now=NOW,
+        excluded={"FIXTURE:REQ-3": "No deployers: internal tool only."},
+    )
+
+    assert [c.obligation_id for c in derived] == ["FIXTURE:REQ-1", "FIXTURE:REQ-3"]
+    assert derived[1] == ControlInstance(
+        control_id=make_control_id(TENANT_ID, "sys-1", "FIXTURE:REQ-3"),
+        tenant_id=TENANT_ID,
+        system_id="sys-1",
+        obligation_id="FIXTURE:REQ-3",
+        article_ref="FIXTURE:REQ-3",
+        state=ControlState.WAIVED,
+        last_assessed_at=NOW,
+        waiver_rationale="No deployers: internal tool only.",
+    )
+
+
+def test_excluded_requirement_keeps_the_existing_owner_ttl_and_evidence():
+    existing = ControlInstance(
+        control_id=make_control_id(TENANT_ID, "sys-1", "FIXTURE:REQ-3"),
+        tenant_id=TENANT_ID,
+        system_id="sys-1",
+        obligation_id="FIXTURE:REQ-3",
+        article_ref="FIXTURE:REQ-3",
+        owner="jane@example.com",
+        state=ControlState.SATISFIED,
+        evidence_refs=["sha256:aaaa"],
+        ttl_days=30,
+        last_assessed_at="2026-01-01T00:00:00+00:00",
+        last_evidence_at="2026-01-01T00:00:00+00:00",
+        due_at="2026-01-31T00:00:00+00:00",
+    )
+
+    derived = derive_controls(
+        _gap_report([]),
+        _manifest(),
+        get_catalog(),
+        [existing],
+        tenant_id=TENANT_ID,
+        now=NOW,
+        excluded={"FIXTURE:REQ-3": "Out of scope."},
+    )
+
+    assert derived == [
+        existing.model_copy(
+            update={
+                "state": ControlState.WAIVED,
+                "last_assessed_at": NOW,
+                "waiver_rationale": "Out of scope.",
+            }
+        )
+    ]

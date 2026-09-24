@@ -32,15 +32,19 @@ from opencomplai_cli.publish import (
     publish_dossier_envelope,
     publish_scan_status,
 )
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack, evaluate_targets
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.models import (
     ArticleGapStatus,
+    Attestation,
     ControlsSummary,
     ControlState,
     ControlSummaryRow,
     DiscrepancySeverity,
     EvalSummary,
     EvaluatorOutcome,
+    FrameworkInputs,
+    FrameworkReport,
     GapReport,
     NistRmfReport,
     PrincipleStatus,
@@ -49,6 +53,7 @@ from opencomplai_core.models import (
     ScanResult,
     ScanStatusArtifact,
     ScanSummary,
+    SystemManifest,
 )
 from opencomplai_core.nist_rmf_report import build_nist_rmf_report
 from opencomplai_core.principle_report import build_principle_summary
@@ -514,6 +519,77 @@ def test_model_built_artifact_prepared_validates_against_widened_schema(populate
         assert prepared[field] == artifact[field]
 
 
+def test_multi_target_artifact_prepared_validates_against_widened_schema(
+    monkeypatch,
+):
+    """framework_reports from a real multi-framework evaluation -- crosswalk
+    rows (NIST AI RMF), an attested row and an exclusion (the test-only
+    FIXTURE pack) -- pass the widened schema after the push mapper."""
+    schema = _widened_schema_or_skip()
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        pytest.skip("jsonschema not importable from this test environment")
+
+    monkeypatch.setitem(
+        FRAMEWORKS,
+        "FIXTURE",
+        FrameworkPack(
+            "FIXTURE",
+            "Fixture framework",
+            requirements=REPO_ROOT
+            / "packages/core/tests/fixtures/framework_pack/requirements.json",
+        ),
+    )
+    manifest = SystemManifest(
+        system_id="sys-multi",
+        intended_purpose="credit scoring",
+        framework_inputs={
+            "FIXTURE": FrameworkInputs(
+                excluded={"FIXTURE:REQ-3": "Internal tool, no deployers."},
+                attested={
+                    "FIXTURE:REQ-2": Attestation(
+                        statement="The board approved the AI policy.",
+                        attested_by="jane@example.com",
+                        attested_at="2026-09-01",
+                    )
+                },
+            )
+        },
+    )
+    reports = evaluate_targets(
+        manifest, ["EU_AI_ACT", "NIST_AI_RMF", "FIXTURE"], commit_ref="a" * 40
+    )
+    rows = [row for report in reports.values() for row in report.report.articles]
+    assert {"crosswalk", "attestation"} <= {row.source for row in rows}
+    assert "attested" in {row.confidence_label for row in rows}
+    assert reports["FIXTURE"].excluded
+
+    model = _model_built_artifact(populated=True).model_copy(
+        update={"framework_reports": reports}
+    )
+    artifact = json.loads(model.model_dump_json())
+    prepared = prepare_scan_status_artifact(
+        artifact, commit_env={"GITHUB_SHA": "i" * 40}
+    )
+
+    errors = [e.message for e in Draft202012Validator(schema).iter_errors(prepared)]
+    assert errors == [], f"prepared artifact fails the widened schema: {errors}"
+    assert list(prepared["framework_reports"]) == [
+        "EU_AI_ACT",
+        "NIST_AI_RMF",
+        "FIXTURE",
+    ]
+    assert prepared["framework_reports"] == artifact["framework_reports"]
+
+
+def test_artifact_without_framework_reports_omits_the_key():
+    """Absent framework_reports is dropped, not written as null, so an
+    artifact without it keeps the bytes (and signature) it had before."""
+    artifact = json.loads(_model_built_artifact(populated=True).model_dump_json())
+    assert "framework_reports" not in artifact
+
+
 # (pydantic model, $defs name) -- None means the schema's top-level properties.
 _SCHEMA_COVERED_MODELS = [
     (ScanStatusArtifact, None),
@@ -525,6 +601,7 @@ _SCHEMA_COVERED_MODELS = [
     (PrincipleStatus, "PrincipleStatus"),
     (NistRmfReport, "NistRmfReport"),
     (RmfSubcategoryStatus, "RmfSubcategoryStatus"),
+    (FrameworkReport, "FrameworkReport"),
     (ControlsSummary, "ControlsSummary"),
     (ControlSummaryRow, "ControlSummaryRow"),
 ]

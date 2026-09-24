@@ -7,6 +7,9 @@ const SystemManifestSchema = z
     system_id: z.string().min(1),
     intended_purpose: z.string().min(1),
     compliance_target: z.string().default('EU_AI_ACT'),
+    // Frameworks to assess side by side; framework_inputs passes through and
+    // is validated by the risk engine.
+    compliance_targets: z.array(z.string().min(1)).min(1).optional(),
     high_risk_presumption: z.boolean().default(false),
     commit_ref: z.string().default('HEAD'),
     // Optional Annex IV Section 2 / 3 inputs. Stripped to typed values so

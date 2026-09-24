@@ -20,6 +20,7 @@ from opencomplai_core.gap_probes import artifact_gap_status
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
+    Attestation,
     ConfidenceLabel,
     CorroborationReport,
     EvalReport,
@@ -193,6 +194,43 @@ def _evaluator_status(
     return None
 
 
+def _attestation_status(
+    ref: str, attestations: dict[str, Attestation]
+) -> ArticleGapStatus:
+    # `ref` is the requirement id itself ("<FW>:<id>"), which is also the key
+    # the manifest's framework_inputs.<FW>.attested uses.
+    attestation = attestations.get(ref)
+    if attestation is None:
+        framework = ref.partition(":")[0]
+        return _with_honesty(
+            ArticleGapStatus(
+                article="",
+                status=GapStatus.UNVERIFIED,
+                source=ArticleGapSource.ATTESTATION,
+                evidence_ref="none",
+                rationale=(
+                    f"No attestation recorded. Add one under "
+                    f"framework_inputs.{framework}.attested in the manifest."
+                ),
+            ),
+            confidence=None,
+            label=ConfidenceLabel.NOT_ASSESSED,
+        )
+    return _with_honesty(
+        ArticleGapStatus(
+            article="",
+            status=GapStatus.MET,
+            source=ArticleGapSource.ATTESTATION,
+            evidence_ref=(
+                f"attestation:{attestation.attested_by}@{attestation.attested_at}"
+            ),
+            rationale=attestation.statement,
+        ),
+        confidence=None,
+        label=ConfidenceLabel.ATTESTED,
+    )
+
+
 def build_gap_report(
     system_id: str,
     commit_ref: str,
@@ -200,9 +238,16 @@ def build_gap_report(
     corroboration_report: CorroborationReport | None = None,
     eval_report: EvalReport | None = None,
     repo_root: Path | None = None,
+    requirements: dict[str, Any] | None = None,
+    attestations: dict[str, Attestation] | None = None,
 ) -> GapReport:
-    """Project rule/obligation/scan/eval/artifact outputs into a per-article gap report."""
-    article_map = load_gap_article_map()
+    """Project rule/obligation/scan/eval/artifact outputs into a per-article gap report.
+
+    `requirements` is a framework pack's requirements map; the EU AI Act
+    article map is used when it is omitted. `attestations` (requirement id ->
+    Attestation) feeds sources of kind "attestation".
+    """
+    article_map = requirements if requirements is not None else load_gap_article_map()
     articles: list[ArticleGapStatus] = []
 
     for article, config in article_map.items():
@@ -224,6 +269,8 @@ def build_gap_report(
                 candidate = _evaluator_status(ref, eval_report)
             elif kind == "artifact":
                 candidate = artifact_gap_status(ref, repo_root)
+            elif kind == "attestation":
+                candidate = _attestation_status(ref, attestations or {})
 
             if candidate is None:
                 continue

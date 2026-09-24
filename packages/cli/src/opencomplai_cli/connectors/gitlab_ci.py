@@ -99,6 +99,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+from opencomplai_cli.connectors import summarize_failed_controls
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
 
 RUNNING_IN_GITLAB = os.environ.get("GITLAB_CI") == "true"
@@ -155,7 +156,7 @@ def _build_junit_xml(artifact: dict | None, stdout: str) -> str:
             failure = ET.SubElement(
                 case,
                 "failure",
-                message=f"control_fail: {', '.join(str(f) for f in failed)}",
+                message=f"control_fail: {summarize_failed_controls(failed)}",
             )
             failure.text = stdout
         elif result == "trap_detected":
@@ -265,7 +266,10 @@ def run_connector(
     # collapsing everything but control_fail to a passing pipeline.
     if scan_result == "control_fail":
         print(
-            f"FAIL: control_fail — {', '.join(str(c) for c in (artifact_result or {}).get('failed_controls', []))}"
+            "FAIL: control_fail — "
+            + summarize_failed_controls(
+                (artifact_result or {}).get("failed_controls", [])
+            )
         )
     elif scan_result == "trap_detected":
         print(

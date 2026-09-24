@@ -1,5 +1,6 @@
 """Tests for opencomplai.yaml project config loading (opencomplai.yaml, 3.5)."""
 
+import pytest
 from opencomplai_core.project_config import (
     ProjectConfig,
     apply_project_config_defaults,
@@ -90,3 +91,38 @@ def test_apply_defaults_with_no_config_is_a_no_op():
     )
     assert fail_on == "none"
     assert framework_detectors is False
+
+
+def test_load_project_config_parses_gate_section(tmp_path):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(
+        "gate:\n  frameworks:\n    - NIST_AI_RMF\n  fail_on: partial\n",
+        encoding="utf-8",
+    )
+    config = load_project_config(config_file)
+    assert config.gate_frameworks == ["NIST_AI_RMF"]
+    assert config.gate_fail_on == "partial"
+
+
+def test_gate_defaults_to_nothing_gated():
+    config = ProjectConfig()
+    assert config.gate_frameworks == []
+    assert config.gate_fail_on is None
+
+
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        ("scan: [\n", "opencomplai.yaml: not valid YAML"),
+        ("- gate\n", "opencomplai.yaml: must be a mapping"),
+        ("gate: [NIST_AI_RMF]\n", "opencomplai.yaml: gate must be a mapping"),
+        ("scan: major\n", "opencomplai.yaml: scan must be a mapping"),
+        ("gate:\n  frameworks: NIST_AI_RMF\n", "gate.frameworks must be a list"),
+        ("gate:\n  fail_on: [partial]\n", "gate.fail_on must be missing or"),
+    ],
+)
+def test_load_project_config_rejects_malformed_files(tmp_path, text, message):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        load_project_config(config_file)

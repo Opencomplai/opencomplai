@@ -13,8 +13,9 @@
 - id: opencomplai-check
   name: Opencomplai compliance check
   description: >-
-    Full EU AI Act compliance gate against a declared system-manifest.json. Requires
-    `opencomplai init` to have been run first. Fails the commit on CONTROL_FAIL,
+    Full compliance gate against a declared system-manifest.json: the EU AI Act,
+    plus any other framework opencomplai.yaml gates. Requires `opencomplai init`
+    to have been run first. Fails the commit on CONTROL_FAIL,
     VALIDATION_FAIL, POLICY_BLOCK, or TRAP_DETECTED (see exit codes in README).
   entry: opencomplai check
   language: python

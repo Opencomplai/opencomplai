@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to Opencomplai — an open-source EU AI Act compliance toolkit for AI engineering teams.
+Welcome to Opencomplai — an open-source AI compliance toolkit for AI engineering teams. It evaluates the EU AI Act natively and derives a NIST AI RMF 1.0 view from the same evidence (see [Frameworks](../frameworks/index.md)).
 
 ## What is Opencomplai?
 

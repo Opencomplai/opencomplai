@@ -1,9 +1,10 @@
 # NIST AI RMF
 
-Opencomplai evaluates `NIST_AI_RMF` (the AI Risk Management Framework 1.0, NIST AI
-100-1) as a second compliance target alongside its native `EU_AI_ACT` target — but it
-does so by **re-projecting evidence Opencomplai already gathers for the EU AI Act**,
-not by measuring anything new.
+Opencomplai assesses `NIST_AI_RMF` (the AI Risk Management Framework 1.0, NIST AI
+100-1) as a **derived** framework next to its native `EU_AI_ACT` target: every verdict
+is **re-projected from evidence Opencomplai already gathers for the EU AI Act**, not
+measured anew. Coverage is partial (see below), so its status on
+[Frameworks](../frameworks/index.md) is "derived, partial".
 
 ## No new scanner was added
 
@@ -72,8 +73,35 @@ Every row's `Rationale` names the exact EU AI Act article(s), their gap-report s
 and the evidence reference (rule id, obligation id, evaluator id, or scan finding) the
 verdict was derived from — the citation trail. `--output json` carries the same fields
 under `nist_rmf_report.subcategories[].source_eu_ai_act_articles` on both `opencomplai
-gaps --target NIST_AI_RMF` and `opencomplai check --with-gaps` (the latter only when
-the manifest's `compliance_target` is `NIST_AI_RMF`).
+gaps --target NIST_AI_RMF` and `opencomplai check --with-gaps` (the latter when
+`NIST_AI_RMF` is one of its resolved targets: `--target`, else the manifest's
+`compliance_targets`, else its `compliance_target`).
+
+## Alongside the EU AI Act
+
+`NIST_AI_RMF` can be the only target (the manifest's `compliance_target`, or `gaps
+--target NIST_AI_RMF`), which prints the subcategory table above. It can also sit next
+to the EU AI Act, in the manifest's `compliance_targets` or with repeated `--target`:
+
+```json
+{
+  "compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"],
+  "framework_inputs": {
+    "NIST_AI_RMF": {
+      "excluded": {"NIST_AI_RMF:MAP 1.1": "Internal tool with no external users"}
+    }
+  }
+}
+```
+
+Then `gaps` prints the EU AI Act table and a NIST AI RMF requirement table, and
+`gaps --output json` and `check --with-gaps` also carry a NIST AI RMF framework report
+(`frameworks` / `framework_reports`) next to `nist_rmf_report`. Its rows have ids prefixed `NIST_AI_RMF:`, source `crosswalk`, and
+`derived_from: "EU_AI_ACT"`. A requirement can be excluded with a reason, as above;
+it cannot be attested, because nothing about it is evaluated on its own. Being
+derived, NIST AI RMF adds no controls and no `recommend` files: closing the EU AI Act
+gaps its rows cite is what changes them. It gates `check` only if you opt in (see
+[Gating other frameworks](../cli/check.md#gating-other-frameworks)).
 
 ## Honesty guarantees
 
@@ -89,8 +117,8 @@ the manifest's `compliance_target` is `NIST_AI_RMF`).
   current run, the verdict says exactly that instead of guessing.
 - **ISO/IEC 42001 stays mapped-only.** The same crosswalk cites an ISO/IEC 42001:2023
   clause per article (the "Mapped" column in `opencomplai gaps`'s default `EU_AI_ACT`
-  output), but no verdict is computed for it — only `EU_AI_ACT` and `NIST_AI_RMF` are
-  *evaluated* targets.
+  output), but no verdict is computed for it. `EU_AI_ACT` (evaluated) and `NIST_AI_RMF`
+  (derived) are the only targets.
 
 ## A living framework
 
@@ -112,6 +140,7 @@ tables before treating it as durable reference material.
 | Taxonomy loader | `packages/core/src/opencomplai_core/nist_ai_rmf_subcategories.py` |
 | EU AI Act ↔ NIST/ISO crosswalk | `packages/core/src/opencomplai_core/data/framework_crosswalk.json` |
 | Re-projection (coverage rule) | `packages/core/src/opencomplai_core/nist_rmf_report.py` |
+| Registry entry (derived pack) | `packages/core/src/opencomplai_core/frameworks.py` |
 | CLI surface | `opencomplai gaps --target NIST_AI_RMF`, `opencomplai check --with-gaps` |
 
 See [Control Codes → Principles → Articles](eu-ai-act-principles.md) for the EU AI Act

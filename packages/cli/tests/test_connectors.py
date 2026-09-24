@@ -778,3 +778,58 @@ class TestGitLabCIConnector:
             _publish_to_dashboard({"system_id": "s1", "signature": "sig"}, env)
         mock_urlopen.assert_not_called()  # no token acquired -> publish skipped
         assert "OIDC token acquisition failed" in capsys.readouterr().err
+
+
+# ---------------------------------------------------------------------------
+# failed_controls summary shared by both connectors
+# ---------------------------------------------------------------------------
+
+GATED_IDS = [
+    "EU_AIA_ART6_HIGH_RISK",
+    "FIXTURE:REQ-1",
+    "NIST_AI_RMF:GOVERN 1.1",
+    "NIST_AI_RMF:MAP 1.1",
+]
+GATED_SUMMARY = (
+    "EU_AIA_ART6_HIGH_RISK, FIXTURE: 1 requirement(s), NIST_AI_RMF: 2 requirement(s)"
+)
+
+
+class TestFailedControlsSummary:
+    def test_eu_ids_alone_keep_the_plain_list(self):
+        from opencomplai_cli.connectors import summarize_failed_controls
+
+        ids = [f"ctrl-{i}" for i in range(7)]
+        assert summarize_failed_controls(ids) == ", ".join(ids)
+        assert summarize_failed_controls(ids, limit=5) == ", ".join(ids[:5])
+
+    def test_gated_ids_are_counted_per_framework_after_eu_ids(self):
+        from opencomplai_cli.connectors import summarize_failed_controls
+
+        assert summarize_failed_controls(GATED_IDS) == GATED_SUMMARY
+
+    def test_github_summary_counts_gated_ids_past_the_eu_limit(self):
+        from opencomplai_cli.connectors.github_actions import _failed_controls_summary
+
+        ids = [f"ctrl-{i}" for i in range(6)] + ["NIST_AI_RMF:GOVERN 1.1"]
+        assert _failed_controls_summary({"failed_controls": ids}) == (
+            "ctrl-0, ctrl-1, ctrl-2, ctrl-3, ctrl-4, NIST_AI_RMF: 1 requirement(s)"
+        )
+
+    def test_gitlab_control_fail_messages_count_gated_ids(
+        self, tmp_path, monkeypatch, capsys
+    ):
+        from opencomplai_cli.connectors.gitlab_ci import _build_junit_xml, run_connector
+
+        artifact = {"result": "control_fail", "failed_controls": GATED_IDS}
+        assert f'message="control_fail: {GATED_SUMMARY}"' in _build_junit_xml(
+            artifact, ""
+        )
+
+        monkeypatch.chdir(tmp_path)
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value = MagicMock(
+                stdout=json.dumps(artifact), stderr="", returncode=1
+            )
+            assert run_connector(env={}, junit_path=os.devnull) == 1
+        assert f"FAIL: control_fail — {GATED_SUMMARY}" in capsys.readouterr().out

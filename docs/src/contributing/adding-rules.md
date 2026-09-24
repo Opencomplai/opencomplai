@@ -149,5 +149,5 @@ All existing tests must still pass. New tests must pass. No regressions.
 - **Deterministic:** same input same output, always.
 - **No side effects:** rules must not write files, make HTTP calls, or import from `cli`.
 - **Informative rationale:** the `rationale` field is user-facing. Write it as a sentence a developer will read in the compliance report.
-- **Accurate reference:** always cite the specific EU AI Act article.
+- **Accurate reference:** always cite the specific article or clause of the framework the rule belongs to. Every rule today is an EU AI Act rule, cited by article. To assess another framework, write a [framework pack](adding-framework-packs.md) instead of a rule.
 - **Use `answers` for signals you cannot infer:** if a determination requires human input (e.g. "has the system undergone a conformity assessment?"), key it in `AssessmentInput.answers` and document the key in this page.

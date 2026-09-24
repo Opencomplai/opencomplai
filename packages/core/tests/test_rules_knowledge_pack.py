@@ -320,3 +320,15 @@ class TestOptionalAiPluginReExportsCoreKnowledge:
         import opencomplai_core.knowledge.subject_cues as core_mod
 
         assert ai_mod.PRODUCT_OR_ENTITY_CUES is core_mod.PRODUCT_OR_ENTITY_CUES
+
+
+def test_matched_keywords_come_back_in_a_stable_order():
+    # Matches used to be returned in set order, which follows the
+    # per-process string hash seed, so rule rationales differed run to run.
+    matcher = rules._CompiledKeywordMatcher(["zeta", "alpha", "credit scoring", "mid"])
+    assert matcher.find_matching_keywords("zeta mid credit scoring alpha") == [
+        "alpha",
+        "credit scoring",
+        "mid",
+        "zeta",
+    ]

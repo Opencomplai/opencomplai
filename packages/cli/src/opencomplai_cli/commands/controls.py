@@ -39,6 +39,7 @@ from opencomplai_core.control_freshness import (
     detect_stale,
     effective_ttl_days,
 )
+from opencomplai_core.frameworks import EU_AI_ACT, FRAMEWORKS, framework_of
 from opencomplai_core.models import ControlInstance, ControlState
 from rich.table import Table
 
@@ -295,12 +296,35 @@ def status_cmd(
         "--fail-on-missing/--no-fail-on-missing",
         help="Gate exit code 1 on evidence_missing controls too (default: on)",
     ),
+    framework: list[str] | None = typer.Option(
+        None,
+        "--framework",
+        help=(
+            "Count only this framework's controls; repeat for several "
+            "(default: EU_AI_ACT plus the frameworks opencomplai.yaml gates)"
+        ),
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """One-line control register summary; exit 1 when any control is
     missing/stale evidence or pending review (CI-consumable)."""
     main_mod = _require_vault()
-    controls = _list_controls(main_mod, system_id)
+    frameworks = framework or [
+        EU_AI_ACT,
+        *main_mod._project_config(Path(".")).gate_frameworks,
+    ]
+    unknown = [fw for fw in frameworks if fw not in FRAMEWORKS]
+    if unknown:
+        main_mod.err_console.print(
+            f"[red]Error:[/red] unknown framework {', '.join(unknown)}; known "
+            f"frameworks: {', '.join(FRAMEWORKS)}"
+        )
+        sys.exit(2)
+    controls = [
+        control
+        for control in _list_controls(main_mod, system_id)
+        if framework_of(control.obligation_id) in frameworks
+    ]
     stale_rows = detect_stale(controls, get_catalog())
     stale_count = len(stale_rows)
 

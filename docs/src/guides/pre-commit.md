@@ -16,7 +16,7 @@ directly instead of hand-writing the CLI invocation.
 | Hook ID | What it runs | Gates the commit? |
 |---|---|---|
 | `opencomplai-quick-scan` | `opencomplai scan --quick --repo-root .` | **No.** Discovery-only, always exits `0`, no manifest required. |
-| `opencomplai-check` | `opencomplai check` | **Yes.** Full EU AI Act compliance gate — fails the commit on `CONTROL_FAIL`, `VALIDATION_FAIL`, `POLICY_BLOCK`, or `TRAP_DETECTED`. Requires `opencomplai init` to have been run first (a `system-manifest.json` must exist). |
+| `opencomplai-check` | `opencomplai check` | **Yes.** Full compliance gate (the EU AI Act, plus any framework `opencomplai.yaml` gates) — fails the commit on `CONTROL_FAIL`, `VALIDATION_FAIL`, `POLICY_BLOCK`, or `TRAP_DETECTED`. Requires `opencomplai init` to have been run first (a `system-manifest.json` must exist). |
 
 ## Consumer-side configuration
 

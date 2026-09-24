@@ -1,11 +1,13 @@
 """`opencomplai.yaml` — project-level tool-behavior config (scan defaults, evaluator
-threshold overrides, allowlists).
+threshold overrides, allowlists, which frameworks gate `check`).
 
-Governs tool *behavior* only (scan defaults, thresholds, allowlists) — never a source
-of compliance *declarations*. It must never become a second, competing source of truth
-against the manifest for compliance posture; `SystemManifest` remains the sole
-authority for what a system is declared to do. Additive to (not replacing) `.ocignore`
-and explicit CLI flags — explicit CLI flags always override values from this file.
+Governs tool *behavior* only (scan defaults, thresholds, allowlists, CI gating) —
+never a source of compliance *declarations*. It must never become a second, competing
+source of truth against the manifest for compliance posture; `SystemManifest` remains
+the sole authority for what a system is declared to do. Gating decides which
+frameworks' gaps fail CI; it declares nothing about the system. Additive to (not
+replacing) `.ocignore` and explicit CLI flags — explicit CLI flags always override
+values from this file.
 """
 
 from __future__ import annotations
@@ -28,6 +30,9 @@ class ProjectConfig:
     scan_framework_detectors: bool | None = None
     eval_threshold_overrides: dict[str, float] = field(default_factory=dict)
     allowlisted_categories: list[str] = field(default_factory=list)
+    # Non-EU frameworks whose Missing (or Partial) rows fail `check`.
+    gate_frameworks: list[str] = field(default_factory=list)
+    gate_fail_on: str | None = None
 
 
 def find_project_config(start_dir: Path) -> Path | None:
@@ -36,12 +41,36 @@ def find_project_config(start_dir: Path) -> Path | None:
     return candidate if candidate.exists() else None
 
 
-def load_project_config(path: Path) -> ProjectConfig:
-    """Parse an `opencomplai.yaml` file. Missing/empty keys fall back to defaults."""
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+def _section(raw: dict, key: str, path: Path) -> dict:
+    section = raw.get(key) or {}
+    if not isinstance(section, dict):
+        raise ValueError(f"{path.name}: {key} must be a mapping")
+    return section
 
-    scan_section = raw.get("scan", {}) or {}
-    eval_section = raw.get("eval", {}) or {}
+
+def load_project_config(path: Path) -> ProjectConfig:
+    """Parse an `opencomplai.yaml` file. Missing/empty keys fall back to defaults.
+
+    Raises ValueError when the file is not YAML or a section has the wrong shape.
+    """
+    try:
+        raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError as e:
+        raise ValueError(f"{path.name}: not valid YAML: {e}") from e
+    if not isinstance(raw, dict):
+        raise ValueError(f"{path.name}: must be a mapping")
+
+    scan_section = _section(raw, "scan", path)
+    eval_section = _section(raw, "eval", path)
+    gate_section = _section(raw, "gate", path)
+    gate_frameworks = gate_section.get("frameworks") or []
+    if not isinstance(gate_frameworks, list) or not all(
+        isinstance(fw, str) for fw in gate_frameworks
+    ):
+        raise ValueError(f"{path.name}: gate.frameworks must be a list of frameworks")
+    gate_fail_on = gate_section.get("fail_on")
+    if gate_fail_on is not None and not isinstance(gate_fail_on, str):
+        raise ValueError(f"{path.name}: gate.fail_on must be missing or partial")
 
     return ProjectConfig(
         scan_fail_on=scan_section.get("fail_on"),
@@ -52,6 +81,8 @@ def load_project_config(path: Path) -> ProjectConfig:
         allowlisted_categories=list(
             scan_section.get("allowlisted_categories", []) or []
         ),
+        gate_frameworks=gate_frameworks,
+        gate_fail_on=gate_fail_on,
     )
 
 

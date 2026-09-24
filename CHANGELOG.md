@@ -11,6 +11,116 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.8.0] — 2026-09-24
+
+### Added
+
+- A system can be assessed against several frameworks side by side. The
+  manifest gains `compliance_targets` (framework keys, e.g. `["EU_AI_ACT",
+  "NIST_AI_RMF"]`; it takes precedence over `compliance_target`) and
+  `framework_inputs`, declarations for frameworks other than the EU AI
+  Act: `excluded` maps a requirement id to the reason it does not apply,
+  and `attested` maps one to a provider attestation (`statement`,
+  `attested_by`, `attested_at`) where the framework accepts one (neither
+  framework in this release does). Both keys are left out of a manifest
+  that does not set them, so existing manifests serialise unchanged. The
+  EU AI Act is evaluated natively; NIST AI RMF 1.0 is derived from its
+  evidence through the crosswalk. Reports for frameworks other than the
+  EU AI Act carry a framework-neutral disclaimer, and their rows can have
+  the new `attestation` and `crosswalk` sources and the `attested`
+  confidence label.
+- `opencomplai gaps` and `opencomplai check --with-gaps` assess every target
+  framework: `--target` can be repeated, and without it the manifest's
+  `compliance_targets` (else `compliance_target`) are used. With exactly one
+  `EU_AI_ACT` or `NIST_AI_RMF` target the output is unchanged; for any other
+  set `gaps` prints one table per framework and `gaps --output json` adds a
+  `frameworks` block (one report per target) under the framework-neutral
+  disclaimer. `check --with-gaps` attaches `nist_rmf_report` whenever
+  `NIST_AI_RMF` is a target.
+- `ScanStatusArtifact.framework_reports`: for any target set other than
+  exactly `EU_AI_ACT` or exactly `NIST_AI_RMF`, `check --with-gaps` embeds
+  one framework report per target, and `report` renders them from the
+  artifact. The key is omitted when unset, so other artifacts keep their
+  bytes and signatures; `gap_report` and `nist_rmf_report` are written as
+  before.
+- Controls, `recommend` and `report` cover natively evaluated frameworks
+  other than the EU AI Act (none ships in this release; see the guide to
+  adding framework packs). `gaps` and `check --with-gaps` sync their
+  requirements to the control register (ids prefixed `<FW>:`; requirements
+  excluded in `framework_inputs` become waived controls with the
+  justification as the waiver rationale), and the control catalog takes
+  their titles and TTLs from the framework's requirements map. `controls
+  status --framework` (repeatable) picks the frameworks counted; the default
+  is `EU_AI_ACT`, so the status line and exit code are unchanged.
+  `recommend` writes `generic_requirement.md` for such rows that have no
+  template of their own, and `report --gap-report` renders one section per
+  framework other than the EU AI Act from a multi-framework `gaps --output
+  json` file. NIST AI RMF, derived from EU AI Act evidence, adds no controls
+  or fixes of its own.
+- Opt-in CI gating for frameworks other than the EU AI Act:
+  `opencomplai.yaml` `gate: {frameworks, fail_on}` or `check --gate FW`
+  (repeatable, replaces the file's list) and `--gate-fail-on
+  missing|partial`. A Missing (or, with `partial`, Partial) row of a gated
+  framework appends its prefixed id to `failed_controls` and turns `PASS`
+  into `CONTROL_FAIL` (exit 1); other results are unchanged. Excluded,
+  Unverified and Met rows never fail. A bad gate exits 2 before anything is
+  written. `controls status` also counts gated frameworks by default, `gaps`
+  notes the gate under a gated framework's table, and the GitHub Actions and
+  GitLab CI connectors summarise gated ids as `<FW>: N requirement(s)`.
+  Without a gate, output is unchanged.
+- `POST /v1/manifests/validate` (gateway and risk engine) accepts
+  `compliance_targets` and `framework_inputs` and validates the manifest with
+  the core `SystemManifest` model; an empty list or an unknown framework id
+  is a 422. The gateway OpenAPI spec and REST reference describe
+  `compliance_target` as legacy and mark `/v1/risk/classify`,
+  `/v1/docs/generate` and `/v1/checker/*` as EU AI Act only.
+- The `opencomplai` SDK and `opencomplai_core` export `evaluate_targets`,
+  `resolve_targets`, `FRAMEWORKS`, `FrameworkPack`, `FrameworkReport` and
+  `GapReport`, for assessing several frameworks from Python.
+- Docs: a Frameworks section (what is evaluated, derived or only mapped, how
+  to target several frameworks, exclusions, attestations and gating) and a
+  guide to adding framework packs.
+
+### Changed
+
+- `opencomplai gaps` without `--target` now follows the manifest: a manifest
+  whose `compliance_target` is `NIST_AI_RMF` gets the NIST AI RMF table, where
+  it used to get the EU AI Act table.
+- `opencomplai validate-manifest` rejects an unknown framework key in
+  `compliance_targets` (exit 2), as `gaps` and `check` do, and lists the
+  targets in its human output.
+- `opencomplai check` (and `gaps`, `controls status`) now reads
+  `opencomplai.yaml` for `gate`, from `--repo-root` (`controls status`:
+  the current directory). A malformed file (not valid YAML, a section that
+  is not a mapping, or a `gate.frameworks` that is not a list) exits 2
+  where `check` used to ignore it.
+- Package descriptions, the README and the docs site no longer describe
+  Opencomplai as EU AI Act only: the EU AI Act is evaluated natively and NIST
+  AI RMF 1.0 is derived from the same evidence.
+- `opencomplai-cli` now requires `opencomplai-core>=0.8.0`, and the
+  `opencomplai` meta-package requires `opencomplai-core` and
+  `opencomplai-cli` `>=0.8.0`.
+- `scripts/smoke_wheel_install.sh` also runs `check --with-gaps` on an EU AI
+  Act plus NIST AI RMF manifest, asserting `framework_reports`,
+  `gap_report` and `nist_rmf_report`, and a `check --gate NIST_AI_RMF`
+  that must fail.
+
+### Removed
+
+- **Breaking for SDK callers:** `bridge_to_manifest_fields()` no longer
+  returns the `intended_purpose` key deprecated in 0.7.1; read the tier
+  label from `checker_verdict`.
+
+### Fixed
+
+- `opencomplai scan` exits 2 with an error on a malformed `opencomplai.yaml`
+  (not valid YAML, or a file or `scan`/`eval` section that is not a
+  mapping) instead of crashing with a traceback and exit 1.
+- Rule rationales list matched keywords in a stable (sorted) order; they
+  used to change order from run to run.
+
+---
+
 ## [0.7.1] — 2026-09-23
 
 ### Added
@@ -441,6 +551,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.8.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.8.0
 [0.7.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.7.1
 [0.3.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.3.0
 [0.1.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.2

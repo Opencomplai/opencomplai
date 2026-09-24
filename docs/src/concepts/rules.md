@@ -2,12 +2,17 @@
 
 Rules are the atomic unit of compliance evaluation in Opencomplai.
 
+Every rule today belongs to the EU AI Act, and `rule` sources are EU AI Act only.
+Other [frameworks](../frameworks/index.md) are assessed from the same evidence: NIST AI
+RMF by re-projecting the EU AI Act rows, and a natively evaluated framework through its
+own requirements map (see [Adding framework packs](../contributing/adding-framework-packs.md)).
+
 ## What a rule does
 
 Each rule is a deterministic check that:
 
 1. Receives an `AssessmentInput` (model metadata + optional answers).
-2. Returns a `RuleResult` with a `passed` boolean, `rationale` string, and EU AI Act `reference`.
+2. Returns a `RuleResult` with a `passed` boolean, `rationale` string, and a `reference` to the article of the framework the rule belongs to.
 
 ## Rule ID naming convention
 

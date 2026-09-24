@@ -53,6 +53,44 @@ describe('Gateway API routes', () => {
       expect(res.statusCode).toBe(503);
       expect(JSON.parse(res.body).error_code).toBe('DEPENDENCY_UNAVAILABLE');
     });
+
+    it('returns 422 for an empty compliance_targets list', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/v1/manifests/validate',
+        payload: { system_id: 'test', intended_purpose: 'chatbot', compliance_targets: [] },
+      });
+      expect(res.statusCode).toBe(422);
+      expect(JSON.parse(res.body).error_code).toBe('VALIDATION_ERROR');
+    });
+
+    it('forwards compliance_targets and framework_inputs to the risk engine', async () => {
+      const fetchSpy: ReturnType<typeof vi.fn> = vi.fn(
+        async () => new Response('{"valid":true}', { status: 200 }),
+      );
+      vi.stubGlobal('fetch', fetchSpy);
+      const frameworkInputs = {
+        NIST_AI_RMF: { excluded: { 'NIST_AI_RMF:MAP 1.1': 'Internal tool only' } },
+      };
+      try {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/v1/manifests/validate',
+          payload: {
+            system_id: 'test',
+            intended_purpose: 'chatbot',
+            compliance_targets: ['EU_AI_ACT', 'NIST_AI_RMF'],
+            framework_inputs: frameworkInputs,
+          },
+        });
+        expect(res.statusCode).toBe(200);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      const sentBody = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+      expect(sentBody.compliance_targets).toEqual(['EU_AI_ACT', 'NIST_AI_RMF']);
+      expect(sentBody.framework_inputs).toEqual(frameworkInputs);
+    });
   });
 
   describe('GET /v1/docs', () => {

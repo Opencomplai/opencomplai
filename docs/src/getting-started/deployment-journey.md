@@ -78,7 +78,7 @@ scan (or the full gate, once you have a manifest) runs on every commit:
 ```yaml
 repos:
   - repo: https://github.com/Opencomplai/opencomplai
-    rev: v0.7.1
+    rev: v0.8.0
     hooks:
       - id: opencomplai-quick-scan   # discovery only, never fails the commit
       # - id: opencomplai-check      # full EU AI Act gate — requires system-manifest.json

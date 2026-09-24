@@ -17,9 +17,22 @@ from pathlib import Path
 
 import opencomplai_cli.main as main_module
 from opencomplai_cli.main import app
+from opencomplai_core.control_identity import make_control_id
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
 from typer.testing import CliRunner
 
 runner = CliRunner()
+
+FIXTURE_PACK = FrameworkPack(
+    "FIXTURE",
+    "Fixture framework",
+    requirements=Path(__file__).resolve().parents[2]
+    / "core"
+    / "tests"
+    / "fixtures"
+    / "framework_pack"
+    / "requirements.json",
+)
 
 
 def _write_manifest(tmp_path: Path, system_id: str, intended_purpose: str) -> Path:
@@ -351,3 +364,107 @@ def test_check_without_with_gaps_never_calls_sync_and_omits_controls_block(
 
     artifact = json.loads((tmp_path / "compliance-artifact.json").read_text())
     assert artifact["controls"] is None
+
+
+# ---------------------------------------------------------------------------
+# Other frameworks: a native pack adds its own controls (exclusions waived);
+# a derived one (NIST AI RMF) adds none.
+# ---------------------------------------------------------------------------
+
+
+def _fixture_manifest(tmp_path: Path, system_id: str, monkeypatch) -> Path:
+    monkeypatch.setitem(FRAMEWORKS, "FIXTURE", FIXTURE_PACK)
+    manifest_file = _write_manifest(tmp_path, system_id, "customer support chatbot")
+    manifest = json.loads(manifest_file.read_text())
+    manifest["compliance_targets"] = ["EU_AI_ACT", "FIXTURE"]
+    manifest["framework_inputs"] = {
+        "FIXTURE": {"excluded": {"FIXTURE:REQ-3": "No deployers: internal tool only."}}
+    }
+    manifest_file.write_text(json.dumps(manifest))
+    return manifest_file
+
+
+def _fixture_ids(system_id: str) -> dict[str, str]:
+    return {
+        make_control_id("oss-default", system_id, rid): rid
+        for rid in ("FIXTURE:REQ-1", "FIXTURE:REQ-2", "FIXTURE:REQ-3")
+    }
+
+
+def test_gaps_syncs_native_framework_controls_and_waives_exclusions(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("OPENCOMPLAI_VAULT_URL", "http://fake-vault.invalid")
+    fake_vault = _FakeVault()
+    monkeypatch.setattr(main_module, "_vault_request", fake_vault)
+    manifest_file = _fixture_manifest(tmp_path, "sys-fixture", monkeypatch)
+    gaps_args = ["gaps", "--manifest", str(manifest_file), "--repo-root", str(tmp_path)]
+
+    result = runner.invoke(app, [*gaps_args, "--target", "EU_AI_ACT"])
+    assert result.exit_code == 0, result.output
+    eu_ids = set(fake_vault.controls["sys-fixture"])
+
+    result = runner.invoke(app, gaps_args)
+    assert result.exit_code == 0, result.output
+    bucket = fake_vault.controls["sys-fixture"]
+    fixture_ids = _fixture_ids("sys-fixture")
+    assert set(bucket) == eu_ids | set(fixture_ids)
+    states = {fixture_ids[cid]: bucket[cid]["state"] for cid in fixture_ids}
+    assert states == {
+        "FIXTURE:REQ-1": "evidence_missing",
+        "FIXTURE:REQ-2": "evidence_missing",
+        "FIXTURE:REQ-3": "waived",
+    }
+    waived = bucket[make_control_id("oss-default", "sys-fixture", "FIXTURE:REQ-3")]
+    assert waived["waiver_rationale"] == "No deployers: internal tool only."
+    assert waived["article_ref"] == "FIXTURE:REQ-3"
+
+
+def test_derived_nist_target_adds_no_controls(tmp_path, monkeypatch):
+    monkeypatch.setenv("OPENCOMPLAI_VAULT_URL", "http://fake-vault.invalid")
+    fake_vault = _FakeVault()
+    monkeypatch.setattr(main_module, "_vault_request", fake_vault)
+    manifest_file = _write_manifest(tmp_path, "sys-nist", "customer support chatbot")
+    gaps_args = ["gaps", "--manifest", str(manifest_file), "--repo-root", str(tmp_path)]
+
+    assert runner.invoke(app, gaps_args).exit_code == 0
+    eu_ids = set(fake_vault.controls["sys-nist"])
+    fake_vault.controls.clear()
+
+    result = runner.invoke(
+        app, [*gaps_args, "--target", "EU_AI_ACT", "--target", "NIST_AI_RMF"]
+    )
+    assert result.exit_code == 0, result.output
+    assert set(fake_vault.controls["sys-nist"]) == eu_ids
+
+
+def test_check_with_gaps_controls_block_includes_native_framework_controls(
+    tmp_path, monkeypatch
+):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("OPENCOMPLAI_VAULT_URL", "http://fake-vault.invalid")
+    fake_vault = _FakeVault()
+    monkeypatch.setattr(main_module, "_vault_request", fake_vault)
+    manifest_file = _fixture_manifest(tmp_path, "sys-check-fixture", monkeypatch)
+
+    result = runner.invoke(
+        app,
+        [
+            "check",
+            "--manifest",
+            str(manifest_file),
+            "--repo-root",
+            str(tmp_path),
+            "--with-gaps",
+        ],
+    )
+    assert result.exit_code == 0, result.output
+
+    artifact = json.loads((tmp_path / "compliance-artifact.json").read_text())
+    items = {row["control_id"]: row for row in artifact["controls"]["items"]}
+    assert set(items) == set(fake_vault.controls["sys-check-fixture"])
+    fixture_ids = _fixture_ids("sys-check-fixture")
+    assert set(fixture_ids) <= set(items)
+    waived = make_control_id("oss-default", "sys-check-fixture", "FIXTURE:REQ-3")
+    assert items[waived]["state"] == "waived"
+    assert artifact["controls"]["summary"]["waived"] == 1

@@ -46,16 +46,45 @@ mkdir -p "$HOME" work
 cd work
 
 opencomplai --version
+echo '{"compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"]}' >targets.json
 opencomplai init \
   --system-id smoke-system \
   --intended-purpose "customer support chatbot" \
+  --section-extras-file targets.json \
   --output system-manifest.json
 opencomplai check --manifest system-manifest.json --with-gaps
+# Two targets: one framework report each, and the legacy blocks as before.
+python - <<'EOF'
+import json
+
+artifact = json.load(open("compliance-artifact.json"))
+assert list(artifact.get("framework_reports") or {}) == ["EU_AI_ACT", "NIST_AI_RMF"], (
+    "framework_reports", list(artifact.get("framework_reports") or {})
+)
+assert artifact.get("gap_report"), "gap_report missing"
+assert artifact.get("nist_rmf_report"), "nist_rmf_report missing"
+EOF
 opencomplai docs generate \
   --system-id smoke-system \
   --manifest system-manifest.json \
   --output-dir dossier \
   --allow-incomplete
 ls dossier/dossier_*.json # named after the dossier_id; fails if none
+
+# This directory has none of the documents the gap probes look for, so the
+# NIST AI RMF rows derived from them are Missing and gating NIST AI RMF turns
+# the PASS above into CONTROL_FAIL (exit 1).
+status=0
+opencomplai check --manifest system-manifest.json --gate NIST_AI_RMF || status=$?
+if [ "$status" -ne 1 ]; then
+  echo "check --gate NIST_AI_RMF exited $status, expected 1" >&2
+  exit 1
+fi
+python - <<'EOF'
+import json
+
+failed = json.load(open("compliance-artifact.json"))["failed_controls"]
+assert any(c.startswith("NIST_AI_RMF:") for c in failed), failed
+EOF
 
 echo "Wheel install smoke test passed."

@@ -1,0 +1,17 @@
+{
+  "FIXTURE:REQ-1": {
+    "title": "Risk register maintained",
+    "default_ttl_days": 180,
+    "sources": [{ "kind": "artifact", "ref": "risk_register" }]
+  },
+  "FIXTURE:REQ-2": {
+    "title": "Governance policy approved",
+    "default_ttl_days": null,
+    "sources": [{ "kind": "attestation", "ref": "FIXTURE:REQ-2" }]
+  },
+  "FIXTURE:REQ-3": {
+    "title": "Deployer instructions published",
+    "default_ttl_days": 365,
+    "sources": [{ "kind": "artifact", "ref": "deployer_instructions" }]
+  }
+}

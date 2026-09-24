@@ -47,6 +47,7 @@ def derive_controls(
     *,
     tenant_id: str = "oss-default",
     now: str | None = None,
+    excluded: Mapping[str, str] = {},
 ) -> list[ControlInstance]:
     """Derive one `ControlInstance` per `gap_report.articles` row (E-8).
 
@@ -85,6 +86,13 @@ def derive_controls(
     `catalog` is looked up by `row.article`; a missing entry does not fail —
     the derived control simply has no catalog TTL to inherit (`ttl_days`
     stays whatever the existing instance had, typically None).
+
+    `excluded` maps requirement ids the manifest declares out of scope
+    (`framework_inputs.<FW>.excluded`, already removed from the report's
+    rows) to their justification. Each becomes a `WAIVED` control appended
+    after the row-derived ones, with the justification as its
+    `waiver_rationale`; owner, TTL and evidence carry over from the existing
+    instance.
     """
     resolved_now = now if now is not None else datetime.now(UTC).isoformat()
     existing_by_id = {c.control_id: c for c in existing_controls}
@@ -164,6 +172,27 @@ def derive_controls(
                 last_evidence_at=last_evidence_at,
                 due_at=due_at,
                 waiver_rationale=waiver_rationale,
+            )
+        )
+
+    for obligation_id, justification in excluded.items():
+        control_id = make_control_id(tenant_id, manifest.system_id, obligation_id)
+        existing = existing_by_id.get(control_id)
+        waiver = {
+            "state": ControlState.WAIVED,
+            "last_assessed_at": resolved_now,
+            "waiver_rationale": justification,
+        }
+        derived.append(
+            existing.model_copy(update=waiver)
+            if existing is not None
+            else ControlInstance(
+                control_id=control_id,
+                tenant_id=tenant_id,
+                system_id=manifest.system_id,
+                obligation_id=obligation_id,
+                article_ref=obligation_id,
+                **waiver,
             )
         )
 

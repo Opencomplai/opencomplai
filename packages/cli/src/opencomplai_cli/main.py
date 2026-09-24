@@ -22,10 +22,11 @@ import time
 import urllib.error
 import urllib.request
 import uuid
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
 import typer
@@ -36,12 +37,22 @@ from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
+from opencomplai_core.frameworks import (
+    EU_AI_ACT,
+    FRAMEWORKS,
+    evaluate_targets,
+    gate_failures,
+    load_requirements_map,
+    resolve_targets,
+    validate_gate,
+)
 from opencomplai_core.fria import generate_fria, render_fria_markdown
 from opencomplai_core.gap_probes import qms_article_17_clause_statuses
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.models import (
+    DISCLAIMER_V1,
+    DISCLAIMER_V2,
     AssessmentInput,
-    ComplianceTarget,
     ControlInstance,
     ControlState,
     CorroborationReport,
@@ -50,9 +61,12 @@ from opencomplai_core.models import (
     EvalSampleSet,
     EvalSummary,
     EvaluatorOutcome,
+    FrameworkReport,
     GapReport,
     GapStatus,
     ModelMetadata,
+    NistRmfReport,
+    PrincipleSummary,
     RiskLevel,
     ScanResult,
     ScanStatusArtifact,
@@ -63,6 +77,11 @@ from opencomplai_core.models import (
 from opencomplai_core.nist_rmf_report import build_nist_rmf_report
 from opencomplai_core.output_envelope import wrap_scan_output
 from opencomplai_core.principle_report import build_principle_summary
+from opencomplai_core.project_config import (
+    ProjectConfig,
+    find_project_config,
+    load_project_config,
+)
 from opencomplai_core.recommend_engine import render_recommendations
 from opencomplai_core.report_engine import render_report
 from opencomplai_core.scan_engine import run_scan, scan_summary_from_report
@@ -73,6 +92,7 @@ from opencomplai_core.service_auth import load_shared_secret, mint_service_token
 from opencomplai_core.state_machine import TRAP_DETECTED_EVENT, transition
 from opencomplai_core.system_state_store import load_state, save_state, state_record
 from rich.console import Console
+from rich.markup import escape
 from rich.progress import (
     BarColumn,
     Progress,
@@ -445,9 +465,18 @@ def _risk_engine_request(method: str, path: str, body: dict | None = None) -> di
 
 
 def _sync_controls_to_vault(
-    report: GapReport, manifest: SystemManifest, *, quiet: bool
+    report: GapReport,
+    manifest: SystemManifest,
+    *,
+    quiet: bool,
+    extra: Iterable[FrameworkReport] = (),
 ) -> list[ControlInstance] | None:
     """Upsert control instances derived from `report` + the manifest fingerprint.
+
+    `extra` are other frameworks' reports: each natively evaluated one adds
+    its controls after the EU AI Act's, its exclusions as waived controls.
+    Derived reports (NIST AI RMF) add none, since their rows re-project the
+    EU AI Act's and would duplicate its controls.
 
     Fully skipped (no output at all) when no vault is configured — D11
     vault-less OSS mode. When a vault is configured, any failure here is a
@@ -469,9 +498,20 @@ def _sync_controls_to_vault(
             "items"
         ]
         existing = [ControlInstance.model_validate(item) for item in existing_items]
+        catalog = get_catalog()
         derived = derive_controls(
-            report, manifest, get_catalog(), existing, tenant_id=tenant_id
+            report, manifest, catalog, existing, tenant_id=tenant_id
         )
+        for framework_report in extra:
+            if framework_report.derived_from is None:
+                derived += derive_controls(
+                    framework_report.report,
+                    manifest,
+                    catalog,
+                    existing,
+                    tenant_id=tenant_id,
+                    excluded=framework_report.excluded,
+                )
         _vault_request(
             "PUT",
             "/v1/controls",
@@ -719,7 +759,10 @@ def info_cmd(
     def _field(label: str, value: str) -> None:
         console.print(f"  [dim]{label:<13}[/dim] {value}")
 
-    summary = primary["summary"] or "Opencomplai Python SDK for EU AI Act compliance"
+    summary = primary["summary"] or (
+        "Opencomplai Python SDK for AI compliance: the EU AI Act, "
+        "and NIST AI RMF derived from the same evidence"
+    )
     _field("Name:", primary["name"])
     _field("Version:", primary["version"])
     _field("Summary:", summary)
@@ -1177,6 +1220,8 @@ def validate_manifest_cmd(
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
+    # The model accepts any framework id; check and gaps reject unknown ones.
+    _resolve_targets_or_exit(manifest, None)
 
     if output == OutputFormat.json:
         console.print_json(manifest.model_dump_json(indent=2))
@@ -1185,6 +1230,9 @@ def validate_manifest_cmd(
         console.print(f"  system_id:             {manifest.system_id}")
         console.print(f"  intended_purpose:      {manifest.intended_purpose}")
         console.print(f"  compliance_target:     {manifest.compliance_target}")
+        if manifest.compliance_targets:
+            targets = ", ".join(manifest.compliance_targets)
+            console.print(f"  compliance_targets:    {targets}")
         console.print(f"  high_risk_presumption: {manifest.high_risk_presumption}")
 
 
@@ -1224,9 +1272,10 @@ def _load_sample_set(
     return sample
 
 
-def _read_gap_report(path: Path) -> GapReport:
+def _read_gap_report(path: Path) -> tuple[GapReport, dict[str, FrameworkReport]]:
     """Load a `--gap-report` file: a bare GapReport or the envelope that
     `opencomplai gaps --output json` prints (report nested under `payload`).
+    Also returns the envelope's `frameworks` block, empty when absent.
 
     Windows PowerShell 5.1 `>` redirection writes UTF-16LE with a BOM, so a
     UTF-16 BOM selects UTF-16; anything else is read as UTF-8 (BOM optional),
@@ -1244,7 +1293,10 @@ def _read_gap_report(path: Path) -> GapReport:
     raw = json.loads(text)
     if isinstance(raw, dict) and "payload" in raw and "tool_version" in raw:
         raw = raw["payload"]
-    return GapReport.model_validate(raw)
+    frameworks = raw.get("frameworks", {}) if isinstance(raw, dict) else {}
+    return GapReport.model_validate(raw), {
+        fw: FrameworkReport.model_validate(value) for fw, value in frameworks.items()
+    }
 
 
 _GAP_STATUS_STYLE = {
@@ -1279,24 +1331,27 @@ def gaps_cmd(
         "--repo-root",
         help="Repository root for artifact path probes (Arts. 9/13/14/16/24/43)",
     ),
-    target: ComplianceTarget = typer.Option(
-        ComplianceTarget.EU_AI_ACT,
+    target: list[str] | None = typer.Option(
+        None,
         "--target",
         help=(
-            "EU_AI_ACT (default, evaluated natively) or NIST_AI_RMF "
-            "(evaluated by re-projecting the EU_AI_ACT evidence below through "
-            "data/framework_crosswalk.json — see docs/src/concepts/nist-ai-rmf.md)"
+            "Framework to assess; repeat for several. Replaces the manifest's "
+            "compliance_targets (else its compliance_target). EU_AI_ACT is "
+            "evaluated natively; NIST_AI_RMF by re-projecting the EU_AI_ACT "
+            "evidence through data/framework_crosswalk.json — see "
+            "docs/src/concepts/nist-ai-rmf.md"
         ),
     ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """
-    Print a per-article EU AI Act gap report (Met/Partial/Missing/Unverified).
+    Print a per-requirement gap report (Met/Partial/Missing/Unverified) for
+    every target framework, the EU AI Act by default.
 
     Purely a projection of already-computed rule/obligation/scan/eval results —
     informational only, never gates CI (see `opencomplai check` for the CI gate).
     `--target NIST_AI_RMF` re-projects the same evidence into a per-subcategory
-    NIST AI RMF 1.0 profile instead — no new scanner or evaluator involved.
+    NIST AI RMF 1.0 profile — no new scanner or evaluator involved.
     """
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
@@ -1308,6 +1363,8 @@ def gaps_cmd(
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
+
+    targets = _resolve_targets_or_exit(manifest, target)
 
     assessment_input = AssessmentInput(
         model=ModelMetadata(
@@ -1337,30 +1394,39 @@ def gaps_cmd(
         sample_set = sample_set.model_copy(update={"commit_ref": commit_ref})
         eval_report = run_evals(manifest.system_id, commit_ref, sample_set)
 
-    # D10 sidecars: keep the on-disk scan/eval reports the most recent ones,
-    # same contract as `check` — only writes what actually ran here.
-    _write_sidecar_reports(
-        corroboration_report, eval_report, quiet=(output == OutputFormat.json)
-    )
-
-    report = build_gap_report(
-        system_id=manifest.system_id,
+    # Evaluated before anything is written: a bad framework_inputs entry
+    # exits 2 without touching the sidecars.
+    reports = _evaluate_targets_or_exit(
+        manifest,
+        targets,
         commit_ref=commit_ref,
         risk_result=risk_result,
         corroboration_report=corroboration_report,
         eval_report=eval_report,
         repo_root=repo_root.resolve(),
     )
+
+    # D10 sidecars: keep the on-disk scan/eval reports the most recent ones,
+    # same contract as `check` — only writes what actually ran here.
+    _write_sidecar_reports(
+        corroboration_report, eval_report, quiet=(output == OutputFormat.json)
+    )
+
+    report = reports[EU_AI_ACT].report
     principle_summary = build_principle_summary(report)
     report = report.model_copy(update={"principle_summary": principle_summary})
+    reports[EU_AI_ACT] = reports[EU_AI_ACT].model_copy(update={"report": report})
 
-    _sync_controls_to_vault(report, manifest, quiet=(output == OutputFormat.json))
-
-    nist_report = (
-        build_nist_rmf_report(report)
-        if target == ComplianceTarget.NIST_AI_RMF
-        else None
+    _sync_controls_to_vault(
+        report,
+        manifest,
+        quiet=(output == OutputFormat.json),
+        extra=[reports[fw] for fw in targets if fw != EU_AI_ACT],
     )
+
+    nist_report = build_nist_rmf_report(report) if "NIST_AI_RMF" in targets else None
+    # Exactly one EU AI Act or NIST AI RMF target keeps today's output.
+    legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
 
     if output == OutputFormat.json:
         envelope_payload = json.loads(report.model_dump_json())
@@ -1368,47 +1434,132 @@ def gaps_cmd(
             envelope_payload["nist_rmf_report"] = json.loads(
                 nist_report.model_dump_json()
             )
+        if not legacy:
+            envelope_payload["frameworks"] = {
+                fw: json.loads(reports[fw].model_dump_json()) for fw in targets
+            }
         envelope = wrap_scan_output(
             envelope_payload,
             scan_errors=[],
             tool_version=__version__,
+            disclaimer=DISCLAIMER_V1 if legacy else DISCLAIMER_V2,
         )
         console.print_json(envelope.model_dump_json(indent=2))
         return
 
-    if nist_report is not None:
-        console.print(
-            f"\n[bold]Opencomplai NIST AI RMF Gap Report[/bold] — {manifest.system_id}\n"
-        )
-        console.print(
-            "[dim]Re-projected from EU AI Act evidence via the framework crosswalk "
-            "(data/framework_crosswalk.json) — heuristic estimates, not a legal "
-            "determination. See docs/src/concepts/nist-ai-rmf.md for the "
-            "methodology; no new scanner or evaluator backs this.[/dim]\n"
-        )
-        rmf_table = Table(show_header=True, header_style="bold")
-        rmf_table.add_column("Subcategory", style="dim")
-        rmf_table.add_column("Status", min_width=10)
-        rmf_table.add_column("Mapping conf.", style="dim")
-        rmf_table.add_column("From (EU AI Act)", style="dim")
-        rmf_table.add_column("Rationale")
-        for row in nist_report.subcategories:
-            rmf_table.add_row(
-                row.subcategory,
-                _GAP_STATUS_STYLE[row.status],
-                row.mapping_confidence or "—",
-                ", ".join(row.source_eu_ai_act_articles) or "—",
-                row.rationale,
-            )
-        console.print(rmf_table)
-        console.print(
-            "\n[dim]NIST AI RMF report is informational only — it does not gate "
-            "CI. Every row cites the EU AI Act evidence it was derived from; "
-            "UNVERIFIED rows have no framework_crosswalk.json coverage yet.[/dim]\n"
+    config = _project_config(repo_root)
+    if targets == ["NIST_AI_RMF"]:
+        _print_nist_gaps(
+            nist_report, manifest.system_id, _gate_note(config, "NIST_AI_RMF")
         )
         return
+    for fw in targets:
+        if fw == EU_AI_ACT:
+            _print_eu_gaps(report, principle_summary, manifest.system_id)
+        else:
+            _print_framework_gaps(reports[fw], _gate_note(config, fw))
 
-    console.print(f"\n[bold]Opencomplai Gap Report[/bold] — {manifest.system_id}\n")
+
+def _resolve_targets_or_exit(
+    manifest: SystemManifest, cli_targets: list[str] | None
+) -> list[str]:
+    try:
+        return resolve_targets(manifest, cli_targets)
+    except ValueError as e:
+        err_console.print(f"[red]Error:[/red] {e}")
+        sys.exit(2)
+
+
+def _project_config(repo_root: Path) -> ProjectConfig:
+    """`opencomplai.yaml` under `repo_root`, or the built-in defaults; a
+    malformed file exits 2."""
+    path = find_project_config(repo_root)
+    if path is None:
+        return ProjectConfig()
+    try:
+        return load_project_config(path)
+    except ValueError as e:
+        err_console.print(f"[red]Error:[/red] {e}")
+        sys.exit(2)
+
+
+def _resolve_gate(
+    targets: list[str],
+    cli_frameworks: list[str] | None,
+    cli_fail_on: str | None,
+    repo_root: Path,
+) -> tuple[list[str], str]:
+    """Gated frameworks and fail_on. `--gate`/`--gate-fail-on` replace
+    opencomplai.yaml's `gate`; a bad gate exits 2 before anything is written."""
+    config = _project_config(repo_root)
+    frameworks = list(dict.fromkeys(cli_frameworks or config.gate_frameworks))
+    fail_on = cli_fail_on or config.gate_fail_on or "missing"
+    try:
+        validate_gate(frameworks, fail_on, targets)
+    except ValueError as e:
+        err_console.print(f"[red]Error:[/red] gate: {e}")
+        sys.exit(2)
+    return frameworks, fail_on
+
+
+def _evaluate_targets_or_exit(
+    manifest: SystemManifest, targets: list[str], **kwargs: Any
+) -> dict[str, FrameworkReport]:
+    try:
+        return evaluate_targets(manifest, targets, **kwargs)
+    except ValueError as e:
+        err_console.print(f"[red]Error:[/red] {e}")
+        sys.exit(2)
+
+
+def _gate_note(config: ProjectConfig, framework: str) -> str | None:
+    """How `check` gates `framework` per opencomplai.yaml; None when it does not."""
+    if framework not in config.gate_frameworks:
+        return None
+    rows = "Missing or Partial" if config.gate_fail_on == "partial" else "Missing"
+    return (
+        f"gated in CI: `opencomplai check` fails on its {rows} rows "
+        "(opencomplai.yaml gate)"
+    )
+
+
+def _print_nist_gaps(
+    nist_report: NistRmfReport, system_id: str, gate_note: str | None = None
+) -> None:
+    console.print(f"\n[bold]Opencomplai NIST AI RMF Gap Report[/bold] — {system_id}\n")
+    console.print(
+        "[dim]Re-projected from EU AI Act evidence via the framework crosswalk "
+        "(data/framework_crosswalk.json) — heuristic estimates, not a legal "
+        "determination. See docs/src/concepts/nist-ai-rmf.md for the "
+        "methodology; no new scanner or evaluator backs this.[/dim]\n"
+    )
+    rmf_table = Table(show_header=True, header_style="bold")
+    rmf_table.add_column("Subcategory", style="dim")
+    rmf_table.add_column("Status", min_width=10)
+    rmf_table.add_column("Mapping conf.", style="dim")
+    rmf_table.add_column("From (EU AI Act)", style="dim")
+    rmf_table.add_column("Rationale")
+    for row in nist_report.subcategories:
+        rmf_table.add_row(
+            row.subcategory,
+            _GAP_STATUS_STYLE[row.status],
+            row.mapping_confidence or "—",
+            ", ".join(row.source_eu_ai_act_articles) or "—",
+            row.rationale,
+        )
+    console.print(rmf_table)
+    ci = gate_note or "informational only — it does not gate CI"
+    console.print(
+        f"\n[dim]NIST AI RMF report is {ci}. Every row cites the EU AI Act "
+        "evidence it was derived from; UNVERIFIED rows have no "
+        "framework_crosswalk.json coverage yet.[/dim]\n"
+    )
+
+
+def _print_eu_gaps(
+    report: GapReport, principle_summary: PrincipleSummary, system_id: str
+) -> None:
+    console.print(f"\n[bold]Opencomplai Gap Report[/bold] — {system_id}\n")
     console.print(
         "[dim]Statuses are heuristic estimates — not a legal determination.[/dim]\n"
     )
@@ -1453,6 +1604,43 @@ def gaps_cmd(
         "\n[dim]Gap report is informational only — it does not gate CI. "
         "See `opencomplai check` for the compliance-artifact.json CI contract.[/dim]\n"
     )
+
+
+def _print_framework_gaps(
+    framework_report: FrameworkReport, gate_note: str | None = None
+) -> None:
+    """One non-EU framework's rows, then its exclusions, gate and disclaimer."""
+    pack = FRAMEWORKS[framework_report.framework]
+    requirements = load_requirements_map(pack.requirements) if pack.requirements else {}
+    console.print(
+        f"\n[bold]{escape(framework_report.label)}[/bold] — "
+        f"{escape(framework_report.report.system_id)}\n"
+    )
+    table = Table(show_header=True, header_style="bold")
+    table.add_column("Requirement", style="dim")
+    table.add_column("Title")
+    table.add_column("Status", min_width=10)
+    table.add_column("Source", style="dim")
+    table.add_column("Evidence", style="dim")
+    table.add_column("Rationale")
+    for row in framework_report.report.articles:
+        # Attested rows carry the provider's own words: print them, not markup.
+        table.add_row(
+            escape(row.article),
+            escape(requirements.get(row.article, {}).get("title", "—")),
+            _GAP_STATUS_STYLE[row.status],
+            row.source.value,
+            escape(row.evidence_ref),
+            escape(row.rationale),
+        )
+    console.print(table)
+    if framework_report.excluded:
+        console.print("\n[bold]Excluded[/bold]")
+        for rid, reason in framework_report.excluded.items():
+            console.print(f"  {escape(rid)}: {escape(reason)}")
+    if gate_note:
+        console.print(f"\n[dim]This framework is {gate_note}.[/dim]")
+    console.print(f"\n[dim]{DISCLAIMER_V2}[/dim]\n")
 
 
 @app.command("recommend")
@@ -1504,7 +1692,7 @@ def recommend_cmd(
                 f"[red]Error:[/red] gap report not found: {gap_report_file}"
             )
             sys.exit(2)
-        report = _read_gap_report(gap_report_file)
+        report, framework_reports = _read_gap_report(gap_report_file)
     else:
         if not manifest_file.exists():
             err_console.print(
@@ -1550,17 +1738,32 @@ def recommend_cmd(
             sample_set = sample_set.model_copy(update={"commit_ref": commit_ref})
             eval_report = run_evals(manifest.system_id, commit_ref, sample_set)
 
-        report = build_gap_report(
-            system_id=manifest.system_id,
+        framework_reports = _evaluate_targets_or_exit(
+            manifest,
+            _resolve_targets_or_exit(manifest, None),
             commit_ref=commit_ref,
             risk_result=risk_result,
             corroboration_report=corroboration_report,
             eval_report=eval_report,
             repo_root=repo_root.resolve(),
         )
+        report = framework_reports[EU_AI_ACT].report
 
+    # The EU AI Act report as before, then every natively evaluated framework;
+    # derived ones (NIST AI RMF) re-project EU rows that already have fixes.
+    reports = [report] + [
+        framework_report.report
+        for fw, framework_report in framework_reports.items()
+        if fw != EU_AI_ACT and framework_report.derived_from is None
+    ]
     resolved_repo_root = repo_root.resolve()
-    written = render_recommendations(report, output_dir, repo_root=resolved_repo_root)
+    written = [
+        path
+        for gap_report in reports
+        for path in render_recommendations(
+            gap_report, output_dir, repo_root=resolved_repo_root
+        )
+    ]
 
     if not written:
         console.print(
@@ -1757,13 +1960,14 @@ def report_cmd(
         )
 
     gap_report = None
+    framework_reports: dict[str, FrameworkReport] = {}
     if gap_report_file is not None:
         if not gap_report_file.exists():
             err_console.print(
                 f"[red]Error:[/red] gap report not found: {gap_report_file}"
             )
             sys.exit(2)
-        gap_report = _read_gap_report(gap_report_file)
+        gap_report, framework_reports = _read_gap_report(gap_report_file)
 
     assessment_input = AssessmentInput(
         model=ModelMetadata(
@@ -1782,6 +1986,7 @@ def report_cmd(
         artifact=artifact,
         gap_report=gap_report,
         risk_result=risk_result,
+        framework_reports=framework_reports,
         fmt=fmt,
     )
 
@@ -2550,13 +2755,11 @@ def scan_cmd(
         bootstrap=ocignore_bootstrap,
     )
 
-    from opencomplai_core.project_config import find_project_config, load_project_config
-
     project_config_path = find_project_config(repo_root)
     resolved_fail_on = fail_on
     resolved_framework_detectors = framework_detectors
     if project_config_path is not None:
-        project_config = load_project_config(project_config_path)
+        project_config = _project_config(repo_root)
         # Config values only apply where the CLI flag is still at its built-in default —
         # an explicit CLI flag always wins over opencomplai.yaml (never the reverse).
         if fail_on == FailOnLevel.none and project_config.scan_fail_on is not None:
@@ -2752,6 +2955,31 @@ def check_cmd(
             "exit code 4) and freezes deployment pending HITL review."
         ),
     ),
+    target: list[str] | None = typer.Option(
+        None,
+        "--target",
+        help=(
+            "Framework --with-gaps and --gate assess; repeat for several. "
+            "Replaces the manifest's compliance_targets (else its "
+            "compliance_target)."
+        ),
+    ),
+    gate: list[str] | None = typer.Option(
+        None,
+        "--gate",
+        help=(
+            "Non-EU target framework whose Missing rows fail the check (exit 1); "
+            "repeat for several. Replaces opencomplai.yaml's gate.frameworks."
+        ),
+    ),
+    gate_fail_on: str | None = typer.Option(
+        None,
+        "--gate-fail-on",
+        help=(
+            "missing (default) or partial: which rows of a gated framework fail. "
+            "Replaces opencomplai.yaml's gate.fail_on."
+        ),
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """
@@ -2772,6 +3000,11 @@ def check_cmd(
     except Exception as e:
         err_console.print(f"[red]Manifest validation error:[/red] {e}")
         sys.exit(2)
+
+    targets = _resolve_targets_or_exit(manifest, target)
+    gate_frameworks, gate_fail_on = _resolve_gate(
+        targets, gate, gate_fail_on, repo_root
+    )
 
     if manifest.checker_session is None:
         err_console.print(
@@ -2867,7 +3100,7 @@ def check_cmd(
             manifest.system_id, commit_ref, "high_risk_corroboration_failed"
         )
 
-    if with_gaps:
+    if with_gaps or gate_frameworks:
         gap_assessment_input = AssessmentInput(
             model=ModelMetadata(
                 name=manifest.system_id,
@@ -2886,36 +3119,66 @@ def check_cmd(
                 commit_ref,
                 sample_set.model_copy(update={"commit_ref": commit_ref}),
             )
-        gap_report = build_gap_report(
-            system_id=manifest.system_id,
+        framework_reports = _evaluate_targets_or_exit(
+            manifest,
+            targets,
             commit_ref=commit_ref,
             risk_result=gap_risk_result,
             corroboration_report=scan_report,
             eval_report=gap_eval_report,
             repo_root=repo_root.resolve(),
         )
-        derived_controls = _sync_controls_to_vault(
-            gap_report, manifest, quiet=(output == OutputFormat.json)
-        )
-        controls_block = (
-            build_controls_block(derived_controls)
-            if derived_controls is not None
-            else None
-        )
-        nist_rmf_report = (
-            build_nist_rmf_report(gap_report)
-            if manifest.compliance_target == ComplianceTarget.NIST_AI_RMF
-            else None
-        )
-        artifact = artifact.model_copy(
-            update={
-                "gap_report": gap_report,
-                "controls": controls_block,
-                "nist_rmf_report": nist_rmf_report,
-            }
-        )
 
-    # Sign only now: the scan override, checker verdict and --with-gaps
+        # Opt-in gate, after HALT-WIRE and the checker verdict: failing rows
+        # of gated frameworks follow the EU ids in failed_controls and only
+        # ever turn PASS into CONTROL_FAIL. They never halt the system.
+        for fw in gate_frameworks:
+            framework_reports[fw] = framework_reports[fw].model_copy(
+                update={"gated": True}
+            )
+        gate_failed = gate_failures(framework_reports, gate_frameworks, gate_fail_on)
+        if gate_failed:
+            artifact = artifact.model_copy(
+                update={
+                    "result": ScanResult.CONTROL_FAIL
+                    if artifact.result == ScanResult.PASS
+                    else artifact.result,
+                    "failed_controls": list(
+                        dict.fromkeys([*artifact.failed_controls, *gate_failed])
+                    ),
+                }
+            )
+
+        if with_gaps:
+            gap_report = framework_reports[EU_AI_ACT].report
+            derived_controls = _sync_controls_to_vault(
+                gap_report,
+                manifest,
+                quiet=(output == OutputFormat.json),
+                extra=[framework_reports[fw] for fw in targets if fw != EU_AI_ACT],
+            )
+            controls_block = (
+                build_controls_block(derived_controls)
+                if derived_controls is not None
+                else None
+            )
+            nist_rmf_report = (
+                build_nist_rmf_report(gap_report) if "NIST_AI_RMF" in targets else None
+            )
+            # Exactly one EU AI Act or NIST AI RMF target keeps today's artifact.
+            legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
+            artifact = artifact.model_copy(
+                update={
+                    "gap_report": gap_report,
+                    "controls": controls_block,
+                    "nist_rmf_report": nist_rmf_report,
+                    "framework_reports": None
+                    if legacy
+                    else {fw: framework_reports[fw] for fw in targets},
+                }
+            )
+
+    # Sign only now: the scan override, checker verdict, gate and --with-gaps
     # blocks above all change the bytes the signature has to cover.
     artifact = _sign_artifact(artifact, sign)
 

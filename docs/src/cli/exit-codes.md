@@ -5,10 +5,20 @@ Opencomplai uses fixed, contractual exit codes so CI pipelines can reliably gate
 | Code | Constant | When it happens |
 |---:|---|---|
 | `0` | `PASS` | All critical controls passed. |
-| `1` | `CONTROL_FAIL` | One or more critical controls failed (e.g. an Annex III high-risk use case, or a failed pipeline evaluator). |
-| `2` | `VALIDATION_FAIL` | Input or manifest validation failed (e.g., missing or invalid `system-manifest.json`). |
+| `1` | `CONTROL_FAIL` | One or more critical controls failed (e.g. an Annex III high-risk use case, or a failed pipeline evaluator), or a gated framework has a failing row (see [Gating other frameworks](check.md#gating-other-frameworks)). |
+| `2` | `VALIDATION_FAIL` | Input or manifest validation failed (e.g., missing or invalid `system-manifest.json`, or a bad `gate` setting). |
 | `3` | `POLICY_BLOCK` | A prohibited (Article 5) practice was detected in the declared purpose, e.g. `social scoring`, or the manifest's checker verdict is `prohibited_practice`. |
 | `4` | `TRAP_DETECTED` | Article 25 substantial-modification trap: the change makes you a provider. Raised locally by `--change-context model_retrain`, `purpose_change` or `capability_extension`, and by the risk engine in service-backed mode. |
+
+## Which frameworks gate
+
+The EU AI Act always gates `check`: its rules, the checker verdict, evaluators and the
+code scan set the result as described above. Any other target framework gates only
+when `opencomplai.yaml` `gate.frameworks` or `check --gate` lists it, and then only by
+turning `PASS` into `CONTROL_FAIL` (exit `1`) when one of its rows is Missing (or, with
+`fail_on: partial`, Partial). A gated framework never produces exit `3` or `4` and never
+halts the system. `gaps`, `report` and `recommend` never gate, whatever the targets.
+See [Frameworks](../frameworks/index.md).
 
 ## Typical CI usage
 

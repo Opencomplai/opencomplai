@@ -24,7 +24,7 @@ Create a system manifest and set up the local signing keypair.
 | `--intended-purpose` | *(required unless `--interactive`)* | Primary intended purpose — maps to EU AI Act Annex III categories. |
 | `--interactive` | `False` | Run the EU AI Act applicability checker wizard, then prompt for manifest fields. |
 | `--skip-checker` | `False` | With `--interactive`, skip the checker wizard. |
-| `--compliance-target` | `EU_AI_ACT` | Compliance framework target. |
+| `--compliance-target` | `EU_AI_ACT` | Single framework target: `EU_AI_ACT` or `NIST_AI_RMF`. To assess several, see [Targeting several frameworks](#targeting-several-frameworks). |
 | `--high-risk-presumption` / `--no-high-risk-presumption` | `False` | Set to `True` if the provider presumes the system is high-risk pending classification. |
 | `--training-data-description` | *(none)* | Annex IV §2 free-text training-data summary. **Required for HIGH-risk systems.** |
 | `--model-architecture` | *(none)* | Annex IV §2 free-text architecture description. **Required for HIGH-risk systems.** |
@@ -92,6 +92,23 @@ Section 2/3 fields (with `null`/empty defaults when not supplied):
 ```
 
 When present, `checker_session` records an EU AI Act applicability checker run. See [checker](checker.md).
+
+## Targeting several frameworks
+
+`init` writes the single `compliance_target`. To assess several frameworks side by
+side, add `compliance_targets` (and, if needed, `framework_inputs`) to the manifest,
+either by editing it or by putting them in the `--section-extras-file` JSON:
+
+```json
+{
+  "compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"]
+}
+```
+
+`compliance_targets` then takes precedence over `compliance_target`. Neither key is
+written when unset, so the manifest above is unchanged for a single target. Run
+[`validate-manifest`](validate-manifest.md) to check the framework keys; see
+[Frameworks](../frameworks/index.md) for exclusions and attestations.
 
 ## Next step
 

@@ -179,8 +179,10 @@ Docker Compose stack is not currently built or smoke-tested in CI.
 The test suites import from source, so they cannot see a module, dependency or data file
 the published wheels fail to ship. `bash scripts/smoke_wheel_install.sh` covers that: it
 builds the core, CLI and SDK wheels, installs only those into a clean venv and runs
-`--version`, `init`, `check --with-gaps` and an offline `docs generate` from outside the
-repo. It needs `uv` and runs on Linux and Git Bash on Windows.
+`--version`, `init`, `check --with-gaps` (EU AI Act and NIST AI RMF targets, checking
+`framework_reports`, `gap_report` and `nist_rmf_report`), an offline `docs generate` and a
+`check --gate NIST_AI_RMF` that must fail, from outside the repo. It needs `uv` and runs
+on Linux and Git Bash on Windows.
 
 ---
 

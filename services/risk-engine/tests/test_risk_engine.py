@@ -126,3 +126,60 @@ async def test_hitl_override_requires_rationale():
             },
         )
     assert r.status_code == 422
+
+
+async def _validate_manifest(payload: dict, headers: dict[str, str]):
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test", headers=headers
+    ) as client:
+        return await client.post("/v1/manifests/validate", json=payload)
+
+
+@pytest.mark.asyncio
+async def test_validate_manifest_accepts_compliance_targets(service_auth_headers):
+    excluded = {"NIST_AI_RMF:MAP 1.1": "Internal tool, no external users"}
+    r = await _validate_manifest(
+        {
+            "system_id": "test",
+            "intended_purpose": "chatbot",
+            "compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"],
+            "framework_inputs": {"NIST_AI_RMF": {"excluded": excluded}},
+        },
+        service_auth_headers,
+    )
+    assert r.status_code == 200
+    manifest = r.json()["manifest"]
+    assert manifest["compliance_targets"] == ["EU_AI_ACT", "NIST_AI_RMF"]
+    assert manifest["framework_inputs"] == {
+        "NIST_AI_RMF": {"excluded": excluded, "attested": {}}
+    }
+
+
+@pytest.mark.asyncio
+async def test_validate_manifest_single_target_omits_new_fields(service_auth_headers):
+    r = await _validate_manifest(
+        {"system_id": "test", "intended_purpose": "chatbot"}, service_auth_headers
+    )
+    assert r.status_code == 200
+    manifest = r.json()["manifest"]
+    assert manifest["compliance_target"] == "EU_AI_ACT"
+    assert "compliance_targets" not in manifest
+    assert "framework_inputs" not in manifest
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "extra",
+    [
+        {"compliance_targets": ["EU_AI_ACT", "ISO_42001"]},
+        {"compliance_targets": []},
+        {"framework_inputs": {"NIST_AI_RMF": {"attested": {"X": {}}}}},
+    ],
+    ids=["unknown-target", "empty-targets", "bad-attestation"],
+)
+async def test_validate_manifest_rejects_invalid_targets(extra, service_auth_headers):
+    r = await _validate_manifest(
+        {"system_id": "test", "intended_purpose": "chatbot", **extra},
+        service_auth_headers,
+    )
+    assert r.status_code == 422
