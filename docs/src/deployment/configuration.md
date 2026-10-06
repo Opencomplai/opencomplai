@@ -98,8 +98,8 @@ gated three ways:
    regulated deployment the real control is `OPENCOMPLAI_OFFLINE=1` or a local
    model.
 
-Model downloads are pinned to an immutable upstream revision and checksum-
-verified where the catalog records one — on download **and** on every cache hit,
+Model downloads are strictly pinned to an immutable upstream revision and checksum-
+verified — on download **and** on every cache hit,
 so a later local modification of a cached model is caught. An unpinned model is
 refused outright when stdin is not interactive: unattended is exactly where an
 upstream substitution would go unnoticed.

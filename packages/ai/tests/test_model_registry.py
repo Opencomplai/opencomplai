@@ -89,3 +89,15 @@ def test_needs_preload_matches_what_resolve_actually_requires():
     for model_id, spec in MODEL_CATALOG.items():
         if spec.runtime == "llama-cpp":
             assert spec.needs_preload is True, model_id
+
+
+def test_gguf_models_are_pinned():
+    for model_id, spec in MODEL_CATALOG.items():
+        if spec.runtime == "llama-cpp":
+            assert spec.revision, f"Model {model_id} is missing a revision pin"
+            assert len(spec.revision) >= 40, f"Model {model_id} revision looks invalid"
+
+            assert spec.sha256, f"Model {model_id} is missing a sha256 checksum"
+            assert len(spec.sha256) == 64, f"Model {model_id} sha256 must be 64 chars"
+            # Ensure it's a valid hex string
+            int(spec.sha256, 16)

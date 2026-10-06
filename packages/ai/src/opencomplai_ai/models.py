@@ -136,6 +136,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         hf_repo="Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF",
         filename="qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
         requires_deep=True,
+        revision="ebb2015119c907b064c512bf053e945850b5875f",
+        sha256="1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
     ),
     "qwen2.5-coder-1.5b": ModelSpec(
         model_id="qwen2.5-coder-1.5b",
@@ -146,6 +148,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         hf_repo="Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
         filename="qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
         requires_deep=True,
+        revision="f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        sha256="cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
     ),
     "smollm2-1.7b": ModelSpec(
         model_id="smollm2-1.7b",
@@ -156,6 +160,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         hf_repo="HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF",
         filename="smollm2-1.7b-instruct-q4_k_m.gguf",
         requires_deep=True,
+        revision="2d4a76a30b4af41ecd395c35725ac11688d4cfe4",
+        sha256="decd2598bc2c8ed08c19adc3c8fdd461ee19ed5708679d1c54ef54a5a30d4f33",
     ),
     "phi-3.5-mini": ModelSpec(
         model_id="phi-3.5-mini",
@@ -163,9 +169,11 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         size_mb=2200,
         license="MIT",
         runtime="llama-cpp",
-        hf_repo="microsoft/Phi-3.5-mini-instruct-gguf",
+        hf_repo="bartowski/Phi-3.5-mini-instruct-GGUF",
         filename="Phi-3.5-mini-instruct-Q4_K_M.gguf",
         requires_deep=True,
+        revision="6d70da17e749a471ccb62ade694486011a75cda3",
+        sha256="e4165e3a71af97f1b4820da61079826d8752a2088e313af0c7d346796c38eff5",
     ),
     "mistral-7b": ModelSpec(
         model_id="mistral-7b",
@@ -176,6 +184,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         hf_repo="MaziyarPanahi/Mistral-7B-Instruct-v0.3-GGUF",
         filename="Mistral-7B-Instruct-v0.3.Q4_K_M.gguf",
         requires_deep=True,
+        revision="ce89f595755a4bf2e2e05d155cc43cb847c78978",
+        sha256="14850c84ff9f06e9b51d505d64815d5cc0cea0257380353ac0b3d21b21f6e024",
     ),
     "saas": ModelSpec(
         model_id="saas",

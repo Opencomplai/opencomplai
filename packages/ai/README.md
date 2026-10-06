@@ -90,8 +90,9 @@ opencomplai scan --ai-intent --ai-model codebert-onnx     # no download, no [dee
 
 On first use of a GGUF model, the plugin prompts before downloading and shows a progress
 bar; the download is refused up front (no prompt, no partial download) if `[deep]` isn't
-installed. `codebert-onnx` needs none of this in normal use — it does deterministic
-code-signal matching with no model artifact to fetch.
+installed. All GGUF model downloads are strictly pinned to an immutable upstream revision 
+and checksum-verified on download and on every cache hit. `codebert-onnx` needs none of 
+this in normal use — it does deterministic code-signal matching with no model artifact to fetch.
 
 An explicit prefetch/export of `codebert-onnx` (e.g. via `opencomplai ai configure`) is
 still available for callers that want the artifact anyway: CodeBERT has no prebuilt ONNX

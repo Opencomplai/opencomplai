@@ -11,7 +11,10 @@ def test_cache_hit_skips_download(tmp_path):
     cached = tmp_path / "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf"
     cached.write_bytes(b"fake-model-data")
 
-    with patch("opencomplai_ai.downloader.get_cache_dir", return_value=tmp_path):
+    with (
+        patch("opencomplai_ai.downloader.get_cache_dir", return_value=tmp_path),
+        patch("opencomplai_ai.downloader.verify_artifact"),
+    ):
         result = ensure_model("qwen2.5-coder-1.5b")
 
     assert result == cached
@@ -41,6 +44,7 @@ def test_missing_file_triggers_download(tmp_path):
         patch("opencomplai_ai.downloader.Console", return_value=console_mock),
         patch("opencomplai_ai.downloader.Progress") as mock_progress,
         patch("huggingface_hub.hf_hub_download", mock_hf),
+        patch("opencomplai_ai.downloader.verify_artifact"),
         # requires_deep=True for this model; the base install in this test
         # suite has no llama-cpp-python, so without this the new
         # finding-48.10 gate below would (correctly) refuse before download.

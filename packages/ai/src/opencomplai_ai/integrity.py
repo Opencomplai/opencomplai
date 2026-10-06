@@ -46,10 +46,9 @@ def verify_artifact(path: Path, expected_sha256: str, *, context: str) -> None:
     """
     Check ``path`` against ``expected_sha256``.
 
-    A blank expectation is a no-op — the catalog does not yet carry checksums
-    for every model (see PLAN/execution/DEFERRED-DECISIONS.md). That is a gap
-    to close, not a licence to pretend verification happened, so nothing here
-    reports success when there was nothing to check.
+    A blank expectation is a no-op. The catalog should carry checksums
+    for every model (enforced by `test_model_registry.py::test_gguf_models_are_pinned`).
+    Nothing here reports success when there was nothing to check.
 
     On mismatch the offending file is **deleted** before raising: leaving an
     artifact that failed verification on disk invites the next run to hit it as
