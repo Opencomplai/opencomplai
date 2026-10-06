@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import urllib.request as urlreq
 
@@ -72,6 +73,8 @@ app = FastAPI(
     ),
     version="0.1.0-dev",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("risk-engine")
 
@@ -207,6 +210,7 @@ async def validate_manifest(request: ManifestValidateRequest) -> dict:
         resolve_targets(manifest)  # rejects unknown framework ids
         return {"valid": True, "manifest": manifest.model_dump()}
     except Exception as exc:
+        logger.warning("Manifest validation failed", exc_info=True)
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
@@ -328,6 +332,7 @@ def _vault_request(method: str, path: str, body: dict | None = None) -> dict | N
         with urlreq.urlopen(req, timeout=5) as resp:
             return json.loads(resp.read())
     except Exception:
+        logger.exception("Vault request failed")
         return None
 
 
@@ -394,6 +399,7 @@ async def _record_hitl_event(
         with urlreq.urlopen(req, timeout=5) as resp:
             return json.loads(resp.read()).get("event_id")
     except Exception:
+        logger.exception("Failed to record HITL event in Evidence Vault")
         return None
 
 
@@ -569,6 +575,7 @@ async def run_evals_endpoint(request: EvalRunRequest) -> dict:
     try:
         sample_set = EvalSampleSet.model_validate(request.sample_set)
     except Exception as exc:
+        logger.warning("Eval sample set validation failed", exc_info=True)
         raise HTTPException(
             status_code=422,
             detail={

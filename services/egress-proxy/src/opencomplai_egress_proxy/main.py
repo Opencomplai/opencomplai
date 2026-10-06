@@ -11,6 +11,7 @@ The only component allowed to make outbound network calls. Enforces:
 from __future__ import annotations
 
 import json
+import logging
 import os
 import urllib.request
 
@@ -47,6 +48,8 @@ app = FastAPI(
     ),
     version="0.1.0-dev",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("egress-proxy")
 
@@ -103,6 +106,9 @@ def _emit_egress_blocked(
         with urllib.request.urlopen(req, timeout=3) as resp:
             return json.loads(resp.read()).get("event_id")
     except Exception:
+        logger.warning(
+            "Failed to record egress_blocked event in Evidence Vault", exc_info=True
+        )
         return None  # non-blocking; vault unavailability is logged separately
 
 
@@ -155,6 +161,7 @@ async def gateway_health() -> Response:
                 media_type=r.headers.get("content-type"),
             )
     except Exception:
+        logger.warning("Gateway health check failed", exc_info=True)
         return JSONResponse(
             status_code=503, content={"status": "degraded", "service": "egress-proxy"}
         )
@@ -178,6 +185,7 @@ async def sync_metadata(request: Request) -> Response:
     try:
         payload = await request.json()
     except Exception:
+        logger.warning("Invalid JSON in sync_metadata payload", exc_info=True)
         return JSONResponse(
             status_code=422,
             content={
@@ -213,6 +221,7 @@ async def sync_metadata(request: Request) -> Response:
                 media_type="application/json",
             )
         except Exception as exc:
+            logger.exception("Pro dashboard unreachable")
             return JSONResponse(
                 status_code=503,
                 content={
@@ -279,6 +288,7 @@ async def pro_ingest(sub_path: str, request: Request) -> Response:
                 media_type=r.headers.get("content-type", "application/json"),
             )
     except Exception as exc:
+        logger.exception("Evidence vault unreachable during JWT pubkey fetch")
         return JSONResponse(
             status_code=503,
             content={
@@ -327,6 +337,7 @@ async def proxy_to_gateway(path: str, request: Request) -> Response:
                 media_type=r.headers.get("content-type"),
             )
     except Exception as exc:
+        logger.exception("Gateway proxy request failed")
         return JSONResponse(
             status_code=503,
             content={

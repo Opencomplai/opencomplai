@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import base64
 import json
+import logging
 import os
 import time
 
@@ -55,6 +56,8 @@ app = FastAPI(
     description="Annex IV technical documentation dossier generator (REQ-DOC-001).",
     version="0.1.0-dev",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("doc-generator")
 
@@ -429,6 +432,7 @@ async def generate_docs(
     except HTTPException:
         raise
     except Exception as exc:
+        logger.exception("Dossier generation failed unexpectedly")
         duration_ms = int((time.monotonic() - start) * 1000)
         raise HTTPException(
             status_code=500,

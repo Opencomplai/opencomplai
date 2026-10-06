@@ -16,6 +16,17 @@ Opencomplai emits OpenTelemetry (OTel) traces and Prometheus metrics from every 
 
 ---
 
+## Logs
+
+Python services log to standard out (stdout) using a structured JSON format. Logs contain standard fields (`ts`, `level`, `logger`, `service`, `msg`, `exc_info`) and automatically inject `trace_id` when an OpenTelemetry span is active, allowing correlation between traces and logs.
+
+### Configuration
+| Variable | Default | Description |
+|---|---|---|
+| `LOG_LEVEL` | `INFO` | Standard Python log level (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`). |
+
+---
+
 ## Quick Start
 
 1. Copy the env template and enable OTel:

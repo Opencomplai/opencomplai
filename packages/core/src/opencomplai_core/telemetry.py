@@ -15,8 +15,40 @@ services can boot without telemetry in air-gapped or stripped-down environments.
 
 from __future__ import annotations
 
+import json
+import logging
 import os
+from datetime import UTC, datetime
 from typing import Any
+
+
+class JsonFormatter(logging.Formatter):
+    def __init__(self, service_name: str):
+        super().__init__()
+        self.service_name = service_name
+
+    def format(self, record: logging.LogRecord) -> str:
+        log_obj = {
+            "ts": datetime.fromtimestamp(record.created, tz=UTC).isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "service": self.service_name,
+            "msg": record.getMessage(),
+        }
+        if record.exc_info:
+            log_obj["exc_info"] = self.formatException(record.exc_info)
+
+        try:
+            from opentelemetry import trace
+
+            span = trace.get_current_span()
+            if span and span.is_recording():
+                log_obj["trace_id"] = f"{span.get_span_context().trace_id:032x}"
+        except ImportError:
+            pass
+
+        return json.dumps(log_obj)
+
 
 # ---------------------------------------------------------------------------
 # PRD Section 11.1 telemetry event names (canonical — never deviate)
@@ -66,6 +98,13 @@ def configure_telemetry(service_name: str) -> None:
 
     No-op when ``opentelemetry`` is not installed.
     """
+    resolved_service_name = os.environ.get("OTEL_SERVICE_NAME", service_name)
+    log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(JsonFormatter(resolved_service_name))
+    logging.basicConfig(level=log_level, handlers=[handler], force=True)
+
     trace, metrics = _try_import_otel()
     if trace is None or metrics is None:
         return
