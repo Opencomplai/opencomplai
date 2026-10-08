@@ -1,3 +1,4 @@
+# The opencomplai-cli pin must equal the release version: stamped at release time, enforced by packages/cli/tests/test_precommit_hooks_pin.py.
 - id: opencomplai-quick-scan
   name: Opencomplai quick scan
   description: >-
@@ -6,7 +7,7 @@
     `opencomplai-check` instead once you have a manifest and want a real CI gate.
   entry: opencomplai scan --quick --repo-root .
   language: python
-  additional_dependencies: ["opencomplai-cli"]
+  additional_dependencies: ["opencomplai-cli==0.9.0"]
   pass_filenames: false
   always_run: true
 
@@ -19,6 +20,6 @@
     VALIDATION_FAIL, POLICY_BLOCK, or TRAP_DETECTED (see exit codes in README).
   entry: opencomplai check
   language: python
-  additional_dependencies: ["opencomplai-cli"]
+  additional_dependencies: ["opencomplai-cli==0.9.0"]
   pass_filenames: false
   always_run: true

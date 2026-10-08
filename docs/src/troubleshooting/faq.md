@@ -8,7 +8,7 @@ Opencomplai is an open-source AI compliance toolkit for AI engineering teams, bu
 
 ### Which version of the EU AI Act does Opencomplai implement?
 
-The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default), producing a computed pass/gap verdict per article. `NIST_AI_RMF` is derived rather than evaluated on its own — `opencomplai gaps --target NIST_AI_RMF` re-projects that same EU AI Act evidence into a per-subcategory NIST AI RMF 1.0 verdict via `data/framework_crosswalk.json`, citing the EU AI Act article each subcategory verdict was derived from (no new scanner or evaluator; see [NIST AI RMF](../concepts/nist-ai-rmf.md)). ISO/IEC 42001 is mapped, not evaluated: the same crosswalk links each EU AI Act article/control to its corresponding ISO/IEC 42001:2023 clause, and `opencomplai gaps` shows it in the "Mapped" column, but no verdict is computed for it. To assess several frameworks side by side, see [Frameworks](../frameworks/index.md).
+The rule engine implements the EU AI Act as published in the Official Journal of the EU (2024). The compliance target is `EU_AI_ACT` (default), producing a computed pass/gap verdict per article. `NIST_AI_RMF` is derived rather than evaluated on its own — `opencomplai gaps --target NIST_AI_RMF` re-projects that same EU AI Act evidence into a per-subcategory NIST AI RMF 1.0 verdict via `data/framework_crosswalk.json`, citing the EU AI Act article each subcategory verdict was derived from (no new scanner or evaluator; see [NIST AI RMF](../concepts/nist-ai-rmf.md)). ISO/IEC 42001:2023 is a native pack, attestation-led (partial, unreviewed): `opencomplai gaps --target ISO_IEC_42001` (or `ISO_IEC_42001` in `compliance_targets`) reports one row per clause and Annex A control, and most rows read Unverified until you record a provider attestation under `framework_inputs`. Nothing here certifies ISO/IEC 42001 conformity. The same crosswalk still cites an ISO/IEC 42001 clause per EU AI Act article in the "Mapped" column of `opencomplai gaps`; that citation is a reference, not a verdict. To assess several frameworks side by side, see [Frameworks](../frameworks/index.md).
 
 ### Is Opencomplai a legal compliance guarantee?
 
@@ -40,7 +40,7 @@ Docker is only required to run the full service stack (gateway API, evidence vau
 
 ### Is the package published to PyPI?
 
-Yes. All packages are published on PyPI (latest **0.1.2**):
+Yes. All packages are published on PyPI. The current version is on each package's PyPI page and in the [changelog](https://github.com/Opencomplai/opencomplai/blob/main/CHANGELOG.md):
 
 - [opencomplai](https://pypi.org/project/opencomplai/) — `pip install opencomplai` (recommended)
 - [opencomplai-core](https://pypi.org/project/opencomplai-core/)
@@ -100,7 +100,11 @@ Don't set `OPENCOMPLAI_API_URL`. The CLI falls back to the local rule engine aut
 
 ### What is `compliance-artifact.json`?
 
-The `ScanStatusArtifact` written to the current directory after every `check` run. This is the machine-readable CI gate artifact. It contains `install_id`, `system_id`, `commit_ref`, `result`, `failed_controls`, `evidence_hashes`, `rationale_hash`, `duration_ms`, and optionally a signature. Consume it in CI to gate on `result`.
+The `ScanStatusArtifact` written to the current directory after every `check` run. This is the machine-readable CI gate artifact. It contains `install_id`, `system_id`, `commit_ref`, `result`, `failed_controls`, `evidence_hashes`, `rationale_hash`, `duration_ms`, and a signature only when it was signed. Consume it in CI to gate on `result`.
+
+### How do I sign in CI without a key file?
+
+Set `SIGNING_KEY_PRIVATE` to the base64-encoded PEM from your CI secret store and run `opencomplai check --sign`. For runs with no key, use `--sign-if-available`: it warns and writes an unsigned artifact, where `--sign` would exit 2.
 
 ### How do I gate a CI pipeline on the result?
 

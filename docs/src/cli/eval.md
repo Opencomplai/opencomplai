@@ -20,18 +20,41 @@ against an `EvalSampleSet` directly, without going through `opencomplai check`.
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--manifest` / `-m` | `system-manifest.json` | System manifest path |
-| `--sample-set` | *(required)* | Path to an `EvalSampleSet` JSON |
+| `--sample-set` | *(bundled seed corpus)* | Path to an `EvalSampleSet` JSON. Optional: omit it to run the bundled prompt-injection seed corpus |
 | `--commit-ref` | `HEAD` | Commit reference for provenance |
 | `--output` / `-o` | `human` | `human` or `json` |
 | `--provider` | *(none)* | Opt-in: call a live model provider for each prompt (see below) |
 | `--model` | *(none)* | Model name to request from `--provider` — required when `--provider` is set |
 | `--provider-api-key-env` | `OPENCOMPLAI_PROVIDER_API_KEY` | Environment variable holding the provider API key |
+| `--provider-base-url` | *(provider default)* | Base URL of an OpenAI-compatible endpoint for `--provider` (https; plain http only for localhost) |
 | `--suite` | *(none)* | Opt-in Inspect-AI eval bridge (`inspect-ai`) — see below |
 | `--tasks` | curated pin | Comma-separated tasks for `--suite` |
 | `--log-dir` | *(none)* | Local Inspect log directory for `--suite` |
 
 See [Evaluators](../concepts/evaluators.md) for what each local evaluator measures and
 which are opt-in vs. always-on.
+
+---
+
+## Zero-config run
+
+Run `opencomplai eval` with no `--sample-set` to see evaluator output straight away. It
+uses a small bundled corpus of self-authored prompt-injection prompts
+(`SEED_PROMPT_INJECTION_V1`) and needs no network:
+
+```bash
+opencomplai eval --manifest system-manifest.json
+```
+
+- The corpus holds **prompts only**. There are no canned outputs, so offline the
+  adversarial evaluator is SKIPPED (`no_prompt_output_pairs`) and `opencomplai gaps`
+  shows Art. 15 as UNVERIFIED.
+- Add `--provider` and `--model` and the live completions are scored by the adversarial
+  evaluator (see below).
+- Results from the seed corpus are heuristic evidence: even a PASS reads PARTIAL in the
+  gap report, never MET. The corpus is lexical, English only and small. It is not a
+  compliance conclusion.
+- `check` and `gaps` do not use the seed corpus; they still need `--sample-set`.
 
 ---
 
@@ -97,6 +120,8 @@ opencomplai eval --sample-set eval-set.json --provider openai --model gpt-4o-min
 |---|---|
 | `openai` | OpenAI-compatible `/v1/chat/completions` |
 | `openai_compatible` | Any self-hosted/vLLM/compatible deployment implementing the same `/v1/chat/completions` shape |
+
+Use `--provider-base-url` to point `--provider` at a self-hosted or gateway endpoint. The URL must be `https`; plain `http` is accepted only for `localhost` and other loopback addresses, and URLs with credentials, a query string or a fragment are rejected (exit 2, no request sent). The API key is sent as a Bearer header, which is why plaintext to a remote host is refused. It cannot be combined with `--suite`.
 
 ---
 

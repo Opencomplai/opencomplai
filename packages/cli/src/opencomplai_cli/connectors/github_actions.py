@@ -35,6 +35,9 @@ Environment variables consumed
                                when set, the connector sends the key-authed
                                envelope (no ``install_id``) and skips every
                                fallback below.
+``OPENCOMPLAI_CHECK_ARGS``     — extra ``check`` flags (shell-style); command-line
+                               flags follow them; ``--commit-ref`` defaults to
+                               ``GITHUB_SHA``.
 ``OPENCOMPLAI_PUSH_DOSSIER``    — set to ``"1"`` to also run
                                    ``opencomplai docs generate --push`` after
                                    a successful dashboard publish (DG-10).
@@ -90,7 +93,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from opencomplai_core.ci_reports import artifact_to_summary_md
+
 from opencomplai_cli.connectors import summarize_failed_controls
+from opencomplai_cli.connectors._check_args import build_check_args
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
 
 # `check --sign` (main.py's check_cmd) always writes its artifact here,
@@ -145,6 +151,7 @@ def _annotate(level: str, message: str) -> None:
 def run_connector(
     check_args: list[str] | None = None,
     env: dict[str, str] | None = None,
+    argv: list[str] | None = None,
 ) -> int:
     """
     Run ``opencomplai check --sign`` and handle GHA platform conventions.
@@ -156,7 +163,16 @@ def run_connector(
     """
     _env = {**os.environ, **(env or {})}
 
-    cmd = ["opencomplai", "check", "--sign"] + (check_args or [])
+    sign_flag = "--sign" if _env.get("SIGNING_KEY_PRIVATE") else "--sign-if-available"
+    try:
+        extra = build_check_args(check_args, _env, argv)
+    except ValueError:
+        _annotate(
+            "error",
+            "OPENCOMPLAI_CHECK_ARGS is not valid shell-style text (unbalanced quote?).",
+        )
+        return 2
+    cmd = ["opencomplai", "check", sign_flag, *extra]
     try:
         result = subprocess.run(
             cmd,
@@ -279,28 +295,7 @@ def _failed_controls_summary(artifact: dict | None) -> str:
 
 
 def _build_summary(artifact: dict | None, stdout: str, stderr: str) -> str:
-    result = artifact.get("result", "unknown") if artifact else "unknown"
-    system_id = artifact.get("system_id", "unknown") if artifact else "unknown"
-    commit_ref = artifact.get("commit_ref", "") if artifact else ""
-    lines = [
-        "## Opencomplai Compliance Scan",
-        "",
-        "| Field | Value |",
-        "|-------|-------|",
-        f"| Result | `{result}` |",
-        f"| System | `{system_id}` |",
-        f"| Commit | `{commit_ref}` |",
-    ]
-    if artifact and artifact.get("failed_controls"):
-        lines.append(f"| Failed controls | `{_failed_controls_summary(artifact)}` |")
-    eval_summary = artifact.get("eval_summary") if artifact else None
-    if isinstance(eval_summary, dict):
-        lines.append(
-            f"| Eval outcome | `{eval_summary.get('overall_outcome', 'n/a')}` |"
-        )
-    elif artifact and artifact.get("eval_overall_outcome"):
-        lines.append(f"| Eval outcome | `{artifact['eval_overall_outcome']}` |")
-    return "\n".join(lines)
+    return artifact_to_summary_md(artifact)
 
 
 def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
@@ -444,7 +439,7 @@ def _push_dossier_if_opted_in(artifact: dict | None, env: dict[str, str]) -> Non
 
 
 def main() -> None:
-    sys.exit(run_connector())
+    sys.exit(run_connector(argv=sys.argv[1:]))
 
 
 __all__ = ["RUNNING_IN_GHA", "main", "run_connector"]

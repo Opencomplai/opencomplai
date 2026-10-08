@@ -279,7 +279,7 @@ const QUESTIONS: Question[] = [
   {
     key: "r5_fria",
     label:
-      "Are you a public body or private entity providing public services? (FRIA under Art 27)",
+      "Are you a body governed by public law, a private entity providing public services, or a deployer of an Annex III 5(b) or 5(c) system (credit scoring or life/health insurance pricing) (FRIA under Art 27)?",
     type: "confirm",
     section: "Obligations",
     defaultBool: false,

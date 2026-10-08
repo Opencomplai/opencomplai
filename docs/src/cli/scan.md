@@ -121,25 +121,27 @@ signal in that case).
 
 ## AI intent analysis (`--ai-intent`)
 
-`--ai-intent` runs a second pass after signature detection: each extracted callsite is embedded by a local model and classified on three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — producing a per-callsite `eu_obligation` list.
+`--ai-intent` runs a second pass after signature detection: each extracted callsite is classified by the selected backend on three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — producing a per-callsite `eu_obligation` list.
+
+There are three backends. `codebert-onnx` is a deterministic code-signal matcher: it runs on the base install of `opencomplai-ai`, needs no download, no ONNX Runtime and no `optimum`, and matches each callsite against the built-in Annex III, prohibited-practice and limited-risk signal lists. The GGUF models (`qwen2.5-coder-*`, `smollm2-1.7b`, `phi-3.5-mini`, `mistral-7b`) are real local LLM inference; they need the `[deep]` extra and a one-time model download. `saas` is the third, opt-in cloud backend: it runs no model locally and, once you have consented to data egress and set `OPENCOMPLAI_API_KEY`, sends redacted code snippets to the hosted intent API. The `codebert-onnx` id is kept for compatibility with existing configs and annotations; no CodeBERT model is loaded.
 
 ### Install
 
-**ONNX (CPU, no C compiler):**
+**Deterministic matcher (base install, no download):**
 
 === "macOS / Linux"
     ```bash
-    pip install opencomplai-ai 'optimum[onnxruntime]'
+    pip install opencomplai-ai
     opencomplai ai configure --model codebert-onnx --set-default
     ```
 
 === "Windows (PowerShell)"
     ```powershell
-    pip install opencomplai-ai "optimum[onnxruntime]"
+    pip install opencomplai-ai
     opencomplai ai configure --model codebert-onnx --set-default
     ```
 
-**GGUF (optional, supports larger models):**
+**GGUF (optional, local LLM inference with larger models):**
 
 === "macOS / Linux"
     ```bash
@@ -178,7 +180,7 @@ signal in that case).
 
 | `--ai-model` value | Size | Runtime | Install extra |
 |---|---|---|---|
-| `codebert-onnx` | 440 MB | onnxruntime | `optimum[onnxruntime]` |
+| `codebert-onnx` | no download | deterministic matcher | base install |
 | `qwen2.5-coder-0.5b` | 400 MB | llama-cpp | `[deep]` |
 | `qwen2.5-coder-1.5b` | 1 GB | llama-cpp | `[deep]` |
 | `smollm2-1.7b` | 1.1 GB | llama-cpp | `[deep]` |
@@ -188,19 +190,39 @@ signal in that case).
 
 ### Output
 
-The `AI Intent Analysis` block appears at the end of `--output human`:
+With an AI backend selected, the human report adds the EU AI Act sections (AI usage map, Prohibited, High-risk, Limited-risk, flag rationale). Real output from `--ai-intent --ai-model codebert-onnx` on the `tests/fixtures/eu_ai_scan` fixture (the final flag-rationale section is omitted here):
 
 ```
-AI Intent Analysis:
-  src/face.py:5  autonomy=display_only  subject=legal_entity  conf=0.9397
-  src/face.py:7  autonomy=display_only  subject=legal_entity  conf=0.9378
+Code Corroboration Scan
+  severity:     none
+  declared:     (none)
+  detected:     (none)
+  discrepancies: (none)
+
+EU AI Act Scan
+  ────────────────────────────────────────
+
+  1. AI usage map (6 sites in 2 files)
+     llm_inference        2 files   create, gemini_api, load, openai
+     scoring              1 files   predict_proba
+
+  2. Prohibited (Art. 5) — 0 findings
+
+  3. High-risk (Annex III) — 0 findings
+
+  4. Limited-risk (Art. 50) — 2 findings
+     src/app/api/oracle/route.ts:4  gemini_api
+       Inform users they are interacting with an AI system at first interaction
+     src/app/api/oracle/route.ts:10  gemini_api
+       Inform users they are interacting with an AI system at first interaction
+
+  5. Declaration cross-check
+     declared:      (none)
+     detected:        (none)
+     discrepancies: (none)
 ```
 
-`conf` is the average cosine similarity across all three dimensions. Scores above `0.90` are reliable.
-
-### First run — `codebert-onnx` export
-
-The first scan with `codebert-onnx` exports the PyTorch checkpoint to ONNX and caches it at `~/.cache/opencomplai/models/codebert-base/model.onnx`. The CLI prompts before downloading (~440 MB). Subsequent scans run fully offline from the cache.
+Each annotation also carries a `confidence` value, printed per callsite by `--ai-legacy`. It is not a similarity score or a calibrated probability: the deterministic matcher assigns fixed values by match type (`0.5` to `0.8`), and the GGUF models report a fixed `0.75`. Treat it as a label for how the callsite was matched, not as a measure of reliability.
 
 See the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) for a full walkthrough.
 

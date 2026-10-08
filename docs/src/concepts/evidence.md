@@ -63,3 +63,8 @@ detection logic that produced it:
 Other signal categories (AI SDK usage, ML frameworks, vector/embedding stores, PII
 dataflow, biometric, scoring/profiling) are produced by the existing lexical detectors
 and are always-on (no opt-in flag).
+
+Some signal categories are detection-only: `agent_framework`, `mcp_server` and
+`pii_dataflow`. A finding in one of them never produces a `MET` gap row on its own;
+it reads `UNVERIFIED` ("detected, no compliance verdict") until other evidence
+resolves the article.

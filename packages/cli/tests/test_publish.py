@@ -57,6 +57,17 @@ from opencomplai_core.models import (
 )
 from opencomplai_core.nist_rmf_report import build_nist_rmf_report
 from opencomplai_core.principle_report import build_principle_summary
+from opencomplai_core.summaries import (
+    AgentsSummary,
+    ArtifactSummaries,
+    IncidentItem,
+    IncidentsSummary,
+    OversightSummary,
+    PackIssuance,
+    PacksSummary,
+    QmsClauses,
+    QmsSummary,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -590,6 +601,63 @@ def test_artifact_without_framework_reports_omits_the_key():
     assert "framework_reports" not in artifact
 
 
+def test_090_shaped_artifact_validates_against_widened_schema():
+    """Provenance stamps plus every summaries sub-object, built from the
+    models, validate before and after the push mapper."""
+    schema = _widened_schema_or_skip()
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        pytest.skip("jsonschema not importable from this test environment")
+
+    summaries = ArtifactSummaries(
+        oversight=OversightSummary(entries=1, approvals=1, resumes=0, roles=1),
+        agents=AgentsSummary(agents=2, with_mandate=1, with_guardrails=1),
+        qms=QmsSummary(clauses=QmsClauses(**dict.fromkeys("abcdefghijklm", "present"))),
+        incidents=IncidentsSummary(
+            open=1,
+            closed=0,
+            items=[
+                IncidentItem(
+                    incident_id="INC-1",
+                    incident_class="death",
+                    status="open",
+                    declared_on="2026-10-01",
+                    aware_on="2026-10-01",
+                    party_types=["authority"],
+                )
+            ],
+        ),
+        packs=PacksSummary(
+            issued=1,
+            items=[
+                PackIssuance(
+                    pack_sha256="a" * 64, issued_on="2026-10-01", kind="deployer"
+                )
+            ],
+        ),
+    )
+    model = _model_built_artifact(populated=True).model_copy(
+        update={
+            "summaries": summaries,
+            "rule_set_version": "1.6.0",
+            "cli_version": "0.9.0",
+            "schema_version": "1",
+            "manifest_sha256": "b" * 64,
+        }
+    )
+    artifact = json.loads(model.model_dump_json())
+    assert set(artifact["summaries"]) == {
+        "oversight", "agents", "qms", "incidents", "packs"
+    }  # fmt: skip
+    prepared = prepare_scan_status_artifact(
+        artifact, commit_env={"GITHUB_SHA": "i" * 40}
+    )
+    errors = [e.message for e in Draft202012Validator(schema).iter_errors(prepared)]
+    assert errors == [], f"090-shaped artifact fails the widened schema: {errors}"
+    assert prepared["summaries"] == artifact["summaries"]
+
+
 # (pydantic model, $defs name) -- None means the schema's top-level properties.
 _SCHEMA_COVERED_MODELS = [
     (ScanStatusArtifact, None),
@@ -604,6 +672,15 @@ _SCHEMA_COVERED_MODELS = [
     (FrameworkReport, "FrameworkReport"),
     (ControlsSummary, "ControlsSummary"),
     (ControlSummaryRow, "ControlSummaryRow"),
+    (ArtifactSummaries, "ArtifactSummaries"),
+    (OversightSummary, "OversightSummary"),
+    (AgentsSummary, "AgentsSummary"),
+    (QmsSummary, "QmsSummary"),
+    (QmsClauses, "QmsClauses"),
+    (IncidentsSummary, "IncidentsSummary"),
+    (IncidentItem, "IncidentItem"),
+    (PacksSummary, "PacksSummary"),
+    (PackIssuance, "PackIssuance"),
 ]
 
 

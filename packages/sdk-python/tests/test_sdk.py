@@ -57,6 +57,7 @@ def test_sdk_exports_and_pep561():
         "resolve_targets",
     }
     expected_exports = {
+        "AgentDecisionLog",
         "AssessmentInput",
         "ModelMetadata",
         "RiskLevel",

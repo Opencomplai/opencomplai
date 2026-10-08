@@ -26,7 +26,7 @@ POSTGRES_PASSWORD=use_a_strong_random_password
 - [ ] `.env` is not committed to version control.
 - [ ] `EGRESS_ALLOWED_DESTINATIONS` is set to only the destinations you need.
 - [ ] Signing key is backed up securely (or use a managed KMS).
-- [ ] Prometheus and Grafana ports (`9090`, `3000`) are not exposed to the public internet.
+- [ ] Prometheus and Grafana (host ports `9090` and `3001` by default) stay on loopback: `OBSERVABILITY_BIND_ADDR` defaults to `127.0.0.1`. Read [Network exposure](../deployment/observability.md#network-exposure) before changing it, and never expose them to the public internet.
 - [ ] Docker Compose is pinned to specific image tags (replace `:latest` with version tags for stability).
 - [ ] `docker compose health` shows all services healthy before routing traffic.
 
@@ -35,13 +35,13 @@ POSTGRES_PASSWORD=use_a_strong_random_password
 === "macOS / Linux"
     ```bash
     curl http://localhost:8080/health
-    # {"status":"ok","service":"gateway-api","version":"0.1.0-dev"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     Invoke-WebRequest -Uri "http://localhost:8080/health"
-    # {"status":"ok","service":"gateway-api","version":"0.1.0-dev"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
     ```
 
 All services expose a `/health` endpoint for load balancer or monitoring integration.
@@ -55,6 +55,6 @@ See [Air-gap Deployment](../deployment/airgap.md) for the full guide, including 
 Prometheus scrapes metrics from all services; Grafana dashboards are pre-configured. Access:
 
 - Prometheus: `http://localhost:9090`
-- Grafana: `http://localhost:3000` (or `GRAFANA_HOST_PORT` from `.env`)
+- Grafana: `http://localhost:3001` (or `GRAFANA_HOST_PORT` from `.env`)
 
 Metrics are counters and histograms only — no payload sampling, no PII in metric labels.

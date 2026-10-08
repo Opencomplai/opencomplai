@@ -16,6 +16,14 @@ from opencomplai_core.qms_document import (
     render_qms_document_markdown,
 )
 
+_FILLED = (
+    "This procedure documents regulatory compliance, design control, quality "
+    "assurance, testing validation, technical specifications and standards, "
+    "data governance, risk management, post-market monitoring, incident "
+    "reporting, authority communication, record retention, resource planning "
+    "and accountability.\n"
+)
+
 _PRESENT_CLAUSE_FILES = {
     "a": "REGULATORY_COMPLIANCE_STRATEGY.md",
     "b": "DESIGN_CONTROL.md",
@@ -39,7 +47,7 @@ def test_document_without_repo_root_is_thirteen_unverified_rows():
 
 def test_six_of_thirteen_present_not_one_article_verdict(tmp_path: Path):
     for filename in _PRESENT_CLAUSE_FILES.values():
-        (tmp_path / filename).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / filename).write_text(_FILLED, encoding="utf-8")
 
     doc = build_qms_document(tmp_path, system_id="qms-fixture", commit_ref="abc123")
     assert len(doc.clauses) == 13
@@ -61,7 +69,7 @@ def test_markdown_document_shows_per_clause_status_not_single_verdict(
     tmp_path: Path,
 ):
     for filename in _PRESENT_CLAUSE_FILES.values():
-        (tmp_path / filename).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / filename).write_text(_FILLED, encoding="utf-8")
 
     doc = build_qms_document(tmp_path, system_id="qms-fixture")
     rendered = render_qms_document_markdown(doc)
@@ -87,3 +95,21 @@ def test_no_evidence_hashes_stays_honest_not_fabricated(tmp_path: Path):
     doc = build_qms_document(tmp_path)
     rendered = render_qms_document_markdown(doc)
     assert "No evidence-vault references supplied" in rendered
+
+
+def test_scaffold_clause_reads_unfilled_and_is_not_counted_present(tmp_path: Path):
+    (tmp_path / "REGULATORY_COMPLIANCE_STRATEGY.md").write_text(
+        _FILLED, encoding="utf-8"
+    )
+    (tmp_path / "DESIGN_CONTROL.md").write_text(
+        "# Design control\n\n| Owner | _fill in_ |\n", encoding="utf-8"
+    )
+    doc = build_qms_document(tmp_path)
+    by_letter = {c.letter: c for c in doc.clauses}
+    assert by_letter["a"].status_label == "Present"
+    assert by_letter["b"].status_label == "Unfilled"
+    assert by_letter["b"].status == GapStatus.PARTIAL
+    assert (doc.present_count, doc.unfilled_count, doc.missing_count) == (1, 1, 11)
+    rendered = render_qms_document_markdown(doc)
+    assert "1 present / 11 missing / 1 unfilled" in rendered
+    assert "| Unfilled |" in rendered

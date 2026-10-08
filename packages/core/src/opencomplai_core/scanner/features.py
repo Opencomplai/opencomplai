@@ -11,6 +11,7 @@ from opencomplai_core.scanner.extractors.ast import (
 )
 from opencomplai_core.scanner.extractors.config import extract_config_features
 from opencomplai_core.scanner.extractors.manifests import extract_manifest_features
+from opencomplai_core.scanner.extractors.mcp import extract_mcp_servers
 from opencomplai_core.scanner.extractors.notebooks import extract_notebook_features
 from opencomplai_core.scanner.feature_types import (
     FeatureStore,
@@ -72,6 +73,8 @@ def extract_features(
     if progress_cb:
         progress_cb.on_step("extract", 6, "notebooks")
 
+    store.mcp_servers.extend(extract_mcp_servers(inventory))
+
     if config.framework_detectors:
         from opencomplai_core.scanner.detectors.framework_ast import (
             load_framework_class_names,
@@ -89,6 +92,7 @@ def extract_features(
         "artifacts": len(store.artifacts),
         "notebooks": len(store.notebooks),
         "framework_objects": len(store.framework_objects),
+        "mcp_servers": len(store.mcp_servers),
     }
     if cache is not None and config.use_cache:
         cache.record_summary(store.summary)

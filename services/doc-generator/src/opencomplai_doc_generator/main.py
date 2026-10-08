@@ -19,11 +19,13 @@ import time
 
 import httpx
 from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException
+from opencomplai_core.agent_inventory import AgentInventory
 from opencomplai_core.engine import assess
 from opencomplai_core.models import (
     AssessmentInput,
     CorroborationReport,
     EvalReport,
+    HumanOversight,
     ModelMetadata,
     SystemManifest,
 )
@@ -53,7 +55,7 @@ EVIDENCE_VAULT_URL = os.environ.get("EVIDENCE_VAULT_URL", "http://evidence-vault
 app = FastAPI(
     title="Opencomplai Documentation Generator",
     description="Annex IV technical documentation dossier generator (REQ-DOC-001).",
-    version="0.1.0-dev",
+    version="0.9.0",
 )
 
 configure_telemetry("doc-generator")
@@ -112,6 +114,8 @@ class GenerateDocsRequest(BaseModel):
     known_limitations: list[str] = Field(default_factory=list)
     # Optional Annex IV Section 3 overrides. Same rationale as Section 2.
     human_oversight_measures: list[str] = Field(default_factory=list)
+    # Structured Art. 14 block (SU-20a1); typed so a malformed one is a 422.
+    human_oversight: HumanOversight | None = None
     monitoring_approach: str | None = None
     incident_response_procedure: str | None = None
     # E-6: pure passthrough of provider-supplied Annex IV attestation fields
@@ -130,6 +134,9 @@ class GenerateDocsRequest(BaseModel):
     # generate_dossier leaves the corresponding sections as placeholders.
     eval_report: dict | None = None
     corroboration_report: dict | None = None
+    # Declared agent inventory, copied into the dossier verbatim; typed so a
+    # malformed block is a 422.
+    agent_inventory: AgentInventory | None = None
 
 
 class GenerateDocsResponse(BaseModel):
@@ -343,6 +350,17 @@ async def generate_docs(
             eu_declaration_of_conformity_ref=request.eu_declaration_of_conformity_ref,
             post_market_monitoring_plan_ref=request.post_market_monitoring_plan_ref,
             post_market_monitoring_summary=request.post_market_monitoring_summary,
+            # Only when set, so a legacy request builds the manifest as before.
+            **(
+                {"human_oversight": request.human_oversight}
+                if request.human_oversight
+                else {}
+            ),
+            **(
+                {"agent_inventory": request.agent_inventory}
+                if request.agent_inventory
+                else {}
+            ),
         )
 
         assessment_input = AssessmentInput(

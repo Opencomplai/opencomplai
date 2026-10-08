@@ -292,3 +292,38 @@ async def test_pro_ingest_metrics(client):
     )
     assert resp.status_code == 201
     assert "event_id" in resp.json()
+
+
+async def _issue_passing_badge(client, tag: str) -> str:
+    resp = await client.post(
+        "/v1/pro/badges/issue",
+        json={
+            "system_id": f"sys-{tag}",
+            "bundle_checksum": f"chk-{tag}",
+            "artifact": {
+                **_GOOD_ARTIFACT,
+                "system_id": f"sys-{tag}",
+                "bundle_checksum": f"chk-{tag}",
+            },
+        },
+    )
+    assert resp.status_code == 201
+    return resp.json()["badge_id"]
+
+
+async def test_badge_svg_does_not_claim_compliance(client):
+    badge_id = await _issue_passing_badge(client, "wording")
+    text = (await client.get(f"/v1/pro/badges/{badge_id}/svg")).text
+    assert "compliant" not in text
+    assert "EU AI Act" not in text
+    assert "scan passed" in text
+
+
+async def test_portfolio_status_is_scan_passed(client):
+    await _issue_passing_badge(client, "pf1")
+    await _issue_passing_badge(client, "pf2")
+    resp = await client.get("/v1/portfolio")
+    assert resp.status_code == 200
+    systems = resp.json()["systems"]
+    assert len(systems) == 2
+    assert all(row["status"] == "scan_passed" for row in systems)

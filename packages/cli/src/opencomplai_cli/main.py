@@ -11,10 +11,8 @@ Exit codes (contractual — never deviate):
 
 from __future__ import annotations
 
-import codecs
 import importlib.metadata
 import json
-import locale
 import os
 import re
 import sys
@@ -23,32 +21,48 @@ import urllib.error
 import urllib.request
 import uuid
 from collections.abc import Iterable
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
 import typer
+from opencomplai_core.acceptance import (
+    ART6_CONTROL,
+    CLASSIFICATION_ACCEPTANCE,
+    apply_acceptance,
+    evaluate_record,
+    record_path,
+    trusted_key_ids_from_env,
+)
+from opencomplai_core.agent_inventory import check_inventory
+from opencomplai_core.backlog import SortOrder, build_backlog, sort_rows
 from opencomplai_core.compliance_checker import CHECKER_VERDICTS
-from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
+from opencomplai_core.compliance_checker.models import (
+    CheckerSession,
+    ComplianceCheckerResult,
+)
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
 from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.control_identity import fingerprint_manifest
+from opencomplai_core.deployer_pack import with_pack_summary
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
+from opencomplai_core.evaluators.seed_corpus import seed_sample_set
 from opencomplai_core.frameworks import (
     EU_AI_ACT,
-    FRAMEWORKS,
     evaluate_targets,
     gate_failures,
-    load_requirements_map,
+    requirement_title,
     resolve_targets,
     validate_gate,
 )
 from opencomplai_core.fria import generate_fria, render_fria_markdown
-from opencomplai_core.gap_probes import qms_article_17_clause_statuses
+from opencomplai_core.gap_probes import qms_clause_results, summarise_qms_clauses
 from opencomplai_core.gap_report import build_gap_report
+from opencomplai_core.manifest_sources import oversight_warnings
+from opencomplai_core.model_card_import import ModelCardError, import_model_card
 from opencomplai_core.models import (
     DISCLAIMER_V1,
     DISCLAIMER_V2,
@@ -83,7 +97,9 @@ from opencomplai_core.project_config import (
     load_project_config,
 )
 from opencomplai_core.recommend_engine import render_recommendations
+from opencomplai_core.regulatory_timeline import timeline_lines, today_utc
 from opencomplai_core.report_engine import render_report
+from opencomplai_core.roles import effective_roles
 from opencomplai_core.scan_engine import run_scan, scan_summary_from_report
 from opencomplai_core.scanner.feature_types import ScanConfig, ScanProgressCallback
 from opencomplai_core.scanner.ocignore import ensure_ocignore
@@ -115,6 +131,7 @@ from opencomplai_cli import (
     __version__,
 )
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
+from opencomplai_cli.inputs import load_manifest, read_json_file
 
 if TYPE_CHECKING:
     from opencomplai_core.dossier import AnnexIVDossier
@@ -137,21 +154,53 @@ keys_app = typer.Typer(
 )
 
 from opencomplai_cli._encoding import install_ascii_fallback  # noqa: E402
+from opencomplai_cli.acceptance_gate import apply_acceptance_gate  # noqa: E402
+from opencomplai_cli.agent_inventory_payload import (  # noqa: E402
+    agent_inventory_payload,
+)
+from opencomplai_cli.commands import (  # noqa: E402
+    agents_attest,  # noqa: F401
+    agents_runtime,  # noqa: F401
+    agents_verify_log,  # noqa: F401
+    oversight_log,  # noqa: F401
+    verify_dossier,  # noqa: F401
+)
+from opencomplai_cli.commands.accept import accept_cmd  # noqa: E402
+from opencomplai_cli.commands.agents import app as agents_app  # noqa: E402
 from opencomplai_cli.commands.checker import (  # noqa: E402
-    build_checker_session_ref,
     display_results,
-    evaluate_and_finalize,
+    evaluate_roles,
     load_answers_file,
+    parse_roles,
     run_interactive_wizard,
     write_exports,
 )
+from opencomplai_cli.commands.checker_manifest import (  # noqa: E402
+    write_or_append_manifest,
+)
 from opencomplai_cli.commands.controls import app as controls_app  # noqa: E402
 from opencomplai_cli.commands.dashboard import app as dashboard_app  # noqa: E402
+from opencomplai_cli.commands.deployer_pack import (  # noqa: E402
+    app as deployer_pack_app,
+)
+from opencomplai_cli.commands.diff import diff_cmd  # noqa: E402
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
+from opencomplai_cli.commands.incident import app as incident_app  # noqa: E402
+from opencomplai_cli.commands.instructions import app as instructions_app  # noqa: E402
 from opencomplai_cli.commands.interactive_init import run_interactive_init  # noqa: E402
 from opencomplai_cli.commands.push import run_push, run_push_dossier  # noqa: E402
 from opencomplai_cli.commands.qms import app as qms_app  # noqa: E402
+from opencomplai_cli.commands.rules import app as rules_app  # noqa: E402
 from opencomplai_cli.commands.serve import run_serve  # noqa: E402
+from opencomplai_cli.commands.verify import verify_cmd  # noqa: E402
+from opencomplai_cli.mapped_view import (  # noqa: E402
+    add_mapped_columns,
+    mapped_cells,
+    mapped_payload,
+    parse_map_to,
+)
+from opencomplai_cli.oversight_payload import oversight_payload  # noqa: E402
+from opencomplai_cli.summaries_emit import with_summaries  # noqa: E402
 
 ai_app = typer.Typer(help="AI intent analysis commands.")
 
@@ -169,11 +218,19 @@ app.add_typer(keys_app, name="keys")
 app.add_typer(ai_app, name="ai")
 app.add_typer(controls_app, name="controls")
 app.add_typer(qms_app, name="qms")
+app.add_typer(rules_app, name="rules")
+app.add_typer(incident_app, name="incident")
+app.add_typer(agents_app, name="agents")
+app.add_typer(instructions_app, name="instructions")
+app.add_typer(deployer_pack_app, name="deployer-pack")
 # HALT-WIRE: `approve`/`resume` are top-level commands (not a sub-typer),
 # implemented in commands/halt.py and registered here to avoid a circular
 # import (halt.py needs `console`/`_emit_event` from this module, lazily).
 app.command("approve")(approve_cmd)
 app.command("resume")(resume_cmd)
+app.command("accept")(accept_cmd)
+app.command("diff")(diff_cmd)
+app.command("verify")(verify_cmd)
 
 console = Console()
 err_console = Console(stderr=True)
@@ -681,6 +738,52 @@ def _apply_checker_verdict(
     )
 
 
+def _apply_committed_acceptance(
+    artifact: ScanStatusArtifact,
+    manifest: SystemManifest,
+    repo_root: Path,
+    human: bool,
+) -> ScanStatusArtifact:
+    """Honour a signed acceptance record committed under `repo_root`.
+
+    Reads the repository only, never the home directory. Human output notes the
+    outcome on stderr; an absent record prints nothing.
+    """
+    root = repo_root.resolve()
+    path = record_path(root, manifest.system_id, CLASSIFICATION_ACCEPTANCE)
+    status = evaluate_record(
+        path,
+        manifest,
+        CLASSIFICATION_ACCEPTANCE,
+        trusted_key_ids=trusted_key_ids_from_env(os.environ),
+    )
+    applied = apply_acceptance(artifact, status)
+    if human and status.state == "valid" and status.record is not None:
+        rec = status.record
+        rel = escape(path.relative_to(root).as_posix())
+        if ART6_CONTROL in artifact.failed_controls and (
+            ART6_CONTROL not in applied.failed_controls
+        ):
+            err_console.print(
+                f"Accepted high-risk classification (record {rel}, "
+                f"accepted_by {escape(rec['accepted_by'])}, accepted_at {escape(rec['accepted_at'])}); "
+                "Art. 6 not counted as a failure.",
+                soft_wrap=True,
+            )
+        else:
+            err_console.print(
+                f"Acceptance record {rel} is valid but does not apply to this result.",
+                soft_wrap=True,
+            )
+    elif human and status.state != "absent":
+        err_console.print(
+            f"[yellow]WARN:[/yellow] acceptance record is {status.state} "
+            f"({status.reason}); the high-risk classification still fails the check.",
+            soft_wrap=True,
+        )
+    return applied
+
+
 def _maybe_halt_system(system_id: str, commit_ref: str, reason: str) -> None:
     """HALT-WIRE / E-12(a): persist HALTED_PENDING_REVIEW when this `check`
     run hit a trap or an unresolved HIGH-risk corroboration gap, via the
@@ -854,6 +957,14 @@ def init_cmd(
             "Merged into the manifest. See docs/customer-workflow for the schema."
         ),
     ),
+    from_model_card: Path | None = typer.Option(
+        None,
+        "--from-model-card",
+        help=(
+            "Offline import of Hugging Face model card front matter; values are "
+            "recorded as attested, not verified."
+        ),
+    ),
     output_file: Path = typer.Option(Path("system-manifest.json"), "--output", "-o"),
     run_code_scan: bool = typer.Option(
         False, "--scan", help="Run code corroboration after writing manifest"
@@ -870,6 +981,11 @@ def init_cmd(
     and SHOULD populate Section 3 (oversight, monitoring) — either via the
     inline flags above or with --section-extras-file.
     """
+    if interactive and from_model_card is not None:
+        err_console.print(
+            "[red]Error:[/red] --from-model-card cannot be combined with --interactive."
+        )
+        sys.exit(2)
     if interactive:
         extras: dict = {}
         if section_extras_file is not None:
@@ -879,7 +995,7 @@ def init_cmd(
                 )
                 sys.exit(2)
             try:
-                extras = json.loads(section_extras_file.read_text())
+                extras = json.loads(section_extras_file.read_text(encoding="utf-8"))
             except json.JSONDecodeError as exc:
                 err_console.print(
                     f"[red]Error parsing --section-extras-file:[/red] {exc}"
@@ -956,7 +1072,7 @@ def init_cmd(
             )
             sys.exit(2)
         try:
-            extras = json.loads(section_extras_file.read_text())
+            extras = json.loads(section_extras_file.read_text(encoding="utf-8"))
             if not isinstance(extras, dict):
                 raise ValueError("extras file must contain a JSON object at top level")
         except (json.JSONDecodeError, ValueError) as exc:
@@ -987,13 +1103,38 @@ def init_cmd(
         if key not in manifest_kwargs or manifest_kwargs.get(key) is None:
             manifest_kwargs[key] = value
 
+    if from_model_card is not None:
+        try:
+            card = import_model_card(
+                from_model_card.read_text(encoding="utf-8-sig"),
+                source_name=from_model_card.name,
+                today=datetime.now(UTC).date(),
+            )
+        except (OSError, UnicodeDecodeError, ModelCardError) as exc:
+            err_console.print("[red]Error reading --from-model-card:[/red]", end=" ")
+            err_console.print(str(exc), markup=False)
+            sys.exit(2)
+        # Explicit flags and the extras file win over the card.
+        filled = [k for k in card.fields if not manifest_kwargs.get(k)]
+        for key in filled:
+            manifest_kwargs[key] = card.fields[key]
+        if filled:
+            manifest_kwargs["imported_evidence"] = {k: card.evidence[k] for k in filled}
+        console.print(
+            f"[dim]Imported {len(filled)} field(s) from model card "
+            "(attested, not verified)[/dim]"
+        )
+        for warning in card.warnings:
+            console.print(warning, style="yellow", markup=False)
+
     try:
         manifest = SystemManifest(**manifest_kwargs)
     except Exception as exc:
         err_console.print(f"[red]Invalid manifest input:[/red] {exc}")
         sys.exit(2)
+    _exit_on_inventory_errors(manifest)
 
-    output_file.write_text(manifest.model_dump_json(indent=2))
+    output_file.write_text(manifest.model_dump_json(indent=2), encoding="utf-8")
     console.print(f"[green]Manifest written to {output_file}[/green]")
     console.print(f"  system_id:         {manifest.system_id}")
     console.print(f"  intended_purpose:  {manifest.intended_purpose}")
@@ -1115,8 +1256,10 @@ def checker_cmd(
     answers_file: Path | None = typer.Option(
         None, "--answers", help="JSON file with checker answers (non-interactive)"
     ),
-    entity_type: str | None = typer.Option(
-        None, "--entity-type", help="Skip E1 prompt when re-running for another role"
+    entity_type: list[str] | None = typer.Option(
+        None,
+        "--entity-type",
+        help="Operator role; repeat for each role (provider, deployer, ...)",
     ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
     export_json: Path | None = typer.Option(None, "--export-json"),
@@ -1152,21 +1295,19 @@ def checker_cmd(
         _checker_web(local=local)
         return
 
-    from opencomplai_core.compliance_checker import (
-        bridge_to_manifest_fields,
-    )
-
+    roles = parse_roles(entity_type)
     if answers_file is not None:
-        session = load_answers_file(answers_file)
+        loaded = load_answers_file(answers_file)
+
+        def session_for_role(role: str | None) -> CheckerSession | None:
+            return CheckerSession(answers=dict(loaded.answers))
     else:
-        session = run_interactive_wizard(skip_allowed=False)
-        if session is None:
-            sys.exit(0)
 
-    if entity_type:
-        session.answers["e1_entity_type"] = entity_type
+        def session_for_role(role: str | None) -> CheckerSession | None:
+            return run_interactive_wizard(skip_allowed=False, preset_entity=role)
 
-    result = evaluate_and_finalize(session)
+    merged = evaluate_roles(session_for_role, roles)
+    result = merged.result
 
     if output == OutputFormat.json:
         console.print_json(result.model_dump_json(indent=2))
@@ -1179,27 +1320,33 @@ def checker_cmd(
         export_md=export_md,
         export_pdf=export_pdf,
         export_all_base=export_all_base,
+        rationale=merged.rationale,
     )
 
     if write_manifest is not None:
-        bridged = bridge_to_manifest_fields(result)
         report_path = export_json or (
             export_all_base.with_suffix(".json") if export_all_base else None
         )
-        system_id = typer.prompt("System ID", default="my-ai-system")
-        if intended_purpose is None:
-            intended_purpose = typer.prompt("Intended purpose (what the system does)")
-        payload: dict = {
-            "system_id": system_id,
-            "intended_purpose": intended_purpose,
-            "compliance_target": "EU_AI_ACT",
-            "high_risk_presumption": bridged["high_risk_presumption"],
-            "commit_ref": "HEAD",
-            "operator_role": bridged["operator_role"],
-            "checker_session": build_checker_session_ref(result, report_path),
-        }
-        write_manifest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        console.print(f"[green]Manifest written to[/green] {write_manifest}")
+        write_or_append_manifest(
+            write_manifest,
+            result=result,
+            report_path=report_path,
+            roles=merged.roles,
+            rationale=merged.rationale,
+            obligation_ids=merged.obligation_ids,
+            intended_purpose=intended_purpose,
+        )
+
+
+def _exit_on_inventory_errors(manifest: SystemManifest) -> None:
+    """Exit 2 listing every agent-inventory graph error (no-op without a block)."""
+    if manifest.agent_inventory is None:
+        return
+    errors = check_inventory(manifest.agent_inventory)
+    for error in errors:
+        err_console.print(f"[red]Invalid agent inventory:[/red] {escape(error)}")
+    if errors:
+        sys.exit(2)
 
 
 @app.command("validate-manifest")
@@ -1215,13 +1362,16 @@ def validate_manifest_cmd(
         )
         sys.exit(2)
     try:
-        data = json.loads(manifest_file.read_text())
+        data = json.loads(manifest_file.read_text(encoding="utf-8"))
         manifest = SystemManifest.model_validate(data)
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
     # The model accepts any framework id; check and gaps reject unknown ones.
     _resolve_targets_or_exit(manifest, None)
+    _exit_on_inventory_errors(manifest)
+    for warning in oversight_warnings(manifest):
+        err_console.print(f"[yellow]Warning:[/yellow] {warning}")
 
     if output == OutputFormat.json:
         console.print_json(manifest.model_dump_json(indent=2))
@@ -1234,6 +1384,16 @@ def validate_manifest_cmd(
             targets = ", ".join(manifest.compliance_targets)
             console.print(f"  compliance_targets:    {targets}")
         console.print(f"  high_risk_presumption: {manifest.high_risk_presumption}")
+        if manifest.agent_inventory is not None:
+            console.print(
+                f"  Agents declared:       {len(manifest.agent_inventory.agents)}"
+            )
+        if manifest.human_oversight is not None:
+            roles = manifest.human_oversight.roles
+            can = sum(r.can_intervene for r in roles)
+            console.print(
+                f"  human_oversight:       {len(roles)} role(s), {can} can intervene"
+            )
 
 
 def _load_sample_set(
@@ -1282,21 +1442,23 @@ def _read_gap_report(path: Path) -> tuple[GapReport, dict[str, FrameworkReport]]
     falling back to the locale encoding: a cmd.exe or Git Bash `>` redirect on
     Windows writes the ANSI code page (cp1252), e.g. an em dash as 0x97.
     """
-    data = path.read_bytes()
-    if data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
-        text = data.decode("utf-16")
-    else:
-        try:
-            text = data.decode("utf-8-sig")
-        except UnicodeDecodeError:
-            text = data.decode(locale.getpreferredencoding(False))
-    raw = json.loads(text)
-    if isinstance(raw, dict) and "payload" in raw and "tool_version" in raw:
-        raw = raw["payload"]
+    raw = read_json_file(path)
     frameworks = raw.get("frameworks", {}) if isinstance(raw, dict) else {}
     return GapReport.model_validate(raw), {
         fw: FrameworkReport.model_validate(value) for fw, value in frameworks.items()
     }
+
+
+def _read_scan_report(path: Path) -> CorroborationReport:
+    """A `--scan-report` file: a bare CorroborationReport or the `scan -o json`
+    envelope, in any redirect encoding. A bad file exits 2."""
+    try:
+        return CorroborationReport.model_validate(read_json_file(path))
+    except ValueError as e:  # includes pydantic.ValidationError
+        err_console.print(
+            f"[red]Error:[/red] scan report {escape(str(path))}: {escape(str(e))}"
+        )
+        sys.exit(2)
 
 
 _GAP_STATUS_STYLE = {
@@ -1339,10 +1501,31 @@ def gaps_cmd(
             "compliance_targets (else its compliance_target). EU_AI_ACT is "
             "evaluated natively; NIST_AI_RMF by re-projecting the EU_AI_ACT "
             "evidence through data/framework_crosswalk.json — see "
-            "docs/src/concepts/nist-ai-rmf.md"
+            "docs/src/concepts/nist-ai-rmf.md. ISO_IEC_42001 is the native "
+            "ISO/IEC 42001 pack, attestation-led (partial, unreviewed), not a "
+            "certification."
         ),
     ),
+    map_to: list[str] | None = typer.Option(
+        None,
+        "--map-to",
+        help=(
+            "Add mapped-only DORA and/or EBA citations per EU AI Act article; "
+            "repeat for several. A citation, not a verdict: low confidence, "
+            "needs founder review"
+        ),
+    ),
+    strict: bool = typer.Option(
+        False,
+        "--strict",
+        help="Exit 2 on unknown keys in the manifest instead of warning",
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+    sort: SortOrder = typer.Option(
+        SortOrder.article,
+        "--sort",
+        help="Row order: article (default) or priority (deadline, severity, effort)",
+    ),
 ) -> None:
     """
     Print a per-requirement gap report (Met/Partial/Missing/Unverified) for
@@ -1352,6 +1535,8 @@ def gaps_cmd(
     informational only, never gates CI (see `opencomplai check` for the CI gate).
     `--target NIST_AI_RMF` re-projects the same evidence into a per-subcategory
     NIST AI RMF 1.0 profile — no new scanner or evaluator involved.
+    `--target ISO_IEC_42001` reports the native ISO/IEC 42001 pack,
+    attestation-led (partial, unreviewed); it certifies nothing.
     """
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
@@ -1359,12 +1544,17 @@ def gaps_cmd(
         sys.exit(2)
 
     try:
-        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+        manifest = load_manifest(manifest_file, strict)
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
 
     targets = _resolve_targets_or_exit(manifest, target)
+    try:
+        regimes = parse_map_to(map_to)
+    except ValueError as e:
+        err_console.print(f"[red]Error:[/red] {escape(str(e))}")
+        sys.exit(2)
 
     assessment_input = AssessmentInput(
         model=ModelMetadata(
@@ -1384,9 +1574,7 @@ def gaps_cmd(
                 f"[red]Error:[/red] scan report not found: {scan_report_file}"
             )
             sys.exit(2)
-        corroboration_report = CorroborationReport.model_validate(
-            json.loads(scan_report_file.read_text())
-        )
+        corroboration_report = _read_scan_report(scan_report_file)
 
     eval_report = None
     sample_set = _load_sample_set(sample_set_file, manifest)
@@ -1438,6 +1626,10 @@ def gaps_cmd(
             envelope_payload["frameworks"] = {
                 fw: json.loads(reports[fw].model_dump_json()) for fw in targets
             }
+        if regimes:
+            envelope_payload["mapped_regimes"] = mapped_payload(regimes)
+        if sort is SortOrder.priority:
+            envelope_payload["backlog"] = build_backlog(report.articles)
         envelope = wrap_scan_output(
             envelope_payload,
             scan_errors=[],
@@ -1452,12 +1644,21 @@ def gaps_cmd(
         _print_nist_gaps(
             nist_report, manifest.system_id, _gate_note(config, "NIST_AI_RMF")
         )
+        if sort is SortOrder.priority:
+            console.print("[dim]The NIST table keeps subcategory order.[/dim]")
         return
     for fw in targets:
         if fw == EU_AI_ACT:
-            _print_eu_gaps(report, principle_summary, manifest.system_id)
+            _print_eu_gaps(
+                report, principle_summary, manifest.system_id, sort, regimes or None
+            )
         else:
-            _print_framework_gaps(reports[fw], _gate_note(config, fw))
+            _print_framework_gaps(reports[fw], _gate_note(config, fw), sort)
+    if sort is SortOrder.priority:
+        console.print(
+            "[dim]Ordered by deadline, severity, effort. "
+            "Effort is a rough engineering estimate.[/dim]"
+        )
 
 
 def _resolve_targets_or_exit(
@@ -1557,7 +1758,11 @@ def _print_nist_gaps(
 
 
 def _print_eu_gaps(
-    report: GapReport, principle_summary: PrincipleSummary, system_id: str
+    report: GapReport,
+    principle_summary: PrincipleSummary,
+    system_id: str,
+    sort: SortOrder = SortOrder.article,
+    regimes: list[str] | None = None,
 ) -> None:
     console.print(f"\n[bold]Opencomplai Gap Report[/bold] — {system_id}\n")
     console.print(
@@ -1570,8 +1775,10 @@ def _print_eu_gaps(
     table.add_column("Source", style="dim")
     table.add_column("Evidence", style="dim")
     table.add_column("Rationale")
+    if regimes:
+        add_mapped_columns(table, regimes)
     catalog = get_catalog()
-    for row in report.articles:
+    for row in sort_rows(report.articles, sort):
         catalog_entry = catalog.get(row.article)
         mapped = catalog_entry.iso_42001_clause if catalog_entry else None
         table.add_row(
@@ -1581,6 +1788,7 @@ def _print_eu_gaps(
             row.source.value,
             row.evidence_ref,
             row.rationale,
+            *(mapped_cells(row.article, regimes) if regimes else ()),
         )
     console.print(table)
     console.print(
@@ -1588,6 +1796,11 @@ def _print_eu_gaps(
         "(data/framework_crosswalk.json) — a citation, not a computed "
         "conformity verdict.[/dim]\n"
     )
+    if regimes:
+        console.print(
+            "[dim]Mapped only: a citation, not a verdict; needs founder review.[/dim]\n"
+        )
+    _print_timeline(report)
 
     console.print("\n[bold]Principle Summary[/bold]\n")
     principle_table = Table(show_header=True, header_style="bold")
@@ -1606,12 +1819,23 @@ def _print_eu_gaps(
     )
 
 
+def _print_timeline(report: GapReport, today: date | None = None) -> None:
+    """`Regulatory timeline` block for a gap report's articles; dates only
+    unless `today` is given."""
+    lines = timeline_lines((row.article for row in report.articles), today)
+    if lines:
+        console.print("[bold]Regulatory timeline[/bold]")
+        for line in lines:
+            console.print(f"  {escape(line)}")
+        console.print()
+
+
 def _print_framework_gaps(
-    framework_report: FrameworkReport, gate_note: str | None = None
+    framework_report: FrameworkReport,
+    gate_note: str | None = None,
+    sort: SortOrder = SortOrder.article,
 ) -> None:
     """One non-EU framework's rows, then its exclusions, gate and disclaimer."""
-    pack = FRAMEWORKS[framework_report.framework]
-    requirements = load_requirements_map(pack.requirements) if pack.requirements else {}
     console.print(
         f"\n[bold]{escape(framework_report.label)}[/bold] — "
         f"{escape(framework_report.report.system_id)}\n"
@@ -1623,11 +1847,11 @@ def _print_framework_gaps(
     table.add_column("Source", style="dim")
     table.add_column("Evidence", style="dim")
     table.add_column("Rationale")
-    for row in framework_report.report.articles:
+    for row in sort_rows(framework_report.report.articles, sort):
         # Attested rows carry the provider's own words: print them, not markup.
         table.add_row(
             escape(row.article),
-            escape(requirements.get(row.article, {}).get("title", "—")),
+            escape(requirement_title(row.article) or "—"),
             _GAP_STATUS_STYLE[row.status],
             row.source.value,
             escape(row.evidence_ref),
@@ -1679,6 +1903,11 @@ def recommend_cmd(
         help="Repository root for artifact path probes (Arts. 9/13/14/16/17/24/43), "
         "including the Art. 17 QMS per-clause breakdown",
     ),
+    sort: SortOrder = typer.Option(
+        SortOrder.article,
+        "--sort",
+        help="Row order: article (default) or priority (deadline, severity, effort)",
+    ),
 ) -> None:
     """
     Write copy-paste remediation templates for every Missing/Partial gap-report row.
@@ -1704,7 +1933,7 @@ def recommend_cmd(
             sys.exit(2)
         try:
             manifest = SystemManifest.model_validate(
-                json.loads(manifest_file.read_text())
+                json.loads(manifest_file.read_text(encoding="utf-8"))
             )
         except Exception as e:
             err_console.print(f"[red]Validation error:[/red] {e}")
@@ -1728,9 +1957,7 @@ def recommend_cmd(
                     f"[red]Error:[/red] scan report not found: {scan_report_file}"
                 )
                 sys.exit(2)
-            corroboration_report = CorroborationReport.model_validate(
-                json.loads(scan_report_file.read_text())
-            )
+            corroboration_report = _read_scan_report(scan_report_file)
 
         eval_report = None
         sample_set = _load_sample_set(sample_set_file, manifest)
@@ -1761,7 +1988,7 @@ def recommend_cmd(
         path
         for gap_report in reports
         for path in render_recommendations(
-            gap_report, output_dir, repo_root=resolved_repo_root
+            gap_report, output_dir, repo_root=resolved_repo_root, sort=sort
         )
     ]
 
@@ -1778,12 +2005,12 @@ def recommend_cmd(
         console.print(f"  {path}")
 
     if any(row.article == "Art. 17" for row in report.articles):
-        qms_rows = qms_article_17_clause_statuses(resolved_repo_root)
-        present = sum(1 for r in qms_rows if r.status == GapStatus.PARTIAL)
-        missing = sum(1 for r in qms_rows if r.status == GapStatus.MISSING)
+        counts = summarise_qms_clauses(qms_clause_results(resolved_repo_root))
+        unfilled = f", {counts.unfilled}/13 unfilled" if counts.unfilled else ""
         console.print(
-            f"\n[bold]Art. 17 QMS per-clause:[/bold] {present}/13 present, "
-            f"{missing}/13 missing (see the qms_outline.md written above for detail)",
+            f"\n[bold]Art. 17 QMS per-clause:[/bold] {counts.present}/13 present"
+            f"{unfilled}, {counts.missing}/13 missing "
+            "(see the qms_outline.md written above for detail)",
             soft_wrap=True,
         )
 
@@ -1828,7 +2055,9 @@ def fria_generate_cmd(
         err_console.print("Run [bold]opencomplai init[/bold] first.")
         sys.exit(2)
     try:
-        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+        manifest = SystemManifest.model_validate(
+            json.loads(manifest_file.read_text(encoding="utf-8"))
+        )
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
@@ -1934,6 +2163,11 @@ def report_cmd(
     output_file: Path = typer.Option(
         Path("report.html"), "--output", "-o", help="Output path (.html or .pdf)"
     ),
+    sort: SortOrder = typer.Option(
+        SortOrder.article,
+        "--sort",
+        help="Row order: article (default) or priority (deadline, severity, effort)",
+    ),
 ) -> None:
     """
     Render a single shareable report combining manifest + rule results + gap report +
@@ -1948,7 +2182,9 @@ def report_cmd(
         err_console.print("Run [bold]opencomplai init[/bold] first.")
         sys.exit(2)
     try:
-        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+        manifest = SystemManifest.model_validate(
+            json.loads(manifest_file.read_text(encoding="utf-8"))
+        )
     except Exception as e:
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
@@ -1956,7 +2192,7 @@ def report_cmd(
     artifact = None
     if artifact_file is not None and artifact_file.exists():
         artifact = ScanStatusArtifact.model_validate(
-            json.loads(artifact_file.read_text())
+            json.loads(artifact_file.read_text(encoding="utf-8"))
         )
 
     gap_report = None
@@ -1988,6 +2224,7 @@ def report_cmd(
         risk_result=risk_result,
         framework_reports=framework_reports,
         fmt=fmt,
+        sort=sort,
     )
 
     if isinstance(rendered, bytes):
@@ -2172,27 +2409,29 @@ def _bootstrap_ocignore(
     *,
     ocignore_path: Path | None,
     bootstrap: bool,
+    quiet: bool = False,
 ) -> ScanConfig:
     resolved_root = repo_root.resolve()
+    out = err_console if quiet else console  # JSON mode keeps stdout pure
     if bootstrap:
         if not resolved_root.exists():
-            console.print(
+            out.print(
                 "[yellow]Warning:[/yellow] repo-root does not exist — "
                 "cannot create .ocignore. Check --repo-root path."
             )
         elif not resolved_root.is_dir():
-            console.print(
+            out.print(
                 "[yellow]Warning:[/yellow] repo-root is not a directory — "
                 "cannot create .ocignore."
             )
         else:
             created, path = ensure_ocignore(resolved_root, ocignore_path=ocignore_path)
             if created:
-                console.print(
+                out.print(
                     f"[dim]Created scan config at {path} (edit patterns and limits as needed)[/dim]"
                 )
             elif not path.exists():
-                console.print(
+                out.print(
                     "[yellow]Warning:[/yellow] could not create .ocignore — "
                     "scanning with empty exclusions and unlimited limits."
                 )
@@ -2636,6 +2875,11 @@ def scan_cmd(
         "--ocignore-bootstrap/--no-ocignore-bootstrap",
         help="Create default .ocignore on first scan if missing",
     ),
+    strict: bool = typer.Option(
+        False,
+        "--strict",
+        help="Exit 2 on unknown keys in the manifest instead of warning",
+    ),
     ai_intent: bool = typer.Option(
         False,
         "--ai-intent",
@@ -2701,14 +2945,14 @@ def scan_cmd(
         err_console.print(f"[red]Error:[/red] manifest not found: {manifest_file}")
         sys.exit(2)
     else:
-        manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
+        manifest = load_manifest(manifest_file, strict)
     baseline_categories: list[str] | None = None
     baseline_ref: str | None = None
     if baseline is not None:
         if not baseline.exists():
             err_console.print(f"[red]Error:[/red] baseline not found: {baseline}")
             sys.exit(2)
-        baseline_data = json.loads(baseline.read_text())
+        baseline_data = json.loads(baseline.read_text(encoding="utf-8"))
         baseline_categories = baseline_data.get("accepted_categories", [])
         baseline_ref = baseline_data.get("baseline_ref")
 
@@ -2753,6 +2997,7 @@ def scan_cmd(
         repo_root,
         ocignore_path=ocignore_path,
         bootstrap=ocignore_bootstrap,
+        quiet=(output == OutputFormat.json),
     )
 
     project_config_path = find_project_config(repo_root)
@@ -2769,7 +3014,9 @@ def scan_cmd(
             and project_config.scan_framework_detectors is not None
         ):
             resolved_framework_detectors = project_config.scan_framework_detectors
-        console.print(f"[dim]Loaded project config: {project_config_path}[/dim]")
+        (err_console if output == OutputFormat.json else console).print(
+            f"[dim]Loaded project config: {project_config_path}[/dim]"
+        )
     fail_on = resolved_fail_on
     framework_detectors = resolved_framework_detectors
 
@@ -2880,6 +3127,7 @@ def _write_sidecar_reports(
     eval_report: EvalReport | None,
     *,
     quiet: bool = False,
+    output_dir: Path = Path("."),
 ) -> None:
     """
     Write full scan-report.json / eval-report.json sidecars beside
@@ -2888,24 +3136,28 @@ def _write_sidecar_reports(
     ran — absence of either report is never fabricated.
     """
     if scan_report is not None:
-        path = Path("scan-report.json")
-        path.write_text(scan_report.model_dump_json(indent=2))
+        path = output_dir / "scan-report.json"
+        path.write_text(scan_report.model_dump_json(indent=2), encoding="utf-8")
         if not quiet:
             console.print(f"[dim]Artifact written to {path}[/dim]")
     if eval_report is not None:
-        path = Path("eval-report.json")
-        path.write_text(eval_report.model_dump_json(indent=2))
+        path = output_dir / "eval-report.json"
+        path.write_text(eval_report.model_dump_json(indent=2), encoding="utf-8")
         if not quiet:
             console.print(f"[dim]Artifact written to {path}[/dim]")
 
 
 @app.command("check")
 def check_cmd(
-    manifest_file: Path = typer.Option(
-        Path("system-manifest.json"),
+    ctx: typer.Context,
+    manifest_files: list[Path] | None = typer.Option(
+        None,
         "--manifest",
         "-m",
-        help="Path to system manifest JSON file",
+        help=(
+            "Path to system manifest JSON file (default: system-manifest.json). "
+            "Repeatable, one system per manifest; globs are expanded by the CLI"
+        ),
     ),
     commit_ref: str = typer.Option("HEAD", "--commit-ref", help="Git commit reference"),
     scan_mode: str = typer.Option("local", "--scan-mode", help="ci | local | airgap"),
@@ -2917,7 +3169,18 @@ def check_cmd(
     sign: bool = typer.Option(
         False,
         "--sign/--no-sign",
-        help="Sign the status artifact (requires signing key)",
+        help=(
+            "Sign the status artifact. Needs a signing key (the key file from "
+            "'opencomplai init' or SIGNING_KEY_PRIVATE); exits 2 without one"
+        ),
+    ),
+    sign_if_available: bool = typer.Option(
+        False,
+        "--sign-if-available",
+        help=(
+            "Sign when a signing key is available; otherwise warn and write an "
+            "unsigned artifact. --sign wins when both are given"
+        ),
     ),
     run_code_scan: bool = typer.Option(
         False, "--scan", help="Run code corroboration scan (opt-in)"
@@ -2930,6 +3193,17 @@ def check_cmd(
             "artifact path probes (Arts. 9/13/14/16/24/43)"
         ),
     ),
+    oversight_log_path: Path | None = typer.Option(
+        None, "--oversight-log", help="Oversight log to summarise (default: state dir)"
+    ),
+    agent_log: Path | None = typer.Option(
+        None, "--agent-log", help="Agent decision log (default: agent-log.jsonl)"
+    ),
+    incident_register: Path | None = typer.Option(
+        None,
+        "--incident-register",
+        help="Incident register to summarise (default: incident-register.json)",
+    ),
     emit_scan_evidence: bool = typer.Option(True, "--emit-evidence/--no-emit-evidence"),
     scan_fail_on: FailOnLevel = typer.Option(
         FailOnLevel.none,
@@ -2940,6 +3214,11 @@ def check_cmd(
         ),
     ),
     scan_baseline: Path | None = typer.Option(None, "--baseline"),
+    strict: bool = typer.Option(
+        False,
+        "--strict",
+        help="Exit 2 on unknown keys in the manifest instead of warning",
+    ),
     with_gaps: bool = typer.Option(
         False,
         "--with-gaps",
@@ -2980,6 +3259,25 @@ def check_cmd(
             "Replaces opencomplai.yaml's gate.fail_on."
         ),
     ),
+    output_dir: Path = typer.Option(
+        Path("."),
+        "--output-dir",
+        help=(
+            "Directory for compliance-artifact.json and the scan/eval sidecars "
+            "(default: current directory)"
+        ),
+    ),
+    report_junit: Path | None = typer.Option(
+        None, "--report-junit", help="Also write a JUnit XML report of the verdict"
+    ),
+    sarif_output: Path | None = typer.Option(
+        None,
+        "--sarif-output",
+        help="Also write SARIF 2.1.0 of the check verdict, not scan evidence",
+    ),
+    summary_md: Path | None = typer.Option(
+        None, "--summary-md", help="Also write the Markdown job summary"
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """
@@ -2989,17 +3287,54 @@ def check_cmd(
     When OPENCOMPLAI_API_URL is set, orchestrates all services; otherwise
     uses the local engine with local artifact output.
     """
+    from opencomplai_cli.commands.portfolio import expand_manifest_args, run_portfolio
+
+    manifests = expand_manifest_args(manifest_files)
+    if len(manifests) > 1:
+        sys.exit(
+            run_portfolio(
+                dict(ctx.params),
+                manifests,
+                lambda **kw: ctx.invoke(check_cmd, ctx=ctx, **kw),
+                ctx.command,
+            )
+        )
+    manifest_file = manifests[0]
+
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
         err_console.print("Run [bold]opencomplai init[/bold] first.")
         sys.exit(2)
 
     try:
-        raw = json.loads(manifest_file.read_text())
-        manifest = SystemManifest.model_validate(raw)
+        manifest = load_manifest(manifest_file, strict)
     except Exception as e:
         err_console.print(f"[red]Manifest validation error:[/red] {e}")
         sys.exit(2)
+
+    # Resolve once so the artifact, gap_report and halt record agree and never
+    # carry the literal "HEAD".
+    from opencomplai_cli import publish
+
+    commit_ref = publish._resolve_commit_ref(commit_ref, os.environ, repo_dir=repo_root)
+
+    # Fail before any pipeline step, ledger event or file write.
+    from opencomplai_cli.check_signing import signing_key_available
+
+    if (sign or sign_if_available) and not signing_key_available(_SIGNING_KEY):
+        if sign:
+            err_console.print(
+                "[red]Error:[/red] --sign needs a signing key. Run "
+                "[bold]opencomplai init[/bold] or set SIGNING_KEY_PRIVATE "
+                "(base64 PEM). Use --sign-if-available to write an unsigned "
+                "artifact instead."
+            )
+            sys.exit(2)
+        err_console.print(
+            "[yellow]Warning:[/yellow] no signing key (run [bold]opencomplai "
+            "init[/bold] or set SIGNING_KEY_PRIVATE): the artifact will be unsigned."
+        )
+        sign_if_available = False
 
     targets = _resolve_targets_or_exit(manifest, target)
     gate_frameworks, gate_fail_on = _resolve_gate(
@@ -3014,10 +3349,15 @@ def check_cmd(
         )
     elif output == OutputFormat.human:
         cs = manifest.checker_session
-        role = manifest.operator_role or "unknown"
+        roles = effective_roles(manifest)
+        role_text = (
+            f"roles={', '.join(roles)}"
+            if len(roles) > 1
+            else f"role={''.join(roles) or 'unknown'}"
+        )
         console.print(
             f"[dim]Applicability checker:[/dim] session {cs.session_id[:8]}… "
-            f"(v{cs.checker_version}, role={role})"
+            f"(v{cs.checker_version}, {role_text})"
         )
 
     install_id = _get_install_id()
@@ -3025,6 +3365,23 @@ def check_cmd(
 
     api_available = bool(os.environ.get("OPENCOMPLAI_API_URL", "").strip())
     sample_set = _load_sample_set(sample_set_file, manifest)
+
+    # Validate every input before anything is emitted, halted or written: a bad
+    # framework_inputs entry or baseline exits 2 with no halt record or evidence.
+    baseline_categories: list[str] | None = None
+    if scan_baseline is not None:
+        try:
+            baseline_data = read_json_file(scan_baseline)
+            baseline_categories = baseline_data.get("accepted_categories", [])
+        except (OSError, ValueError, AttributeError) as e:
+            err_console.print(
+                f"[red]Error:[/red] baseline {escape(str(scan_baseline))}: "
+                f"{escape(str(e))}"
+            )
+            sys.exit(2)
+    if with_gaps or gate_frameworks:
+        _evaluate_targets_or_exit(manifest, targets, commit_ref=commit_ref)
+
     eval_summary, eval_failed, eval_hashes, eval_report = _run_pipeline_evals(
         manifest,
         commit_ref,
@@ -3036,13 +3393,14 @@ def check_cmd(
     scan_summary: ScanSummary | None = None
     scan_report: CorroborationReport | None = None
     scan_failed = False
-    baseline_categories: list[str] | None = None
-    if scan_baseline is not None and scan_baseline.exists():
-        baseline_data = json.loads(scan_baseline.read_text())
-        baseline_categories = baseline_data.get("accepted_categories", [])
 
     if run_code_scan:
-        scan_config = _bootstrap_ocignore(repo_root, ocignore_path=None, bootstrap=True)
+        scan_config = _bootstrap_ocignore(
+            repo_root,
+            ocignore_path=None,
+            bootstrap=True,
+            quiet=(output == OutputFormat.json),
+        )
         _, scan_report, scan_hashes = _run_scan_corroboration(
             manifest,
             commit_ref,
@@ -3088,12 +3446,25 @@ def check_cmd(
 
     artifact, escalated = _apply_checker_verdict(artifact, manifest)
     risk_high |= escalated
+    artifact = _apply_committed_acceptance(
+        artifact, manifest, repo_root, output == OutputFormat.human
+    )
+    artifact, halt_suppressed = apply_acceptance_gate(
+        artifact,
+        manifest,
+        repo_root=repo_root,
+        commit_ref=commit_ref,
+        change_context=change_context,
+        scan_mode=scan_mode,
+        corroboration_report=scan_report,
+        sample_set=sample_set,
+    )
 
     # HALT-WIRE / E-12(a): halt trigger — trap always halts; an unresolved
     # HIGH-risk corroboration gap (--scan --fail-on ... failed) halts too,
     # even when the artifact result itself stays CONTROL_FAIL rather than
     # TRAP_DETECTED.
-    if artifact.result == ScanResult.TRAP_DETECTED:
+    if artifact.result == ScanResult.TRAP_DETECTED and not halt_suppressed:
         _maybe_halt_system(manifest.system_id, commit_ref, "trap_detected")
     elif risk_high and scan_failed:
         _maybe_halt_system(
@@ -3157,6 +3528,11 @@ def check_cmd(
                 quiet=(output == OutputFormat.json),
                 extra=[framework_reports[fw] for fw in targets if fw != EU_AI_ACT],
             )
+            na_count = len(getattr(gap_report, "not_applicable", None) or {})
+            if output == OutputFormat.human and na_count:
+                console.print(
+                    f"[dim]Not applicable to this session: {na_count} article(s)[/dim]"
+                )
             controls_block = (
                 build_controls_block(derived_controls)
                 if derived_controls is not None
@@ -3180,7 +3556,26 @@ def check_cmd(
 
     # Sign only now: the scan override, checker verdict, gate and --with-gaps
     # blocks above all change the bytes the signature has to cover.
-    artifact = _sign_artifact(artifact, sign)
+    from opencomplai_cli.check_signing import stamp_artifact
+
+    artifact = stamp_artifact(
+        artifact,
+        now=datetime.now(UTC),
+        manifest_bytes=manifest_file.read_bytes() if manifest_file.is_file() else None,
+    )
+    # Before signing, so the signature covers the packs and other summaries.
+    artifact = with_pack_summary(artifact, repo_root / "deployer-pack")
+    artifact = with_summaries(
+        artifact,
+        manifest=manifest,
+        repo_root=repo_root,
+        scan_report=scan_report,
+        oversight_log=oversight_log_path,
+        agent_log=agent_log,
+        incident_register=incident_register,
+        warn=lambda m: err_console.print(f"[yellow]WARN:[/yellow] {m}"),
+    )
+    artifact = _sign_artifact(artifact, sign or sign_if_available, strict=sign)
 
     if api_available:
         # Step 8 — append the final artifact to the ledger
@@ -3190,19 +3585,36 @@ def check_cmd(
         )
 
     # Write artifact to disk for CI consumption
-    artifact_path = Path("compliance-artifact.json")
-    artifact_path.write_text(artifact.model_dump_json(indent=2))
+    artifact_path = output_dir / "compliance-artifact.json"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    artifact_path.write_text(artifact.model_dump_json(indent=2), encoding="utf-8")
 
     # D10 sidecars: full scan/eval reports beside the compact artifact, so
     # `opencomplai docs generate` can pick up the most recent evidence.
     _write_sidecar_reports(
-        scan_report, eval_report, quiet=(output == OutputFormat.json)
+        scan_report,
+        eval_report,
+        quiet=(output == OutputFormat.json),
+        output_dir=output_dir,
     )
+
+    if report_junit or sarif_output or summary_md:
+        from opencomplai_cli.report_outputs import write_check_reports
+
+        write_check_reports(
+            json.loads(artifact.model_dump_json()),
+            junit=report_junit,
+            sarif=sarif_output,
+            summary_md=summary_md,
+            location_uri=manifest_file.as_posix(),
+            tool_version=__version__,
+            warn=lambda m: err_console.print(f"[yellow]WARN:[/yellow] {escape(m)}"),
+        )
 
     if output == OutputFormat.json:
         console.print_json(artifact.model_dump_json(indent=2))
     else:
-        _print_artifact_human(artifact)
+        _print_artifact_human(artifact, str(artifact_path))
 
     sys.exit(_exit_code(artifact.result, scan_mode))
 
@@ -3252,6 +3664,21 @@ def _run_service_check(
                 "compliance_target": manifest.compliance_target,
                 "high_risk_presumption": manifest.high_risk_presumption,
                 "commit_ref": commit_ref,
+                **(
+                    {"compliance_targets": manifest.compliance_targets}
+                    if manifest.compliance_targets
+                    else {}
+                ),
+                **(
+                    {
+                        "framework_inputs": {
+                            fw: fi.model_dump(mode="json")
+                            for fw, fi in manifest.framework_inputs.items()
+                        }
+                    }
+                    if manifest.framework_inputs
+                    else {}
+                ),
             },
         )
         if status >= 400:
@@ -3391,6 +3818,8 @@ def _run_service_check(
                 "human_oversight_measures": manifest.human_oversight_measures,
                 "monitoring_approach": manifest.monitoring_approach,
                 "incident_response_procedure": manifest.incident_response_procedure,
+                **oversight_payload(manifest),
+                **agent_inventory_payload(manifest),
             },
         )
         if status >= 400:
@@ -3549,25 +3978,40 @@ def _finalize_artifact(
     )
 
 
-def _sign_artifact(artifact: ScanStatusArtifact, sign: bool) -> ScanStatusArtifact:
-    """Return a signed copy of `artifact` when `sign` is set and a key exists.
+def _sign_artifact(
+    artifact: ScanStatusArtifact, sign: bool, *, strict: bool = False
+) -> ScanStatusArtifact:
+    """Return a signed copy of `artifact` when `sign` is set and a key is available.
 
     The signature covers every other field, so this must run only once the
-    artifact is final — anything changed afterwards no longer verifies.
+    artifact is final (stamped included) — anything changed afterwards no longer
+    verifies. A key that is present but unusable is a hard error (exit 2) when
+    `strict` (explicit --sign), else a warning.
     """
-    if not (sign and _SIGNING_KEY.exists()):
+    from opencomplai_cli.check_signing import signing_key_available
+
+    if not (sign and signing_key_available(_SIGNING_KEY)):
         return artifact
     try:
         from opencomplai_core.signing import sign_artifact
 
         signature = sign_artifact(artifact, _SIGNING_KEY)
     except Exception as exc:
-        err_console.print(f"[yellow]Warning: signing failed — {exc}[/yellow]")
+        if strict:
+            err_console.print(f"[red]Error:[/red] signing failed: {escape(str(exc))}")
+            sys.exit(2)
+        err_console.print(
+            f"[yellow]Warning: signing failed: {escape(str(exc))}[/yellow]"
+        )
         return artifact
     return artifact.model_copy(update={"signature": signature})
 
 
-def _print_artifact_human(artifact: ScanStatusArtifact) -> None:
+def _print_artifact_human(
+    artifact: ScanStatusArtifact,
+    written_to: str = "compliance-artifact.json",
+    today: date | None = None,
+) -> None:
     result_color = "green" if artifact.result == ScanResult.PASS else "red"
     console.print("\n[bold]Opencomplai Compliance Check[/bold]")
     console.print(f"  system_id:    {artifact.system_id}")
@@ -3595,7 +4039,15 @@ def _print_artifact_human(artifact: ScanStatusArtifact) -> None:
             console.print(
                 f"  scan_gaps:         {', '.join(artifact.scan_summary.discrepancies)}"
             )
-    console.print("\n  [dim]Artifact written to compliance-artifact.json[/dim]")
+    if artifact.gap_report is not None:
+        lines = timeline_lines(
+            (row.article for row in artifact.gap_report.articles), today or today_utc()
+        )
+        if lines:
+            console.print("\n  [bold]Regulatory timeline[/bold]")
+            for line in lines:
+                console.print(f"    {escape(line)}")
+    console.print(f"\n  [dim]Artifact written to {written_to}[/dim]")
 
 
 @app.command("eval")
@@ -3606,7 +4058,10 @@ def eval_cmd(
     sample_set_file: Path | None = typer.Option(
         None,
         "--sample-set",
-        help="Path to EvalSampleSet JSON (required unless --suite is set)",
+        help=(
+            "Path to EvalSampleSet JSON. Optional: when omitted (and no --suite), "
+            "the bundled prompt-injection seed corpus is used."
+        ),
     ),
     commit_ref: str = typer.Option("HEAD", "--commit-ref"),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
@@ -3629,6 +4084,14 @@ def eval_cmd(
         "--provider-api-key-env",
         help="Environment variable holding the provider API key",
     ),
+    provider_base_url: str | None = typer.Option(
+        None,
+        "--provider-base-url",
+        help=(
+            "Base URL of an OpenAI-compatible endpoint for --provider (https, or "
+            "http only for localhost/loopback)"
+        ),
+    ),
     suite: str | None = typer.Option(
         None,
         "--suite",
@@ -3649,7 +4112,27 @@ def eval_cmd(
         help="Local Inspect log directory for --suite inspect-ai (no S3 in this release)",
     ),
 ) -> None:
-    """Run safety, bias, and data-leakage pipeline evaluators."""
+    """Run safety, bias, and data-leakage pipeline evaluators.
+
+    Without --sample-set, runs the bundled prompt-injection seed corpus offline
+    (prompts only: the adversarial evaluator is SKIPPED unless --provider supplies
+    live completions). Seed results are heuristic evidence, never a MET basis.
+    """
+    if provider_base_url is not None:
+        if provider is None or suite is not None:
+            err_console.print(
+                "[red]Error:[/red] --provider-base-url requires --provider "
+                "and cannot be used with --suite"
+            )
+            sys.exit(2)
+        from opencomplai_core.model_providers import validate_base_url
+
+        try:
+            validate_base_url(provider_base_url)
+        except ValueError as exc:
+            err_console.print(f"[red]Error:[/red] {exc}")
+            sys.exit(2)
+
     if suite is not None:
         if suite != "inspect-ai":
             err_console.print(
@@ -3716,17 +4199,55 @@ def eval_cmd(
             sys.exit(1)
         sys.exit(0)
 
-    if sample_set_file is None:
-        err_console.print(
-            "[red]Error:[/red] --sample-set is required unless --suite is set"
-        )
-        sys.exit(2)
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest not found: {manifest_file}")
         sys.exit(2)
-    manifest = SystemManifest.model_validate(json.loads(manifest_file.read_text()))
-    sample_set = _load_sample_set(sample_set_file, manifest)
+    manifest = SystemManifest.model_validate(
+        json.loads(manifest_file.read_text(encoding="utf-8"))
+    )
+    seeded = sample_set_file is None
+    if seeded:
+        sample_set = seed_sample_set(manifest.system_id, commit_ref)
+        (err_console if output == OutputFormat.json else console).print(
+            "[dim]Using bundled seed corpus (heuristic evidence, "
+            "not a compliance conclusion)[/dim]"
+        )
+    else:
+        sample_set = _load_sample_set(sample_set_file, manifest)
     assert sample_set is not None
+
+    # Single provider call site (`--provider-base-url` is passed here). The
+    # completions score the seed corpus and are reused for the printed payload below.
+    completions = None
+    if provider is not None:
+        if not provider_model:
+            err_console.print(
+                "[red]Error:[/red] --model is required when --provider is set"
+            )
+            sys.exit(2)
+        api_key = os.environ.get(provider_api_key_env, "")
+        if not api_key:
+            err_console.print(
+                f"[red]Error:[/red] {provider_api_key_env} is not set; "
+                "cannot call --provider without an API key"
+            )
+            sys.exit(2)
+
+        from opencomplai_core.model_providers import get_provider_client
+
+        client = (
+            get_provider_client(provider, base_url=provider_base_url)
+            if provider_base_url is not None
+            else get_provider_client(provider)
+        )
+        completions = [
+            client.complete(prompt, model=provider_model, api_key=api_key)
+            for prompt in sample_set.prompts
+        ]
+        if seeded:
+            sample_set = seed_sample_set(
+                manifest.system_id, commit_ref, [c.completion for c in completions]
+            )
 
     api_available = bool(os.environ.get("OPENCOMPLAI_API_URL", "").strip())
     summary, _failed, _, _report = _run_pipeline_evals(
@@ -3744,27 +4265,7 @@ def eval_cmd(
         if summary.skipped_evaluators:
             console.print(f"  skipped: {summary.skipped_evaluators}")
 
-    if provider is not None:
-        if not provider_model:
-            err_console.print(
-                "[red]Error:[/red] --model is required when --provider is set"
-            )
-            sys.exit(2)
-        api_key = os.environ.get(provider_api_key_env, "")
-        if not api_key:
-            err_console.print(
-                f"[red]Error:[/red] {provider_api_key_env} is not set; "
-                "cannot call --provider without an API key"
-            )
-            sys.exit(2)
-
-        from opencomplai_core.model_providers import get_provider_client
-
-        client = get_provider_client(provider)
-        completions = [
-            client.complete(prompt, model=provider_model, api_key=api_key)
-            for prompt in sample_set.prompts
-        ]
+    if completions is not None:
         provider_payload = {
             "provider": provider,
             "model": provider_model,
@@ -4007,8 +4508,23 @@ def docs_generate_cmd(
             "restore the old always-exit-0 behaviour."
         ),
     ),
+    render: list[str] = typer.Option(
+        [],
+        "--render",
+        help=(
+            "Also write the dossier as Markdown (md) and/or PDF (pdf) next "
+            "to the JSON. Repeatable. Local fallback only; the exit code is "
+            "unchanged."
+        ),
+    ),
 ) -> None:
     """Generate an Annex IV technical documentation dossier (REQ-DOC-001)."""
+    bad_render = sorted(set(render) - {"md", "pdf"})
+    if bad_render:
+        err_console.print(
+            f"[red]Error:[/red] --render accepts 'md' or 'pdf', got: {', '.join(bad_render)}"
+        )
+        sys.exit(2)
     # HALT-WIRE / E-12(d): a HALTED_PENDING_REVIEW system refuses dossier
     # generation outright — no --force bypass. Resuming requires a signed
     # approval token via `opencomplai resume`.
@@ -4033,7 +4549,7 @@ def docs_generate_cmd(
             sys.exit(2)
         try:
             loaded_manifest = SystemManifest.model_validate_json(
-                manifest_file.read_text()
+                manifest_file.read_text(encoding="utf-8")
             )
         except Exception as exc:
             err_console.print(f"[red]Invalid manifest:[/red] {exc}")
@@ -4046,7 +4562,7 @@ def docs_generate_cmd(
     if scan_report_file.exists():
         try:
             scan_report = CorroborationReport.model_validate(
-                json.loads(scan_report_file.read_text())
+                json.loads(scan_report_file.read_text(encoding="utf-8"))
             )
         except Exception as exc:
             err_console.print(
@@ -4062,7 +4578,7 @@ def docs_generate_cmd(
     if eval_report_file.exists():
         try:
             eval_report = EvalReport.model_validate(
-                json.loads(eval_report_file.read_text())
+                json.loads(eval_report_file.read_text(encoding="utf-8"))
             )
         except Exception as exc:
             err_console.print(
@@ -4100,6 +4616,8 @@ def docs_generate_cmd(
                 "eu_declaration_of_conformity_ref": loaded_manifest.eu_declaration_of_conformity_ref,
                 "post_market_monitoring_plan_ref": loaded_manifest.post_market_monitoring_plan_ref,
                 "post_market_monitoring_summary": loaded_manifest.post_market_monitoring_summary,
+                **oversight_payload(loaded_manifest),
+                **agent_inventory_payload(loaded_manifest),
             }
         )
     if scan_report is not None:
@@ -4147,6 +4665,11 @@ def docs_generate_cmd(
                 "persistence separately. --push applies to the local "
                 "fallback (unset OPENCOMPLAI_API_URL)."
             )
+        if render:
+            err_console.print(
+                "[yellow]Warning:[/yellow] --render needs local mode (unset "
+                "OPENCOMPLAI_API_URL); no Markdown or PDF was written."
+            )
         sys.exit(0)
     except ConnectionError:
         pass
@@ -4155,6 +4678,7 @@ def docs_generate_cmd(
     try:
         from opencomplai_core.dossier import validate_dossier_schema
         from opencomplai_core.dossier_generator import generate_dossier
+        from opencomplai_core.dossier_render import write_renders
         from opencomplai_core.engine import assess as _assess
 
         manifest = (
@@ -4198,7 +4722,19 @@ def docs_generate_cmd(
 
         output_dir.mkdir(parents=True, exist_ok=True)
         out_file = output_dir / f"dossier_{dossier.dossier_id}.json"
-        out_file.write_text(dossier.model_dump_json(indent=2))
+        try:
+            out_file.write_text(dossier.model_dump_json(indent=2), encoding="utf-8")
+        except BaseException:
+            out_file.unlink(missing_ok=True)
+            raise
+        try:
+            rendered = write_renders(
+                dossier, output_dir, render, schema_valid=schema_valid
+            )
+        except ImportError as exc:
+            # JSON (and any Markdown) are already on disk; fail after them.
+            err_console.print(f"[red]Error:[/red] {exc}")
+            sys.exit(1)
 
         if output == OutputFormat.json:
             console.print_json(dossier.model_dump_json(indent=2))
@@ -4211,6 +4747,8 @@ def docs_generate_cmd(
             console.print(f"  bundle_checksum: {dossier.bundle_checksum}")
             console.print(f"  schema:          {valid_marker}")
             console.print(f"  output:          {out_file}")
+            for path in rendered:
+                console.print(f"  rendered:        {path}")
         # HIGH-risk guardrail: warn loudly when section2_complete=false
         if not dossier.section2_complete:
             err_console.print(
@@ -4315,34 +4853,6 @@ def sync_metadata_cmd(
         sys.exit(3)
 
 
-def _print_human(result) -> None:
-    """Print a human-readable assessment report to the terminal."""
-    console.print("\n[bold]Opencomplai Assessment Report[/bold]")
-    console.print(f"Model:      {result.model_name} v{result.model_version}")
-    color = "red" if result.rules_failed else "green"
-    console.print(
-        f"Risk level: [bold {color}]{result.risk_level.value.upper()}[/bold {color}]"
-    )
-    console.print(
-        f"Rules:      {result.rules_passed} passed, "
-        f"{result.rules_failed} failed of {result.rules_evaluated} total"
-    )
-    console.print(f"Generated:  {result.generated_at}\n")
-
-    table = Table(show_header=True, header_style="bold")
-    table.add_column("Rule", style="dim", max_width=40)
-    table.add_column("Status", min_width=6)
-    table.add_column("Reference", style="dim")
-    table.add_column("Rationale")
-
-    for rule in result.rule_results:
-        status = "[green]PASS[/green]" if rule.passed else "[red]FAIL[/red]"
-        table.add_row(rule.rule_name, status, rule.reference, rule.rationale)
-
-    console.print(table)
-    console.print(f"\n{result.evidence_summary}\n")
-
-
 # ---------------------------------------------------------------------------
 # keys sub-commands
 # ---------------------------------------------------------------------------
@@ -4357,7 +4867,7 @@ def keys_rotate_cmd(
 
     Generates a new keypair in ~/.opencomplai/, archives the old private key
     as signing.key.prev, and prints the new public key fingerprint.
-    Recommend running every 90 days. See docs/security/key-management.md.
+    Recommend running every 90 days. See docs/src/security/key-management.md.
     """
     import hashlib
     import shutil
@@ -4430,7 +4940,7 @@ def _require_ai_plugin() -> None:
         err_console.print(
             "[red]Error:[/red] opencomplai-ai is not installed.\n"
             "  Basic:  pip install opencomplai-ai\n"
-            "  Full:   pip install 'opencomplai-ai[deep]'"
+            "  Full:   pip install 'opencomplai-ai\\[deep]'"
         )
         sys.exit(1)
 
@@ -4584,7 +5094,10 @@ def ai_status_cmd() -> None:
         cached = [f.name for f in cache_dir.iterdir() if f.is_file()]
         if cached:
             console.print(f"  cached files  : {', '.join(cached)}")
-    else:
+    elif spec is None or spec.needs_preload:
+        # codebert-onnx (deterministic matcher) and saas (cloud client) have no
+        # local artifact, so an empty cache is not a missing download. Models
+        # downloaded earlier are still listed above when the cache exists.
         console.print("  cache dir     : (empty — model not yet downloaded)")
     console.print()
 
@@ -4599,12 +5112,14 @@ def _deep_installed() -> bool:
 
 
 def _preload_ai_model(model_id: str | None) -> bool:
-    """Ensure the AI model is cached before Rich's live display starts.
+    """Ensure a downloadable AI model is cached before Rich's live display starts.
 
-    Interactive download/export prompts must be shown BEFORE progress bars are
+    The interactive download prompt must be shown BEFORE progress bars are
     active; Rich's live renderer hides console.input() on most terminals.
-    Returns False if the user cancels or a hard dependency is missing (caller
-    should set ai_intent=False so the scan still completes without AI).
+    Backends with no local artifact (codebert-onnx, saas) return True without
+    calling ``ensure_model``. Returns False if the user cancels or a hard
+    dependency is missing (caller should set ai_intent=False so the scan still
+    completes without AI).
     """
     try:
         from opencomplai_ai.config import get_active_model
@@ -4627,5 +5142,7 @@ def _preload_ai_model(model_id: str | None) -> bool:
     except ImportError:
         return True  # plugin not installed; run_scan will emit the warning
     except RuntimeError as exc:
-        err_console.print(f"[yellow]AI intent skipped:[/yellow] {exc}")
+        # escape(): the message carries "pip install 'opencomplai-ai[deep]'",
+        # and Rich would otherwise read "[deep]" as a style tag and drop it.
+        err_console.print(f"[yellow]AI intent skipped:[/yellow] {escape(str(exc))}")
         return False

@@ -1,0 +1,34 @@
+{
+  "name": "22_deployer_fria_annex_i_only",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "deployer",
+      "hr1_annex_i": true,
+      "hr8_conformity_assessment": true,
+      "s1_in_scope": true,
+      "r5_fria": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": true,
+    "is_prohibited": false,
+    "effective_entity": "deployer",
+    "status_change_ids": [
+      "high_risk"
+    ],
+    "obligation_ids": [
+      "ai_literacy",
+      "deployer_high_risk",
+      "deployer_general"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:deployer",
+      "hr:high_risk",
+      "s1:in_scope",
+      "e1:ai_literacy"
+    ]
+  }
+}

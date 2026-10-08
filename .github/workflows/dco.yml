@@ -1,0 +1,48 @@
+name: DCO
+
+# Every non-merge commit in a pull request must carry a Signed-off-by trailer
+# (git commit -s). See CONTRIBUTING.md section 11.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    name: Signed-off-by check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Check Signed-off-by trailers
+        id: dco
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          missing=""
+          while read -r sha; do
+            [ -n "$sha" ] || continue
+            author="$(git log -1 --format=%an "$sha")"
+            case "$author" in
+              *"[bot]") continue ;;
+            esac
+            msg="$(git log -1 --format=%B "$sha")"
+            if ! grep -qiE '^Signed-off-by: .+ <.+@.+>$' <<<"$msg"; then
+              missing="$missing $(git rev-parse --short "$sha")"
+            fi
+          done < <(git rev-list --no-merges "$BASE_SHA..$HEAD_SHA")
+          if [ -n "$missing" ]; then
+            echo "Commits without a Signed-off-by trailer:$missing" >&2
+            echo "Add one with 'git commit -s' (or 'git rebase --signoff') and force-push." >&2
+            exit 1
+          fi
+          echo "All commits are signed off."

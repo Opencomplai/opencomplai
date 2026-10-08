@@ -4,7 +4,7 @@
 
 OpenComplAI brings AI compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks." The EU AI Act is evaluated natively; NIST AI RMF 1.0 is derived from the same evidence.
 
-[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 20+](https://img.shields.io/badge/node-20%2B-339933)](https://nodejs.org/)
+[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 24+](https://img.shields.io/badge/node-24%2B-339933)](https://nodejs.org/)
 
 ### Demo
 
@@ -22,16 +22,22 @@ OpenComplAI brings AI compliance directly into your CI/CD pipeline, turning frag
 Traditional GRC tools are disconnected dashboards that create "velocity tax." We shift compliance left:
 
 - **Prevent Non-Compliance:** Gate releases by blocking builds that violate safety rules.
-- **Automated Evidence:** Generate audit-ready logs automatically for every deployment.
-- **Frameworks Side by Side:** Assess one system against the EU AI Act and NIST AI RMF 1.0 side by side (`compliance_targets` in the manifest, or `opencomplai gaps --target EU_AI_ACT --target NIST_AI_RMF`). The EU AI Act is evaluated natively; NIST AI RMF is re-projected per subcategory from that same EU AI Act evidence through a built-in crosswalk, with no scanner of its own (see [NIST AI RMF](docs/src/concepts/nist-ai-rmf.md)). ISO/IEC 42001 stays mapped only: a clause citation via the same crosswalk (`data/framework_crosswalk.json`), with no computed verdict. See [Frameworks](docs/src/frameworks/index.md).
+- **Automated Evidence:** `opencomplai check` writes `compliance-artifact.json` with evidence hashes for every run; it is signed only when you pass `--sign` and a local signing key exists.
+- **Frameworks Side by Side:** Assess one system against the EU AI Act and NIST AI RMF 1.0 side by side (`compliance_targets` in the manifest, or `opencomplai gaps --target EU_AI_ACT --target NIST_AI_RMF`). The EU AI Act is evaluated natively; NIST AI RMF is re-projected per subcategory from that same EU AI Act evidence through a built-in crosswalk, with no scanner of its own (see [NIST AI RMF](docs/src/concepts/nist-ai-rmf.md)). ISO/IEC 42001 is a native pack of attestation rows that read Unverified until you record an attestation under `framework_inputs` (`--target ISO_IEC_42001`). DORA and EBA are mapped only: `gaps --map-to DORA|EBA` adds a low-confidence citation per EU AI Act article (see [Mapped regimes](docs/src/concepts/mapped-regimes.md)). Standing line: EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only. See [Frameworks](docs/src/frameworks/index.md).
+
+## Who it is for
+
+Teams that build, fine-tune or substantially modify AI systems and need a per-release EU AI Act check in CI.
+It is not a GRC platform or an eval tool; it runs beside them and stays offline unless you run `opencomplai push`.
+See [Works alongside other tools](docs/src/guides/works-alongside.md).
 
 ## How It Works (The 3-Minute Setup)
 
 1. **Define:** Create a compliance manifest for your model.
-2. **Integrate:** Copy the ready-made [GitHub Actions/GitLab CI workflow](docs/src/guides/ci-integration.md) into your pipeline.
+2. **Integrate:** Copy the ready-made [GitHub Actions/GitLab CI workflow](docs/src/guides/ci-integration.md) into your pipeline, or use the [GitHub Action](integrations/github-action/README.md) for a sticky pull request comment.
 3. **Ship:** Get an automated "Pass/Fail" result before your code ever hits production.
 
-[**Check out our Dummy Repo (Sandbox)**](examples/sample-system/) – *Test how we catch AI errors without risking your production code.*
+[**Check out our Dummy Repo (Sandbox)**](examples/gate-demo/) – *Five fictional systems, one per gate outcome (exit codes 3, 4, 1, 1, 0). Illustrative sandbox, not legal advice. It does not scan code.*
 
 ## Core Components
 
@@ -155,8 +161,7 @@ Opencomplai is open-core:
 
 - **Community Edition** — this repository, licensed under **AGPL-3.0**. The full risk
   assessment engine, CLI, SDK, services, and EU AI Act checker.
-- **Enterprise Edition** — a hosted premium dashboard, single sign-on, additional
-  rule engines, and commercial support, available under a commercial licence. See
+- **Enterprise Edition** — a hosted premium dashboard and commercial support, available under a commercial licence. See
   [opencomplai.com](https://opencomplai.com) for details.
 
 ## Contributing
@@ -175,10 +180,10 @@ after a week, ping the PR directly or ask in
 ## AI use
 
 The core rule engine (`packages/core`) and CLI are fully deterministic and rule-based — no
-LLM or ML inference. An optional `packages/ai` plugin adds local ML/LLM inference (an
-ONNX/transformers intent classifier, with an optional `[deep]` extra for local GGUF models
-via llama-cpp-python); it is not installed or used unless a maintainer or contributor
-explicitly opts in.
+LLM or ML inference. An optional `packages/ai` plugin adds intent classification (a
+deterministic code-signal matcher, plus an optional `[deep]` extra for local GGUF LLMs via
+llama-cpp-python, which are the only local model inference); it is not installed or used
+unless a maintainer or contributor explicitly opts in.
 
 `pyproject.toml`, `package.json`, and `requirements*.txt` files are scanned in CI for
 unapproved AI/LLM packages (excluding `tests/`, `examples/`, `fixtures/`, `node_modules/`,

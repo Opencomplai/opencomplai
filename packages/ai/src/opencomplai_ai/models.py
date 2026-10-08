@@ -108,22 +108,41 @@ class ModelSpec:
     needs_preload: bool = True
 
 
+# PIN_SOURCES (retrieved 2026-10-06; source: hub tree API, LFS oid; revision = repo main commit at that date)
+#   qwen2.5-coder-0.5b: Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF @ ebb2015119c907b064c512bf053e945850b5875f, retrieved 2026-10-06, hub tree API, LFS oid
+#   qwen2.5-coder-1.5b: Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF @ f86cb2c1fa58255f8052cc32aeede1b7482d4361, retrieved 2026-10-06, hub tree API, LFS oid
+#   smollm2-1.7b: HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF @ 2d4a76a30b4af41ecd395c35725ac11688d4cfe4, retrieved 2026-10-06, hub tree API, LFS oid
+#   phi-3.5-mini: bartowski/Phi-3.5-mini-instruct-GGUF @ 6d70da17e749a471ccb62ade694486011a75cda3, retrieved 2026-10-06, hub tree API, LFS oid;
+#     repo changed from microsoft/Phi-3.5-mini-instruct-gguf because that repo does not exist on the hub;
+#     community repo (same trust class as mistral-7b), needs founder review
+#   mistral-7b: MaziyarPanahi/Mistral-7B-Instruct-v0.3-GGUF @ ce89f595755a4bf2e2e05d155cc43cb847c78978, retrieved 2026-10-06, hub tree API, LFS oid; community repo, needs founder review
+#   codebert-onnx: microsoft/codebert-base @ 3b0952feddeffad0063f274080e3c23d75e7eb39, retrieved 2026-10-06, hub tree API; revision only, no sha256 (optional local export, nothing downloaded or hashed by scans)
 MODEL_CATALOG: dict[str, ModelSpec] = {
     "codebert-onnx": ModelSpec(
         model_id="codebert-onnx",
         # Deterministic Annex III / prohibited-practice / limited-risk
         # code-signal matcher (see classifier.IntentClassifier) — no model
-        # weights are loaded and nothing is downloaded on the classification
-        # path. hf_repo/filename/runtime below back only the separate,
-        # optional ONNX export exposed via `ensure_model` (e.g. an explicit
-        # `opencomplai ai configure` prefetch), which needs the `[onnx]`
-        # extra and is not part of normal --ai-intent scanning.
-        display_name="CodeBERT code-signal matcher (deterministic, no download)",
+        # weights are loaded, no ONNX Runtime session is created, and
+        # nothing is downloaded on the classification path; the license and
+        # runtime below describe that matcher, not CodeBERT. The id stays
+        # "codebert-onnx" because users store it in ai-config.yaml and it is
+        # written into every EvidenceItem annotation. hf_repo/filename back
+        # only the separate, optional ONNX export in
+        # `downloader.ensure_model` — a Python-API-only function (neither
+        # `opencomplai ai configure`, which only saves the choice, nor any
+        # scan calls it) that needs the `[onnx]` extra and whose output
+        # nothing reads.
+        display_name="Deterministic code-signal matcher (no model)",
         size_mb=0,
-        license="MIT",
-        runtime="onnxruntime",
+        license="AGPL-3.0-only",
+        runtime="deterministic",
         hf_repo="microsoft/codebert-base",
         filename="codebert-base-onnx.tar.gz",
+        # `revision` pins only the checkpoint (microsoft/codebert-base) that the
+        # optional Python-API export reads. `sha256` is intentionally empty:
+        # the ONNX file comes from a local export that scans do not use
+        # (nothing is downloaded or hashed, and the matcher loads no model).
+        revision="3b0952feddeffad0063f274080e3c23d75e7eb39",
         requires_deep=False,
         needs_preload=False,
     ),
@@ -135,6 +154,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         runtime="llama-cpp",
         hf_repo="Qwen/Qwen2.5-Coder-0.5B-Instruct-GGUF",
         filename="qwen2.5-coder-0.5b-instruct-q4_k_m.gguf",
+        revision="ebb2015119c907b064c512bf053e945850b5875f",
+        sha256="1d9614638d18024d0fbb36575a15f1302a3adf044df10345688ec4f6e1c4ff32",
         requires_deep=True,
     ),
     "qwen2.5-coder-1.5b": ModelSpec(
@@ -145,6 +166,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         runtime="llama-cpp",
         hf_repo="Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF",
         filename="qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
+        revision="f86cb2c1fa58255f8052cc32aeede1b7482d4361",
+        sha256="cc324af070c2ecbfd324a30884d2f951a7ff756aba85cb811a6ec436933bb046",
         requires_deep=True,
     ),
     "smollm2-1.7b": ModelSpec(
@@ -155,6 +178,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         runtime="llama-cpp",
         hf_repo="HuggingFaceTB/SmolLM2-1.7B-Instruct-GGUF",
         filename="smollm2-1.7b-instruct-q4_k_m.gguf",
+        revision="2d4a76a30b4af41ecd395c35725ac11688d4cfe4",
+        sha256="decd2598bc2c8ed08c19adc3c8fdd461ee19ed5708679d1c54ef54a5a30d4f33",
         requires_deep=True,
     ),
     "phi-3.5-mini": ModelSpec(
@@ -163,8 +188,10 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         size_mb=2200,
         license="MIT",
         runtime="llama-cpp",
-        hf_repo="microsoft/Phi-3.5-mini-instruct-gguf",
+        hf_repo="bartowski/Phi-3.5-mini-instruct-GGUF",
         filename="Phi-3.5-mini-instruct-Q4_K_M.gguf",
+        revision="6d70da17e749a471ccb62ade694486011a75cda3",
+        sha256="e4165e3a71af97f1b4820da61079826d8752a2088e313af0c7d346796c38eff5",
         requires_deep=True,
     ),
     "mistral-7b": ModelSpec(
@@ -175,6 +202,8 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
         runtime="llama-cpp",
         hf_repo="MaziyarPanahi/Mistral-7B-Instruct-v0.3-GGUF",
         filename="Mistral-7B-Instruct-v0.3.Q4_K_M.gguf",
+        revision="ce89f595755a4bf2e2e05d155cc43cb847c78978",
+        sha256="14850c84ff9f06e9b51d505d64815d5cc0cea0257380353ac0b3d21b21f6e024",
         requires_deep=True,
     ),
     "saas": ModelSpec(

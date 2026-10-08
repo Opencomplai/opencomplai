@@ -12,7 +12,7 @@ from opencomplai_core.compliance_checker.models import CheckerSession, EntityTyp
 
 
 def test_checker_version_constant():
-    assert CHECKER_VERSION == "checker-2026-07-24"
+    assert CHECKER_VERSION == "checker-2026-10-05"
 
 
 def test_catalogs_load():
@@ -298,3 +298,59 @@ def test_art_6_3_exceptions_still_apply_to_annex_iii_only_trigger():
         )
     )
     assert result.is_high_risk is False
+
+
+def _provider_derogation(**extra):
+    answers = {
+        "gate_is_ai_system": True,
+        "e1_entity_type": "provider",
+        "hr2_annex_iii": True,
+        "s1_in_scope": True,
+        **extra,
+    }
+    return evaluate(CheckerSession(answers=answers))
+
+
+def test_provider_derogation_yields_registration_duty():
+    for key in (
+        "hr3_art_6_3",
+        "hr4_narrow_task",
+        "hr5_no_significant_risk",
+        "hr6_accessory",
+    ):
+        result = _provider_derogation(**{key: True})
+        assert result.is_high_risk is False, key
+        assert "provider_art_6_4_registration" in [o.id for o in result.obligations]
+        assert "hr:derogation_registration" in result.determination_path
+
+
+def test_derogation_registration_not_for_deployer_or_profiling():
+    deployer = evaluate(
+        CheckerSession(
+            answers={
+                "gate_is_ai_system": True,
+                "e1_entity_type": "deployer",
+                "hr2_annex_iii": True,
+                "hr3_art_6_3": True,
+            }
+        )
+    )
+    profiling = _provider_derogation(hr3_art_6_3=True, hr7_profiling=True)
+    for result in (deployer, profiling):
+        assert "provider_art_6_4_registration" not in [o.id for o in result.obligations]
+
+
+def test_fria_requires_annex_iii():
+    result = evaluate(
+        CheckerSession(
+            answers={
+                "gate_is_ai_system": True,
+                "e1_entity_type": "deployer",
+                "hr1_annex_i": True,
+                "hr8_conformity_assessment": True,
+                "r5_fria": True,
+            }
+        )
+    )
+    assert result.is_high_risk is True
+    assert "fria" not in [o.id for o in result.obligations]

@@ -1,6 +1,7 @@
 # ADR: Framework Packs — Assessing One System Against Several Frameworks
 
-**Status:** Accepted  
+**Status:** Accepted (amended 2026-10)  
+Amended in the 0.9.0 round (SU-GM2, E-13).  
 **Date:** 2026-09-23
 
 ## Context
@@ -18,8 +19,9 @@ their signed artifacts must not notice the change.
    (`id`, `label`, `disclaimer_ref`, `requirements`, `derive`, `data_files`) and a plain
    `FRAMEWORKS` dict. No ABCs, entry points or loaders. The 0.8.0 registry has
    `EU_AI_ACT` (native, `data/gap_article_map.json`) and `NIST_AI_RMF` (derived from EU
-   evidence via the crosswalk). A test-only `FIXTURE` native pack, registered per test,
-   proves the generic path; no other frameworks ship in this round.
+   evidence via the crosswalk); `ISO_IEC_42001` (native, `data/iso_42001.json`) joins
+   them (see the 2026-10 amendment). A test-only `FIXTURE` native pack, registered per
+   test, proves the generic path.
 2. **Targets are registry keys.** `SystemManifest.compliance_targets: list[str] | None`
    lists the frameworks to assess. Resolution: `check`/`gaps` flags replace the
    manifest; else `compliance_targets`; else `[compliance_target]`. Unknown keys are an
@@ -54,10 +56,13 @@ their signed artifacts must not notice the change.
    `excluded`, `report: GapReport`); `GapReport` itself is unchanged.
    `ScanStatusArtifact.framework_reports` is omitted from serialisation when `None`, so
    existing artifacts keep their bytes and signatures.
-9. **Legacy runs are frozen.** A run whose resolved targets are exactly `["EU_AI_ACT"]`
-   or `["NIST_AI_RMF"]` produces today's output byte for byte, pinned by golden
-   snapshots. `gap_report` and `nist_rmf_report` are always written as today and kept
-   permanently; `framework_reports` is added only for other target sets.
+9. **Legacy runs are frozen per data version.** A run whose resolved targets are exactly
+   `["EU_AI_ACT"]` or `["NIST_AI_RMF"]` produces the same output byte for byte while the
+   framework `data_version` and the rule-set version are unchanged, pinned by golden
+   snapshots. A deliberate data commit (new articles, sources or crosswalk rows) changes
+   the `data_version` and regenerates the goldens once, with a reviewed diff.
+   `gap_report` and `nist_rmf_report` are always written as today and kept permanently;
+   `framework_reports` is added only for other target sets.
 10. **Gating is opt-in.** `opencomplai.yaml` `gate: {frameworks: [...], fail_on:
     missing|partial}` (default `missing`), or `check --gate FW` (repeatable, replaces
     the file's list) and `--gate-fail-on`. A row of a gated framework fails when it is
@@ -79,7 +84,19 @@ their signed artifacts must not notice the change.
   visible to anyone reading the report.
 - New enum values reach JSON consumers only when a multi-framework run emits them.
 
+## Amendment 2026-10 (E-13)
+
+ISO/IEC 42001 is now a native pack: registry key `ISO_IEC_42001`, data in
+`data/iso_42001.json`, `DISCLAIMER_V2`. Rows are attestation-led: a provider's recorded
+attestation is the evidence, so a row reads Unverified until one exists. Only four rows
+also reference an existing probe (`risk_register` for Clause 6.1.2 and 6.1.3,
+`deployer_instructions` for A.8.2, `provider_qms_bundle` for A.6.2.7), and the worst
+status wins, so a file alone never makes them Met. Every row carries `source`, low
+`confidence` and `needs_founder_review: true`; titles are short headings, not standard
+text. `ComplianceTarget` gets no member, so the Annex IV dossier schema stays stable.
+DORA and EBA stay mapped-only, in a separate data file owned by SU-32b and SU-32c.
+
 ## Out of scope
 
-ISO/IEC 42001, Colorado and other framework packs; a document registry; per-framework
+Colorado and other framework packs; a document registry; per-framework
 vault columns.

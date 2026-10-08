@@ -12,10 +12,12 @@ from opencomplai_core.models import (
 )
 from opencomplai_core.signing import (
     SigningDomain,
+    SigningKeyError,
     _canonical_payload,
     canonical_json_bytes,
     domain_separated,
     generate_keypair,
+    resolve_key,
     sign_artifact,
     sign_bundle_bytes,
     verify_artifact,
@@ -289,3 +291,105 @@ def test_untagged_legacy_signatures_do_not_verify(tmp_path):
 
     for domain in SigningDomain:
         assert verify_bundle_bytes(body, legacy, pub, domain) is False
+
+
+def test_new_domain_values_are_ascii_and_unique():
+    values = [d.value for d in SigningDomain]
+    assert len(values) == 10
+    assert len(set(values)) == len(values)
+    assert all(v.isascii() and "\x00" not in v for v in values)
+
+
+def test_new_domains_are_mutually_exclusive(keypair: Path):
+    payload = b"one payload, many purposes"
+    for signed_under in SigningDomain:
+        sig = sign_bundle_bytes(payload, keypair / "signing.key", signed_under)
+        for checked_under in SigningDomain:
+            ok = verify_bundle_bytes(
+                payload, sig, keypair / "signing.pub", checked_under
+            )
+            assert ok is (checked_under is signed_under)
+
+
+def _b64_pem(key_dir: Path) -> str:
+    import base64
+
+    return base64.b64encode((key_dir / "signing.key").read_bytes()).decode()
+
+
+def test_resolve_key_prefers_env(tmp_path: Path, monkeypatch):
+    generate_keypair(tmp_path / "env")
+    generate_keypair(tmp_path / "disk")
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", _b64_pem(tmp_path / "env"))
+    assert (
+        resolve_key(tmp_path / "disk" / "signing.key")
+        == (tmp_path / "env" / "signing.key").read_bytes()
+    )
+
+
+def test_resolve_key_falls_back_to_file(keypair: Path, monkeypatch):
+    monkeypatch.delenv("SIGNING_KEY_PRIVATE", raising=False)
+    path = keypair / "signing.key"
+    assert resolve_key(path) == path.read_bytes()
+
+
+def test_resolve_key_fails_loudly_when_neither_exists(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("SIGNING_KEY_PRIVATE", raising=False)
+    for arg in (None, tmp_path / "missing.key"):
+        with pytest.raises(SigningKeyError) as exc:
+            resolve_key(arg)
+        assert isinstance(exc.value, FileNotFoundError)
+        assert "SIGNING_KEY_PRIVATE" in str(exc.value)
+        assert "opencomplai init" in str(exc.value)
+
+
+@pytest.mark.parametrize("bad", ["!!not-base64!!", "bm90IGEgcGVt"])
+def test_resolve_key_bad_env_does_not_fall_back_to_file(
+    keypair: Path, monkeypatch, bad: str
+):
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", bad)
+    with pytest.raises(SigningKeyError) as exc:
+        resolve_key(keypair / "signing.key")
+    assert "SIGNING_KEY_PRIVATE" in str(exc.value)
+    assert bad not in str(exc.value)
+
+
+def test_sign_bundle_bytes_still_works_with_env_key(
+    keypair: Path, tmp_path: Path, monkeypatch
+):
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", _b64_pem(keypair))
+    sig = sign_bundle_bytes(b"x", tmp_path / "nope.key", SigningDomain.BADGE)
+    assert verify_bundle_bytes(b"x", sig, keypair / "signing.pub", SigningDomain.BADGE)
+
+
+def _wrapped(b64: str) -> str:
+    return "\n".join(b64[i : i + 76] for i in range(0, len(b64), 76))
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        lambda b: _wrapped(b),  # GNU `base64` output, 76 columns
+        lambda b: _wrapped(b) + "\n",
+        lambda b: b + "\n",
+        lambda b: "  " + b + "\r\n",
+    ],
+    ids=["wrapped", "wrapped-trailing-newline", "trailing-newline", "padded-crlf"],
+)
+def test_env_key_tolerates_wrapping_and_trailing_whitespace(
+    keypair: Path, tmp_path: Path, monkeypatch, shape
+):
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", shape(_b64_pem(keypair)))
+    assert resolve_key(None) == (keypair / "signing.key").read_bytes()
+    sig = sign_bundle_bytes(b"x", tmp_path / "nope.key", SigningDomain.BADGE)
+    assert verify_bundle_bytes(b"x", sig, keypair / "signing.pub", SigningDomain.BADGE)
+
+
+def test_classification_acceptance_domain_is_exclusive(keypair: Path):
+    payload = b'{"record_type":"classification_acceptance"}'
+    sig = sign_bundle_bytes(
+        payload, keypair / "signing.key", SigningDomain.CLASSIFICATION_ACCEPTANCE
+    )
+    for domain in SigningDomain:
+        ok = verify_bundle_bytes(payload, sig, keypair / "signing.pub", domain)
+        assert ok is (domain is SigningDomain.CLASSIFICATION_ACCEPTANCE)

@@ -96,6 +96,17 @@ class FrameworkObjectRef:
 
 
 @dataclass
+class McpServerRef:
+    """An MCP server declared in a config file. Name only: command, args, env,
+    headers and url values often hold secrets and are never stored."""
+
+    name: str
+    location: str
+    scope: EvidenceScope
+    transport: str  # "stdio" | "remote" | "unknown"
+
+
+@dataclass
 class FeatureStore:
     repo_root: Path
     packages: list[ManifestPackage] = field(default_factory=list)
@@ -106,6 +117,7 @@ class FeatureStore:
     notebooks: list[NotebookRef] = field(default_factory=list)
     semantics: list[SemanticRef] = field(default_factory=list)
     framework_objects: list[FrameworkObjectRef] = field(default_factory=list)
+    mcp_servers: list[McpServerRef] = field(default_factory=list)
     summary: dict[str, int] = field(default_factory=dict)
 
 

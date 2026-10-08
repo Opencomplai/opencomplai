@@ -4,9 +4,13 @@ name: opencomplai
 
 # ---------------------------------------------------------------------------
 # Networks
-# internal: isolated — no outbound internet access (all services except egress-proxy)
+# internal: isolated — no outbound internet access (a service attached only to
+#           this network has none)
 # external: outbound access — only egress-proxy is attached
-# frontend: host-accessible — only gateway-api is attached (enables host port publishing)
+# frontend: host-accessible — gateway-api, prometheus and grafana are attached
+#           (enables host port publishing; see OBSERVABILITY_BIND_ADDR below).
+#           It is an ordinary, non-internal bridge, so those three services
+#           also have outbound access of their own
 # ---------------------------------------------------------------------------
 networks:
   internal:
@@ -32,7 +36,8 @@ volumes:
 services:
 
   # -------------------------------------------------------------------------
-  # PostgreSQL — shared relational store for risk-engine and evidence-vault
+  # PostgreSQL — relational store for evidence-vault. risk-engine keeps no state
+  # of its own. Internal-only; no host port.
   # -------------------------------------------------------------------------
   postgres:
     image: postgres:16-alpine
@@ -219,7 +224,8 @@ services:
 
   # -------------------------------------------------------------------------
   # gateway-api — REST API gateway (Node.js/TypeScript/Fastify)
-  # The only service exposed to the host network (port 8080).
+  # The only application service exposed to the host (port 8080, all
+  # interfaces, auth-gated). prometheus and grafana below are operator UIs.
   # -------------------------------------------------------------------------
   gateway-api:
     build:
@@ -353,8 +359,9 @@ services:
 
   # -------------------------------------------------------------------------
   # prometheus — metrics scraper for all services
-  # Only reachable on the internal network. Mapped to 9090 on the host for
-  # local debugging when PROMETHEUS_HOST_PORT is set.
+  # Always published on the host (PROMETHEUS_HOST_PORT, default 9090), on
+  # loopback only unless OBSERVABILITY_BIND_ADDR says otherwise. Prometheus has
+  # no authentication of its own.
   # -------------------------------------------------------------------------
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -369,7 +376,9 @@ services:
       - internal
       - frontend
     ports:
-      - "${PROMETHEUS_HOST_PORT:-9090}:9090"
+      # Loopback by default: this UI is unauthenticated. To reach it from other
+      # hosts set OBSERVABILITY_BIND_ADDR=0.0.0.0 (applies to grafana too).
+      - "${OBSERVABILITY_BIND_ADDR:-127.0.0.1}:${PROMETHEUS_HOST_PORT:-9090}:9090"
     depends_on:
       gateway-api:
         condition: service_healthy
@@ -377,8 +386,10 @@ services:
 
   # -------------------------------------------------------------------------
   # grafana — operator dashboards (Phase 15)
-  # Default credentials: anonymous viewer access. Provisioning files live in
-  # infra/compose/grafana/provisioning/.
+  # Anonymous Viewer access is on and the admin login is Grafana's stock
+  # admin/admin, so the host port is loopback-only by default (see
+  # OBSERVABILITY_BIND_ADDR). Change the admin password before exposing it.
+  # Provisioning files live in infra/compose/grafana/provisioning/.
   # -------------------------------------------------------------------------
   grafana:
     image: grafana/grafana:11.1.0
@@ -393,7 +404,7 @@ services:
       - internal
       - frontend
     ports:
-      - "${GRAFANA_HOST_PORT:-3001}:3000"
+      - "${OBSERVABILITY_BIND_ADDR:-127.0.0.1}:${GRAFANA_HOST_PORT:-3001}:3000"
     depends_on:
       - prometheus
     restart: unless-stopped

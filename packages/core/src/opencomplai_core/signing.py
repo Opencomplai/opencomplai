@@ -4,9 +4,13 @@ Ed25519 signing helpers for ScanStatusArtifact and dossier checksums.
 OSS mode: signature=None (unsigned).
 Pro/Enterprise: sign_artifact() produces a base64-encoded Ed25519 signature.
 
-Key loading order (runtime signing functions only):
+Key loading order (``resolve_key``, used by the runtime signing functions):
   1. SIGNING_KEY_PRIVATE env var — base64-encoded PEM (used on Vercel / secrets manager)
   2. key_path argument — filesystem path (used by Docker / local setup)
+  Neither present: ``SigningKeyError`` (never a silent unsigned result).
+
+Signing domains cover scan-status artifacts, dossier bundles, badges, approval
+tokens and the shared signed logs, attestations and deployer packs.
 """
 
 from __future__ import annotations
@@ -30,9 +34,10 @@ class SigningDomain(StrEnum):
     """
     What a signature is *for*.
 
-    One Ed25519 keypair signs four unrelated message formats in this system:
-    scan-status artifacts, Annex IV dossier bundles, compliance badges, and
-    (elsewhere) a KMS-signed bundle key. Nothing in the signed bytes said which
+    One Ed25519 keypair signs several unrelated message formats in this system:
+    scan-status artifacts, Annex IV dossier bundles, compliance badges,
+    approval tokens, signed hash-chain logs (oversight, agent, incident),
+    agent attestations and deployer packs. Nothing in the signed bytes said which
     was which, and that was not theoretical — a signature produced by
     ``opencomplai check --sign`` verified, unmodified, as a valid
     compliance-badge signature for the same artifact, because both sides
@@ -48,6 +53,13 @@ class SigningDomain(StrEnum):
     DOSSIER_BUNDLE = "annex-iv-dossier-bundle"
     BADGE = "compliance-badge"
     APPROVAL_TOKEN = "hitl-approval-token"
+    OVERSIGHT_LOG = "oversight-log"
+    AGENT_LOG = "agent-log"
+    INCIDENT_LOG = "incident-log"
+    ATTESTATION = "agent-attestation"
+    DEPLOYER_PACK = "deployer-pack"
+    # Committed classification-acceptance and trap-approval records.
+    CLASSIFICATION_ACCEPTANCE = "classification-acceptance"
 
 
 def domain_separated(domain: SigningDomain, payload: bytes) -> bytes:
@@ -99,17 +111,46 @@ def generate_keypair(key_dir: Path) -> str:
     return str(uuid.uuid4())
 
 
-def _load_private_key_bytes(key_path: Path) -> bytes:
-    """
-    Load private key PEM bytes.
+class SigningKeyError(FileNotFoundError):
+    """No usable signing key. Subclasses FileNotFoundError for old ``except`` sites."""
 
-    Checks SIGNING_KEY_PRIVATE env var first (base64-encoded PEM for Vercel /
-    secrets-manager deployments); falls back to reading key_path from disk.
+
+def resolve_key(key_path: Path | None = None) -> bytes:
     """
+    Return private-key PEM bytes, or raise ``SigningKeyError``.
+
+    Order: ``SIGNING_KEY_PRIVATE`` env (base64 PEM), then ``key_path`` if the file
+    exists. Whitespace in the env value (line wraps, trailing newline) is ignored.
+    A non-empty env value that is not a valid Ed25519 PEM raises instead
+    of falling through to the file, so a broken secret is never masked by a stale
+    local key. Key material is never placed in a message.
+    """
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
     env_key = os.environ.get("SIGNING_KEY_PRIVATE")
     if env_key:
-        return base64.b64decode(env_key)
-    return key_path.read_bytes()
+        try:
+            pem = base64.b64decode("".join(env_key.split()), validate=True)
+            key = serialization.load_pem_private_key(pem, password=None)
+            if not isinstance(key, Ed25519PrivateKey):
+                raise ValueError("not an Ed25519 key")
+        except Exception:
+            raise SigningKeyError(
+                "SIGNING_KEY_PRIVATE is set but is not a base64-encoded Ed25519 PEM"
+            ) from None
+        return pem
+    if key_path is not None and key_path.is_file():
+        return key_path.read_bytes()
+    raise SigningKeyError(
+        "No signing key: set SIGNING_KEY_PRIVATE (base64 PEM) or provide a key "
+        "file (run `opencomplai init` to create one)"
+    )
+
+
+def _load_private_key_bytes(key_path: Path) -> bytes:
+    """Load private key PEM bytes (see ``resolve_key``)."""
+    return resolve_key(key_path)
 
 
 def sign_artifact(artifact: ScanStatusArtifact, key_path: Path) -> str:
@@ -151,9 +192,9 @@ def sign_bundle_bytes(
     remove.
 
     Returned signature is base64-encoded, and verifies only via
-    ``verify_bundle_bytes`` with the *same* domain. This is the asymmetric path
-    that Pro/Enterprise dossiers use; OSS falls back to HMAC (no public key
-    needed) or remains unsigned.
+    ``verify_bundle_bytes`` with the *same* domain. This is the Ed25519 path every
+    bundle domain signs through; there is no symmetric fallback, and a dossier
+    with no Ed25519 key stays unsigned.
     """
     from cryptography.hazmat.primitives import serialization
 

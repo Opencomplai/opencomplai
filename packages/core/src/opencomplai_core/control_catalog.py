@@ -29,7 +29,19 @@ class ControlCatalogEntry:
     #: Mapped (not evaluated) NIST AI RMF 1.0 function/category for this
     #: article, from the same crosswalk. None when no row exists.
     nist_ai_rmf_subcategory: str | None = None
+    #: Provenance of this row's title and TTL. Unset on the older article rows.
+    source: str | None = None
+    #: "low" or "medium" when the row carries provenance; unset otherwise.
+    confidence: str | None = None
+    #: True when the row awaits founder or counsel confirmation.
+    needs_founder_review: bool = False
 
+
+# The TTLs of Art. 26, 49, 72 and 73 are placeholders; those rows carry their
+# own provenance fields (source, confidence, review flag) set from this text.
+_TTL_PLACEHOLDER_SOURCE = (
+    "heuristic (no legal source): placeholder evidence freshness window, unverified"
+)
 
 # Every article key emitted by gap_report.py / data/gap_article_map.json must
 # appear here (extras are fine; omissions are not — see
@@ -91,6 +103,13 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
         title="Responsibilities along the AI value chain / substantial modification",
         default_ttl_days=180,
     ),
+    "Art. 26": ControlCatalogEntry(
+        title="Obligations of deployers of high-risk AI systems",
+        default_ttl_days=180,
+        source=_TTL_PLACEHOLDER_SOURCE,
+        confidence="low",
+        needs_founder_review=True,
+    ),
     "Art. 27": ControlCatalogEntry(
         title="Fundamental rights impact assessment",
         default_ttl_days=180,
@@ -107,6 +126,13 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
         title="CE marking",
         default_ttl_days=365,
     ),
+    "Art. 49": ControlCatalogEntry(
+        title="Registration in the EU database",
+        default_ttl_days=365,
+        source=_TTL_PLACEHOLDER_SOURCE,
+        confidence="low",
+        needs_founder_review=True,
+    ),
     "Art. 50": ControlCatalogEntry(
         title="Transparency obligations for certain AI systems",
         default_ttl_days=180,
@@ -118,6 +144,20 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
     "Art. 55": ControlCatalogEntry(
         title="GPAI systemic-risk obligations",
         default_ttl_days=180,
+    ),
+    "Art. 72": ControlCatalogEntry(
+        title="Post-market monitoring",
+        default_ttl_days=90,
+        source=_TTL_PLACEHOLDER_SOURCE,
+        confidence="low",
+        needs_founder_review=True,
+    ),
+    "Art. 73": ControlCatalogEntry(
+        title="Reporting of serious incidents",
+        default_ttl_days=180,
+        source=_TTL_PLACEHOLDER_SOURCE,
+        confidence="low",
+        needs_founder_review=True,
     ),
 }
 
@@ -174,6 +214,9 @@ def _framework_pack_entries() -> dict[str, ControlCatalogEntry]:
         requirement_id: ControlCatalogEntry(
             title=config.get("title", ""),
             default_ttl_days=config.get("default_ttl_days"),
+            source=config.get("source"),
+            confidence=config.get("confidence"),
+            needs_founder_review=bool(config.get("needs_founder_review")),
         )
         for pack in FRAMEWORKS.values()
         if pack.requirements is not None and pack.id != EU_AI_ACT

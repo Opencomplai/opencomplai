@@ -51,7 +51,7 @@ Key fields to inspect:
 | `failed_controls` | IDs of failing controls — look these up in `rules.py` |
 | `evidence_hashes` | Empty in local mode; populated in service-backed mode |
 | `pending_verifications_count` | > 0 means the service stack has pending ground-truth tasks |
-| `signature` | `null` in unsigned OSS mode; base64 string if `--sign` was passed |
+| `signature` | `null` when unsigned, including `--sign-if-available` without a key (a warning is printed); base64 string when signed |
 
 ### Run the rule engine directly (SDK)
 
@@ -129,6 +129,10 @@ All services should be `running`. If any show `exited`, check their logs.
 | `EGRESS_BLOCKED` (egress-proxy) | Outbound request was blocked; expected in air-gap mode |
 | `SignatureVerificationError` | Artifact signature does not match the registered signing key |
 
+### Signature did not survive push
+
+The artifact must come from a `check` that stamps `timestamp`, `policy_bundle_version` and `commit_ref` before signing. Re-run `opencomplai check --sign` and push that fresh artifact without editing it.
+
 ### Verify the evidence ledger
 
 === "macOS / Linux"
@@ -168,10 +172,12 @@ Expected output:
 Expected output:
 
 ```
-opencomplai          0.1.0-dev
-opencomplai-cli      0.1.0-dev
-opencomplai-core     0.1.0-dev
+opencomplai          <version>
+opencomplai-cli      <version>
+opencomplai-core     <version>
 ```
+
+Each package prints the version you installed.
 
 ### Check the rule registry
 

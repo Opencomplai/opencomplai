@@ -1,0 +1,94 @@
+{
+  "scan_id": "scan-sample",
+  "system_id": "sys-agents-sample",
+  "commit_ref": "abc123",
+  "scanner_version": "0",
+  "input_digest": "sha256:a",
+  "config_hash": "sha256:b",
+  "detector_versions": {},
+  "declared_purpose": "internal support triage",
+  "declared_categories": [],
+  "evidence": [
+    {
+      "evidence_id": "ev0",
+      "evidence_kind": "import",
+      "category": "agent_framework",
+      "token_hash": "h",
+      "token_label": "langgraph",
+      "locations": [
+        "src/app.py:1"
+      ],
+      "scope": "prod",
+      "reachability": "reachable_entrypoint",
+      "detector_id": "d",
+      "detector_version": "1",
+      "redaction_level": "none",
+      "rationale_code": "r",
+      "confidence": 0.9
+    },
+    {
+      "evidence_id": "ev1",
+      "evidence_kind": "import",
+      "category": "ai_sdk",
+      "token_hash": "h",
+      "token_label": "llamaindex",
+      "locations": [
+        "src/app.py:1"
+      ],
+      "scope": "prod",
+      "reachability": "reachable_entrypoint",
+      "detector_id": "d",
+      "detector_version": "1",
+      "redaction_level": "none",
+      "rationale_code": "r",
+      "confidence": 0.9
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "f0",
+      "signal_category": "agent_framework",
+      "evidence_ids": [
+        "ev0"
+      ],
+      "locations": [
+        "src/app.py:1"
+      ],
+      "mapped_taxonomy": [],
+      "strength": 1.0,
+      "scope": "prod",
+      "reachability": "reachable_entrypoint",
+      "confidence_rationale": [],
+      "reviewer_prompt": ""
+    },
+    {
+      "finding_id": "f1",
+      "signal_category": "ai_sdk",
+      "evidence_ids": [
+        "ev1"
+      ],
+      "locations": [
+        "src/app.py:1"
+      ],
+      "mapped_taxonomy": [],
+      "strength": 1.0,
+      "scope": "prod",
+      "reachability": "reachable_entrypoint",
+      "confidence_rationale": [],
+      "reviewer_prompt": ""
+    }
+  ],
+  "detected_categories": [],
+  "discrepancies": [],
+  "score_breakdown": {},
+  "severity": "none",
+  "feature_summary": {},
+  "cache_summary": {},
+  "skipped_paths": [],
+  "limits_hit": [],
+  "warnings": [],
+  "detector_errors": [],
+  "baseline_ref": null,
+  "generated_at": "2026-07-11T00:00:00Z",
+  "report_hash": "sha256:c"
+}

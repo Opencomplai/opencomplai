@@ -60,7 +60,7 @@
 {{rule_results_table}}
 
 <h2>Gap report</h2>
-{{gap_report_table}}{{framework_reports_section}}
+{{gap_report_table}}{{framework_reports_section}}{{regulatory_timeline_section}}
 
 <h2>Eval summary</h2>
 {{eval_summary_block}}
@@ -73,14 +73,13 @@
 (function () {
   const statusFilter = document.getElementById('statusFilter');
   const textFilter = document.getElementById('textFilter');
-  const table = document.querySelector('#gap-table');
-  if (!table) return;
+  const tables = document.querySelectorAll('#gap-table, table.gap-table');
+  if (!tables.length) return;
   function apply() {
     const status = (statusFilter.value || '').toUpperCase();
     const q = (textFilter.value || '').toLowerCase();
-    for (const row of table.querySelectorAll('tbody tr')) {
-      const cells = row.querySelectorAll('td');
-      const rowStatus = (cells[1]?.textContent || '').trim().toUpperCase();
+    for (const table of tables) for (const row of table.querySelectorAll('tbody tr')) {
+      const rowStatus = (row.querySelector('td[class^="status-"]')?.textContent || '').trim().toUpperCase();
       const hay = row.textContent.toLowerCase();
       const okStatus = !status || rowStatus === status;
       const okText = !q || hay.includes(q);

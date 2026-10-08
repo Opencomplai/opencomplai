@@ -43,13 +43,14 @@ Have an idea? [Open a discussion](https://github.com/Opencomplai/opencomplai/dis
 
 ---
 
-## Roadmap: JS/TS repository scanning (design spike, not implemented)
+## JS/TS repository scanning (regex extractor; real parser is a design spike)
 
-`opencomplai scan` only extracts AI-capability signals from Python today. A design
-spike for extending the scanner to JavaScript/TypeScript repositories exists at
-`docs/design/js-ts-scanning-spike.md` — it documents an architecture direction, not a
-shipped feature. If you're interested in contributing this, start there; do not expect
-`opencomplai scan` to detect anything in a `.js`/`.ts` file yet.
+`opencomplai scan` extracts imports and model-call sites from `.js`, `.jsx`, `.ts` and
+`.tsx` files with a regex extractor (static `import`, `export ... from`, literal
+`require()` and `import()`). Computed imports are invisible, and it is not a parser. A
+design spike for a real parser exists at `docs/design/js-ts-scanning-spike.md` — it
+documents an architecture direction, not a shipped feature. If you're interested in
+contributing the parser work, start there.
 
 ---
 

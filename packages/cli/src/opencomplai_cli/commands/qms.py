@@ -17,16 +17,19 @@ sub-typer, so a module-level import back into `main` would be circular.
 from __future__ import annotations
 
 import json
+import sys
+from dataclasses import asdict
 from datetime import UTC, datetime
 from enum import StrEnum
 from pathlib import Path
 
 import typer
 from opencomplai_core.control_catalog import get_catalog
-from opencomplai_core.models import CorroborationReport, EvalReport
+from opencomplai_core.models import CorroborationReport, EvalReport, SystemManifest
 from opencomplai_core.qms_document import (
     build_qms_document,
     render_qms_document_markdown,
+    scaffold_qms,
 )
 from rich.table import Table
 
@@ -88,12 +91,44 @@ def generate_cmd(
         "-o",
         help="Path to write the rendered Markdown document",
     ),
+    manifest_file: Path | None = typer.Option(
+        None,
+        "--manifest",
+        "-m",
+        help="Optional system manifest JSON; fills clauses (e), (h) and (i) "
+        "from its declared fields, lists EN 18286 with a cross-check against "
+        "its harmonised_standards, and adds the micro-enterprise note when "
+        "organisation_size is micro. Absent fields stay blank.",
+    ),
+    scaffold: bool = typer.Option(
+        False,
+        "--scaffold",
+        help="First write starter clause files under docs/qms/ (never "
+        "overwrites an existing file)",
+    ),
     output_format: OutputFormat = typer.Option(OutputFormat.human, "--output-format"),
 ) -> None:
     """Generate a filled Art. 17(1)(a)-(m) QMS document: per-clause evidence
     status (present/missing/partial) for each of the 13 sub-points, not a
-    single article-level verdict."""
+    single article-level verdict. With --scaffold, writes missing starter
+    clause files first (they read as Unfilled until edited)."""
     from opencomplai_cli import main as _main
+
+    manifest: SystemManifest | None = None
+    if manifest_file is not None:
+        if not manifest_file.exists():
+            _main.err_console.print(
+                f"[red]Error:[/red] manifest file not found: {manifest_file}"
+            )
+            _main.err_console.print("Run [bold]opencomplai init[/bold] first.")
+            sys.exit(2)
+        try:
+            manifest = SystemManifest.model_validate(
+                json.loads(manifest_file.read_text())
+            )
+        except Exception as e:
+            _main.err_console.print(f"[red]Validation error:[/red] {e}")
+            sys.exit(2)
 
     scan_report: CorroborationReport | None = None
     if scan_report_file.exists():
@@ -118,12 +153,21 @@ def generate_cmd(
             )
 
     resolved_repo_root = repo_root.resolve()
+    scaffolded = None
+    if scaffold:
+        if not resolved_repo_root.is_dir():
+            _main.err_console.print(
+                f"[red]Error:[/red] --repo-root {repo_root} is not a directory"
+            )
+            raise typer.Exit(2)
+        scaffolded = scaffold_qms(resolved_repo_root)
     doc = build_qms_document(
         resolved_repo_root,
         system_id=system_id,
         commit_ref=commit_ref,
         generated_at=datetime.now(UTC).isoformat(),
         evidence_hashes=_evidence_hashes(scan_report, eval_report),
+        manifest=manifest,
     )
 
     markdown = render_qms_document_markdown(doc)
@@ -140,19 +184,36 @@ def generate_cmd(
                     "title": c.title,
                     "status": c.status.value,
                     "status_label": c.status_label,
+                    "confidence": c.confidence,
                     "evidence_ref": c.evidence_ref,
                     "rationale": c.rationale,
+                    "manifest_content": c.manifest_content,
                 }
                 for c in doc.clauses
             ],
+            "standards": [asdict(s) for s in doc.standards],
+            "profile_notes": [asdict(n) for n in doc.profile_notes],
             "present_count": doc.present_count,
             "missing_count": doc.missing_count,
+            "unfilled_count": doc.unfilled_count,
             "unverified_count": doc.unverified_count,
             "evidence_hashes": doc.evidence_hashes,
             "output_file": str(output_file),
         }
+        if scaffolded is not None:
+            payload["scaffold"] = {
+                "created": [e.path for e in scaffolded if e.action == "created"],
+                "skipped": [e.path for e in scaffolded if e.action == "skipped"],
+            }
         _main.console.print_json(json.dumps(payload))
         return
+
+    if scaffolded is not None:
+        created = sum(e.action == "created" for e in scaffolded)
+        _main.console.print(
+            f"Scaffold: {created} created, {len(scaffolded) - created} skipped "
+            "(existing files untouched)"
+        )
 
     catalog_entry = get_catalog().get("Art. 17")
     title = catalog_entry.title if catalog_entry else "Quality management system"
@@ -170,8 +231,14 @@ def generate_cmd(
     _main.console.print(table)
 
     summary = f"{doc.present_count} present / {doc.missing_count} missing"
+    if doc.unfilled_count:
+        summary += f" / {doc.unfilled_count} unfilled"
     if doc.unverified_count:
         summary += f" / {doc.unverified_count} unverified"
     _main.console.print(
         f"\n[bold]{summary}[/bold] (of 13 clauses) -- wrote {output_file}\n"
     )
+    for note in doc.profile_notes:
+        _main.console.print(
+            f"[yellow]Note (needs founder review):[/yellow] {note.text}\n"
+        )

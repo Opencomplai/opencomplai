@@ -89,3 +89,13 @@ def test_needs_preload_matches_what_resolve_actually_requires():
     for model_id, spec in MODEL_CATALOG.items():
         if spec.runtime == "llama-cpp":
             assert spec.needs_preload is True, model_id
+
+
+def test_codebert_onnx_entry_is_labelled_as_the_deterministic_matcher():
+    # The id stays "codebert-onnx" for config/annotation compatibility, but
+    # the backend is IntentClassifier: no CodeBERT weights, no ONNX session.
+    # Its user-visible labels must not claim otherwise.
+    spec = MODEL_CATALOG["codebert-onnx"]
+    assert spec.runtime != "onnxruntime"
+    assert "codebert" not in spec.display_name.lower()
+    assert spec.license != "MIT"

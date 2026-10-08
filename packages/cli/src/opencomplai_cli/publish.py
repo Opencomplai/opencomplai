@@ -356,9 +356,9 @@ def prepare_dossier_envelope(
       disk -- that's a presentation choice, not part of the bundle's
       identity.
     * ``signed_by`` -- self-describing ``"cli:<signature_status>"`` (e.g.
-      ``cli:unsigned`` in OSS default mode, ``cli:hmac-local`` /
-      ``cli:ed25519`` when a local signing key is configured via
-      ``generate_dossier``) rather than a fabricated key id. Mirrors
+      ``cli:unsigned`` when ``generate_dossier`` had no Ed25519 key,
+      ``cli:ed25519`` when it signed; a legacy ``cli:hmac-local`` in an old
+      dossier file passes through, nothing writes it now) rather than a fabricated key id. Mirrors
       ``dashboard_ingest.routes``'s own ``"api-key:{key_id}"`` stamping
       convention for a non-cryptographic attestation of provenance.
     * ``policy_bundle_version`` -- same ``"cli-<version>"`` stand-in as

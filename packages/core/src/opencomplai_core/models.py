@@ -8,9 +8,10 @@ elsewhere.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime
 from enum import StrEnum
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import (
     BaseModel,
@@ -18,7 +19,13 @@ from pydantic import (
     Field,
     SerializerFunctionWrapHandler,
     model_serializer,
+    model_validator,
 )
+
+from opencomplai_core.agent_inventory import AgentInventory
+from opencomplai_core.incident import IncidentContact
+from opencomplai_core.serialization import OMIT_EMPTY, OMIT_NONE, omit_by_table
+from opencomplai_core.summaries import ArtifactSummaries
 
 # ---------------------------------------------------------------------------
 # Enumerations
@@ -85,10 +92,14 @@ class ComplianceTarget(StrEnum):
     re-projecting that same EU AI Act evidence through
     `data/framework_crosswalk.json` into per-subcategory NIST AI RMF 1.0
     verdicts (`nist_rmf_report.py`). Coverage is partial: a subcategory with
-    no crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 is
-    mapped only, not a target: it has no member here and is surfaced solely
-    as a per-article reference (see `control_catalog` and
-    `opencomplai gaps`'s Mapped column), never as an assessment target.
+    no crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 has
+    no member here, because a new member would change the published dossier
+    schema: it is the `ISO_IEC_42001` native framework pack in
+    `frameworks.py`, attestation-led (partial, unreviewed), selected through
+    `compliance_targets` or `--target ISO_IEC_42001`. Its per-article clause
+    citation (`control_catalog`, the Mapped column of `opencomplai gaps`)
+    stays a reference, not a verdict. Nothing here certifies ISO/IEC 42001
+    conformity.
     """
 
     EU_AI_ACT = "EU_AI_ACT"
@@ -179,6 +190,18 @@ class Attestation(BaseModel):
     attested_at: _NonEmptyStr = Field(..., description="ISO 8601 date or timestamp")
 
 
+class ImportedFieldEvidence(BaseModel):
+    """Where an imported manifest value came from. Provider-declared, not verified."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    source: _NonEmptyStr
+    status: Literal["attested"]
+    source_file: _NonEmptyStr = Field(..., description="Basename only, never a path")
+    card_sha256: _NonEmptyStr
+    imported_on: _NonEmptyStr = Field(..., description="ISO 8601 date")
+
+
 class FrameworkInputs(BaseModel):
     """Per-framework compliance declarations carried in the manifest.
 
@@ -196,6 +219,84 @@ class FrameworkInputs(BaseModel):
         default_factory=dict,
         description="Requirement id -> provider attestation that it is met",
     )
+
+
+class RecordKeeping(BaseModel):
+    """Declared Art. 12 record-keeping posture (the declarable half only).
+
+    Mirrors the declarable fields of `dossier.ArticleTwelveRecordKeeping`; the
+    ledger root hash is measured, never declared, so it is not here.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    logging_enabled: bool = False
+    log_retention_days: int | None = Field(None, gt=0)
+    evidence_vault_enabled: bool = False
+
+
+class OversightRole(BaseModel):
+    """One person or team that oversees the system (Art. 14), as declared."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    role: _NonEmptyStr
+    authority: str | None = Field(None, description="What this role may decide.")
+    can_intervene: bool = False
+    conditions: list[str] = Field(
+        default_factory=list, description="When this role must act or stop the system."
+    )
+    training_ref: str | None = Field(
+        None, description="Pointer to training evidence; never opened or verified."
+    )
+
+
+class HumanOversight(BaseModel):
+    """Declared human-oversight arrangement; a statement, never verified."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    roles: list[OversightRole] = Field(..., min_length=1)
+    escalation: str | None = None
+    evidence_refs: list[str] = Field(
+        default_factory=list, description="Paths or URLs; never opened or checked."
+    )
+
+    @model_validator(mode="after")
+    def _no_duplicate_roles(self) -> HumanOversight:
+        seen: set[str] = set()
+        for item in self.roles:
+            key = item.role.strip().casefold()
+            if key in seen:
+                raise ValueError(f"duplicate oversight role: {item.role!r}")
+            seen.add(key)
+        return self
+
+
+# Add a row here to omit a new optional field when it is unset.
+_MANIFEST_OMIT = {
+    "compliance_targets": OMIT_NONE,
+    "framework_inputs": OMIT_EMPTY,
+    "operator_roles": OMIT_EMPTY,
+    "organisation_size": OMIT_NONE,
+    "record_keeping": OMIT_NONE,
+    "agent_inventory": OMIT_NONE,
+    "human_oversight": OMIT_NONE,
+    "incident_contacts": OMIT_EMPTY,
+    "provider_contact": OMIT_NONE,
+    "foreseeable_misuse": OMIT_EMPTY,
+    "input_data_specifications": OMIT_NONE,
+    "predetermined_changes": OMIT_EMPTY,
+    "expected_lifetime_and_maintenance": OMIT_NONE,
+    "log_interpretation": OMIT_NONE,
+    "imported_evidence": OMIT_EMPTY,
+}
+
+
+def unknown_manifest_keys(raw: Mapping[str, Any]) -> list[str]:
+    """Sorted top-level keys of a manifest dict that `SystemManifest` does not
+    define (pydantic silently drops them, so a typo would otherwise vanish)."""
+    return sorted(k for k in raw if k not in SystemManifest.model_fields)
 
 
 class SystemManifest(BaseModel):
@@ -359,6 +460,60 @@ class SystemManifest(BaseModel):
         None,
         description="Reference to the EU AI Act applicability checker session, if run.",
     )
+    operator_roles: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Every operator role the checker found; `operator_role` stays the "
+            "primary and is always written. Omitted when empty."
+        ),
+    )
+    organisation_size: Literal["micro", "small", "medium", "large"] | None = Field(
+        None,
+        description="Organisation size class; nothing computes from it yet.",
+    )
+    record_keeping: RecordKeeping | None = Field(
+        None, description="Declared Art. 12 record-keeping posture, if any."
+    )
+    agent_inventory: AgentInventory | None = Field(
+        None,
+        description="Declared agent inventory (agents, tools, mandate, delegation); omitted when absent.",
+    )
+    human_oversight: HumanOversight | None = Field(
+        None,
+        description="Structured human-oversight declaration (Art. 14); omitted when absent.",
+    )
+    incident_contacts: list[IncidentContact] = Field(
+        default_factory=list,
+        description="Who to notify for an incident (authority, deployer, ...); omitted when empty.",
+    )
+    provider_contact: str | None = Field(
+        None,
+        description="Provider identity and contact details (Art. 13(3)(a)); omitted when unset.",
+    )
+    foreseeable_misuse: list[str] = Field(
+        default_factory=list,
+        description="Known or foreseeable circumstances, including misuse, that may lead to risk (Art. 13(3)(b)(iii)); omitted when empty.",
+    )
+    input_data_specifications: str | None = Field(
+        None,
+        description="Specifications for the input data (Art. 13(3)(b)(vi)); omitted when unset.",
+    )
+    predetermined_changes: list[str] = Field(
+        default_factory=list,
+        description="Changes to the system and its performance pre-determined at the initial conformity assessment (Art. 13(3)(c)); omitted when empty.",
+    )
+    expected_lifetime_and_maintenance: str | None = Field(
+        None,
+        description="Expected lifetime and necessary maintenance and care measures (Art. 13(3)(e)); omitted when unset.",
+    )
+    log_interpretation: str | None = Field(
+        None,
+        description="How to collect, store and interpret the logs (Art. 13(3)(f)); omitted when unset.",
+    )
+    imported_evidence: dict[str, ImportedFieldEvidence] = Field(
+        default_factory=dict,
+        description="Manifest field -> provenance of a value imported from a model card; omitted when empty.",
+    )
 
     @model_serializer(mode="wrap")
     def _omit_unset_framework_fields(
@@ -366,12 +521,11 @@ class SystemManifest(BaseModel):
     ) -> dict[str, Any]:
         # A manifest that never used the multi-framework fields must serialise
         # to the same bytes as before they existed.
-        data = handler(self)
-        if self.compliance_targets is None:
-            data.pop("compliance_targets", None)
-        if not self.framework_inputs:
-            data.pop("framework_inputs", None)
-        return data
+        return omit_by_table(self, handler(self), _MANIFEST_OMIT)
+
+
+# Add a row here to omit a new optional field when it is unset.
+_CHECKER_REF_OMIT = {"obligation_ids": OMIT_EMPTY, "rationale": OMIT_EMPTY}
 
 
 class CheckerSessionRef(BaseModel):
@@ -395,6 +549,20 @@ class CheckerSessionRef(BaseModel):
             "`check` fails a prohibited or high-risk verdict."
         ),
     )
+    obligation_ids: list[str] = Field(
+        default_factory=list,
+        description="Obligation ids the checker session found applicable.",
+    )
+    rationale: list[str] = Field(
+        default_factory=list,
+        description="Why each role or obligation applies.",
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_fields(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), _CHECKER_REF_OMIT)
 
 
 class ScanRequest(BaseModel):
@@ -409,6 +577,19 @@ class ScanRequest(BaseModel):
     trigger: str = Field(..., description="install | ci_commit | manual_check")
     scan_mode: str = Field(..., description="ci | local | airgap")
     policy_bundle_version: str | None = None
+
+
+# Add a row here to omit a new optional field when it is unset.
+_ARTIFACT_OMIT = {
+    "framework_reports": OMIT_NONE,
+    "rule_set_version": OMIT_NONE,
+    "cli_version": OMIT_NONE,
+    "schema_version": OMIT_NONE,
+    "manifest_sha256": OMIT_NONE,
+    "timestamp": OMIT_NONE,
+    "policy_bundle_version": OMIT_NONE,
+    "summaries": OMIT_NONE,
+}
 
 
 class ScanStatusArtifact(BaseModel):
@@ -464,6 +645,16 @@ class ScanStatusArtifact(BaseModel):
             "EU_AI_ACT or exactly NIST_AI_RMF; omitted from the JSON otherwise"
         ),
     )
+    # Provenance stamps; omitted while None so legacy bytes and signatures hold.
+    rule_set_version: str | None = None
+    cli_version: str | None = None
+    schema_version: str | None = None
+    manifest_sha256: str | None = None
+    timestamp: str | None = None
+    policy_bundle_version: str | None = None
+    summaries: ArtifactSummaries | None = Field(
+        None, description="Closed leaf-only summaries block; omitted when None"
+    )
 
     @model_serializer(mode="wrap")
     def _omit_unset_framework_reports(
@@ -471,10 +662,7 @@ class ScanStatusArtifact(BaseModel):
     ) -> dict[str, Any]:
         # An artifact without framework reports must serialise, and so be
         # signed, byte-for-byte as it was before the field existed.
-        data = handler(self)
-        if self.framework_reports is None:
-            data.pop("framework_reports", None)
-        return data
+        return omit_by_table(self, handler(self), _ARTIFACT_OMIT)
 
 
 class LedgerEvent(BaseModel):
@@ -795,6 +983,14 @@ class ControlInstance(BaseModel):
     )
     waiver_rationale: str | None = Field(
         None, description="Rationale recorded when state is WAIVED"
+    )
+    waiver_source: Literal["exclusion", "manual"] | None = Field(
+        None,
+        description=(
+            "Where a WAIVED state came from: a manifest exclusion (lifted when the "
+            "exclusion is removed) or a manual waiver. None = unknown/legacy, "
+            "treated as manual"
+        ),
     )
 
 
@@ -1135,6 +1331,7 @@ class ArticleGapSource(StrEnum):
     ARTIFACT = "artifact"
     ATTESTATION = "attestation"  # provider attestation from the manifest
     CROSSWALK = "crosswalk"  # re-projected from another framework's rows
+    MANIFEST = "manifest"  # derived from a manifest field
 
 
 class ConfidenceLabel(StrEnum):
@@ -1183,6 +1380,10 @@ class PrincipleSummary(BaseModel):
     principles: list[PrincipleStatus] = Field(default_factory=list)
 
 
+# Add a row here to omit a new optional field when it is unset.
+_GAP_REPORT_OMIT = {"not_applicable": OMIT_EMPTY}
+
+
 class GapReport(BaseModel):
     """Per-article Met/Partial/Missing/Unverified projection (opencomplai gaps).
 
@@ -1198,6 +1399,16 @@ class GapReport(BaseModel):
     principle_summary: PrincipleSummary | None = Field(
         None, description="6-principle rollup, populated by `opencomplai gaps`"
     )
+    not_applicable: dict[str, str] = Field(
+        default_factory=dict,
+        description="Article -> reason it does not apply; omitted when empty",
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_fields(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), _GAP_REPORT_OMIT)
 
 
 class RmfSubcategoryStatus(BaseModel):

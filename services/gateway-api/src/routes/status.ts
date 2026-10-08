@@ -32,7 +32,7 @@ export const statusRoutes: FastifyPluginAsync = async (app): Promise<void> => {
     const body = {
       status: aggregate.status,
       service: 'gateway-api',
-      version: '0.1.0-dev',
+      version: '0.9.0',
       checked_at: new Date().toISOString(),
       services: aggregate.services,
     };

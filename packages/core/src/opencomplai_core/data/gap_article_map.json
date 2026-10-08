@@ -23,83 +23,167 @@
     "sources": [
       { "kind": "artifact", "ref": "risk_register" },
       { "kind": "obligation", "ref": "provider_high_risk" }
-    ]
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 10": {
     "sources": [
       { "kind": "evaluator", "ref": "EVAL_BIAS_FAIRNESS_V1" },
       { "kind": "scan", "ref": "pii_dataflow" }
-    ]
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 11": {
-    "sources": []
+    "sources": [
+      { "kind": "artifact", "ref": "technical_documentation_dossier" }
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 12": {
-    "sources": []
+    "sources": [
+      { "kind": "artifact", "ref": "event_log_evidence" },
+      { "kind": "manifest", "ref": "record_keeping_declaration" },
+      { "kind": "manifest", "ref": "agent_declarations" }
+    ]
   },
   "Art. 13": {
     "sources": [
-      { "kind": "artifact", "ref": "deployer_instructions" }
+      { "kind": "artifact", "ref": "deployer_instructions" },
+      { "kind": "manifest", "ref": "instructions_for_use_fields" }
     ]
   },
   "Art. 14": {
     "sources": [
       { "kind": "artifact", "ref": "human_oversight_construct" },
       { "kind": "scan", "ref": "agent_framework" },
-      { "kind": "scan", "ref": "mcp_server" }
+      { "kind": "scan", "ref": "mcp_server" },
+      { "kind": "manifest", "ref": "human_oversight_declaration" },
+      { "kind": "manifest", "ref": "agent_declarations" }
     ]
   },
   "Art. 15": {
     "sources": [
       { "kind": "evaluator", "ref": "EVAL_SAFETY_LEXICAL_V1" },
       { "kind": "evaluator", "ref": "EVAL_DATA_LEAKAGE_V1" },
-      { "kind": "scan", "ref": "agent_framework" }
+      { "kind": "scan", "ref": "agent_framework" },
+      { "kind": "manifest", "ref": "agent_declarations" },
+      { "kind": "evaluator", "ref": "EVAL_ADVERSARIAL_V1" }
     ]
   },
   "Art. 16": {
     "sources": [
       { "kind": "artifact", "ref": "provider_qms_bundle" }
-    ]
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 17": {
     "sources": [
       { "kind": "artifact", "ref": "provider_qms" }
-    ]
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 24": {
     "sources": [
       { "kind": "artifact", "ref": "distributor_conformity" }
-    ]
+    ],
+    "applies_when_any": ["distributor"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 25": {
     "sources": [
       { "kind": "rule", "ref": "EU_AIA_ART25_MODIFICATION_TRAP" }
     ]
   },
+  "Art. 26": {
+    "sources": [
+      { "kind": "artifact", "ref": "deployer_use_records" },
+      { "kind": "manifest", "ref": "agent_declarations" }
+    ],
+    "applies_when_any": ["deployer_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
+    "source": "Regulation (EU) 2024/1689 Art. 26; obligations.json deployer_high_risk",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "Evidence probes: deployer_use_records (file-name convention) and the manifest agent inventory; Partial at most, never Met. Applicability comes from a recorded checker session (applies_when_any), not from this row."
+  },
   "Art. 27": {
     "sources": [
       { "kind": "obligation", "ref": "fria" },
       { "kind": "artifact", "ref": "provider_fria" }
-    ]
+    ],
+    "applies_when_any": ["fria"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 43": {
     "sources": [
       { "kind": "artifact", "ref": "conformity_assessment_docs" }
-    ]
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
+  },
+  "Art. 49": {
+    "sources": [
+      { "kind": "artifact", "ref": "eu_database_registration_evidence" }
+    ],
+    "applies_when_any": ["provider_high_risk", "deployer_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
+    "source": "Regulation (EU) 2024/1689 Art. 49",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "Evidence probe: eu_database_registration_evidence (file-name convention); Partial at most, never Met. Applicability comes from a recorded checker session (applies_when_any), not from this row."
   },
   "Art. 50": {
     "sources": [
-      { "kind": "obligation", "ref": "transparency" }
-    ]
+      { "kind": "obligation", "ref": "transparency" },
+      { "kind": "artifact", "ref": "transparency_notice_evidence" }
+    ],
+    "applies_when_any": ["transparency"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 53": {
     "sources": [
-      { "kind": "obligation", "ref": "gpai_provider" }
-    ]
+      { "kind": "obligation", "ref": "gpai_provider" },
+      { "kind": "artifact", "ref": "gpai_model_documentation", "when_obligation_any": ["gpai_provider"] },
+      { "kind": "artifact", "ref": "gpai_downstream_information", "when_obligation_any": ["gpai_provider"] }
+    ],
+    "pack_note": {"source": "artifact probes for GPAI documentation conventions; gated on a recorded checker session", "confidence": "low", "needs_founder_review": true, "text": "A convention-based file probe, not a determination that the model is a GPAI model."},
+    "applies_when_any": ["gpai_provider"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 55": {
     "sources": [
-      { "kind": "obligation", "ref": "gpai_systemic_risk" }
-    ]
+      { "kind": "obligation", "ref": "gpai_systemic_risk" },
+      { "kind": "artifact", "ref": "gpai_systemic_risk_evaluation", "when_obligation_any": ["gpai_systemic_risk"] }
+    ],
+    "pack_note": {"source": "artifact probes for GPAI documentation conventions; gated on a recorded checker session", "confidence": "low", "needs_founder_review": true, "text": "A convention-based file probe, not a determination that the model is a GPAI model."},
+    "applies_when_any": ["gpai_systemic_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
+  },
+  "Art. 72": {
+    "sources": [
+      { "kind": "artifact", "ref": "post_market_monitoring_plan" }
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
+    "source": "Regulation (EU) 2024/1689 Art. 72",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "Evidence probe: post_market_monitoring_plan (heuristic, capped at Partial); applicability comes from a recorded checker session (applies_when_any)."
+  },
+  "Art. 73": {
+    "sources": [
+      { "kind": "artifact", "ref": "serious_incident_log" }
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
+    "source": "Regulation (EU) 2024/1689 Art. 73",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "Evidence probe: serious_incident_log (heuristic, capped at Partial); applicability comes from a recorded checker session (applies_when_any)."
   }
 }

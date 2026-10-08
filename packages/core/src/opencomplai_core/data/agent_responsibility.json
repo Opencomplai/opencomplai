@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "description": "Draft map of which EU AI Act obligations an agent deployment sees as sitting with the upstream general-purpose model provider, with the customer, or shared. Reference content for `opencomplai agents report`; not a legal determination. Unverified wording, lawyer to confirm.",
+    "status": "draft",
+    "unverified": "unverified wording, lawyer to confirm",
+    "research_basis": "Article references of Regulation (EU) 2024/1689 (Art. 9-15, 17, 25, 26, 53, 55) read as citation labels; the summaries are neutral paraphrases written for this tool and were not checked against guidance or case law.",
+    "needs_founder_review": true
+  },
+  "rows": [
+    {
+      "id": "gpai-technical-documentation",
+      "party": "upstream_model_provider",
+      "duty": "Technical documentation of the general-purpose AI model",
+      "regime_ref": "Art. 53(1)(a)",
+      "summary": "The provider of the underlying general-purpose model is described as keeping technical documentation of that model. An agent deployment that calls such a model does not by itself take on this duty.",
+      "source": "Regulation (EU) 2024/1689, Art. 53(1)(a)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "gpai-downstream-information",
+      "party": "upstream_model_provider",
+      "duty": "Information and documentation for downstream providers",
+      "regime_ref": "Art. 53(1)(b)",
+      "summary": "The model provider is described as supplying information to those who integrate the model into their own AI systems. The deployment's side is to ask for it and keep what it receives.",
+      "source": "Regulation (EU) 2024/1689, Art. 53(1)(b)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "gpai-copyright-policy",
+      "party": "upstream_model_provider",
+      "duty": "Copyright compliance policy for the model",
+      "regime_ref": "Art. 53(1)(c)",
+      "summary": "A policy on Union copyright law for the model is described as a model-provider duty, not a duty of the party that deploys an agent on top of it.",
+      "source": "Regulation (EU) 2024/1689, Art. 53(1)(c)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "gpai-training-content-summary",
+      "party": "upstream_model_provider",
+      "duty": "Public summary of training content",
+      "regime_ref": "Art. 53(1)(d)",
+      "summary": "The summary of the content used to train the model is described as a model-provider duty.",
+      "source": "Regulation (EU) 2024/1689, Art. 53(1)(d)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "gpai-systemic-risk-evaluation",
+      "party": "upstream_model_provider",
+      "duty": "Model evaluation and adversarial testing for systemic-risk models",
+      "regime_ref": "Art. 55(1)(a)",
+      "summary": "For a model designated as carrying systemic risk, model evaluation and adversarial testing of the model are described as model-provider duties.",
+      "source": "Regulation (EU) 2024/1689, Art. 55(1)(a)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "gpai-systemic-risk-incidents",
+      "party": "upstream_model_provider",
+      "duty": "Serious-incident tracking and reporting for systemic-risk models",
+      "regime_ref": "Art. 55(1)(c)",
+      "summary": "For a model designated as carrying systemic risk, tracking and reporting serious incidents of the model is described as a model-provider duty.",
+      "source": "Regulation (EU) 2024/1689, Art. 55(1)(c)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "provider-system-requirements",
+      "party": "customer",
+      "duty": "Requirements for a high-risk AI system, including risk management, data, logging, transparency, oversight and robustness",
+      "regime_ref": "Art. 9 to Art. 15",
+      "summary": "Where the customer places an agent system on the market or puts it into service under its own name, these requirements are described as the customer's, whatever model sits underneath.",
+      "source": "Regulation (EU) 2024/1689, Art. 9 to Art. 15",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "provider-quality-management",
+      "party": "customer",
+      "duty": "Quality management system of the provider of the AI system",
+      "regime_ref": "Art. 17",
+      "summary": "A documented quality management system is described as a duty of the provider of the AI system, which for an agent system is usually the customer.",
+      "source": "Regulation (EU) 2024/1689, Art. 17",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "deployer-use-and-oversight",
+      "party": "customer",
+      "duty": "Deployer duties: use per instructions, human oversight, input data, monitoring and log retention",
+      "regime_ref": "Art. 26",
+      "summary": "Where the customer operates an agent system, these deployer duties are described as the customer's, including keeping logs the system generates.",
+      "source": "Regulation (EU) 2024/1689, Art. 26",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "value-chain-handoff",
+      "party": "shared",
+      "duty": "Hand-off of information along the AI value chain",
+      "regime_ref": "Art. 25",
+      "summary": "Information, access and cooperation between the model provider, the system provider and the deployer are described as running between parties, so neither side can settle it alone.",
+      "source": "Regulation (EU) 2024/1689, Art. 25",
+      "confidence": "low",
+      "needs_founder_review": true
+    }
+  ]
+}

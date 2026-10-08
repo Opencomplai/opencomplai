@@ -26,7 +26,7 @@ Optional but recommended:
 | Requirement | Version |
 |---|---|
 | Python | 3.11+ |
-| Node.js | 20 LTS |
+| Node.js | 24 LTS |
 | pnpm | 9+ |
 | uv | Latest |
 | Docker | 24+ |

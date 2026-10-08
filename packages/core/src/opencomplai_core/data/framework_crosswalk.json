@@ -196,6 +196,46 @@
       "confidence": "low",
       "needs_founder_review": true,
       "notes": "GPAI systemic-risk obligations map topically to ISO 42001's risk and impact-assessment controls; systemic-risk-specific sub-controls not independently confirmed."
+    },
+    {
+      "eu_ai_act_article": "Art. 26",
+      "iso_42001_clause": "Clause 8.1 (Operational planning and control)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "MAP 3",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "topical correspondence; exact clause and subcategory not independently confirmed"
+    },
+    {
+      "eu_ai_act_article": "Art. 49",
+      "iso_42001_clause": "Clause 7.5 (Documented information)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "GOVERN 4",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "topical correspondence; exact clause and subcategory not independently confirmed"
+    },
+    {
+      "eu_ai_act_article": "Art. 72",
+      "iso_42001_clause": "Clause 9.1 (Monitoring, measurement, analysis and evaluation)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "MANAGE 4",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "topical correspondence; exact clause and subcategory not independently confirmed"
+    },
+    {
+      "eu_ai_act_article": "Art. 73",
+      "iso_42001_clause": "Clause 10.2 (Nonconformity and corrective action)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "MANAGE 4",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "topical correspondence; exact clause and subcategory not independently confirmed"
     }
   ]
 }

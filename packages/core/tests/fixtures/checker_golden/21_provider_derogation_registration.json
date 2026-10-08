@@ -1,0 +1,30 @@
+{
+  "name": "21_provider_derogation_registration",
+  "session": {
+    "answers": {
+      "gate_is_ai_system": true,
+      "e1_entity_type": "provider",
+      "hr2_annex_iii": true,
+      "hr3_art_6_3": true,
+      "s1_in_scope": true
+    }
+  },
+  "expected": {
+    "in_scope": true,
+    "is_high_risk": false,
+    "is_prohibited": false,
+    "effective_entity": "provider",
+    "status_change_ids": [],
+    "obligation_ids": [
+      "ai_literacy",
+      "provider_art_6_4_registration"
+    ],
+    "determination_path": [
+      "gate:yes",
+      "e1:provider",
+      "s1:in_scope",
+      "e1:ai_literacy",
+      "hr:derogation_registration"
+    ]
+  }
+}

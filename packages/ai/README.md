@@ -93,18 +93,18 @@ bar; the download is refused up front (no prompt, no partial download) if `[deep
 installed. `codebert-onnx` needs none of this in normal use — it does deterministic
 code-signal matching with no model artifact to fetch.
 
-An explicit prefetch/export of `codebert-onnx` (e.g. via `opencomplai ai configure`) is
-still available for callers that want the artifact anyway: CodeBERT has no prebuilt ONNX
-build on the Hub, so that path exports the official PyTorch checkpoint to ONNX on first
-run. It needs the separate `[onnx]` extra (`optimum[onnxruntime]`) and is unrelated to
-`--ai-intent` classification.
+The package also contains a Python-API-only function, `opencomplai_ai.downloader.ensure_model("codebert-onnx")`,
+that exports the official PyTorch checkpoint of CodeBERT to ONNX (CodeBERT has no
+prebuilt ONNX build on the Hub). No CLI command calls it (`opencomplai ai configure`
+only saves your model choice), nothing reads the exported file, and it is not used for
+`--ai-intent` classification. It needs the separate `[onnx]` extra (`optimum[onnxruntime]`).
 
 ### Optional extras
 
 | Extra | Adds | Needed for |
 |---|---|---|
 | `[deep]` | `llama-cpp-python` | every GGUF model, including the default `qwen2.5-coder-1.5b` |
-| `[onnx]` | `optimum[onnxruntime]` | only an explicit `codebert-onnx` ONNX export/prefetch — not classification |
+| `[onnx]` | `optimum[onnxruntime]` | only the Python-API `ensure_model("codebert-onnx")` export — not classification, not any CLI command |
 
 ## Configuration
 

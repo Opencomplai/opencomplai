@@ -18,7 +18,7 @@ This is the default for a freshly copied `.env.example`.
 
 ## CLI: air-gap scan mode
 
-When running `opencomplai check` against the stack in air-gap mode, pass `--scan-mode airgap`:
+`--scan-mode airgap` is a label only: it is recorded in the artifact and does not itself block network access. Network isolation comes from the `egress-proxy` allowlist described above. To run `opencomplai check` against the stack, set `OPENCOMPLAI_API_URL`:
 
 === "macOS / Linux"
     ```bash
@@ -33,21 +33,15 @@ When running `opencomplai check` against the stack in air-gap mode, pass `--scan
 
 For fully local CLI operation (no Docker stack), the CLI falls back to the local engine automatically when `OPENCOMPLAI_API_URL` is not set — no additional flags needed.
 
-## Pre-pulling images
+## Transferring images
 
-To deploy without internet access on the target machine, pre-pull images on a connected machine and transfer as tarballs:
+The OpenComplAI services are built from source by `infra/compose/docker-compose.yml`; prebuilt GHCR images are not documented as available. On a connected machine, build the images and save every image the compose file names, then transfer the tarball:
 
 === "macOS / Linux"
     ```bash
-    # On connected machine: pull and save
-    docker compose -f infra/compose/docker-compose.yml pull
-    docker save \
-      ghcr.io/opencomplai/opencomplai/gateway-api:latest \
-      ghcr.io/opencomplai/opencomplai/risk-engine:latest \
-      ghcr.io/opencomplai/opencomplai/evidence-vault:latest \
-      ghcr.io/opencomplai/opencomplai/doc-generator:latest \
-      ghcr.io/opencomplai/opencomplai/egress-proxy:latest \
-      postgres:16-alpine redis:7-alpine prom/prometheus grafana/grafana \
+    # On connected machine: build and save
+    docker compose -f infra/compose/docker-compose.yml build
+    docker save $(docker compose -f infra/compose/docker-compose.yml config --images) \
       | gzip > opencomplai-images.tar.gz
 
     # On air-gapped machine: load
@@ -56,16 +50,10 @@ To deploy without internet access on the target machine, pre-pull images on a co
 
 === "Windows (PowerShell)"
     ```powershell
-    # On connected machine: pull and save
-    docker compose -f infra/compose/docker-compose.yml pull
-    docker save `
-      ghcr.io/opencomplai/opencomplai/gateway-api:latest `
-      ghcr.io/opencomplai/opencomplai/risk-engine:latest `
-      ghcr.io/opencomplai/opencomplai/evidence-vault:latest `
-      ghcr.io/opencomplai/opencomplai/doc-generator:latest `
-      ghcr.io/opencomplai/opencomplai/egress-proxy:latest `
-      postgres:16-alpine redis:7-alpine prom/prometheus grafana/grafana `
-      -o opencomplai-images.tar
+    # On connected machine: build and save
+    docker compose -f infra/compose/docker-compose.yml build
+    $images = docker compose -f infra/compose/docker-compose.yml config --images
+    docker save $images -o opencomplai-images.tar
 
     # On air-gapped machine: load
     docker load -i opencomplai-images.tar

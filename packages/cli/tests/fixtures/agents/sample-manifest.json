@@ -1,0 +1,57 @@
+{
+  "system_id": "sys-agents-sample",
+  "intended_purpose": "internal support triage",
+  "compliance_target": "EU_AI_ACT",
+  "commit_ref": "abc123",
+  "agent_inventory": {
+    "agents": [
+      {
+        "id": "orchestrator",
+        "name": "Triage orchestrator",
+        "tools": [
+          {
+            "name": "ticket-search",
+            "kind": "mcp",
+            "scope": "read-only"
+          }
+        ],
+        "models": [
+          {
+            "provider": "OpenAI",
+            "model": "gpt-x"
+          }
+        ],
+        "mandate": {
+          "permitted_actions": [
+            "tool:ticket-search"
+          ],
+          "prohibited_actions": [
+            "close tickets"
+          ]
+        },
+        "delegation": {
+          "may_delegate_to": [
+            "summariser"
+          ],
+          "max_depth": 1
+        },
+        "guardrails": [
+          {
+            "kind": "output filter"
+          }
+        ]
+      },
+      {
+        "id": "summariser",
+        "name": "Ticket summariser",
+        "parent_id": "orchestrator",
+        "models": [
+          {
+            "provider": "OpenAI",
+            "model": "gpt-x-mini"
+          }
+        ]
+      }
+    ]
+  }
+}

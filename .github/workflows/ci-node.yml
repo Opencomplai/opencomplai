@@ -15,7 +15,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter opencomplai-gateway-api run lint
@@ -28,7 +28,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       # `build` emits to dist/ via tsc; --noEmit runs the same type check
@@ -47,7 +47,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter opencomplai-gateway-api run test
@@ -60,7 +60,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       # Non-blocking: `pnpm audit --prod` against the pinned lockfile
@@ -83,7 +83,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
           cache-dependency-path: docs/checker-widget/package-lock.json
       - name: Install

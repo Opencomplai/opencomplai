@@ -13,6 +13,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "../..");
 
 const bundlePath = path.join(root, "docs/src/assets/js/checker-widget.js");
+// Single source of truth: the same CHECKER_VERSION regex build.mjs uses.
+const versionMatch = fs
+  .readFileSync(path.join(__dirname, "src/engine.ts"), "utf8")
+  .match(/CHECKER_VERSION\s*=\s*"([^"]+)"/);
+if (!versionMatch) {
+  throw new Error("Could not find CHECKER_VERSION in src/engine.ts");
+}
+const version = versionMatch[1];
+
 const outPath = path.join(
   root,
   "packages/cli/src/opencomplai_cli/data/checker-local.html"
@@ -170,14 +179,14 @@ const html = `<!DOCTYPE html>
       <p>
         Answer a short questionnaire to find out whether the EU AI Act applies to
         your AI system, in what operator role, at what risk tier, and which
-        obligations follow. Engine version <strong>checker-2026-07-24</strong>.
+        obligations follow. Engine version <strong>${version}</strong>.
       </p>
     </div>
     <div id="ococ-checker"></div>
   </main>
 
   <footer>
-    Opencomplai · checker checker-2026-07-24 ·
+    Opencomplai · checker ${version} ·
     <a href="https://opencomplai.com" target="_blank" rel="noopener">opencomplai.com</a><br>
     Not legal advice — informational only. Seek qualified legal counsel.
   </footer>

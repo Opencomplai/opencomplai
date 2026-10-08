@@ -62,25 +62,14 @@ def test_guide_gitlab_ci_block_matches_docs_ci_verbatim():
     assert blocks[1] == canonical_path.read_text(encoding="utf-8")
 
 
-@pytest.mark.xfail(
-    reason=(
-        "known pre-existing drift: dashboard-saas/docs/ci/*.yml still says "
-        "'manifest.yaml' in its header comment (stale -- opencomplai init's "
-        "real default is system-manifest.json, see main.py:751). CP-11 fixed "
-        "the OSS-vendored docs/ci/ copy and the guide but dashboard-saas/ is "
-        "guarded read-only this round -- needs its own one-line follow-up fix "
-        "to dashboard-saas/docs/ci/{github-actions,gitlab-ci}.yml."
-    ),
-    strict=False,
-)
 def test_docs_ci_matches_dashboard_saas_source_verbatim():
     """Enterprise-only: docs/ci/*.yml (OSS-vendored) must stay byte-identical
     to the dashboard-saas/docs/ci/*.yml originals they were vendored from.
     Skips in the public checkout, where dashboard-saas/ does not exist at
     all -- intentional, matching the pre-CP-11 skip pattern this file used
     for the two tests above before they were repointed at the OSS-reachable
-    docs/ci/ copy. xfail (not skip) when dashboard-saas/ IS reachable: see
-    the reason above for the one known, tracked line of drift this exposed."""
+    docs/ci/ copy. Fails (never skips) when dashboard-saas/ IS reachable and
+    the two copies differ."""
     if not _DASHBOARD_DOCS_CI_DIR.exists():
         pytest.skip(
             "dashboard-saas/docs/ci not reachable (expected in public checkout)"
@@ -108,3 +97,30 @@ def test_guide_never_mentions_the_legacy_auth_token_var_or_oidc_client_creds():
 def test_guide_points_at_connect():
     text = _GUIDE.read_text(encoding="utf-8")
     assert "/connect" in text
+
+
+_MARKER = "pytest.mark." + "x" + "fail"
+_SKIP_DIRS = {"node_modules", ".venv", "__pycache__"}
+
+
+def test_no_xfail_marker_in_python_tests():
+    """No lenient expected-failure marker may hide a drift in any test tree.
+
+    A strict one (``strict=True``, on the marker's own line) is allowed: it
+    records a known false negative and fails loudly the day it is fixed, so it
+    cannot mask a regression. Anything else, e.g. the old non-strict marker on
+    the dashboard CI parity test, is reported as ``path:line``.
+    """
+    found = []
+    for top in ("packages", "services", "api", "tools", "tests", "dashboard-saas"):
+        root = _REPO_ROOT / top
+        if not root.is_dir():
+            continue
+        for path in root.rglob("*.py"):
+            if _SKIP_DIRS & set(path.parts):
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            for n, line in enumerate(text.splitlines(), start=1):
+                if _MARKER in line and "strict=True" not in line:
+                    found.append(f"{path.relative_to(_REPO_ROOT).as_posix()}:{n}")
+    assert not found, "non-strict expected-failure marker found: " + ", ".join(found)

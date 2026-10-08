@@ -149,3 +149,39 @@ def test_answers_from_change_context_mirrors_risk_engine_keywords():
     }
     assert main._answers_from_change_context("refactor") == {}
     assert main._answers_from_change_context(None) == {}
+
+
+def _validate_payload(monkeypatch, manifest):
+    fake, calls = _fake_call_service(
+        {
+            "risk_class": "minimal",
+            "profiling_detected": False,
+            "trap_detected": False,
+            "rationale_hash": "sha256:" + "a" * 64,
+            "evidence_event_id": "evt_sha256:" + "c" * 64,
+        }
+    )
+    monkeypatch.setattr(main, "_call_service", fake)
+    monkeypatch.setattr(main, "_emit_event", lambda *a, **kw: None)
+    main._run_service_check(manifest, "HEAD", "local", "install-1")
+    return next(p for path, p in calls if path == "/v1/manifests/validate")
+
+
+def test_validate_payload_carries_targets_and_framework_inputs(monkeypatch):
+    manifest = _MANIFEST.model_copy(
+        update={"compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"]}
+    )
+    payload = _validate_payload(monkeypatch, manifest)
+    assert payload["compliance_targets"] == ["EU_AI_ACT", "NIST_AI_RMF"]
+    assert "framework_inputs" not in payload
+
+
+def test_validate_payload_unchanged_for_single_target(monkeypatch):
+    payload = _validate_payload(monkeypatch, _MANIFEST)
+    assert set(payload) == {
+        "system_id",
+        "intended_purpose",
+        "compliance_target",
+        "high_risk_presumption",
+        "commit_ref",
+    }

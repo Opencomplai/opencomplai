@@ -33,7 +33,7 @@ class AgentsDetector(BaseDetector):
 
     @property
     def detector_version(self) -> str:
-        return "1.0.0"
+        return "1.1.0"
 
     @property
     def supported_languages(self) -> frozenset[str]:
@@ -96,23 +96,21 @@ class AgentsDetector(BaseDetector):
                     )
                 )
 
-        for cfg in features.configs:
-            loc = cfg.location.replace("\\", "/")
-            name = loc.rsplit("/", 1)[-1]
-            if name in {".mcp.json", "mcp.json"} or "mcp" in cfg.key.lower():
-                evidence.append(
-                    build_evidence(
-                        detector_id=self.detector_id,
-                        detector_version=self.detector_version,
-                        evidence_kind=EvidenceKind.DEPENDENCY,
-                        category=SignalCategory.MCP_SERVER,
-                        token_label="mcp_config",
-                        location=cfg.location,
-                        scope=cfg.scope,
-                        rationale_code="mcp_config_file",
-                        confidence=0.8,
-                    )
+        for ref in features.mcp_servers:
+            evidence.append(
+                build_evidence(
+                    detector_id=self.detector_id,
+                    detector_version=self.detector_version,
+                    evidence_kind=EvidenceKind.DEPENDENCY,
+                    category=SignalCategory.MCP_SERVER,
+                    token_label=f"mcp_server:{ref.name}",
+                    location=ref.location,
+                    scope=ref.scope,
+                    rationale_code="mcp_config_file",
+                    confidence=0.8,
+                    reachability=Reachability.MANIFEST_ONLY,
                 )
+            )
 
         for pkg in features.packages:
             if _MCP_IMPORT.search(pkg.name):

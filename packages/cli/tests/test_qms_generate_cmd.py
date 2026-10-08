@@ -8,12 +8,21 @@ exact split, for consistency").
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 from opencomplai_cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
+
+_FILLED = (
+    "This procedure documents regulatory compliance, design control, quality "
+    "assurance, testing validation, technical specifications and standards, "
+    "data governance, risk management, post-market monitoring, incident "
+    "reporting, authority communication, record retention, resource planning "
+    "and accountability.\n"
+)
 
 _PRESENT_CLAUSE_FILES = (
     "REGULATORY_COMPLIANCE_STRATEGY.md",  # (a)
@@ -32,7 +41,7 @@ def test_qms_generate_shows_per_clause_status_not_one_article_verdict(
     tmp_path: Path,
 ) -> None:
     for name in _PRESENT_CLAUSE_FILES:
-        (tmp_path / name).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / name).write_text(_FILLED, encoding="utf-8")
 
     output_file = tmp_path / "qms-document.md"
     result = runner.invoke(
@@ -67,7 +76,7 @@ def test_qms_generate_shows_per_clause_status_not_one_article_verdict(
 
 def test_qms_generate_json_output_has_thirteen_clause_rows(tmp_path: Path) -> None:
     for name in _PRESENT_CLAUSE_FILES:
-        (tmp_path / name).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / name).write_text(_FILLED, encoding="utf-8")
 
     output_file = tmp_path / "qms-document.md"
     result = runner.invoke(
@@ -94,3 +103,78 @@ def test_qms_generate_json_output_has_thirteen_clause_rows(tmp_path: Path) -> No
     statuses = {c["clause"]: c["status_label"] for c in payload["clauses"]}
     assert statuses["Art. 17(1)(a)"] == "Present"
     assert statuses["Art. 17(1)(g)"] == "Missing"
+
+
+def test_recommend_and_generate_agree_clause_by_clause(tmp_path: Path) -> None:
+    filled = (
+        "REGULATORY_COMPLIANCE_STRATEGY.md",
+        "DESIGN_CONTROL.md",
+        "TESTING_VALIDATION.md",
+    )
+    scaffold = ("QUALITY_MANAGEMENT_PROCEDURES.md", "TECHNICAL_DOCUMENTATION.md")
+    for name in filled:
+        (tmp_path / name).write_text(_FILLED, encoding="utf-8")
+    for name in scaffold:
+        (tmp_path / name).write_text(
+            "# Procedure\n\n| Owner | _fill in_ |\n", encoding="utf-8"
+        )
+
+    manifest_file = tmp_path / "system-manifest.json"
+    init = runner.invoke(
+        app,
+        [
+            "init",
+            "--system-id",
+            "qms-fixture",
+            "--intended-purpose",
+            "biometric identification",
+            "--output",
+            str(manifest_file),
+        ],
+    )
+    assert init.exit_code == 0, init.output
+    fixes = tmp_path / "fixes"  # outside docs/, never inside a probed path
+    rec = runner.invoke(
+        app,
+        [
+            "recommend",
+            "--manifest",
+            str(manifest_file),
+            "--repo-root",
+            str(tmp_path),
+            "--output",
+            str(fixes),
+        ],
+    )
+    assert rec.exit_code == 0, rec.output
+    outline = (fixes / "art17-qms_outline.md").read_text(encoding="utf-8")
+    recommend_labels = dict(
+        re.findall(r"^\| \(([a-m])\) \|[^|]*\| ([^|]+?) \|", outline, re.M)
+    )
+
+    gen = runner.invoke(
+        app,
+        [
+            "qms",
+            "generate",
+            "--repo-root",
+            str(tmp_path),
+            "--output",
+            str(tmp_path / "qms-document.md"),
+            "--scan-report",
+            str(tmp_path / "scan-report.json"),
+            "--eval-report",
+            str(tmp_path / "eval-report.json"),
+            "--output-format",
+            "json",
+        ],
+    )
+    assert gen.exit_code == 0, gen.output
+    generate_labels = {
+        c["clause"][-2]: c["status_label"] for c in json.loads(gen.output)["clauses"]
+    }
+
+    assert len(recommend_labels) == len(generate_labels) == 13
+    assert recommend_labels == generate_labels
+    assert sorted(set(generate_labels.values())) == ["Missing", "Present", "Unfilled"]
+    assert sum(v == "Unfilled" for v in generate_labels.values()) == 2

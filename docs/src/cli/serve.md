@@ -21,15 +21,9 @@ tells you to install the extra.
 
 ## Synopsis
 
-=== "macOS / Linux"
-    ```bash
-    opencomplai serve [PROJECT_ROOT] [OPTIONS]
-    ```
-
-=== "Windows (PowerShell)"
-    ```powershell
-    opencomplai serve [PROJECT_ROOT] [OPTIONS]
-    ```
+```bash
+opencomplai serve [PROJECT_ROOT] [OPTIONS]
+```
 
 ## Arguments
 
@@ -44,7 +38,7 @@ tells you to install the extra.
 | `--host` | `127.0.0.1` | Loopback host only. Values other than `127.0.0.1` or `localhost` are rejected (exit `2`). |
 | `--port` | `8420` | Local TCP port for the dashboard. |
 
-These flags match `opencomplai serve --help` (`run_serve(project_root, host, port)`).
+Run `opencomplai serve --help` for the same list.
 
 ## Example
 

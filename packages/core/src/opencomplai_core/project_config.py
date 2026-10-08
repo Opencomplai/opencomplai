@@ -18,6 +18,8 @@ from pathlib import Path
 import yaml
 
 DEFAULT_CONFIG_FILENAME = "opencomplai.yaml"
+# Mirrors the CLI's FailOnLevel enum (a CLI test pins the two equal).
+FAIL_ON_LEVELS = ("none", "new-major", "major", "critical")
 
 
 @dataclass
@@ -72,15 +74,35 @@ def load_project_config(path: Path) -> ProjectConfig:
     if gate_fail_on is not None and not isinstance(gate_fail_on, str):
         raise ValueError(f"{path.name}: gate.fail_on must be missing or partial")
 
+    scan_fail_on = scan_section.get("fail_on")
+    if scan_fail_on is not None and scan_fail_on not in FAIL_ON_LEVELS:
+        raise ValueError(
+            f"{path.name}: scan.fail_on must be one of {', '.join(FAIL_ON_LEVELS)}"
+        )
+    framework_detectors = scan_section.get("framework_detectors")
+    if framework_detectors is not None and not isinstance(framework_detectors, bool):
+        raise ValueError(f"{path.name}: scan.framework_detectors must be true or false")
+    allowlisted = scan_section.get("allowlisted_categories") or []
+    if not isinstance(allowlisted, list) or not all(
+        isinstance(c, str) for c in allowlisted
+    ):
+        raise ValueError(
+            f"{path.name}: scan.allowlisted_categories must be a list of strings"
+        )
+    overrides = eval_section.get("threshold_overrides") or {}
+    if not isinstance(overrides, dict) or not all(
+        isinstance(k, str) and isinstance(v, (int, float)) and not isinstance(v, bool)
+        for k, v in overrides.items()
+    ):
+        raise ValueError(
+            f"{path.name}: eval.threshold_overrides must map names to numbers"
+        )
+
     return ProjectConfig(
-        scan_fail_on=scan_section.get("fail_on"),
-        scan_framework_detectors=scan_section.get("framework_detectors"),
-        eval_threshold_overrides=dict(
-            eval_section.get("threshold_overrides", {}) or {}
-        ),
-        allowlisted_categories=list(
-            scan_section.get("allowlisted_categories", []) or []
-        ),
+        scan_fail_on=scan_fail_on,
+        scan_framework_detectors=framework_detectors,
+        eval_threshold_overrides=dict(overrides),
+        allowlisted_categories=list(allowlisted),
         gate_frameworks=gate_frameworks,
         gate_fail_on=gate_fail_on,
     )

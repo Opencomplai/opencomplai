@@ -46,6 +46,7 @@ compliance-artifact.json
 system-manifest.json
 # ...but keep the committed example fixtures used by the scanner docs
 !examples/sample-system/**/system-manifest.json
+!examples/gate-demo/**/system-manifest.json
 !tests/fixtures/**/system-manifest.json
 .venv-ci-check/*
 # GitHub issues sync output (local mirror; may contain PII from issues)

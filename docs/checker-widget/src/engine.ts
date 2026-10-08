@@ -1,9 +1,9 @@
 /**
  * TypeScript port of packages/core/src/opencomplai_core/compliance_checker/engine.py
- * Deterministic compliance checker — checker version checker-2026-07-24.
+ * Deterministic compliance checker — checker version checker-2026-10-05.
  *
- * Must produce identical output to the Python evaluate() for all 20 golden
- * fixtures in packages/core/tests/fixtures/checker_golden/.
+ * Must produce identical output to the Python evaluate() for all golden
+ * vectors in packages/core/tests/fixtures/checker_golden_vectors_shared.json.
  */
 import {
   getObligation,
@@ -12,7 +12,7 @@ import {
   StatusChangeItem,
 } from "./catalog";
 
-export const CHECKER_VERSION = "checker-2026-07-24";
+export const CHECKER_VERSION = "checker-2026-10-05";
 
 export type EntityType =
   | "provider"
@@ -78,6 +78,21 @@ function determineHighRisk(answers: Record<string, unknown>): boolean {
     if (answerBool(answers, "hr6_accessory")) return false;
   }
   return true;
+}
+
+function reliesOnArt63Derogation(answers: Record<string, unknown>): boolean {
+  // Annex III system the provider assesses as not high-risk (Art. 6(3)).
+  const annexI =
+    answerBool(answers, "hr1_annex_i") &&
+    answerBool(answers, "hr8_conformity_assessment");
+  return (
+    answerBool(answers, "hr2_annex_iii") &&
+    !annexI &&
+    !answerBool(answers, "hr7_profiling") &&
+    ["hr3_art_6_3", "hr4_narrow_task", "hr5_no_significant_risk", "hr6_accessory"].some(
+      (k) => answerBool(answers, k)
+    )
+  );
 }
 
 function dedupeIds(ids: string[]): string[] {
@@ -305,6 +320,11 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
   // Entity-role obligations
   obligationIds.push(...entityObligations(effectiveEntity, isHighRisk));
 
+  if (effectiveEntity === "provider" && reliesOnArt63Derogation(answers)) {
+    obligationIds.push("provider_art_6_4_registration");
+    path.push("hr:derogation_registration");
+  }
+
   // Transparency — Art. 50 disclosure duties apply in addition to high-risk
   // obligations, not instead of them, so the obligation is never gated on
   // isHighRisk. Only the "transparency_only" status (sole obligation tier)
@@ -329,6 +349,8 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
   if (
     answerBool(answers, "r5_fria") &&
     isHighRisk &&
+    // Art. 27 applies to Art. 6(2) (Annex III) systems only.
+    answerBool(answers, "hr2_annex_iii") &&
     effectiveEntity === "deployer"
   ) {
     obligationIds.push("fria");

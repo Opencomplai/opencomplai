@@ -18,6 +18,15 @@ Quickstart:
 To assess a manifest against several frameworks side by side, pass
 resolve_targets(manifest) to evaluate_targets; FRAMEWORKS lists the
 frameworks this release knows.
+
+To keep a tamper-evident record of an agent's decisions (the raw tool input is
+hashed, never stored):
+    from opencomplai import AgentDecisionLog
+
+    log = AgentDecisionLog("agent-log.jsonl")
+    log.record(agent_id="a1", tool="search", intent="look up a policy",
+               tool_input={"q": "retention"}, outcome="success")
+    assert log.verify().ok
 """
 
 from opencomplai_core.engine import assess
@@ -40,9 +49,12 @@ from opencomplai_core.models import (
     SystemManifest,
 )
 
-__version__ = "0.8.0"
+from opencomplai.agent_log import AgentDecisionLog
+
+__version__ = "0.9.0"
 __all__ = [
     "FRAMEWORKS",
+    "AgentDecisionLog",
     "AssessmentInput",
     "FrameworkPack",
     "FrameworkReport",

@@ -1,23 +1,27 @@
 # syntax=docker/dockerfile:1
-FROM python:3.11-slim AS builder
+# Base image is pinned by digest. To refresh it, run
+# `docker buildx imagetools inspect python:3.11-slim` and use the index digest in both FROM lines.
+FROM python:3.11-slim@sha256:6f31d6e9ba2b0a787a3f81c37b004155b87b9efa1b771182bd550c1615745be5 AS builder
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir uv
+RUN pip install --no-cache-dir "uv==0.11.2"
 
 COPY pyproject.toml uv.lock ./
 COPY packages/core ./packages/core
 COPY services/doc-generator ./services/doc-generator
 
-RUN uv sync --package opencomplai-doc-generator
+RUN uv sync --frozen --no-dev --package opencomplai-doc-generator
 
 # ---------------------------------------------------------------------------
-FROM python:3.11-slim AS runtime
+FROM python:3.11-slim@sha256:6f31d6e9ba2b0a787a3f81c37b004155b87b9efa1b771182bd550c1615745be5 AS runtime
 
 WORKDIR /app
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends curl ca-certificates && \
+    python -m pip uninstall -y pip setuptools wheel && \
     rm -rf /var/lib/apt/lists/* && \
     addgroup --gid 1001 opencomplai && \
     adduser --uid 1001 --gid 1001 --no-create-home opencomplai

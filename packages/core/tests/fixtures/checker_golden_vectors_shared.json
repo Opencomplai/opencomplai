@@ -556,13 +556,15 @@
         "effective_entity": "provider",
         "status_change_ids": [],
         "obligation_ids": [
-          "ai_literacy"
+          "ai_literacy",
+          "provider_art_6_4_registration"
         ],
         "determination_path": [
           "gate:yes",
           "e1:provider",
           "s1:in_scope",
-          "e1:ai_literacy"
+          "e1:ai_literacy",
+          "hr:derogation_registration"
         ]
       }
     },

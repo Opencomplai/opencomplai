@@ -47,7 +47,7 @@ def verify_artifact(path: Path, expected_sha256: str, *, context: str) -> None:
     Check ``path`` against ``expected_sha256``.
 
     A blank expectation is a no-op — the catalog does not yet carry checksums
-    for every model (see PLAN/execution/DEFERRED-DECISIONS.md). That is a gap
+    for every model yet. That is a gap
     to close, not a licence to pretend verification happened, so nothing here
     reports success when there was nothing to check.
 

@@ -122,6 +122,7 @@ nav:
     - Overview: getting-started/index.md
     - Requirements: getting-started/requirements.md
     - Installation: getting-started/installation.md
+    - Upgrading to 0.9: getting-started/upgrading-to-0.9.md
     - Quick Start: getting-started/quick-start.md
     - Deployment Journey: getting-started/deployment-journey.md
     - First Project: getting-started/first-project.md
@@ -136,6 +137,8 @@ nav:
       - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
       - Annex IV coverage ledger: concepts/annex-iv-coverage.md
     - NIST AI RMF: concepts/nist-ai-rmf.md
+    - Mapped-only regimes (DORA, EBA): concepts/mapped-regimes.md
+    - GPAI training summary and Code of Practice: frameworks/gpai-training-summary-and-cop.md
 
   - Guides:
     - Overview: guides/index.md
@@ -148,28 +151,49 @@ nav:
     - Security: guides/security.md
     - Gap-closure control mapping: security/gap-closure-control-mapping.md
     - Supply-Chain Security: security/supply-chain.md
+    - Key Management: security/key-management.md
     - CI Integration: guides/ci-integration.md
+    - CI for GitLab and Azure: guides/ci-gitlab-azure.md
+    - CI Recipes (other systems): guides/ci-recipes.md
     - Pre-commit Integration: guides/pre-commit.md
     - Project Configuration: guides/configuration.md
     - CI Code Scanning (SARIF): guides/sarif-integration.md
+    - Works alongside other tools: guides/works-alongside.md
 
   - CLI Reference:
+    - Overview: cli/index.md
     - init: cli/init.md
     - checker: cli/checker.md
     - validate-manifest: cli/validate-manifest.md
     - check: cli/check.md
+    - accept: cli/accept.md
     - scan: cli/scan.md
     - gaps: cli/gaps.md
+    - diff: cli/diff.md
+    - rules changelog: cli/rules.md
     - controls: cli/controls.md
+    - incident: cli/incident.md
+    - agents: cli/agents.md
     - recommend: cli/recommend.md
+    - qms: cli/qms.md
+    - fria: cli/fria.md
     - report: cli/report.md
     - risk classify: cli/risk-classify.md
     - verify-output: cli/verify-output.md
+    - verify: cli/verify.md
     - docs generate: cli/docs-generate.md
+    - instructions generate: cli/instructions-generate.md
     - sync metadata: cli/sync-metadata.md
     - dashboard: cli/dashboard.md
     - serve: cli/serve.md
     - eval: cli/eval.md
+    - push: cli/push.md
+    - approve / resume: cli/approve-resume.md
+    - keys: cli/keys.md
+    - ai: cli/ai.md
+    - info: cli/info.md
+    - deployer-pack: cli/deployer-pack.md
+    - portfolio: cli/portfolio.md
     - Exit codes: cli/exit-codes.md
 
   - Python SDK:
@@ -191,14 +215,19 @@ nav:
     - Evidence: concepts/evidence.md
     - Evaluators: concepts/evaluators.md
     - Scan workflow: concepts/scan-workflow.md
+    - Rule-set versioning: concepts/rule-set-versioning.md
+    - Roles and applicability: concepts/roles-and-applicability.md
+    - Backlog order: concepts/backlog.md
+    - Agents: concepts/agents.md
+    - Incidents: concepts/incidents.md
+    - Regimes: concepts/regimes.md
+    - High-risk acceptance: concepts/high-risk-acceptance.md
+    - Published schemas: concepts/published-schemas.md
     - "Inspect-AI eval bridge": concepts/inspect-bridge.md
+    - "Agent audit-log import": concepts/agt-import.md
 
   - API Reference:
     - Overview: api/index.md
-    - Python SDK:
-      - Overview: api/python-sdk/index.md
-      - Installation: api/python-sdk/installation.md
-      - API Reference: api/python-sdk/api-reference.md
     - JavaScript/TypeScript SDK:
       - Overview: api/javascript-sdk/index.md
       - Installation: api/javascript-sdk/installation.md
@@ -213,6 +242,7 @@ nav:
     - System Design: architecture/system-design.md
     - Data Model: architecture/data-model.md
     - "ADR: Local serve vs SaaS": architecture/adr-local-serve-vs-saas.md
+    - Hosted dashboard: architecture/dashboard-saas.md
 
   - Examples:
     - Overview: examples/index.md
@@ -251,7 +281,7 @@ extra_css:
 # "email a copy" feature is available at all.
 extra_javascript:
   - assets/js/checker-config.js
-  - assets/js/checker-widget.js?v=checker-2026-07-24
+  - assets/js/checker-widget.js?v=checker-2026-10-05
 
 # Extra configuration
 extra:

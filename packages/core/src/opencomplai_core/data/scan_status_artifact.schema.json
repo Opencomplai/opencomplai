@@ -1,0 +1,1479 @@
+{
+  "$defs": {
+    "AgentsSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "agents": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Agents",
+          "type": "integer"
+        },
+        "chain_valid": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Chain Valid"
+        },
+        "log_entries": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Entries"
+        },
+        "log_head_sha256": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Head Sha256"
+        },
+        "out_of_mandate": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Out Of Mandate"
+        },
+        "undeclared": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Undeclared"
+        },
+        "with_guardrails": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "With Guardrails",
+          "type": "integer"
+        },
+        "with_mandate": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "With Mandate",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "agents",
+        "with_mandate",
+        "with_guardrails"
+      ],
+      "title": "AgentsSummary",
+      "type": "object"
+    },
+    "ArticleGapSource": {
+      "description": "Which subsystem produced an ArticleGapStatus row's evidence.",
+      "enum": [
+        "rule",
+        "obligation",
+        "scan",
+        "evaluator",
+        "artifact",
+        "attestation",
+        "crosswalk",
+        "manifest"
+      ],
+      "title": "ArticleGapSource",
+      "type": "string"
+    },
+    "ArticleGapStatus": {
+      "description": "Met/Partial/Missing/Unverified status for a single EU AI Act article.",
+      "properties": {
+        "article": {
+          "description": "EU AI Act article reference, e.g. 'Art. 6'",
+          "title": "Article",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heuristic confidence 0-1; null when not assessed",
+          "title": "Confidence"
+        },
+        "confidence_label": {
+          "$ref": "#/$defs/ConfidenceLabel",
+          "default": "heuristic_estimate"
+        },
+        "disclaimer_ref": {
+          "default": "DISCLAIMER_V1",
+          "title": "Disclaimer Ref",
+          "type": "string"
+        },
+        "evidence_ref": {
+          "description": "Rule id, obligation id, evaluator id, or scan finding reference",
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "rationale": {
+          "default": "",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ArticleGapSource"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        }
+      },
+      "required": [
+        "article",
+        "status",
+        "source",
+        "evidence_ref"
+      ],
+      "title": "ArticleGapStatus",
+      "type": "object"
+    },
+    "ArtifactSummaries": {
+      "additionalProperties": false,
+      "properties": {
+        "agents": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentsSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "incidents": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/IncidentsSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "oversight": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OversightSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "packs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PacksSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "qms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QmsSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "ArtifactSummaries",
+      "type": "object"
+    },
+    "ConfidenceLabel": {
+      "description": "Honesty label for gap / report surfaces (heuristic aid, not legal determination).",
+      "enum": [
+        "heuristic_estimate",
+        "not_assessed",
+        "measured",
+        "attested"
+      ],
+      "title": "ConfidenceLabel",
+      "type": "string"
+    },
+    "ControlState": {
+      "description": "Lifecycle state of a single {system, obligation} control instance.",
+      "enum": [
+        "satisfied",
+        "evidence_missing",
+        "evidence_stale",
+        "pending_review",
+        "waived"
+      ],
+      "title": "ControlState",
+      "type": "string"
+    },
+    "ControlSummaryRow": {
+      "description": "One compact per-control row embedded in the artifact's `controls` block.",
+      "properties": {
+        "article_ref": {
+          "title": "Article Ref",
+          "type": "string"
+        },
+        "control_id": {
+          "title": "Control Id",
+          "type": "string"
+        },
+        "due_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Due At"
+        },
+        "owner": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owner"
+        },
+        "state": {
+          "$ref": "#/$defs/ControlState"
+        }
+      },
+      "required": [
+        "control_id",
+        "article_ref",
+        "state"
+      ],
+      "title": "ControlSummaryRow",
+      "type": "object"
+    },
+    "ControlsSummary": {
+      "description": "Optional controls block embedded in `ScanStatusArtifact` (CTRL-ARTIFACT, D9).\n\n`summary` carries a count for every `ControlState` value (zero-filled for\nstates with no matching control) so consumers never have to special-case a\nmissing key. `items` carries one `ControlSummaryRow` per control instance,\nin the same order as the derived control list.",
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/ControlSummaryRow"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "summary": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Summary",
+          "type": "object"
+        }
+      },
+      "title": "ControlsSummary",
+      "type": "object"
+    },
+    "DiscrepancySeverity": {
+      "enum": [
+        "none",
+        "info",
+        "minor",
+        "major",
+        "critical"
+      ],
+      "title": "DiscrepancySeverity",
+      "type": "string"
+    },
+    "EvalSummary": {
+      "description": "Compact eval block embedded in ScanStatusArtifact.",
+      "properties": {
+        "eval_set_id": {
+          "title": "Eval Set Id",
+          "type": "string"
+        },
+        "eval_set_version": {
+          "title": "Eval Set Version",
+          "type": "string"
+        },
+        "evidence_hashes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Hashes",
+          "type": "array"
+        },
+        "failed_evaluator_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failed Evaluator Ids",
+          "type": "array"
+        },
+        "overall_outcome": {
+          "$ref": "#/$defs/EvaluatorOutcome"
+        },
+        "skipped_evaluators": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Skipped Evaluators",
+          "type": "object"
+        },
+        "threshold_policy_hash": {
+          "title": "Threshold Policy Hash",
+          "type": "string"
+        }
+      },
+      "required": [
+        "eval_set_id",
+        "eval_set_version",
+        "threshold_policy_hash",
+        "overall_outcome"
+      ],
+      "title": "EvalSummary",
+      "type": "object"
+    },
+    "EvaluatorOutcome": {
+      "enum": [
+        "pass",
+        "warn",
+        "fail",
+        "skipped"
+      ],
+      "title": "EvaluatorOutcome",
+      "type": "string"
+    },
+    "FrameworkReport": {
+      "description": "One framework's per-requirement verdicts in a multi-framework run.\n\n`report.articles` carries one row per requirement; ids other than the\nEU AI Act's are prefixed with the framework key (e.g. \"NIST_AI_RMF:GOVERN 1.1\").",
+      "properties": {
+        "data_version": {
+          "description": "Short hash of the framework data the verdicts came from",
+          "title": "Data Version",
+          "type": "string"
+        },
+        "derived_from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Framework whose evidence these verdicts were re-projected from; None when the framework was evaluated natively",
+          "title": "Derived From"
+        },
+        "disclaimer_ref": {
+          "title": "Disclaimer Ref",
+          "type": "string"
+        },
+        "excluded": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Requirement id -> reason, as declared in framework_inputs",
+          "title": "Excluded",
+          "type": "object"
+        },
+        "framework": {
+          "description": "Framework registry key, e.g. 'NIST_AI_RMF'",
+          "title": "Framework",
+          "type": "string"
+        },
+        "gated": {
+          "default": false,
+          "description": "True when this framework gates the run",
+          "title": "Gated",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Human-readable framework name",
+          "title": "Label",
+          "type": "string"
+        },
+        "report": {
+          "$ref": "#/$defs/GapReport"
+        }
+      },
+      "required": [
+        "framework",
+        "label",
+        "data_version",
+        "disclaimer_ref",
+        "report"
+      ],
+      "title": "FrameworkReport",
+      "type": "object"
+    },
+    "GapReport": {
+      "description": "Per-article Met/Partial/Missing/Unverified projection (opencomplai gaps).\n\nPurely a read-only projection of already-deterministic rule/obligation/scan/eval\noutputs \u2014 introduces no new analysis logic and does not affect exit codes.",
+      "properties": {
+        "articles": {
+          "items": {
+            "$ref": "#/$defs/ArticleGapStatus"
+          },
+          "title": "Articles",
+          "type": "array"
+        },
+        "commit_ref": {
+          "title": "Commit Ref",
+          "type": "string"
+        },
+        "evidence_hashes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Hashes",
+          "type": "array"
+        },
+        "generated_at": {
+          "title": "Generated At",
+          "type": "string"
+        },
+        "not_applicable": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Article -> reason it does not apply; omitted when empty",
+          "title": "Not Applicable",
+          "type": "object"
+        },
+        "principle_summary": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PrincipleSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "6-principle rollup, populated by `opencomplai gaps`"
+        },
+        "system_id": {
+          "title": "System Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "system_id",
+        "commit_ref",
+        "generated_at"
+      ],
+      "title": "GapReport",
+      "type": "object"
+    },
+    "GapStatus": {
+      "description": "Per-article compliance status shown by `opencomplai gaps`.",
+      "enum": [
+        "met",
+        "partial",
+        "missing",
+        "unverified"
+      ],
+      "title": "GapStatus",
+      "type": "string"
+    },
+    "IncidentClass": {
+      "enum": [
+        "unclassified",
+        "death",
+        "health_harm",
+        "critical_infrastructure",
+        "fundamental_rights",
+        "property_environment",
+        "widespread_infringement"
+      ],
+      "title": "IncidentClass",
+      "type": "string"
+    },
+    "IncidentItem": {
+      "additionalProperties": false,
+      "properties": {
+        "aware_on": {
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "title": "Aware On",
+          "type": "string"
+        },
+        "closed_on": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed On"
+        },
+        "declared_on": {
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "title": "Declared On",
+          "type": "string"
+        },
+        "incident_class": {
+          "$ref": "#/$defs/IncidentClass"
+        },
+        "incident_id": {
+          "maxLength": 40,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$",
+          "title": "Incident Id",
+          "type": "string"
+        },
+        "party_types": {
+          "items": {
+            "enum": [
+              "authority",
+              "deployer",
+              "importer",
+              "distributor"
+            ],
+            "type": "string"
+          },
+          "maxItems": 4,
+          "title": "Party Types",
+          "type": "array"
+        },
+        "reported_on": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reported On"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "closed"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "incident_id",
+        "incident_class",
+        "status",
+        "declared_on",
+        "aware_on"
+      ],
+      "title": "IncidentItem",
+      "type": "object"
+    },
+    "IncidentsSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "closed": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Closed",
+          "type": "integer"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/IncidentItem"
+          },
+          "maxItems": 50,
+          "title": "Items",
+          "type": "array"
+        },
+        "open": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Open",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "open",
+        "closed"
+      ],
+      "title": "IncidentsSummary",
+      "type": "object"
+    },
+    "NistRmfReport": {
+      "description": "Per-subcategory NIST AI RMF 1.0 gap report (`opencomplai gaps --target\nNIST_AI_RMF`), re-projected from an existing EU_AI_ACT `GapReport`.\n\nIntroduces no new analysis: every row cites the EU AI Act evidence\n(`source_eu_ai_act_articles`) it was derived from via the framework\ncrosswalk. See `nist_rmf_report.py`.",
+      "properties": {
+        "commit_ref": {
+          "title": "Commit Ref",
+          "type": "string"
+        },
+        "generated_at": {
+          "title": "Generated At",
+          "type": "string"
+        },
+        "subcategories": {
+          "items": {
+            "$ref": "#/$defs/RmfSubcategoryStatus"
+          },
+          "title": "Subcategories",
+          "type": "array"
+        },
+        "system_id": {
+          "title": "System Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "system_id",
+        "commit_ref",
+        "generated_at"
+      ],
+      "title": "NistRmfReport",
+      "type": "object"
+    },
+    "OversightSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "approvals": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Approvals",
+          "type": "integer"
+        },
+        "chain_valid": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Chain Valid"
+        },
+        "entries": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Entries",
+          "type": "integer"
+        },
+        "last_event_on": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Event On"
+        },
+        "log_head_sha256": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Head Sha256"
+        },
+        "resumes": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Resumes",
+          "type": "integer"
+        },
+        "roles": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Roles",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "entries",
+        "approvals",
+        "resumes",
+        "roles"
+      ],
+      "title": "OversightSummary",
+      "type": "object"
+    },
+    "PackIssuance": {
+      "additionalProperties": false,
+      "properties": {
+        "issued_on": {
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "title": "Issued On",
+          "type": "string"
+        },
+        "items_not_captured": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Items Not Captured"
+        },
+        "items_provided": {
+          "anyOf": [
+            {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Items Provided"
+        },
+        "kind": {
+          "$ref": "#/$defs/PackKind"
+        },
+        "pack_sha256": {
+          "maxLength": 64,
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Pack Sha256",
+          "type": "string"
+        },
+        "signer_key_id": {
+          "anyOf": [
+            {
+              "maxLength": 16,
+              "pattern": "^[0-9a-f]{16}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Signer Key Id"
+        }
+      },
+      "required": [
+        "pack_sha256",
+        "issued_on",
+        "kind"
+      ],
+      "title": "PackIssuance",
+      "type": "object"
+    },
+    "PackKind": {
+      "enum": [
+        "deployer"
+      ],
+      "title": "PackKind",
+      "type": "string"
+    },
+    "PacksSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "issued": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Issued",
+          "type": "integer"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/PackIssuance"
+          },
+          "maxItems": 50,
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "issued"
+      ],
+      "title": "PacksSummary",
+      "type": "object"
+    },
+    "PrincipleStatus": {
+      "description": "Rollup Met/Partial/Missing/Unverified status for one of the 6 EU Trustworthy\nAI principles, derived from the article-level rows already in a GapReport.",
+      "properties": {
+        "articles": {
+          "description": "Article references rolled up into this principle",
+          "items": {
+            "type": "string"
+          },
+          "title": "Articles",
+          "type": "array"
+        },
+        "principle_id": {
+          "description": "e.g. 'accountability'",
+          "title": "Principle Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "principle_id",
+        "title",
+        "status"
+      ],
+      "title": "PrincipleStatus",
+      "type": "object"
+    },
+    "PrincipleSummary": {
+      "description": "6-principle rollup of a GapReport, additive to `opencomplai gaps --output json`.",
+      "properties": {
+        "principles": {
+          "items": {
+            "$ref": "#/$defs/PrincipleStatus"
+          },
+          "title": "Principles",
+          "type": "array"
+        }
+      },
+      "title": "PrincipleSummary",
+      "type": "object"
+    },
+    "QmsClauses": {
+      "additionalProperties": false,
+      "properties": {
+        "a": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "A",
+          "type": "string"
+        },
+        "b": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "B",
+          "type": "string"
+        },
+        "c": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "C",
+          "type": "string"
+        },
+        "d": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "D",
+          "type": "string"
+        },
+        "e": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "E",
+          "type": "string"
+        },
+        "f": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "F",
+          "type": "string"
+        },
+        "g": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "G",
+          "type": "string"
+        },
+        "h": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "H",
+          "type": "string"
+        },
+        "i": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "I",
+          "type": "string"
+        },
+        "j": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "J",
+          "type": "string"
+        },
+        "k": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "K",
+          "type": "string"
+        },
+        "l": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "L",
+          "type": "string"
+        },
+        "m": {
+          "enum": [
+            "present",
+            "unfilled",
+            "missing",
+            "unverified"
+          ],
+          "title": "M",
+          "type": "string"
+        }
+      },
+      "required": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m"
+      ],
+      "title": "QmsClauses",
+      "type": "object"
+    },
+    "QmsSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "clauses": {
+          "$ref": "#/$defs/QmsClauses"
+        },
+        "size_tier": {
+          "anyOf": [
+            {
+              "enum": [
+                "micro",
+                "small",
+                "medium",
+                "large",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Size Tier"
+        }
+      },
+      "required": [
+        "clauses"
+      ],
+      "title": "QmsSummary",
+      "type": "object"
+    },
+    "RmfFunction": {
+      "description": "NIST AI RMF 1.0 core function (Table 1-4 of NIST AI 100-1).",
+      "enum": [
+        "GOVERN",
+        "MAP",
+        "MEASURE",
+        "MANAGE"
+      ],
+      "title": "RmfFunction",
+      "type": "string"
+    },
+    "RmfSubcategoryStatus": {
+      "description": "Met/Partial/Missing/Unverified status for one NIST AI RMF 1.0\nsubcategory (CP-16, D-3c).\n\nPurely a re-projection of `ArticleGapStatus` rows already computed for\n`EU_AI_ACT` by `gap_report.py`, keyed through\n`data/framework_crosswalk.json` \u2014 no new scanner or evaluator backs this.\nA crosswalk row's `confidence` never gets upgraded when re-projected here\n(see `nist_rmf_report.py`), and `needs_founder_review` is always `True`:\nthis content has not been confirmed by a human reviewer.",
+      "properties": {
+        "category": {
+          "description": "e.g. 'GOVERN 1'",
+          "title": "Category",
+          "type": "string"
+        },
+        "confidence_label": {
+          "$ref": "#/$defs/ConfidenceLabel",
+          "default": "not_assessed"
+        },
+        "disclaimer_ref": {
+          "default": "DISCLAIMER_V1",
+          "title": "Disclaimer Ref",
+          "type": "string"
+        },
+        "function": {
+          "$ref": "#/$defs/RmfFunction"
+        },
+        "mapping_confidence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The framework_crosswalk.json row confidence ('low'|'medium'|'high') this verdict was re-projected through; None when no crosswalk row maps to this subcategory's category.",
+          "title": "Mapping Confidence"
+        },
+        "needs_founder_review": {
+          "default": true,
+          "title": "Needs Founder Review",
+          "type": "boolean"
+        },
+        "rationale": {
+          "default": "",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_eu_ai_act_articles": {
+          "description": "EU AI Act articles this verdict was derived from (citation trail)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Eu Ai Act Articles",
+          "type": "array"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        },
+        "subcategory": {
+          "description": "e.g. 'GOVERN 1.1'",
+          "title": "Subcategory",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subcategory",
+        "function",
+        "category",
+        "status"
+      ],
+      "title": "RmfSubcategoryStatus",
+      "type": "object"
+    },
+    "ScanResult": {
+      "description": "Terminal states for a compliance scan.",
+      "enum": [
+        "pass",
+        "control_fail",
+        "validation_fail",
+        "policy_block",
+        "trap_detected",
+        "degraded_complete"
+      ],
+      "title": "ScanResult",
+      "type": "string"
+    },
+    "ScanSummary": {
+      "description": "Compact scan block embedded in ScanStatusArtifact.",
+      "properties": {
+        "detected_categories": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Detected Categories",
+          "type": "array"
+        },
+        "detector_errors": {
+          "description": "Detector/scan failures from the full report, carried forward so a receiving server can tell severity:none apart from an incomplete scan rather than seeing only a passing severity.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Detector Errors",
+          "type": "array"
+        },
+        "discrepancies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Discrepancies",
+          "type": "array"
+        },
+        "evidence_hashes": {
+          "description": "SHA-256 hashes of evidence objects",
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Hashes",
+          "type": "array"
+        },
+        "report_hash": {
+          "title": "Report Hash",
+          "type": "string"
+        },
+        "scan_id": {
+          "title": "Scan Id",
+          "type": "string"
+        },
+        "scanner_version": {
+          "title": "Scanner Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/DiscrepancySeverity"
+        }
+      },
+      "required": [
+        "scan_id",
+        "scanner_version",
+        "severity",
+        "report_hash"
+      ],
+      "title": "ScanSummary",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.opencomplai.dev/scan_status_artifact/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Machine-readable signed status artifact produced at the end of every scan.\nThis is the canonical output consumed by CI gates and the premium dashboard.",
+  "properties": {
+    "cli_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cli Version"
+    },
+    "commit_ref": {
+      "title": "Commit Ref",
+      "type": "string"
+    },
+    "controls": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ControlsSummary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Control register summary (D9) \u2014 present only when a vault is configured and the control sync succeeded; None in OSS/vault-less mode or when the sync failed"
+    },
+    "duration_ms": {
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "eval_summary": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/EvalSummary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Pipeline evaluator outcomes when a sample set was supplied"
+    },
+    "evidence_hashes": {
+      "description": "SHA-256 hashes of evidence objects",
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Hashes",
+      "type": "array"
+    },
+    "failed_controls": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Failed Controls",
+      "type": "array"
+    },
+    "framework_reports": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/FrameworkReport"
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "One FrameworkReport per target framework, in target order \u2014 present only when --with-gaps assessed a target set other than exactly EU_AI_ACT or exactly NIST_AI_RMF; omitted from the JSON otherwise",
+      "title": "Framework Reports"
+    },
+    "gap_report": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/GapReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Per-article gap status when --with-gaps was used"
+    },
+    "install_id": {
+      "title": "Install Id",
+      "type": "string"
+    },
+    "manifest_sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Manifest Sha256"
+    },
+    "nist_rmf_report": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NistRmfReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Per-subcategory NIST AI RMF re-projection (CP-16) \u2014 present only when --with-gaps was used and NIST_AI_RMF is one of the resolved targets; None otherwise (including OSS/EU_AI_ACT mode)"
+    },
+    "pending_verifications_count": {
+      "default": 0,
+      "title": "Pending Verifications Count",
+      "type": "integer"
+    },
+    "policy_bundle_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Policy Bundle Version"
+    },
+    "rationale_hash": {
+      "description": "SHA-256 of the assessment rationale",
+      "title": "Rationale Hash",
+      "type": "string"
+    },
+    "result": {
+      "$ref": "#/$defs/ScanResult"
+    },
+    "rule_set_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Rule Set Version"
+    },
+    "scan_summary": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ScanSummary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Code corroboration scan outcomes when --scan was used"
+    },
+    "schema_version": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Schema Version"
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Base64-encoded signature; None in unsigned OSS mode",
+      "title": "Signature"
+    },
+    "summaries": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ArtifactSummaries"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Closed leaf-only summaries block; omitted when None"
+    },
+    "system_id": {
+      "title": "System Id",
+      "type": "string"
+    },
+    "timestamp": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Timestamp"
+    }
+  },
+  "required": [
+    "install_id",
+    "system_id",
+    "commit_ref",
+    "result",
+    "rationale_hash",
+    "duration_ms"
+  ],
+  "schema_version": "1",
+  "title": "ScanStatusArtifact",
+  "type": "object"
+}

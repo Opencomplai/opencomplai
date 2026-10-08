@@ -13,7 +13,7 @@ Set up Opencomplai for local development. The project is a Python monorepo manag
 |---|---|---|
 | Python | 3.11+ | [python.org](https://www.python.org/) |
 | uv | Latest | `pip install uv` or [docs.astral.sh/uv](https://docs.astral.sh/uv/) |
-| Node.js | 20 LTS | [nodejs.org](https://nodejs.org/) |
+| Node.js | 24 LTS | [nodejs.org](https://nodejs.org/) |
 | pnpm | 9+ | `npm install -g pnpm` |
 | Docker | 24+ | [docs.docker.com](https://docs.docker.com/get-docker/) |
 | pre-commit | Latest | `pip install pre-commit` |

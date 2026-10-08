@@ -45,7 +45,7 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "docs/risk_register.md",
-        "rationale": "Found candidate artifact/signal for 'risk_register' (2 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
         "confidence": 0.6,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
@@ -62,22 +62,22 @@
       },
       {
         "article": "Art. 11",
-        "status": "unverified",
-        "source": "rule",
-        "evidence_ref": "none",
-        "rationale": "No source data supplied for this article in this run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
         "article": "Art. 12",
-        "status": "unverified",
-        "source": "rule",
-        "evidence_ref": "none",
-        "rationale": "No source data supplied for this article in this run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
@@ -85,8 +85,8 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "INSTRUCTIONS.md",
-        "rationale": "Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
-        "confidence": 0.55,
+        "rationale": "Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic content markers — a bare or empty file is not a set of instructions for use.",
+        "confidence": 0.35,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -151,6 +151,16 @@
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
         "article": "Art. 27",
         "status": "missing",
         "source": "artifact",
@@ -171,13 +181,23 @@
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
         "article": "Art. 50",
-        "status": "unverified",
-        "source": "obligation",
-        "evidence_ref": "transparency",
-        "rationale": "Obligation 'Transparency obligations' applies; no automated verification run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
@@ -199,6 +219,26 @@
         "confidence": null,
         "confidence_label": "not_assessed",
         "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
       }
     ],
     "evidence_hashes": [],
@@ -207,10 +247,11 @@
         {
           "principle_id": "technical_robustness_safety",
           "title": "Technical Robustness and Safety",
-          "status": "unverified",
+          "status": "missing",
           "articles": [
             "Art. 15",
-            "Art. 25"
+            "Art. 25",
+            "Art. 72"
           ]
         },
         {
@@ -224,10 +265,11 @@
         {
           "principle_id": "transparency",
           "title": "Transparency",
-          "status": "partial",
+          "status": "missing",
           "articles": [
             "Art. 12",
             "Art. 13",
+            "Art. 49",
             "Art. 50"
           ]
         },
@@ -261,9 +303,11 @@
             "Art. 16",
             "Art. 17",
             "Art. 24",
+            "Art. 26",
             "Art. 43",
             "Art. 53",
-            "Art. 55"
+            "Art. 55",
+            "Art. 73"
           ]
         }
       ]

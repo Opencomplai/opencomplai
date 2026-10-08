@@ -466,3 +466,59 @@ def test_migration_0007_round_trip(tmp_path, monkeypatch):
     assert "control_instances" in tables
     assert "manifest_fingerprints" in tables
     engine.dispose()
+
+
+async def test_waiver_source_round_trips_and_can_be_cleared(client):
+    await client.put(
+        "/v1/controls",
+        json={
+            "items": [
+                _control_item(
+                    state="waived",
+                    waiver_rationale="Out of scope.",
+                    waiver_source="exclusion",
+                )
+            ]
+        },
+        headers=_headers("tenant-a"),
+    )
+    listed = await client.get("/v1/controls/sys-1", headers=_headers("tenant-a"))
+    assert listed.json()["items"][0]["waiver_source"] == "exclusion"
+
+    # The CLI PUTs a full dump, so a lifted waiver sends waiver_source=None.
+    await client.put(
+        "/v1/controls",
+        json={
+            "items": [
+                _control_item(
+                    state="evidence_missing",
+                    waiver_rationale=None,
+                    waiver_source=None,
+                )
+            ]
+        },
+        headers=_headers("tenant-a"),
+    )
+    listed = await client.get("/v1/controls/sys-1", headers=_headers("tenant-a"))
+    row = listed.json()["items"][0]
+    assert row["state"] == "evidence_missing"
+    assert row["waiver_source"] is None
+
+
+def test_migration_0010_adds_and_drops_waiver_source(tmp_path, monkeypatch):
+    database_url = f"sqlite:///{tmp_path / 'scratch-0010.db'}"
+    monkeypatch.setenv("DATABASE_URL", database_url)
+    cfg = Config(str(_service_root() / "alembic.ini"))
+    cfg.set_main_option("sqlalchemy.url", database_url)
+
+    def columns() -> set[str]:
+        engine = create_engine(database_url)
+        try:
+            return {c["name"] for c in inspect(engine).get_columns("control_instances")}
+        finally:
+            engine.dispose()
+
+    command.upgrade(cfg, "0010")
+    assert "waiver_source" in columns()
+    command.downgrade(cfg, "0009")
+    assert "waiver_source" not in columns()

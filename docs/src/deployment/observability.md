@@ -31,7 +31,9 @@ Opencomplai emits OpenTelemetry (OTel) traces and Prometheus metrics from every 
    docker compose -f infra/compose/docker-compose.yml up -d
    ```
 
-3. Open Grafana at `http://localhost:3001` (default credentials: anonymous viewer).
+3. Open Grafana at `http://localhost:3001`. Anonymous Viewer access is on, so no login is
+   needed to see the dashboards. Grafana and Prometheus listen on this machine's loopback
+   only by default; see [Network exposure](#network-exposure).
 
 ---
 
@@ -41,10 +43,37 @@ Opencomplai emits OpenTelemetry (OTel) traces and Prometheus metrics from every 
 |---|---|---|
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://otel-collector:4317` | gRPC OTLP endpoint for trace/metric export |
 | `OTEL_SERVICE_NAME` | `opencomplai` | Service name tag on all telemetry |
+| `OBSERVABILITY_BIND_ADDR` | `127.0.0.1` | Host address the Prometheus and Grafana ports are published on. Loopback by default; `0.0.0.0` publishes on every IPv4 interface and `::` is the IPv6 equivalent (see [Network exposure](#network-exposure)) |
 | `PROMETHEUS_HOST_PORT` | `9090` | Host port for Prometheus UI |
 | `GRAFANA_HOST_PORT` | `3001` | Host port for Grafana UI |
 
 Leave `OTEL_EXPORTER_OTLP_ENDPOINT` unset to disable trace export. Prometheus metrics are always exposed via each service's `/metrics` endpoint regardless.
+
+### Network exposure
+
+Prometheus and Grafana are operator tools, not part of the API surface, so their host
+ports are published on `127.0.0.1` unless you say otherwise. From the Docker host
+`http://localhost:3001` and `http://localhost:9090` work as usual; other machines cannot
+reach them (see the Docker Engine note below). The gateway (`GATEWAY_PORT`) is unaffected:
+it is the stack's entry point and stays published on all interfaces behind its own
+authentication.
+
+To reach them from other hosts, set `OBSERVABILITY_BIND_ADDR=0.0.0.0` in `infra/compose/.env`
+(every IPv4 interface; `::` is the IPv6 equivalent) or the address of a single interface,
+and recreate the containers. The setting covers both ports.
+
+!!! note "Docker Engine on Linux"
+    Docker Engine releases before 28.0 may let other hosts on the same network segment
+    reach ports published on `127.0.0.1`; 28.0 added a filter for this. If you run an
+    older engine on Linux, also block the Prometheus and Grafana ports with a host
+    firewall.
+
+!!! warning "Before you expose Grafana or Prometheus"
+    - Grafana runs with **anonymous Viewer access enabled**, and its admin login is the stock
+      `admin` / `admin`. Change the admin password (sign in, then profile → change
+      password) before binding it to anything other than loopback.
+    - Prometheus has **no authentication at all**. If other hosts need it, restrict access with
+      a firewall or put it behind an authenticating reverse proxy.
 
 ---
 
@@ -102,11 +131,11 @@ backend on every request.
 {
   "status": "degraded",
   "service": "gateway-api",
-  "version": "0.1.0-dev",
+  "version": "0.9.0",
   "checked_at": "2026-07-30T20:35:00Z",
   "services": {
-    "risk-engine":    { "status": "ok", "latency_ms": 12, "version": "0.2.0" },
-    "evidence-vault": { "status": "ok", "latency_ms": 9,  "version": "0.2.0" },
+    "risk-engine":    { "status": "ok", "latency_ms": 12 },
+    "evidence-vault": { "status": "ok", "latency_ms": 9 },
     "doc-generator":  { "status": "unreachable", "latency_ms": 2000, "reason": "timeout" },
     "egress-proxy":   { "status": "ok", "latency_ms": 7 }
   }
@@ -115,7 +144,9 @@ backend on every request.
 
 Per-service `status` is one of `ok`, `degraded` (answered, but reported itself
 unhealthy), or `unreachable` (no answer). `reason` is one of `timeout`,
-`connection_error`, or `http_error`.
+`connection_error`, or `http_error`. A service entry carries a `version` only
+when that service's health response includes one; the four internal services'
+health responses currently do not, so none appears above.
 
 **Monitor this URL, with the `strict` flag:**
 

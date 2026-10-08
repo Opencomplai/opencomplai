@@ -80,3 +80,67 @@ def test_schema_validates_a_sample_dossier() -> None:
     jsonschema.validate(
         instance=json.loads(sample.model_dump_json()), schema=_committed_schema()
     )
+
+
+def test_record_keeping_retention_is_optional_in_schema() -> None:
+    record_keeping = _committed_schema()["$defs"]["ArticleTwelveRecordKeeping"]
+    assert record_keeping.get("required", []) == []
+    assert "provider_supplied" in record_keeping["properties"]
+    assert "log_retention_days" in record_keeping["properties"]
+
+
+def test_section3_human_oversight_is_optional_in_schema() -> None:
+    schema = _committed_schema()
+    section3 = schema["$defs"]["AnnexIVSection3"]
+    assert "human_oversight" in section3["properties"]
+    assert "human_oversight" not in section3.get("required", [])
+    legacy = AnnexIVDossier(
+        dossier_id="11111111-1111-1111-1111-111111111111",
+        system_id="s",
+        commit_ref="abc1234",
+        generated_at="2026-09-18T00:00:00+00:00",
+        section1={
+            "system_name": "s",
+            "system_version": "v",
+            "provider_name": "p",
+            "intended_purpose": "x",
+            "compliance_target": "EU_AI_ACT",
+            "risk_class": "low",
+            "deployment_context": "production",
+        },
+        section2={"training_data_description": "t", "model_architecture": "m"},
+        section3={},
+        section4={},
+        section5={
+            "risk_assessment_id": "ra",
+            "risk_level": "low",
+            "rules_evaluated": 1,
+            "rules_passed": 1,
+            "rules_failed": 0,
+            "rationale_hash": "sha256:0",
+        },
+        bundle_checksum="sha256:" + "0" * 64,
+    )
+    instance = json.loads(legacy.model_dump_json())
+    assert "human_oversight" not in instance["section3"]
+    jsonschema.validate(instance=instance, schema=schema)
+
+
+def test_agent_inventory_is_optional_in_schema() -> None:
+    schema = _committed_schema()
+    assert "agent_inventory" in schema["properties"]
+    assert "agent_inventory" not in schema.get("required", [])
+    assert "AgentInventory" in schema["$defs"]
+    # A dossier without the block still validates (the key is simply absent).
+    test_section3_human_oversight_is_optional_in_schema()
+
+
+def test_compliance_target_description_names_the_iso_pack() -> None:
+    target = _committed_schema()["$defs"]["ComplianceTarget"]
+    description = target["description"]
+    assert "ISO_IEC_42001" in description
+    assert "attestation-led" in description
+    assert "mapped only, not a target" not in description
+    assert "never as an assessment target" not in description
+    # E-13: ISO is a framework pack, never a new enum member.
+    assert target["enum"] == ["EU_AI_ACT", "NIST_AI_RMF"]

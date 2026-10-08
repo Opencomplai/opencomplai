@@ -49,14 +49,14 @@ def check_ruff() -> None:
     assert result.returncode == 0, "ruff not found in PATH"
 
 
-@check("Node.js >= 20")
+@check("Node.js >= 24")
 def check_node() -> None:
     """Verify Node.js version meets the minimum requirement."""
     result = subprocess.run(["node", "--version"], capture_output=True, text=True)
     assert result.returncode == 0, "node not found in PATH"
     version = result.stdout.strip().lstrip("v")
     major = int(version.split(".")[0])
-    assert major >= 20, f"Node.js 20+ required, found v{version}"
+    assert major >= 24, f"Node.js 24+ required, found v{version}"
 
 
 @check("pnpm installed")

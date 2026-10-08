@@ -1,0 +1,62 @@
+{
+  "obligations.authorised_representative": {
+    "source": "Regulation (EU) 2024/1689, Art. 22 (authorised representatives of providers of high-risk AI systems); Arts. 28 and 29 concern notifying authorities and notification applications",
+    "confidence": "high",
+    "needs_founder_review": true,
+    "note": "article_ref corrected from 'Art. 22, Art. 28' to 'Art. 22'; body unchanged"
+  },
+  "obligations.deployer_general": {
+    "source": "Regulation (EU) 2024/1689, Art. 26 (obligations of deployers of high-risk AI systems)",
+    "confidence": "high",
+    "needs_founder_review": true,
+    "note": "article_ref corrected from 'Art. 26, Art. 29' to 'Art. 26'; last sentence reworded to cite no article number"
+  },
+  "obligations.deployer_high_risk": {
+    "source": "Regulation (EU) 2024/1689, Art. 26 and Art. 27 (fundamental rights impact assessment)",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "FRIA sentence rewritten to the Art. 27 scope (public-law bodies, private entities providing public services, Annex III 5(b)/5(c) deployers); wording is draft"
+  },
+  "obligations.fria": {
+    "source": "Regulation (EU) 2024/1689, Art. 27",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "body extended with Annex III point 5(b) and 5(c) deployers; wording is draft"
+  },
+  "obligations.prohibited": {
+    "source": "Regulation (EU) 2024/1689, Art. 5; ninth practice from Regulation (EU) 2026/1744 (Digital Omnibus), single secondary source",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "'social scoring by public authorities' changed to 'social scoring of natural persons'; ninth practice and its 2 December 2026 date are unverified and carry no article number"
+  },
+  "obligations.ai_literacy": {
+    "source": "Regulation (EU) 2024/1689, Art. 4",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "post-Omnibus Art. 4 wording not verified; text left as is"
+  },
+  "obligations.provider_art_6_4_registration": {
+    "source": "Regulation (EU) 2024/1689, Art. 6(4) and Art. 49(2)",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "new obligation for providers relying on the Art. 6(3) derogation; product-manufacturer treatment not modelled"
+  },
+  "questions.r5_fria": {
+    "source": "Regulation (EU) 2024/1689, Art. 27 and Annex III points 5(b) and 5(c)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "draft wording; same string is hard-coded in the CLI checker command"
+  },
+  "engine.fria_requires_annex_iii": {
+    "source": "Regulation (EU) 2024/1689, Art. 27 (refers to Art. 6(2) systems)",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "fria now requires an Annex III trigger; Annex III point 2 (critical infrastructure) exclusion not modelled: no structured Annex III field exists"
+  },
+  "docs.risk_levels_prohibited": {
+    "source": "Regulation (EU) 2024/1689, Art. 5(1)(c)",
+    "confidence": "high",
+    "needs_founder_review": true,
+    "note": "docs/src/concepts/risk-levels.md: 'social scoring by public authorities' changed to 'social scoring of natural persons'"
+  }
+}

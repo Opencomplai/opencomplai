@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "id": "art5_prohibitions",
+      "title": "Prohibited AI practices, Art. 5(1)(a)-(h)",
+      "applies_from": "2025-02-02",
+      "articles": ["Art. 5"],
+      "scope_note": "Practices (a) to (h) of the Art. 5(1) prohibition list.",
+      "source": "Reg. (EU) 2024/1689, Art. 5 and Art. 113",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "knowledge_ref": "prohibited:*:min"
+    },
+    {
+      "id": "art5_ninth_prohibition",
+      "title": "Ninth prohibited AI practice, Art. 5(1)(i)",
+      "applies_from": "2026-12-02",
+      "articles": ["Art. 5"],
+      "scope_note": "Practice (i) added to the Art. 5(1) prohibition list.",
+      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), Art. 5(1)(i)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "knowledge_ref": "prohibited:Art.5(1)(i)",
+      "note": "unverified: date and wording not checked against the Official Journal; single secondary source."
+    },
+    {
+      "id": "gpai_obligations",
+      "title": "General-purpose AI model obligations",
+      "applies_from": "2025-08-02",
+      "articles": ["Art. 53", "Art. 55"],
+      "scope_note": "Providers of general-purpose AI models, and of those with systemic risk.",
+      "source": "Reg. (EU) 2024/1689, Arts. 53, 55 and 113",
+      "confidence": "medium",
+      "needs_founder_review": true
+    },
+    {
+      "id": "art50_transparency",
+      "title": "Transparency obligations, Art. 50(1)-(4)",
+      "applies_from": "2026-08-02",
+      "articles": ["Art. 50"],
+      "scope_note": "Chatbot disclosure, synthetic content marking, emotion recognition and deepfake disclosure.",
+      "source": "Reg. (EU) 2024/1689, Art. 50 and Art. 113",
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "knowledge_ref": "limited_risk:*"
+    },
+    {
+      "id": "art50_2_transition",
+      "title": "Art. 50(2) transition period end",
+      "applies_from": null,
+      "articles": ["Art. 50"],
+      "scope_note": "Marking of synthetic content by providers of generative systems placed on the market earlier.",
+      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), Art. 50(2)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "unverified: Art. 50(2) transition end date not confirmed; founder to supply"
+    },
+    {
+      "id": "annex_iii_high_risk",
+      "title": "High-risk obligations for Annex III systems",
+      "applies_from": "2027-12-02",
+      "articles": ["Art. 6", "Art. 9-17", "Art. 22-29", "Art. 43"],
+      "scope_note": "Stand-alone high-risk systems listed in Annex III.",
+      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "unverified: date not checked against the Official Journal."
+    },
+    {
+      "id": "annex_i_high_risk",
+      "title": "High-risk obligations for Annex I product systems",
+      "applies_from": "2028-08-02",
+      "articles": ["Art. 6", "Art. 9-17", "Art. 22-29", "Art. 43"],
+      "scope_note": "High-risk AI that is a safety component of, or is itself, a product under Annex I legislation.",
+      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "unverified: date not checked against the Official Journal."
+    },
+    {
+      "id": "art49_2_registration",
+      "title": "Art. 49(2) registration of systems exempted under Art. 6(3)",
+      "applies_from": null,
+      "articles": ["Art. 6"],
+      "scope_note": "Registration duty for providers who consider an Annex III system not high-risk.",
+      "source": "Reg. (EU) 2024/1689, Art. 49(2)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "unverified: date not confirmed"
+    }
+  ]
+}

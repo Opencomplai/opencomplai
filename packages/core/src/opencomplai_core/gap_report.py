@@ -13,10 +13,13 @@ import json
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
+from opencomplai_core.agent_sources import AGENT_SOURCE_REF, agent_gap_status
 from opencomplai_core.compliance_checker.catalog import load_obligations
-from opencomplai_core.gap_probes import artifact_gap_status
+from opencomplai_core.evaluators.seed_corpus import SEED_EVAL_SET_ID
+from opencomplai_core.gap_probes import STUB_SOURCE_REFS, artifact_gap_status
+from opencomplai_core.manifest_sources import manifest_gap_status
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
@@ -28,6 +31,9 @@ from opencomplai_core.models import (
     GapStatus,
     RiskResult,
 )
+
+if TYPE_CHECKING:
+    from opencomplai_core.models import CheckerSessionRef, SystemManifest
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
 
@@ -46,6 +52,12 @@ STATUS_SEVERITY: dict[GapStatus, int] = {
     GapStatus.PARTIAL: 2,
     GapStatus.MISSING: 3,
 }
+
+# Scan signals whose presence is a detection, never a compliance verdict: they can
+# never read MET on their own, even inside a declared Annex III area.
+SCAN_NO_VERDICT: frozenset[str] = frozenset(
+    {"agent_framework", "mcp_server", "pii_dataflow"}
+)
 
 
 @lru_cache(maxsize=1)
@@ -144,6 +156,26 @@ def _scan_status(
             confidence=0.6,
             label=ConfidenceLabel.HEURISTIC_ESTIMATE,
         )
+    declared = set(corroboration_report.declared_categories)
+    in_declared_area = signal_category not in SCAN_NO_VERDICT and any(
+        finding.mapped_taxonomy and set(finding.mapped_taxonomy) <= declared
+        for finding in matched
+    )
+    if not in_declared_area:
+        return _with_honesty(
+            ArticleGapStatus(
+                article="",
+                status=GapStatus.UNVERIFIED,
+                source=ArticleGapSource.SCAN,
+                evidence_ref=matched[0].finding_id,
+                rationale=(
+                    f"{len(matched)} scan finding(s) for signal category "
+                    f"'{signal_category}' detected, no compliance verdict."
+                ),
+            ),
+            confidence=None,
+            label=ConfidenceLabel.NOT_ASSESSED,
+        )
     return _with_honesty(
         ArticleGapStatus(
             article="",
@@ -180,13 +212,21 @@ def _evaluator_status(
                 if result.outcome.value == "skipped"
                 else ConfidenceLabel.MEASURED
             )
+            rationale = f"{evaluator_id} ({result.reference}): {result.outcome.value}."
+            if (
+                eval_report.eval_set_id == SEED_EVAL_SET_ID
+                and result.outcome.value == "pass"
+            ):
+                # The bundled seed corpus is heuristic evidence, never a MET basis.
+                status = GapStatus.PARTIAL
+                rationale += " (heuristic seed corpus; not a MET basis)"
             return _with_honesty(
                 ArticleGapStatus(
                     article="",
                     status=status,
                     source=ArticleGapSource.EVALUATOR,
                     evidence_ref=result.evidence_hash,
-                    rationale=f"{evaluator_id} ({result.reference}): {result.outcome.value}.",
+                    rationale=rationale,
                 ),
                 confidence=result.score if result.outcome.value != "skipped" else None,
                 label=label,
@@ -231,6 +271,45 @@ def _attestation_status(
     )
 
 
+def _not_applicable_reason(
+    article: str,
+    config: dict[str, Any],
+    manifest: SystemManifest | None,
+    checker_session: CheckerSessionRef | None,
+) -> str | None:
+    """Why a recorded checker session says `article` does not apply, else None.
+
+    Only obligation ids decide (roles are named in the text, never used). An
+    empty `obligation_ids` is unknown (legacy session, out of scope), so no
+    article moves. The text has no date or clock (E-14).
+    """
+    required = config.get("applies_when_any")
+    if not required or checker_session is None or not checker_session.obligation_ids:
+        return None
+    if set(required) & set(checker_session.obligation_ids):
+        return None
+    reason = (
+        f"{article} applies only with checker obligation "
+        f"{' or '.join(required)}; checker session {checker_session.session_id} "
+        "did not record it"
+    )
+    roles = (manifest.operator_roles or [manifest.operator_role]) if manifest else []
+    roles = [r for r in roles if r]
+    return f"{reason} (operator role: {', '.join(roles)})" if roles else reason
+
+
+def _source_enabled(
+    source: dict[str, Any], checker_session: CheckerSessionRef | None
+) -> bool:
+    """A source with `when_obligation_any` runs only for a session that recorded one."""
+    gate = source.get("when_obligation_any")
+    if not gate:
+        return True
+    return checker_session is not None and bool(
+        set(gate) & set(checker_session.obligation_ids)
+    )
+
+
 def build_gap_report(
     system_id: str,
     commit_ref: str,
@@ -240,23 +319,42 @@ def build_gap_report(
     repo_root: Path | None = None,
     requirements: dict[str, Any] | None = None,
     attestations: dict[str, Attestation] | None = None,
+    *,
+    manifest: SystemManifest | None = None,
+    checker_session: CheckerSessionRef | None = None,
 ) -> GapReport:
     """Project rule/obligation/scan/eval/artifact outputs into a per-article gap report.
 
     `requirements` is a framework pack's requirements map; the EU AI Act
     article map is used when it is omitted. `attestations` (requirement id ->
-    Attestation) feeds sources of kind "attestation".
+    Attestation) feeds sources of kind "attestation". `manifest` and
+    `checker_session` drive applicability: an article whose `applies_when_any`
+    obligation ids are all missing from the session's recorded `obligation_ids`
+    moves to `GapReport.not_applicable` (no row, no probe). Without a session,
+    or with none recorded, the output is unchanged. A source with
+    `when_obligation_any` is skipped unless the session recorded one of those
+    obligation ids (GPAI documentation probes), so sessionless output is unchanged.
     """
     article_map = requirements if requirements is not None else load_gap_article_map()
     articles: list[ArticleGapStatus] = []
+    not_applicable: dict[str, str] = {}
 
     for article, config in article_map.items():
+        reason = _not_applicable_reason(article, config, manifest, checker_session)
+        if reason is not None:
+            not_applicable[article] = reason
+            continue
         sources = config.get("sources", [])
         row: ArticleGapStatus | None = None
+        manifest_row: ArticleGapStatus | None = None
 
         for source in sources:
             kind = source["kind"]
             ref = source["ref"]
+            if not _source_enabled(source, checker_session):
+                continue
+            if ref in STUB_SOURCE_REFS.get(kind, frozenset()):
+                continue  # placeholder slot: never a candidate
             candidate: ArticleGapStatus | None = None
 
             if kind == "rule" and risk_result is not None:
@@ -271,6 +369,17 @@ def build_gap_report(
                 candidate = artifact_gap_status(ref, repo_root)
             elif kind == "attestation":
                 candidate = _attestation_status(ref, attestations or {})
+            elif (
+                kind == "manifest" and ref == AGENT_SOURCE_REF and manifest is not None
+            ):
+                # Ordinary worst-wins, not the manifest_row supersession below:
+                # an agent PARTIAL must never hide an artifact MISSING.
+                candidate = agent_gap_status(article, manifest, corroboration_report)
+            elif kind == "manifest" and manifest is not None:
+                candidate = manifest_gap_status(ref, manifest)
+                if candidate is not None and manifest_row is None:
+                    manifest_row = candidate  # resolved after the loop
+                continue
 
             if candidate is None:
                 continue
@@ -279,6 +388,22 @@ def build_gap_report(
                 STATUS_SEVERITY[candidate.status] > STATUS_SEVERITY[row.status]
             ):
                 row = candidate
+
+        # A declaration is the provider's own statement. It fills a gap (no
+        # row, UNVERIFIED) and supersedes an artifact probe that found no file
+        # (MISSING); against any other row normal worst-wins applies, so it
+        # never masks an equal or worse verdict (ties keep the existing row).
+        if manifest_row is not None:
+            if (
+                row is None
+                or row.status == GapStatus.UNVERIFIED
+                or (
+                    row.source == ArticleGapSource.ARTIFACT
+                    and row.status == GapStatus.MISSING
+                )
+                or STATUS_SEVERITY[manifest_row.status] > STATUS_SEVERITY[row.status]
+            ):
+                row = manifest_row
 
         if row is None:
             fallback_kind = sources[0]["kind"] if sources else "rule"
@@ -307,4 +432,5 @@ def build_gap_report(
         commit_ref=commit_ref,
         generated_at=datetime.now(UTC).isoformat(),
         articles=articles,
+        **({"not_applicable": not_applicable} if not_applicable else {}),
     )

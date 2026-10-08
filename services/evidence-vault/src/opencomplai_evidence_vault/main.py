@@ -19,7 +19,7 @@ from xml.sax.saxutils import escape as _xml_escape
 
 from alembic import command
 from alembic.config import Config
-from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import Response
 from opencomplai_core.telemetry import configure_telemetry, metrics_response
 from pydantic import BaseModel, Field
@@ -87,8 +87,10 @@ except ImportError:
 from sqlalchemy import select
 
 from opencomplai_evidence_vault.ledger import (
+    GENESIS_HASH,
+    LEDGER_TIPS_MAX_UNPAGED,
     append_event,
-    compute_history_tips,
+    compute_history_tips_page,
     get_chain_tip,
     verify_chain,
 )
@@ -377,6 +379,7 @@ class ControlItemRequest(BaseModel):
     last_evidence_at: str | None = None
     due_at: str | None = None
     waiver_rationale: str | None = None
+    waiver_source: str | None = None
 
 
 class ControlsUpsertRequest(BaseModel):
@@ -463,7 +466,7 @@ def create_app() -> FastAPI:
             "Append-only Merkle-linked event ledger and content-addressable evidence store. "
             "Implements PRD requirements REQ-EV-001, REQ-EV-002, REQ-EV-003."
         ),
-        version="0.1.0-dev",
+        version="0.9.0",
         lifespan=lifespan,
     )
 
@@ -595,6 +598,10 @@ def create_app() -> FastAPI:
 
     @router.get("/v1/evidence/ledger-history-tips")
     async def get_ledger_history_tips(
+        # le: seq is a BigInteger column; a larger value would fail in the
+        # driver as a 500 rather than be rejected as bad input.
+        after_seq: int | None = Query(default=None, ge=0, le=2**63 - 1),
+        limit: int | None = Query(default=None, ge=1, le=5000),
         session: AsyncSession = Depends(get_tenant_session),
         tenant_id: str = Depends(get_tenant_id),
     ) -> dict:
@@ -603,14 +610,55 @@ def create_app() -> FastAPI:
 
         Used by the verify-ledger tool to confirm that a dossier's recorded
         ledger_root_hash corresponds to a real historical point in the chain.
-        The response is a list of sha256:<hex> strings, one per event, plus
-        the genesis hash at index 0.
 
-        WARNING: this endpoint materialises the full chain in memory.  For
-        ledgers with millions of events, add pagination or a streaming variant.
+        Without parameters the response is {"tips", "count"}: every tip as a
+        list of sha256:<hex> strings, with the genesis hash at index 0. That
+        list is built in memory, so a tenant with more than
+        LEDGER_TIPS_MAX_UNPAGED events gets a 413 instead; page with `limit`.
+        413 is kept because the request is well-formed and that status is
+        already published for this case in the gateway OpenAPI document and
+        the REST docs; note that it is the response, not the request content,
+        that would be too large.
+
+        With `limit` (and optionally `after_seq`, default 0) the response is
+        one page: {"genesis", "tips", "count", "next_after_seq"}. `tips` holds
+        the per-event tips after event `after_seq` only (the genesis hash is
+        given separately), and `next_after_seq` is the cursor for the next
+        page, or null on the last one.
         """
-        tips = await compute_history_tips(session, tenant_id=tenant_id)
-        return {"tips": tips, "count": len(tips)}
+        if limit is None:
+            if after_seq is not None:
+                raise HTTPException(
+                    status_code=422, detail="after_seq requires the limit parameter"
+                )
+            # Bounded read, not COUNT(*): the keyset helper fetches one event
+            # past the cap, so a cursor back means "too long" and memory never
+            # exceeds the cap however long the chain is.
+            tips, more = await compute_history_tips_page(
+                session, tenant_id, 0, limit=LEDGER_TIPS_MAX_UNPAGED
+            )
+            if more is not None:
+                raise HTTPException(
+                    status_code=413,
+                    detail=(
+                        f"Ledger has more than {LEDGER_TIPS_MAX_UNPAGED} "
+                        "events, which is more than an unpaged response may "
+                        "hold. Page through it with the limit and after_seq "
+                        "query parameters."
+                    ),
+                )
+            tips = [GENESIS_HASH, *tips]
+            return {"tips": tips, "count": len(tips)}
+
+        tips, next_after_seq = await compute_history_tips_page(
+            session, tenant_id, after_seq or 0, limit=limit
+        )
+        return {
+            "genesis": GENESIS_HASH,
+            "tips": tips,
+            "count": len(tips),
+            "next_after_seq": next_after_seq,
+        }
 
     @router.post(
         "/v1/evidence/objects", response_model=StoreObjectResponse, status_code=201
@@ -1159,8 +1207,8 @@ def create_app() -> FastAPI:
     ) -> dict:
         """
         Return the portfolio of AI systems the vault has on record — one entry
-        per distinct system_id, carrying its most recently issued compliance
-        badge. Backs the dashboard portfolio view and the demo-smoke check.
+        per distinct system_id, carrying its most recently issued badge
+        (status ``scan_passed``: the scan passed with no pending verifications). Backs the dashboard portfolio view and the demo-smoke check.
         """
         stmt = (
             select(BadgeDB)
@@ -1181,7 +1229,7 @@ def create_app() -> FastAPI:
                 "badge_id": badge.badge_id,
                 "bundle_checksum": badge.bundle_checksum,
                 "issued_at": badge.issued_at,
-                "status": "compliant",
+                "status": "scan_passed",
             }
             for badge in latest_by_system.values()
         ]
@@ -1253,7 +1301,7 @@ def create_app() -> FastAPI:
         session: AsyncSession = Depends(get_tenant_session),
         tenant_id: str = Depends(get_tenant_id),
     ) -> Response:
-        """Return an SVG compliance badge asset for embedding in READMEs."""
+        """Return an SVG scan-passed badge asset for embedding in READMEs."""
         badge = await get_badge(session, badge_id, tenant_id=tenant_id)
         if badge is None:
             raise HTTPException(status_code=404, detail=f"Badge not found: {badge_id}")
@@ -1275,10 +1323,10 @@ def create_app() -> FastAPI:
   <rect rx="3" x="120" width="80" height="20" fill="#4c1"/>
   <rect rx="3" width="200" height="20" fill="url(#s)"/>
   <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,sans-serif" font-size="11">
-    <text x="60" y="15" fill="#010101" fill-opacity=".3">EU AI Act</text>
-    <text x="60" y="14">EU AI Act</text>
-    <text x="160" y="15" fill="#010101" fill-opacity=".3">compliant</text>
-    <text x="160" y="14">compliant</text>
+    <text x="60" y="15" fill="#010101" fill-opacity=".3">OpenComplAI</text>
+    <text x="60" y="14">OpenComplAI</text>
+    <text x="160" y="15" fill="#010101" fill-opacity=".3">scan passed</text>
+    <text x="160" y="14">scan passed</text>
   </g>
   <!-- badge_id: {safe_badge_id} system: {safe_system_id} issued: {safe_issued_at} -->
 </svg>"""

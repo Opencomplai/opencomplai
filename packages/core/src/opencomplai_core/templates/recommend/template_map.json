@@ -3,115 +3,242 @@
     "template_id": "ai_literacy_checklist",
     "kind": "markdown",
     "title": "AI Literacy Checklist",
-    "file": "ai_literacy_checklist.md"
+    "file": "ai_literacy_checklist.md",
+    "effort": "S"
   },
   "Art. 5": {
-    "template_id": "annex_iii_applicability_note",
+    "template_id": "art5_prohibited_practices_screen",
     "kind": "markdown",
-    "title": "Annex III Applicability Note",
-    "file": "annex_iii_applicability_note.md"
+    "title": "Prohibited practices screening",
+    "file": "art5_prohibited_practices_screen.md",
+    "article": "Art. 5",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 5",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "S"
   },
   "Art. 6": {
     "template_id": "annex_iii_applicability_note",
     "kind": "markdown",
     "title": "Annex III Applicability Note",
-    "file": "annex_iii_applicability_note.md"
+    "file": "annex_iii_applicability_note.md",
+    "effort": "S"
   },
   "Art. 9": {
     "template_id": "risk_register_entry",
     "kind": "markdown",
     "title": "Risk Register Entry Stub",
-    "file": "risk_register_entry.md"
+    "file": "risk_register_entry.md",
+    "effort": "M"
   },
   "Art. 10": {
-    "template_id": "risk_register_entry",
+    "template_id": "art10_data_governance",
     "kind": "markdown",
-    "title": "Risk Register Entry Stub",
-    "file": "risk_register_entry.md"
+    "title": "Data and data governance",
+    "file": "art10_data_governance.md",
+    "article": "Art. 10",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 10",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
   },
   "Art. 11": {
-    "template_id": "logging_event_capture",
+    "template_id": "art11_technical_documentation",
     "kind": "markdown",
-    "title": "Logging / Event Capture Stub",
-    "file": "logging_event_capture.md"
+    "title": "Technical documentation",
+    "file": "art11_technical_documentation.md",
+    "article": "Art. 11",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 11",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "S"
   },
   "Art. 12": {
     "template_id": "event_logging",
     "kind": "python",
     "title": "Event Logging Helper",
-    "file": "python/art12/event_logging.py"
+    "file": "python/art12/event_logging.py",
+    "effort": "S"
   },
   "Art. 13": {
-    "template_id": "transparency_notice",
+    "template_id": "instructions_for_use",
     "kind": "markdown",
-    "title": "Transparency / Disclosure Notice Stub",
-    "file": "transparency_notice.md"
+    "title": "Instructions for Use (Art. 13)",
+    "file": "instructions_for_use.md",
+    "article": "Art. 13",
+    "source": "plain-language reading of Regulation (EU) 2024/1689 Art. 13(3); not checked against the published text",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "S"
   },
   "Art. 14": {
     "template_id": "oversight_checkpoint",
     "kind": "python",
     "title": "Human Oversight Checkpoint",
-    "file": "python/art14/oversight_checkpoint.py"
+    "file": "python/art14/oversight_checkpoint.py",
+    "effort": "M"
   },
   "Art. 15": {
-    "template_id": "risk_register_entry",
+    "template_id": "art15_accuracy_robustness",
     "kind": "markdown",
-    "title": "Risk Register Entry Stub",
-    "file": "risk_register_entry.md"
+    "title": "Accuracy, robustness and cybersecurity",
+    "file": "art15_accuracy_robustness.md",
+    "article": "Art. 15",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 15",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "L"
   },
   "Art. 16": {
-    "template_id": "risk_register_entry",
+    "template_id": "art16_provider_obligations",
     "kind": "markdown",
-    "title": "Risk Register Entry Stub",
-    "file": "risk_register_entry.md"
+    "title": "Obligations of providers of high-risk AI systems",
+    "file": "art16_provider_obligations.md",
+    "article": "Art. 16",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 16",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
   },
   "Art. 17": {
     "template_id": "qms_outline",
     "kind": "markdown",
     "title": "Quality Management System Outline",
-    "file": "qms_outline.md"
+    "file": "qms_outline.md",
+    "effort": "L"
   },
   "Art. 24": {
-    "template_id": "annex_iii_applicability_note",
+    "template_id": "art24_distributor_obligations",
     "kind": "markdown",
-    "title": "Annex III Applicability Note",
-    "file": "annex_iii_applicability_note.md"
+    "title": "Distributor conformity obligations",
+    "file": "art24_distributor_obligations.md",
+    "article": "Art. 24",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 24",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
   },
   "Art. 25": {
-    "template_id": "human_oversight_checklist",
+    "template_id": "art25_value_chain_responsibilities",
     "kind": "markdown",
-    "title": "Human Oversight Checklist",
-    "file": "human_oversight_checklist.md"
+    "title": "Responsibilities along the AI value chain / substantial modification",
+    "file": "art25_value_chain_responsibilities.md",
+    "article": "Art. 25",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 25",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
   },
   "Art. 27": {
     "template_id": "fria_template",
     "kind": "markdown",
     "title": "Fundamental Rights Impact Assessment (FRIA) Template",
-    "file": "fria_template.md"
+    "file": "fria_template.md",
+    "effort": "L"
   },
   "Art. 43": {
-    "template_id": "annex_iii_applicability_note",
+    "template_id": "art43_conformity_assessment",
     "kind": "markdown",
-    "title": "Annex III Applicability Note",
-    "file": "annex_iii_applicability_note.md"
+    "title": "Conformity assessment",
+    "file": "art43_conformity_assessment.md",
+    "article": "Art. 43",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Art. 43",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "L"
   },
   "Art. 50": {
     "template_id": "transparency_middleware",
     "kind": "python",
     "title": "ASGI Transparency Middleware",
     "file": "python/art50/transparency_middleware.py",
-    "assets": ["python/common/disclosure_helpers.py"]
+    "assets": [
+      "python/common/disclosure_helpers.py"
+    ],
+    "effort": "S"
   },
   "Art. 53": {
-    "template_id": "gpai_obligation_stub",
+    "template_id": "gpai_annex_documentation",
     "kind": "markdown",
-    "title": "GPAI Provider Obligation Stub (Art. 53)",
-    "file": "gpai_obligation_stub.md"
+    "title": "GPAI Provider Documentation (Annex XI and XII, Art. 53)",
+    "file": "gpai_annex_documentation.md",
+    "article": "Art. 53",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Annex XI and Annex XII",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "also": [
+      {
+        "template_id": "gpai_copyright_policy",
+        "kind": "markdown",
+        "title": "GPAI Copyright Policy Outline (Art. 53(1)(c))",
+        "file": "gpai_copyright_policy.md",
+        "article": "Art. 53",
+        "source": "plain-language topic outline for the Art. 53(1)(c) copyright policy; author's recollection, not checked against the published text",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      {
+        "template_id": "gpai_training_summary",
+        "kind": "markdown",
+        "title": "GPAI Training-Content Summary Draft (Art. 53(1)(d))",
+        "file": "gpai_training_summary.md",
+        "article": "Art. 53",
+        "source": "training-content summary pack rendered as a draft; recollection, not checked against the published template",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    ],
+    "effort": "M"
   },
   "Art. 55": {
-    "template_id": "gpai_obligation_stub",
+    "template_id": "gpai_annex_documentation",
     "kind": "markdown",
-    "title": "GPAI Systemic-Risk Obligation Stub (Art. 55)",
-    "file": "gpai_obligation_stub.md"
+    "title": "GPAI Systemic-Risk Documentation (Annex XI Section 2, Art. 55)",
+    "file": "gpai_annex_documentation.md",
+    "article": "Art. 55",
+    "source": "plain-language summary of Regulation (EU) 2024/1689 Annex XI and Annex XII",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "L"
+  },
+  "Art. 26": {
+    "template_id": "eu_obligation_action_plan",
+    "kind": "markdown",
+    "title": "Obligation Action Plan",
+    "file": "eu_obligation_action_plan.md",
+    "source": "generic obligation action plan (placeholder), not an article-specific template",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
+  },
+  "Art. 49": {
+    "template_id": "eu_obligation_action_plan",
+    "kind": "markdown",
+    "title": "Obligation Action Plan",
+    "file": "eu_obligation_action_plan.md",
+    "source": "generic obligation action plan (placeholder), not an article-specific template",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "S"
+  },
+  "Art. 72": {
+    "template_id": "post_market_monitoring_plan",
+    "kind": "markdown",
+    "title": "Post-Market Monitoring Plan",
+    "file": "post_market_monitoring_plan.md",
+    "source": "fill-in checklist for Regulation (EU) 2024/1689 Art. 72 post-market monitoring; not checked against the published text",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
+  },
+  "Art. 73": {
+    "template_id": "serious_incident_report",
+    "kind": "markdown",
+    "title": "Serious Incident Report Stub",
+    "file": "serious_incident_report.md",
+    "source": "fill-in serious-incident record for Regulation (EU) 2024/1689 Art. 73; not checked against the published text",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "effort": "M"
   }
 }

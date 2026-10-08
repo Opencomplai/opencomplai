@@ -1,7 +1,7 @@
 {
   "install_id": "<INSTALL_ID>",
   "system_id": "golden-sys",
-  "commit_ref": "HEAD",
+  "commit_ref": "unresolved",
   "result": "pass",
   "failed_controls": [],
   "evidence_hashes": [],
@@ -13,7 +13,7 @@
   "scan_summary": null,
   "gap_report": {
     "system_id": "golden-sys",
-    "commit_ref": "HEAD",
+    "commit_ref": "unresolved",
     "generated_at": "<TIMESTAMP>",
     "articles": [
       {
@@ -51,7 +51,7 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "docs/risk_register.md",
-        "rationale": "Found candidate artifact/signal for 'risk_register' (2 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
         "confidence": 0.6,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
@@ -68,22 +68,22 @@
       },
       {
         "article": "Art. 11",
-        "status": "unverified",
-        "source": "rule",
-        "evidence_ref": "none",
-        "rationale": "No source data supplied for this article in this run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
         "article": "Art. 12",
-        "status": "unverified",
-        "source": "rule",
-        "evidence_ref": "none",
-        "rationale": "No source data supplied for this article in this run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
@@ -91,8 +91,8 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "INSTRUCTIONS.md",
-        "rationale": "Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
-        "confidence": 0.55,
+        "rationale": "Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic content markers — a bare or empty file is not a set of instructions for use.",
+        "confidence": 0.35,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -157,6 +157,16 @@
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
         "article": "Art. 27",
         "status": "missing",
         "source": "artifact",
@@ -177,13 +187,23 @@
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
         "article": "Art. 50",
-        "status": "unverified",
-        "source": "obligation",
-        "evidence_ref": "transparency",
-        "rationale": "Obligation 'Transparency obligations' applies; no automated verification run.",
-        "confidence": null,
-        "confidence_label": "not_assessed",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
@@ -205,6 +225,26 @@
         "confidence": null,
         "confidence_label": "not_assessed",
         "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
       }
     ],
     "evidence_hashes": [],
@@ -212,7 +252,7 @@
   },
   "nist_rmf_report": {
     "system_id": "golden-sys",
-    "commit_ref": "HEAD",
+    "commit_ref": "unresolved",
     "generated_at": "<TIMESTAMP>",
     "subcategories": [
       {
@@ -229,7 +269,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -247,7 +287,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -265,7 +305,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -283,7 +323,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -301,7 +341,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -319,7 +359,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -337,7 +377,7 @@
           "Art. 16",
           "Art. 17"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> unverified (source=rule, evidence=none); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 1, mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 9 -> partial (source=artifact, evidence=docs/risk_register.md); Art. 11 -> missing (source=artifact, evidence=technical_documentation_dossier); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle); Art. 17 -> partial (source=artifact, evidence=docs/qms.md).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -415,14 +455,15 @@
         "subcategory": "GOVERN 4.1",
         "function": "GOVERN",
         "category": "GOVERN 4",
-        "status": "partial",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 13",
-          "Art. 50"
+          "Art. 50",
+          "Art. 49"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> missing (source=artifact, evidence=transparency_notice_evidence); Art. 49 -> missing (source=artifact, evidence=eu_database_registration_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -430,14 +471,15 @@
         "subcategory": "GOVERN 4.2",
         "function": "GOVERN",
         "category": "GOVERN 4",
-        "status": "partial",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 13",
-          "Art. 50"
+          "Art. 50",
+          "Art. 49"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> missing (source=artifact, evidence=transparency_notice_evidence); Art. 49 -> missing (source=artifact, evidence=eu_database_registration_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -445,14 +487,15 @@
         "subcategory": "GOVERN 4.3",
         "function": "GOVERN",
         "category": "GOVERN 4",
-        "status": "partial",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 13",
-          "Art. 50"
+          "Art. 50",
+          "Art. 49"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> unverified (source=obligation, evidence=transparency).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (GOVERN 4, mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md); Art. 50 -> missing (source=artifact, evidence=transparency_notice_evidence); Art. 49 -> missing (source=artifact, evidence=eu_database_registration_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -638,13 +681,14 @@
         "subcategory": "MAP 3.1",
         "function": "MAP",
         "category": "MAP 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 53"
+          "Art. 53",
+          "Art. 26"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -652,13 +696,14 @@
         "subcategory": "MAP 3.2",
         "function": "MAP",
         "category": "MAP 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 53"
+          "Art. 53",
+          "Art. 26"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -666,13 +711,14 @@
         "subcategory": "MAP 3.3",
         "function": "MAP",
         "category": "MAP 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 53"
+          "Art. 53",
+          "Art. 26"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -680,13 +726,14 @@
         "subcategory": "MAP 3.4",
         "function": "MAP",
         "category": "MAP 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 53"
+          "Art. 53",
+          "Art. 26"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -694,13 +741,14 @@
         "subcategory": "MAP 3.5",
         "function": "MAP",
         "category": "MAP 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 53"
+          "Art. 53",
+          "Art. 26"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MAP 3, mapping confidence=low) from existing EU AI Act evidence: Art. 53 -> unverified (source=obligation, evidence=gpai_provider); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -997,13 +1045,13 @@
         "subcategory": "MEASURE 3.1",
         "function": "MEASURE",
         "category": "MEASURE 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "medium",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 12"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> missing (source=artifact, evidence=event_log_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -1011,13 +1059,13 @@
         "subcategory": "MEASURE 3.2",
         "function": "MEASURE",
         "category": "MEASURE 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "medium",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 12"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> missing (source=artifact, evidence=event_log_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -1025,13 +1073,13 @@
         "subcategory": "MEASURE 3.3",
         "function": "MEASURE",
         "category": "MEASURE 3",
-        "status": "unverified",
+        "status": "missing",
         "mapping_confidence": "medium",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
           "Art. 12"
         ],
-        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> unverified (source=rule, evidence=none).",
+        "rationale": "Re-projected via data/framework_crosswalk.json (MEASURE 3, mapping confidence=medium) from existing EU AI Act evidence: Art. 12 -> missing (source=artifact, evidence=event_log_evidence).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -1195,11 +1243,14 @@
         "subcategory": "MANAGE 4.1",
         "function": "MANAGE",
         "category": "MANAGE 4",
-        "status": "unverified",
-        "mapping_confidence": null,
-        "confidence_label": "not_assessed",
-        "source_eu_ai_act_articles": [],
-        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 72",
+          "Art. 73"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MANAGE 4, mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> missing (source=artifact, evidence=post_market_monitoring_plan); Art. 73 -> missing (source=artifact, evidence=serious_incident_log).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -1207,11 +1258,14 @@
         "subcategory": "MANAGE 4.2",
         "function": "MANAGE",
         "category": "MANAGE 4",
-        "status": "unverified",
-        "mapping_confidence": null,
-        "confidence_label": "not_assessed",
-        "source_eu_ai_act_articles": [],
-        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 72",
+          "Art. 73"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MANAGE 4, mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> missing (source=artifact, evidence=post_market_monitoring_plan); Art. 73 -> missing (source=artifact, evidence=serious_incident_log).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -1219,15 +1273,24 @@
         "subcategory": "MANAGE 4.3",
         "function": "MANAGE",
         "category": "MANAGE 4",
-        "status": "unverified",
-        "mapping_confidence": null,
-        "confidence_label": "not_assessed",
-        "source_eu_ai_act_articles": [],
-        "rationale": "No row in data/framework_crosswalk.json maps any EU AI Act article to MANAGE 4 -- there is no EU-AI-Act-native evidence to re-project onto this subcategory.",
+        "status": "missing",
+        "mapping_confidence": "low",
+        "confidence_label": "heuristic_estimate",
+        "source_eu_ai_act_articles": [
+          "Art. 72",
+          "Art. 73"
+        ],
+        "rationale": "Re-projected via data/framework_crosswalk.json (MANAGE 4, mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> missing (source=artifact, evidence=post_market_monitoring_plan); Art. 73 -> missing (source=artifact, evidence=serious_incident_log).",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       }
     ]
   },
-  "controls": null
+  "controls": null,
+  "rule_set_version": "1.6.0",
+  "cli_version": "<VERSION>",
+  "schema_version": "1",
+  "manifest_sha256": "8a17bfc01ee6b2feffeca295204de49791010ec1b1d6ef70e9dc6abf656300f5",
+  "timestamp": "<TIMESTAMP>",
+  "policy_bundle_version": "<POLICY_BUNDLE>"
 }

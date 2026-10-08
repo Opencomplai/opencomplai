@@ -1,0 +1,153 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "opencomplai",
+          "informationUri": "https://opencomplai.com",
+          "rules": [
+            {
+              "id": "EU_AIA_ART6_HIGH_RISK",
+              "name": "EU_AIA_ART6_HIGH_RISK",
+              "shortDescription": {
+                "text": "Failed control EU_AIA_ART6_HIGH_RISK"
+              }
+            },
+            {
+              "id": "EU_AIA_ART6_PROFILING",
+              "name": "EU_AIA_ART6_PROFILING",
+              "shortDescription": {
+                "text": "Failed control EU_AIA_ART6_PROFILING"
+              }
+            },
+            {
+              "id": "gap/EU_AIA_ART6_HIGH_RISK",
+              "name": "gap/EU_AIA_ART6_HIGH_RISK",
+              "shortDescription": {
+                "text": "Gap row for evidence EU_AIA_ART6_HIGH_RISK"
+              }
+            },
+            {
+              "id": "gap/docs/risk_register.md",
+              "name": "gap/docs/risk_register.md",
+              "shortDescription": {
+                "text": "Gap row for evidence docs/risk_register.md"
+              }
+            },
+            {
+              "id": "gap/none",
+              "name": "gap/none",
+              "shortDescription": {
+                "text": "Gap row for evidence none"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "EU_AIA_ART6_HIGH_RISK",
+          "level": "error",
+          "message": {
+            "text": "Control EU_AIA_ART6_HIGH_RISK failed the compliance check."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "EU_AIA_ART6_PROFILING",
+          "level": "error",
+          "message": {
+            "text": "Control EU_AIA_ART6_PROFILING failed the compliance check."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/EU_AIA_ART6_HIGH_RISK",
+          "level": "error",
+          "message": {
+            "text": "Art. 6: Use case matches Annex III categories: essential_services. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/docs/risk_register.md",
+          "level": "warning",
+          "message": {
+            "text": "Art. 9: Found candidate artifact for risk_register. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 10: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "opencomplai_result": "control_fail",
+        "system_id": "fixture-sys",
+        "commit_ref": "<COMMIT>"
+      }
+    }
+  ]
+}

@@ -14,8 +14,9 @@ Run assessments programmatically using the Opencomplai Python SDK.
     pip install opencomplai
     ```
 
-!!! note "Pre-release"
-    See [Installation](../getting-started/installation.md) for source-install fallback.
+!!! note "Installing from source"
+    The packages are published on PyPI. To work from a checkout instead, see
+    [Installation](../getting-started/installation.md#install-from-source).
 
 ## Minimal example
 

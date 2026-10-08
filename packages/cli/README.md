@@ -7,7 +7,7 @@
 The `opencomplai` command-line tool for AI compliance assessment. It scans your
 repository, classifies your AI system against the EU AI Act, reports gaps for every
 framework your manifest targets (NIST AI RMF 1.0 is derived from the EU AI Act evidence),
-and produces an auditable, CI-gateable compliance artifact.
+and produces an auditable, CI-gateable compliance artifact. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
 
 Built on [`opencomplai-core`](https://pypi.org/project/opencomplai-core/) — the same
 deterministic, rule-based risk engine, with a rich terminal UX.
@@ -32,21 +32,34 @@ meta-package instead.
 | `opencomplai push` | Publish a signed artifact (scan status or Annex IV dossier) to the Premium Dashboard |
 | `opencomplai checker` | Run the interactive EU AI Act applicability checker |
 | `opencomplai gaps` | Print a gap report for every target framework, the EU AI Act by default (informational — never gates CI) |
+| `opencomplai diff` | Compare two artifacts or gap reports: added, removed and changed verdicts and the rule-set version delta (`--fail-on-regression` exits 1 on a worse status) |
 | `opencomplai recommend` | Write copy-paste remediation templates for Missing/Partial gap-report rows |
 | `opencomplai report` | Render a single shareable HTML/PDF compliance report |
 | `opencomplai eval` | Run safety, bias, and data-leakage pipeline evaluators |
-| `opencomplai validate-manifest` | Validate a `system-manifest.json` against the required schema |
+| `opencomplai validate-manifest` | Validate a `system-manifest.json` against the required schema; deep-checks an `agent_inventory` block |
 | `opencomplai serve` | Start a localhost-only scan dashboard (not Pro/SaaS) |
 | `opencomplai approve` | Mint a signed HITL approval token for a `HALTED_PENDING_REVIEW` system |
 | `opencomplai resume` | Resume a `HALTED_PENDING_REVIEW` system with a signed approval token |
+| `opencomplai accept` | Write a signed, committable record accepting a system's high-risk classification |
 | `opencomplai verify-output` | Verify an AI output claim against ground-truth sources |
+| `opencomplai verify` | Verify a signed artifact (`--kind` artifact, dossier or agent-attestation; `--expect KEY=VALUE` adds offline checks) |
 | `opencomplai version` | Show the installed Opencomplai version |
 | `opencomplai info` | Show full package metadata (`pip show`-style, across the whole suite) |
 
 Also available as command groups (`opencomplai <group> --help` for their own subcommands):
-`docs` (Annex IV dossier generation), `risk` (risk classification), `sync` (metadata sync),
+`docs` (Annex IV dossier generation), `instructions` (Art. 13 instructions-for-use), `deployer-pack` (seal instructions-for-use into a hash-named, offline-verifiable pack), `risk` (risk classification), `sync` (metadata sync),
 `keys` (signing-key rotation), `ai` (optional AI-intent plugin configuration), `controls`
-(control-register status).
+(control-register status), `fria` (fundamental rights impact assessment), `qms` (Art. 17 quality-management-system documents), `dashboard` (Premium Dashboard connection management),
+`incident` (incident records and deadline clocks),
+`agents` (declared agent inventory: list, cross-check against a scan, report; `agents attest` signs an agent mandate attestation)
+and `rules` (rule-set history: `opencomplai rules changelog`).
+Per-command pages are at <https://docs.opencomplai.com/cli/>.
+
+`gaps`, `report` and `recommend` accept `--sort priority` to list rows by regulatory deadline, then
+severity (Missing first), then fix effort (S, M, L); the default is `--sort article`. Met rows come last,
+rows without a known deadline or effort sort after dated ones, and effort is a rough engineering
+estimate. `gaps -o json` adds a top-level `backlog` block under `--sort priority`; the `articles` list
+keeps article order.
 
 Run `opencomplai --help` for the full command list, or `opencomplai <command> --help` for
 options.
@@ -95,6 +108,10 @@ So you can wire it straight into CI:
 opencomplai check || exit $?
 ```
 
+`check` can also write CI reports from the same verdict, without changing the exit code:
+`--report-junit PATH` (JUnit XML), `--sarif-output PATH` (SARIF 2.1.0 of the verdict, not scan
+evidence) and `--summary-md PATH` (Markdown job summary).
+
 To publish an Annex IV dossier instead of (or in addition to) a scan-status artifact, run
 `opencomplai docs generate --system-id ... --push` — same `OPENCOMPLAI_API_KEY` /
 `OPENCOMPLAI_DASHBOARD_URL` as `opencomplai push` above.
@@ -106,8 +123,11 @@ the `--ai-intent` flag, which classifies how each AI callsite is actually used:
 
 ```bash
 pip install opencomplai-ai
-opencomplai scan --ai-intent
+opencomplai scan --ai-intent --ai-model codebert-onnx   # deterministic matcher, no download
 ```
+
+The default model is a local GGUF LLM and needs `pip install 'opencomplai-ai[deep]'`;
+without it a bare `--ai-intent` prints `AI intent skipped`.
 
 ## Documentation
 

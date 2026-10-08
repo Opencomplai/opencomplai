@@ -64,9 +64,11 @@ higher and must be demonstrably cleared.
    `model_architecture`, `monitoring_approach`, `incident_response_procedure`).
 3. Run `opencomplai docs generate` to produce the technical dossier that evidences
    Chapter III compliance.
-4. Once the full conformity dossier is accepted by your compliance team, use the
-   `--scan-mode ci` flag in CI to treat this code as informational rather than blocking
-   (exit code `0` in degraded-complete mode).
+4. `EU_AIA_ART6_HIGH_RISK` is a structural CONTROL_FAIL (exit `1`) that cannot be
+   switched off by a flag: `--scan-mode` does not change it, and the manifest's
+   `framework_inputs` exclusions do not apply to the EU AI Act. `docs generate`
+   (step 3) produces the evidence; no waiver path for this control was found in the
+   code, so `check` keeps exiting `1` for a system classified as Annex III.
 
 ---
 

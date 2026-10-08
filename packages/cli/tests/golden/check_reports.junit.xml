@@ -1,0 +1,1 @@
+<testsuite name="opencomplai" tests="1"><testcase name="compliance-scan" classname="opencomplai"><failure message="control_fail: EU_AIA_ART6_HIGH_RISK, EU_AIA_ART6_PROFILING">see compliance-artifact.json</failure></testcase></testsuite>

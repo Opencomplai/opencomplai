@@ -11,10 +11,20 @@ import re
 import shutil
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
+from opencomplai_core.backlog import SortOrder, sort_rows
 from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.frameworks import EU_AI_ACT, framework_of
-from opencomplai_core.gap_probes import QMS_17_1_CLAUSES, qms_article_17_clause_statuses
+from opencomplai_core.gap_probes import (
+    qms_clause_results,
+    qms_summary_text,
+    summarise_qms_clauses,
+)
+from opencomplai_core.gpai_training_pack import (
+    get_gpai_training_pack,
+    render_training_summary_markdown,
+)
 from opencomplai_core.models import ArticleGapStatus, GapReport, GapStatus
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "recommend"
@@ -27,17 +37,6 @@ _GENERIC_MAPPING = {
     "kind": "markdown",
     "file": "generic_requirement.md",
 }
-
-# Labels for the qms_outline.md per-clause Status column — mirrors the
-# Met/Partial/Missing/Unverified honesty model, worded for a human reading a
-# single QMS clause row ("present" reads better than "partial" out of context).
-_QMS_CLAUSE_LABEL: dict[GapStatus, str] = {
-    GapStatus.MET: "Present",
-    GapStatus.PARTIAL: "Present",
-    GapStatus.MISSING: "Missing",
-    GapStatus.UNVERIFIED: "Unverified",
-}
-
 
 _FRIA_ASSESSMENT_LETTERS: tuple[str, ...] = ("a", "b", "c", "d", "e", "f")
 
@@ -66,22 +65,17 @@ def _render_fria_fill_in(content: str) -> str:
 
 def _render_qms_clause_table(content: str, repo_root: Path | None) -> str:
     """Fill the qms_outline.md per-clause {{qms_17_1_<letter>_status}} cells."""
-    rows = qms_article_17_clause_statuses(repo_root)
-    present = sum(1 for r in rows if r.status in (GapStatus.MET, GapStatus.PARTIAL))
-    missing = sum(1 for r in rows if r.status == GapStatus.MISSING)
-    unverified = sum(1 for r in rows if r.status == GapStatus.UNVERIFIED)
-    for (letter, _ref, _title), row in zip(QMS_17_1_CLAUSES, rows, strict=True):
-        content = content.replace(
-            f"{{{{qms_17_1_{letter}_status}}}}", _QMS_CLAUSE_LABEL[row.status]
-        )
-    summary = f"{present} present / {missing} missing"
-    if unverified:
-        summary += f" / {unverified} unverified (pass --repo-root to evaluate)"
+    results = qms_clause_results(repo_root)
+    for r in results:
+        content = content.replace(f"{{{{qms_17_1_{r.letter}_status}}}}", r.label)
+    summary = qms_summary_text(
+        summarise_qms_clauses(results), " (pass --repo-root to evaluate)"
+    )
     return content.replace("{{qms_17_1_summary}}", summary)
 
 
 @lru_cache(maxsize=1)
-def load_template_map() -> dict[str, dict[str, str]]:
+def load_template_map() -> dict[str, dict[str, Any]]:
     path = _TEMPLATES_DIR / "template_map.json"
     with path.open(encoding="utf-8") as handle:
         return json.load(handle)
@@ -99,12 +93,18 @@ def _render(content: str, row: ArticleGapStatus, template_id: str) -> str:
 
 
 def render_recommendations(
-    gap_report: GapReport, output_dir: Path, repo_root: Path | None = None
+    gap_report: GapReport,
+    output_dir: Path,
+    repo_root: Path | None = None,
+    sort: SortOrder = SortOrder.article,
 ) -> list[Path]:
     """Write one remediation template per Missing/Partial article row.
 
     EU AI Act rows without a template_map.json entry are skipped; rows of
     other frameworks ("<FW>:<id>") fall back to generic_requirement.md.
+
+    A markdown entry may carry an `also` list of further markdown mappings; each
+    is written next to the main file for the same row.
 
     Returns the list of files written. Python templates are copied (optionally
     with a short header comment noting the triggering article). Markdown templates
@@ -116,7 +116,7 @@ def render_recommendations(
     output_dir.mkdir(parents=True, exist_ok=True)
     written: list[Path] = []
 
-    for row in gap_report.articles:
+    for row in sort_rows(gap_report.articles, sort):
         if row.status not in _ACTIONABLE_STATUSES:
             continue
         framework = framework_of(row.article)
@@ -167,5 +167,18 @@ def render_recommendations(
             out_path = output_dir / f"{article_slug}-{template_id}.md"
             out_path.write_text(rendered, encoding="utf-8")
             written.append(out_path)
+            for extra in mapping.get("also", []) or []:
+                extra_text = (_TEMPLATES_DIR / extra["file"]).read_text(
+                    encoding="utf-8"
+                )
+                extra_out = _render(extra_text, row, extra["template_id"])
+                if extra["template_id"] == "gpai_training_summary":
+                    extra_out = extra_out.replace(
+                        "{{gpai_training_summary}}",
+                        render_training_summary_markdown(get_gpai_training_pack()),
+                    )
+                extra_path = output_dir / f"{article_slug}-{extra['template_id']}.md"
+                extra_path.write_text(extra_out, encoding="utf-8")
+                written.append(extra_path)
 
     return written

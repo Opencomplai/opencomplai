@@ -1,4 +1,8 @@
-"""CodeBERT-ONNX intent classification backend — deterministic code_signals matcher."""
+"""Deterministic code-signal intent classifier — the backend behind the 'codebert-onnx' id.
+
+No CodeBERT model, ONNX session or tokenizer is involved; the id is kept only for
+config and annotation compatibility.
+"""
 
 from __future__ import annotations
 

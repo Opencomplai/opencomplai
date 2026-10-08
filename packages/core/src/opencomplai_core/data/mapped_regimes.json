@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "description": "Mapped-only citations from EU AI Act articles to DORA and EBA texts. A MAPPING, not a verdict: no status is computed, no probes exist, and DORA/EBA are not compliance targets.",
+    "researched_at": "2026-10-07",
+    "sources": {
+      "DORA": "Regulation (EU) 2022/2554",
+      "EBA": "EBA Guidelines on ICT and security risk management (EBA/GL/2019/04); on outsourcing arrangements (EBA/GL/2019/02); on loan origination and monitoring (EBA/GL/2020/06)"
+    },
+    "confidence_definitions": {
+      "low": "A plausible topical correspondence; the exact article or guideline identifier must be independently verified before being relied on. No row in this file is above low."
+    },
+    "not_covered": {
+      "Art. 47": "No DORA/EBA counterpart identified for the EU declaration of conformity.",
+      "Art. 48": "No DORA/EBA counterpart identified for CE marking.",
+      "Art. 72/73": "Art. 72 and Art. 73 are in control_catalog. No DORA/EBA row is mapped yet: DORA Chapter III (ICT-related incident management) is a plausible counterpart for Art. 73 serious-incident reporting but is unverified, so it needs founder review before a low-confidence row is added."
+    }
+  },
+  "rows": [
+    {
+      "eu_ai_act_article": "Art. 9",
+      "regime": "DORA",
+      "citation": "DORA Chapter II (Arts 5-16)",
+      "topic": "ICT risk management framework",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Topical correspondence with the AI risk management system. Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 17",
+      "regime": "DORA",
+      "citation": "DORA Chapter II (Arts 5-16)",
+      "topic": "ICT risk management framework",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Topical correspondence with the quality management system. Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 12",
+      "regime": "DORA",
+      "citation": "DORA Chapter III (Arts 17-23)",
+      "topic": "ICT-related incident management",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Topical correspondence with logging and record-keeping. Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 15",
+      "regime": "DORA",
+      "citation": "DORA Chapter IV (Arts 24-27)",
+      "topic": "Digital operational resilience testing",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 24",
+      "regime": "DORA",
+      "citation": "DORA Chapter V (Arts 28-44)",
+      "topic": "ICT third-party risk",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 25",
+      "regime": "DORA",
+      "citation": "DORA Chapter V (Arts 28-44)",
+      "topic": "ICT third-party risk",
+      "source": "Regulation (EU) 2022/2554 (DORA)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 15",
+      "regime": "EBA",
+      "citation": "EBA/GL/2019/04",
+      "topic": "Guidelines on ICT and security risk management",
+      "source": "EBA Guidelines on ICT and security risk management (EBA/GL/2019/04)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 25",
+      "regime": "EBA",
+      "citation": "EBA/GL/2019/02",
+      "topic": "Guidelines on outsourcing arrangements",
+      "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    },
+    {
+      "eu_ai_act_article": "Art. 10",
+      "regime": "EBA",
+      "citation": "EBA/GL/2020/06",
+      "topic": "Guidelines on loan origination and monitoring (data quality)",
+      "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
+    }
+  ]
+}

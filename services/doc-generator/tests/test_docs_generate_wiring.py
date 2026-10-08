@@ -366,3 +366,118 @@ async def test_invalid_dossier_with_allow_incomplete_returns_200(
 
     dossier = stub_vault["dossier"]
     assert dossier["annex_iv_complete"] is False
+
+
+_OVERSIGHT_BLOCK = {
+    "roles": [
+        {
+            "role": "Duty officer",
+            "authority": "May suspend the system",
+            "can_intervene": True,
+            "conditions": ["Drift alarm fires"],
+            "training_ref": "training/oversight.md",
+        }
+    ],
+    "escalation": "Duty officer, then CTO",
+    "evidence_refs": ["docs/oversight.md"],
+}
+
+
+@pytest.mark.asyncio
+async def test_structured_oversight_reaches_section3(service_auth_headers, stub_vault):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "employment screening",
+        "human_oversight": _OVERSIGHT_BLOCK,
+        "monitoring_approach": "Datadog + custom drift checks every 6h",
+        "incident_response_procedure": "Runbook at runbooks/ai-incident.md",
+    }
+    await _post_generate(payload, service_auth_headers)
+    section3 = stub_vault["dossier"]["section3"]
+    assert section3["human_oversight"] == {
+        "roles": _OVERSIGHT_BLOCK["roles"],
+        "escalation": _OVERSIGHT_BLOCK["escalation"],
+        "evidence_refs": _OVERSIGHT_BLOCK["evidence_refs"],
+    }
+    assert section3["provider_supplied"] is True
+
+
+@pytest.mark.asyncio
+async def test_request_without_oversight_leaves_section3_unchanged(
+    service_auth_headers, stub_vault
+):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "chatbot",
+    }
+    status, _ = await _post_generate(payload, service_auth_headers)
+    assert status == 200
+    assert "human_oversight" not in stub_vault["dossier"]["section3"]
+
+
+@pytest.mark.asyncio
+async def test_malformed_oversight_returns_422(service_auth_headers, stub_vault):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "chatbot",
+        "human_oversight": {"roles": []},
+    }
+    status, _ = await _post_generate(payload, service_auth_headers)
+    assert status == 422
+
+
+_INVENTORY_BLOCK = {
+    "agents": [
+        {
+            "id": "triage",
+            "name": "Triage agent",
+            "tools": [{"name": "search", "kind": "function"}],
+            "mandate": {"permitted_actions": ["tool:search"]},
+        }
+    ]
+}
+
+
+@pytest.mark.asyncio
+async def test_agent_inventory_reaches_dossier(service_auth_headers, stub_vault):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "chatbot",
+        "agent_inventory": _INVENTORY_BLOCK,
+    }
+    status, _ = await _post_generate(payload, service_auth_headers)
+    assert status == 200
+    stored = stub_vault["dossier"]["agent_inventory"]
+    assert stored["agents"][0]["id"] == "triage"
+    assert stored["agents"][0]["tools"][0]["name"] == "search"
+    assert stored["agents"][0]["mandate"]["permitted_actions"] == ["tool:search"]
+
+
+@pytest.mark.asyncio
+async def test_request_without_inventory_leaves_dossier_unchanged(
+    service_auth_headers, stub_vault
+):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "chatbot",
+    }
+    status, _ = await _post_generate(payload, service_auth_headers)
+    assert status == 200
+    assert "agent_inventory" not in stub_vault["dossier"]
+
+
+@pytest.mark.asyncio
+async def test_malformed_agent_inventory_returns_422(service_auth_headers, stub_vault):
+    payload = {
+        "system_id": "test",
+        "commit_ref": "abc123",
+        "intended_purpose": "chatbot",
+        "agent_inventory": {"agents": []},
+    }
+    status, _ = await _post_generate(payload, service_auth_headers)
+    assert status == 422

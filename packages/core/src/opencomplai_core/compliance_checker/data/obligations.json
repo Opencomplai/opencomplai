@@ -7,7 +7,7 @@
   "authorised_representative": {
     "title": "Authorised representative obligations",
     "body": "An authorised representative must receive a written mandate from a provider to perform specified tasks on its behalf. The authorised representative must keep contact details available, verify that the EU declaration of conformity and technical documentation have been drawn up, and cooperate with competent authorities. Upon termination of the mandate, the authorised representative must inform the market surveillance authority.",
-    "article_ref": "Art. 22, Art. 28"
+    "article_ref": "Art. 22"
   },
   "provider_high_risk": {
     "title": "Provider obligations for high-risk AI systems",
@@ -16,13 +16,13 @@
   },
   "deployer_high_risk": {
     "title": "Deployer obligations for high-risk AI systems",
-    "body": "Deployers of high-risk AI systems must take appropriate technical and organisational measures, ensure human oversight, monitor operation, keep automatically generated logs, and inform the provider or distributor where they consider that use may constitute a risk. Deployers that are public authorities or Union institutions, bodies, offices or agencies must perform a fundamental rights impact assessment before putting the system into use.",
+    "body": "Deployers of high-risk AI systems must take appropriate technical and organisational measures, ensure human oversight, monitor operation, keep automatically generated logs, and inform the provider or distributor where they consider that use may constitute a risk. Deployers that are bodies governed by public law or private entities providing public services, and deployers of Annex III point 5(b) and 5(c) systems, must perform a fundamental rights impact assessment before first use of the system.",
     "article_ref": "Art. 26, Art. 27"
   },
   "deployer_general": {
     "title": "General deployer obligations",
-    "body": "Deployers must use AI systems in accordance with the instructions for use, assign human oversight, and ensure that input data is relevant in view of the intended purpose. Where applicable, deployers must inform workers' representatives and affected persons that they are subject to the use of a high-risk AI system.",
-    "article_ref": "Art. 26, Art. 29"
+    "body": "Deployers must use AI systems in accordance with the instructions for use, assign human oversight, and ensure that input data is relevant in view of the intended purpose. Where applicable, deployers must inform workers' representatives and affected persons that they are subject to the use of a high-risk AI system, as required by the Regulation.",
+    "article_ref": "Art. 26"
   },
   "distributor": {
     "title": "Distributor obligations",
@@ -56,12 +56,17 @@
   },
   "prohibited": {
     "title": "Prohibited AI practices",
-    "body": "The following AI practices are prohibited: harmful subliminal techniques, exploitation of vulnerabilities, social scoring by public authorities, individual predictive policing based solely on profiling, untargeted scraping of facial images, emotion recognition in workplaces and education, biometric categorisation inferring sensitive attributes, and real-time remote biometric identification in publicly accessible spaces for law enforcement except in strictly defined circumstances.",
+    "body": "The following AI practices are prohibited: harmful subliminal techniques, exploitation of vulnerabilities, social scoring of natural persons, individual predictive policing based solely on profiling, untargeted scraping of facial images, emotion recognition in workplaces and education, biometric categorisation inferring sensitive attributes, and real-time remote biometric identification in publicly accessible spaces for law enforcement except in strictly defined circumstances. From 2 December 2026, AI systems that generate sexual abuse material or non-consensual intimate imagery of identifiable persons are also prohibited.",
     "article_ref": "Art. 5"
+  },
+  "provider_art_6_4_registration": {
+    "title": "Documentation and registration for Annex III systems assessed as not high-risk",
+    "body": "A provider that considers an Annex III system not high-risk under Article 6(3) must document that assessment before placing it on the market or putting it into service, register itself and the system in the EU database, and give the documentation to national competent authorities on request.",
+    "article_ref": "Art. 6(4), Art. 49(2)"
   },
   "fria": {
     "title": "Fundamental rights impact assessment",
-    "body": "Deployers that are bodies governed by public law or private entities providing public services must, prior to putting a high-risk AI system into use, perform an assessment of the impact on fundamental rights that the use of such system may produce in the specific context of use.",
+    "body": "Deployers that are bodies governed by public law or private entities providing public services, and deployers of Annex III point 5(b) and 5(c) systems, must, prior to the first use of a high-risk AI system, perform an assessment of the impact on fundamental rights that the use of such system may produce in the specific context of use.",
     "article_ref": "Art. 27"
   }
 }

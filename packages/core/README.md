@@ -8,7 +8,7 @@ The compliance engine at the heart of [Opencomplai](https://opencomplai.com).
 `opencomplai-core` turns a declared `system-manifest.json` and your source tree into a
 deterministic, rule-based EU AI Act risk classification and gap report — no LLM calls,
 no network access, fully reproducible. The same evidence also yields a NIST AI RMF 1.0
-view, re-projected through a built-in crosswalk rather than measured separately.
+view, re-projected through a built-in crosswalk rather than measured separately. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
 
 It powers risk classification (`UnacceptableRiskRule`, `AnnexIIIClassifierRule`,
 `ProfilingDetectionRule`, `SubstantialModificationRule`) and the code-corroboration scan
@@ -88,8 +88,7 @@ for framework, report in reports.items():
     print(FRAMEWORKS[framework].label, len(report.report.articles), "requirements")
 ```
 
-`FRAMEWORKS` lists what this release can assess: `EU_AI_ACT` (evaluated) and
-`NIST_AI_RMF` (derived from the EU AI Act evidence). See
+`FRAMEWORKS` lists what this release can assess. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only. See
 [Frameworks](https://docs.opencomplai.com/frameworks/).
 
 ## What you get

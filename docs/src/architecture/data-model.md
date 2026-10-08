@@ -82,7 +82,7 @@ class Attestation(BaseModel):
     attested_at: str  # ISO 8601 date or timestamp
 ```
 
-`compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`); when
+`compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`); when
 it is unset, the single `compliance_target` is the target. Both new fields are dropped
 from the serialised manifest when unset, so a manifest that does not use them keeps its
 exact bytes. See [Frameworks](../frameworks/index.md).
@@ -117,6 +117,13 @@ beside them, one entry per target in target order, only when the targets are som
 other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF`. When it is `None` the key is
 left out of the JSON, so such an artifact serialises, and verifies against its
 signature, byte for byte as before the field existed.
+
+#### What the signature covers
+
+`check` stamps `timestamp`, `policy_bundle_version` and the resolved `commit_ref` (`HEAD` is
+never kept) first, then signs over every field except `signature`. `opencomplai push`
+therefore adds nothing and forwards the signature unchanged, so it survives push. Editing
+any field after signing breaks verification.
 
 ### `FrameworkReport`
 

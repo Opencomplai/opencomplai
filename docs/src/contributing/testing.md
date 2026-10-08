@@ -182,7 +182,8 @@ builds the core, CLI and SDK wheels, installs only those into a clean venv and r
 `--version`, `init`, `check --with-gaps` (EU AI Act and NIST AI RMF targets, checking
 `framework_reports`, `gap_report` and `nist_rmf_report`), an offline `docs generate` and a
 `check --gate NIST_AI_RMF` that must fail, from outside the repo. It needs `uv` and runs
-on Linux and Git Bash on Windows.
+on Linux and Git Bash on Windows. It also runs `--version` from a `uv tool` install and a
+`pipx` install of the same wheels, so the meta-package's own executable is covered.
 
 ---
 

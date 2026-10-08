@@ -9,8 +9,8 @@ generator's Section 5/7 crosswalk citations.
 
 Every row is a MAPPING, not a computed verdict: it says "this article
 corresponds to that clause/subcategory", with a source and a confidence
-label. Only `EU_AI_ACT` gets a deterministic pass/gap verdict from
-opencomplai today (D-3, `PLAN/CLOSE-P1/00-OVERVIEW.md`). Every row is also
+label. Verdicts come from the framework packs, never from a crosswalk row;
+the NIST AI RMF and ISO/IEC 42001 packs are partial and unreviewed. Every row is also
 `needs_founder_review=true`: this is compliance-facing content that has not
 been confirmed by a human reviewer. See the data file's `_meta` block for
 research date, confidence definitions, and articles deliberately left

@@ -532,6 +532,7 @@ def test_excluded_requirements_become_waived_controls_after_the_rows():
         state=ControlState.WAIVED,
         last_assessed_at=NOW,
         waiver_rationale="No deployers: internal tool only.",
+        waiver_source="exclusion",
     )
 
 
@@ -567,6 +568,96 @@ def test_excluded_requirement_keeps_the_existing_owner_ttl_and_evidence():
                 "state": ControlState.WAIVED,
                 "last_assessed_at": NOW,
                 "waiver_rationale": "Out of scope.",
+                "waiver_source": "exclusion",
             }
         )
     ]
+
+
+def _waived(source: str | None, obligation_id: str = "Art. 10") -> ControlInstance:
+    return ControlInstance(
+        control_id=make_control_id(TENANT_ID, "sys-1", obligation_id),
+        tenant_id=TENANT_ID,
+        system_id="sys-1",
+        obligation_id=obligation_id,
+        article_ref=obligation_id,
+        owner="jane@example.com",
+        state=ControlState.WAIVED,
+        evidence_refs=["sha256:aaaa"],
+        last_assessed_at="2026-01-01T00:00:00+00:00",
+        waiver_rationale="Out of scope.",
+        waiver_source=source,
+    )
+
+
+def test_removed_exclusion_re_derives_the_control():
+    existing = _waived("exclusion")
+
+    derived = derive_controls(
+        _gap_report([MISSING_ROW]),
+        _manifest(),
+        get_catalog(),
+        [existing],
+        tenant_id=TENANT_ID,
+        now=NOW,
+    )
+
+    assert len(derived) == 1
+    assert derived[0].state == ControlState.EVIDENCE_MISSING
+    assert derived[0].waiver_rationale is None
+    assert derived[0].waiver_source is None
+    assert derived[0].owner == "jane@example.com"
+    assert derived[0].evidence_refs == ["sha256:aaaa"]
+
+
+def test_manual_waiver_survives_and_is_not_duplicated_by_an_exclusion():
+    existing = _waived("manual")
+
+    with_row = derive_controls(
+        _gap_report([MISSING_ROW]),
+        _manifest(),
+        get_catalog(),
+        [existing],
+        tenant_id=TENANT_ID,
+        now=NOW,
+    )
+    with_exclusion = derive_controls(
+        _gap_report([]),
+        _manifest(),
+        get_catalog(),
+        [existing],
+        tenant_id=TENANT_ID,
+        now=NOW,
+        excluded={"Art. 10": "A different rationale."},
+    )
+
+    assert with_row == [existing]
+    assert with_exclusion == [existing]
+
+
+def test_legacy_waiver_without_source_is_treated_as_manual():
+    existing = _waived(None)
+
+    derived = derive_controls(
+        _gap_report([MISSING_ROW]),
+        _manifest(),
+        get_catalog(),
+        [existing],
+        tenant_id=TENANT_ID,
+        now=NOW,
+    )
+
+    assert derived == [existing]
+
+
+def test_exclusion_waiver_is_stamped_with_its_source():
+    derived = derive_controls(
+        _gap_report([]),
+        _manifest(),
+        get_catalog(),
+        tenant_id=TENANT_ID,
+        now=NOW,
+        excluded={"Art. 10": "Out of scope."},
+    )
+
+    assert [c.waiver_source for c in derived] == ["exclusion"]

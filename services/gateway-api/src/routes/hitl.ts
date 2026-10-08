@@ -7,7 +7,15 @@ const OverrideSchema = z.object({
   actor_id: z.string().min(1),
   rationale: z.string().min(1),
   decision: z.enum(['approved', 'rejected']),
+  requires_dual_approval: z.boolean().optional(),
   idempotency_key: z.string().optional(),
+});
+
+const SecondApprovalSchema = z.object({
+  actor_id: z.string().min(1),
+  rationale: z.string().min(1),
+  rationale_hash: z.string().min(1),
+  decision: z.enum(['approved', 'rejected']).default('approved'),
 });
 
 const DecideSchema = z.object({
@@ -105,6 +113,31 @@ export const hitlRoutes: FastifyPluginAsync = async (app): Promise<void> => {
       await proxyToService(
         RISK_ENGINE,
         `/v1/hitl/queue/${encodeURIComponent(id)}/decide`,
+        'POST',
+        { ...parsed.data, actor_id: resolveActorId(req, parsed.data.actor_id) },
+        reply,
+      );
+    },
+  );
+
+  app.post(
+    '/hitl/overrides/:override_id/second-approval',
+    async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
+      const { override_id } = req.params as { override_id: string };
+      const parsed = SecondApprovalSchema.safeParse(req.body);
+      if (!parsed.success) {
+        reply.status(422).send({
+          error_code: 'VALIDATION_ERROR',
+          message: parsed.error.message,
+          category: 'client',
+          retryable: false,
+          correlation_id: req.id,
+        });
+        return;
+      }
+      await proxyToService(
+        RISK_ENGINE,
+        `/v1/hitl/overrides/${encodeURIComponent(override_id)}/second-approval`,
         'POST',
         { ...parsed.data, actor_id: resolveActorId(req, parsed.data.actor_id) },
         reply,

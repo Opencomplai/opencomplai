@@ -10,7 +10,7 @@ The AGPL-3.0 is a copyleft licence: if you modify Opencomplai and make it availa
 
 ## Enterprise Edition
 
-For use cases the AGPL doesn't fit — including a hosted premium dashboard, single sign-on, additional rule engines, and commercial support — Opencomplai Enterprise Edition is available under a commercial licence. See [opencomplai.com](https://opencomplai.com) for details.
+For use cases the AGPL doesn't fit — including a hosted premium dashboard and commercial support — Opencomplai Enterprise Edition is available under a commercial licence. See [opencomplai.com](https://opencomplai.com) for details.
 
 ## Contributing
 

@@ -1,0 +1,70 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "minLength": 1,
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "expires_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "title": "Expires At",
+      "type": "string"
+    },
+    "issued_at": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "issuer": {
+      "pattern": "^[\\x20-\\x7e]{1,128}$",
+      "title": "Issuer",
+      "type": "string"
+    },
+    "key_id": {
+      "pattern": "^sha256:[0-9a-f]{16}$",
+      "title": "Key Id",
+      "type": "string"
+    },
+    "mandate_sha256": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Mandate Sha256",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "agent_attestation/v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "signature": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Za-z0-9+/]{86}==$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Signature"
+    },
+    "system_id": {
+      "minLength": 1,
+      "title": "System Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "agent_id",
+    "system_id",
+    "issuer",
+    "mandate_sha256",
+    "issued_at",
+    "expires_at",
+    "key_id"
+  ],
+  "title": "AgentAttestation",
+  "type": "object"
+}

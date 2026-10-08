@@ -4,12 +4,10 @@ Opencomplai ships two [pre-commit](https://pre-commit.com/) hook definitions in
 `.pre-commit-hooks.yaml` at the repo root, so a consuming project can reference them
 directly instead of hand-writing the CLI invocation.
 
-!!! warning "Verify this in your own environment before relying on it in CI"
-    This hook definition has been reviewed and its `entry` command manually confirmed
-    to run correctly, but the literal `pre-commit run ... --all-files` acceptance test
-    (cloning this repo as a `pre-commit` source at a real tag/commit) has not yet been
-    run end-to-end against a published release. Run the verification steps below in a
-    scratch repo before depending on this in a production pre-commit config.
+!!! note "What CI checks"
+    CI runs `pre-commit try-repo` on every change to the hook file, and each hook installs
+    the exact `opencomplai-cli` version of its tagged revision, so a `rev:` pin pins
+    behaviour. You can still repeat the verification steps below in your own environment.
 
 ## Available hooks
 
@@ -31,8 +29,8 @@ repos:
       # - id: opencomplai-check   # requires system-manifest.json — see Quick Start
 ```
 
-Replace `<tag/sha>` with a real released tag (e.g. `v0.1.2`) or commit SHA once one
-exists — `pre-commit` clones the repo at that exact revision to run the hook.
+Replace `<tag/sha>` with the latest release tag from the repository's Releases page
+(or a commit SHA) — `pre-commit` clones the repo at that exact revision to run the hook.
 
 Start with `opencomplai-quick-scan` if you don't yet have a manifest — it can never
 break a commit. Add `opencomplai-check` once you've run
@@ -75,4 +73,5 @@ Both hooks declare `language: python` with `additional_dependencies: ["opencompl
 — `pre-commit` creates an isolated environment and installs the CLI package into it, so
 consumers don't need `opencomplai` pre-installed globally. Both set `pass_filenames:
 false` and `always_run: true`, since compliance scanning operates on the whole repo
-rather than per-changed-file.
+rather than per-changed-file. `additional_dependencies` is pinned to
+`opencomplai-cli==<tag version>`, stamped at release time.

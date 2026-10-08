@@ -21,7 +21,10 @@ Wraps ``opencomplai check`` with GitLab CI platform conventions:
 Environment variables consumed
 -------------------------------
 ``GITLAB_CI``                 — set to ``true`` by GitLab; connector detects.
-``CI_COMMIT_SHA``             — used as ``commit_ref`` in annotations.
+``CI_COMMIT_SHA``             — used as ``commit_ref`` in annotations and as the
+                               default ``--commit-ref`` for ``check``.
+``OPENCOMPLAI_CHECK_ARGS``    — extra ``check`` flags (shell-style); command-line
+                               flags follow them.
 ``CI_JOB_NAME``               — job name surfaced in summary.
 ``GL_ENV_FILE``               — path for dotenv artifact (optional).
 ``OPENCOMPLAI_DASHBOARD_URL`` — dashboard ingest base URL (this dashboard's
@@ -95,11 +98,13 @@ import json
 import os
 import subprocess
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
+from opencomplai_core.ci_reports import artifact_to_junit
+
 from opencomplai_cli.connectors import summarize_failed_controls
+from opencomplai_cli.connectors._check_args import build_check_args
 from opencomplai_cli.exit_codes import HARD_FAIL_EXIT_CODES
 
 RUNNING_IN_GITLAB = os.environ.get("GITLAB_CI") == "true"
@@ -144,51 +149,7 @@ def _section_end(name: str) -> None:
 
 
 def _build_junit_xml(artifact: dict | None, stdout: str) -> str:
-    suite = ET.Element("testsuite", name="opencomplai", tests="1")
-    case = ET.SubElement(
-        suite, "testcase", name="compliance-scan", classname="opencomplai"
-    )
-
-    if artifact:
-        result = artifact.get("result", "unknown")
-        if result == "control_fail":
-            failed = artifact.get("failed_controls", [])
-            failure = ET.SubElement(
-                case,
-                "failure",
-                message=f"control_fail: {summarize_failed_controls(failed)}",
-            )
-            failure.text = stdout
-        elif result == "trap_detected":
-            # FINDING 48.8: trap_detected now fails the build (exit 4) --
-            # a <system-out> here would leave the JUnit case green while the
-            # pipeline itself goes red, which is the exact silent mismatch
-            # the finding called out. Report it as a failure like the other
-            # CI-failing results below.
-            failure = ET.SubElement(
-                case,
-                "failure",
-                message="trap_detected — Article 25 deployment freeze, HITL review required",
-            )
-            failure.text = stdout
-        elif result == "policy_block":
-            failure = ET.SubElement(
-                case,
-                "failure",
-                message="policy_block — prohibited system (EU AI Act Article 5)",
-            )
-            failure.text = stdout
-        elif result == "validation_fail":
-            failure = ET.SubElement(
-                case,
-                "failure",
-                message="validation_fail — manifest or input validation error",
-            )
-            failure.text = stdout
-    else:
-        ET.SubElement(case, "error", message="No artifact result parsed")
-
-    return ET.tostring(suite, encoding="unicode", xml_declaration=False)
+    return artifact_to_junit(artifact, stdout)
 
 
 # ---------------------------------------------------------------------------
@@ -200,6 +161,7 @@ def run_connector(
     check_args: list[str] | None = None,
     env: dict[str, str] | None = None,
     junit_path: str = "opencomplai-report.xml",
+    argv: list[str] | None = None,
 ) -> int:
     """
     Run ``opencomplai check --sign`` and handle GitLab CI conventions.
@@ -210,7 +172,17 @@ def run_connector(
 
     _section_start("opencomplai_scan", "Opencomplai compliance scan")
 
-    cmd = ["opencomplai", "check", "--sign"] + (check_args or [])
+    sign_flag = "--sign" if _env.get("SIGNING_KEY_PRIVATE") else "--sign-if-available"
+    try:
+        extra = build_check_args(check_args, _env, argv)
+    except ValueError:
+        print(
+            "ERROR: OPENCOMPLAI_CHECK_ARGS is not valid shell-style text (unbalanced quote?).",
+            file=sys.stderr,
+        )
+        _section_end("opencomplai_scan")
+        return 2
+    cmd = ["opencomplai", "check", sign_flag, *extra]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, env=_env)
     except FileNotFoundError:
@@ -483,7 +455,7 @@ def _push_dossier_if_opted_in(artifact: dict | None, env: dict[str, str]) -> Non
 
 
 def main() -> None:
-    sys.exit(run_connector())
+    sys.exit(run_connector(argv=sys.argv[1:]))
 
 
 __all__ = ["RUNNING_IN_GITLAB", "main", "run_connector"]

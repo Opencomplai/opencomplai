@@ -1,0 +1,141 @@
+# Annex IV technical documentation dossier 00000000-0000-4000-8000-000000000129
+
+**INCOMPLETE: this dossier is not a complete Annex IV technical documentation file.**
+
+- Schema validation failed.
+- Section 2 is a stub.
+- annex_iv_complete is false.
+- Section 3 is not provided by the provider.
+- Section 4 is not provided by the provider.
+- Section 6 is not provided by the provider.
+- Section 7 is not provided by the provider.
+- Section 8 is not provided by the provider.
+- Section 9 is not provided by the provider.
+
+## Dossier details
+
+- dossier_id: 00000000-0000-4000-8000-000000000129
+- system_id: credit-scorer
+- commit_ref: abc1234
+- generated_at: 2026-01-02T03:04:05+00:00
+- compliance_target: EU_AI_ACT
+- assessed_against: Reg. (EU) 2024/1689
+- rule_version: 1.0.0
+- bundle_checksum: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+## Section 1: General description of the AI system
+
+- system_name: credit-scorer
+- system_version: 1.0.0
+- provider_name: Example Provider
+- intended_purpose: credit scoring for loan applications
+- compliance_target: EU_AI_ACT
+- risk_class: high
+- deployment_context: production
+
+## Section 2: Elements and development process
+
+- training_data_description: **NOT PROVIDED**
+  - _placeholder text: Not specified in this release._
+- model_architecture: **NOT PROVIDED**
+  - _placeholder text: Not specified in this release._
+- performance_metrics:
+  - auc: 0.95
+  - f1: 0.9
+- known_limitations:
+  - Thin-file applicants
+
+## Section 3: Monitoring, functioning and control
+
+- human_oversight_measures:
+  - Manual review of declines
+- monitoring_approach: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- incident_response_procedure: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- provider_supplied: No
+- human_oversight: **NOT PROVIDED**
+
+## Section 4: Performance metrics
+
+- metrics_reported: **NOT PROVIDED**
+- appropriateness_rationale: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- known_metric_limitations: **NOT PROVIDED**
+- provider_supplied: No
+
+## Section 5: Risk management system
+
+- risk_assessment_id: ra-1
+- risk_level: high
+- rules_evaluated: 3
+- rules_passed: 2
+- rules_failed: 1
+- failed_rule_ids:
+  - EU_AIA_ART6_HIGH_RISK
+- rationale_hash: sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+- eval_set_version: **NOT PROVIDED**
+- eval_overall_outcome: **NOT PROVIDED**
+- eval_evidence_hashes: **NOT PROVIDED**
+- scanner_version: **NOT PROVIDED**
+- corroboration_detected_categories: **NOT PROVIDED**
+- corroboration_discrepancies: **NOT PROVIDED**
+- corroboration_severity: **NOT PROVIDED**
+- corroboration_review_status: **NOT PROVIDED**
+- corroboration_baseline_ref: **NOT PROVIDED**
+- corroboration_report_hash: **NOT PROVIDED**
+- crosswalk_refs: **NOT PROVIDED**
+
+## Section 6: Relevant changes through the lifecycle
+
+- changes: **NOT PROVIDED**
+- change_log_reference: **NOT PROVIDED**
+- note: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- provider_supplied: No
+
+## Section 7: Harmonised standards and other solutions
+
+- harmonised_standards: **NOT PROVIDED**
+- alternative_solutions: **NOT PROVIDED**
+- note: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- provider_supplied: No
+- crosswalk_refs: **NOT PROVIDED**
+
+## Section 8: EU declaration of conformity
+
+- declaration_reference: **NOT PROVIDED**
+- declaration_sha256: **NOT PROVIDED**
+- note: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- provider_supplied: No
+
+## Section 9: Post-market monitoring plan
+
+- monitoring_plan_reference: **NOT PROVIDED**
+- plan_summary: **NOT PROVIDED**
+- note: **NOT PROVIDED**
+  - _placeholder text: Not supplied. This section requires a provider attestation and cannot be derived automatically from the repository._
+- provider_supplied: No
+
+## Article 12 record keeping
+
+- record_keeping.logging_enabled: Yes
+- record_keeping.log_retention_days: **NOT PROVIDED**
+- record_keeping.evidence_vault_enabled: No
+- record_keeping.ledger_root_hash: **NOT PROVIDED**
+- record_keeping.provider_supplied: No
+
+## Evidence hashes
+
+- evidence_hashes:
+  - sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+## Signature status
+
+unsigned
+
+## Scope disclaimer
+
+This assessment was generated by Opencomplai (rule-based, deterministic engine). It constitutes structured evidence, not legal advice. Assessment against Reg. (EU) 2024/1689.

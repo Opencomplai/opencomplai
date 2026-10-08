@@ -6,7 +6,7 @@
 
 The convenience meta-package for [Opencomplai](https://opencomplai.com) — AI compliance
 for your AI systems: the EU AI Act, and a NIST AI RMF 1.0 view derived from the same
-evidence. Installing `opencomplai` gives you both the risk engine and the command-line
+evidence. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only. Installing `opencomplai` gives you both the risk engine and the command-line
 tool in one step.
 
 ## Install
@@ -61,8 +61,10 @@ For AI-powered intent classification of code callsites, also install
 
 ```bash
 pip install opencomplai-ai
-opencomplai scan --ai-intent
+opencomplai scan --ai-intent --ai-model codebert-onnx   # deterministic matcher, no download
 ```
+
+The default model is a local GGUF LLM and needs `pip install 'opencomplai-ai[deep]'`.
 
 ## Documentation
 

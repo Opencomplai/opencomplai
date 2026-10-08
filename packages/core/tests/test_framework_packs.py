@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 
 import pytest
+from opencomplai_core.agent_sources import AGENT_SOURCE_REF
 from opencomplai_core.compliance_checker.catalog import load_obligations
 from opencomplai_core.evaluators.registry import EVALUATOR_REGISTRY
 from opencomplai_core.frameworks import (
@@ -24,9 +25,10 @@ from opencomplai_core.frameworks import (
     load_requirements_map,
     resolve_targets,
 )
-from opencomplai_core.gap_probes import _PROBE_PATTERNS
+from opencomplai_core.gap_probes import _PROBE_PATTERNS, STUB_SOURCE_REFS
 from opencomplai_core.gap_report import build_gap_report
-from opencomplai_core.models import SignalCategory, SystemManifest
+from opencomplai_core.manifest_sources import MANIFEST_SOURCE_REFS
+from opencomplai_core.models import ArticleGapSource, SignalCategory, SystemManifest
 from opencomplai_core.rules import RULE_REGISTRY
 
 FIXTURE_REQUIREMENTS = (
@@ -38,18 +40,35 @@ FIXTURE_PACK = FrameworkPack(
 
 ALL_PACKS = [*FRAMEWORKS.values(), FIXTURE_PACK]
 
-EU_ONLY_KINDS = {"rule", "obligation"}
+EU_ONLY_KINDS = {"rule", "obligation", "manifest"}
 NATIVE_KINDS = {"artifact", "attestation", "scan", "evaluator"}
 
 
 def _known_refs() -> dict[str, set[str]]:
     return {
-        "artifact": set(_PROBE_PATTERNS),
+        "artifact": set(_PROBE_PATTERNS) | STUB_SOURCE_REFS["artifact"],
         "scan": {c.value for c in SignalCategory},
         "evaluator": {e.evaluator_id for e in EVALUATOR_REGISTRY},
         "rule": {r.rule_id for r in RULE_REGISTRY},
         "obligation": set(load_obligations()),
+        "manifest": set(STUB_SOURCE_REFS["manifest"])
+        | MANIFEST_SOURCE_REFS
+        | {AGENT_SOURCE_REF},
     }
+
+
+def test_agent_ref_is_not_a_stub():
+    assert AGENT_SOURCE_REF not in STUB_SOURCE_REFS["manifest"]
+    assert AGENT_SOURCE_REF not in MANIFEST_SOURCE_REFS
+
+
+def test_manifest_refs_do_not_overlap_stub_refs():
+    assert not (MANIFEST_SOURCE_REFS & STUB_SOURCE_REFS["manifest"])
+
+
+def test_manifest_is_a_known_source_kind():
+    assert ArticleGapSource("manifest") is ArticleGapSource.MANIFEST
+    assert "manifest" in EU_ONLY_KINDS
 
 
 @pytest.mark.parametrize("pack", ALL_PACKS, ids=lambda p: p.id)
@@ -62,6 +81,9 @@ def test_registry_keys_match_pack_ids():
     assert all(key == pack.id for key, pack in FRAMEWORKS.items())
     assert FRAMEWORKS[EU_AI_ACT].disclaimer_ref == "DISCLAIMER_V1"
     assert FRAMEWORKS["NIST_AI_RMF"].disclaimer_ref == "DISCLAIMER_V2"
+    assert "ISO_IEC_42001" in FRAMEWORKS
+    assert FRAMEWORKS["ISO_IEC_42001"].disclaimer_ref == "DISCLAIMER_V2"
+    assert FRAMEWORKS["ISO_IEC_42001"].requirements is not None
 
 
 @pytest.mark.parametrize(
@@ -144,6 +166,12 @@ def test_registry_data_versions_differ():
     assert data_version(FRAMEWORKS[EU_AI_ACT]) != data_version(
         FRAMEWORKS["NIST_AI_RMF"]
     )
+
+
+def test_registry_data_versions_are_pairwise_distinct():
+    versions = [data_version(pack) for pack in FRAMEWORKS.values()]
+    assert len(versions) == 3
+    assert len(set(versions)) == len(versions)
 
 
 @pytest.mark.parametrize(

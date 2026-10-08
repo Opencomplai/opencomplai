@@ -1,0 +1,46 @@
+name: actionlint
+
+on:
+  push:
+    # A push filter with only `paths`/`tags-ignore` never fires for branch pushes,
+    # so `branches` is required.
+    branches: ["**"]
+    paths:
+      - ".github/workflows/**"
+    # Tag pushes never evaluate `paths`, so without this every release tag re-ran
+    # actionlint on a commit that already passed on main.
+    tags-ignore:
+      - "**"
+  pull_request:
+    paths:
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  # Cancel superseded pull_request runs only; main pushes are never cancelled.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install actionlint 1.7.12 (pinned, SHA256-verified) and run
+        env:
+          ACTIONLINT_VERSION: "1.7.12"
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"; cd "$tmp"
+          base="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}"
+          curl -fsSL --retry 3 --retry-all-errors -O "${base}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          curl -fsSL --retry 3 --retry-all-errors -O "${base}/actionlint_${ACTIONLINT_VERSION}_checksums.txt"
+          sha256sum --ignore-missing -c "actionlint_${ACTIONLINT_VERSION}_checksums.txt"
+          tar -xzf "actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" actionlint
+          cd - >/dev/null
+          "${tmp}/actionlint" -color

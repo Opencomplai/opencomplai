@@ -31,6 +31,70 @@ Python 3.11+ is required. Verify with:
     pip install opencomplai
     ```
 
+### Install as a tool (uv or pipx)
+
+To get the `opencomplai` command in its own isolated environment, use `uv tool` or
+`pipx`. Either puts `opencomplai` on your PATH.
+
+=== "macOS / Linux"
+    ```bash
+    uv tool install opencomplai
+    # or
+    pipx install opencomplai
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    uv tool install opencomplai
+    # or
+    pipx install opencomplai
+    ```
+
+### One-line install (uv-managed Python)
+
+If you have no Python installed, or want one that does not touch your system
+Python, the install script wraps `uv tool install` and asks `uv` for its own
+Python (3.11, the minimum Opencomplai supports). Download the script, then run it:
+
+=== "macOS / Linux"
+    ```bash
+    curl -fsSLO https://raw.githubusercontent.com/Opencomplai/opencomplai/main/scripts/install.sh
+    bash install.sh
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    Invoke-WebRequest https://raw.githubusercontent.com/Opencomplai/opencomplai/main/scripts/install.ps1 -OutFile install.ps1
+    ./install.ps1
+    ```
+
+- It needs network access and installs only the PyPI packages.
+- If `uv` is missing the script prints how to install it and exits with code 1.
+  Pass `--install-uv` (`-InstallUv` on Windows) to let it run the official uv
+  installer for you.
+- `--python <version>` (`-Python`) or the `OPENCOMPLAI_PYTHON` environment
+  variable picks another interpreter; the default is `3.11`, the minimum.
+- The script does not edit your shell profile or PATH. If the tool directory is
+  not on your PATH it prints the directory to add.
+
+The contributor wheel smoke check (`scripts/smoke_wheel_install.sh`) is unchanged.
+
+### Homebrew (planned)
+
+On macOS and Linux, once the tap is published:
+
+```bash
+brew tap Opencomplai/tap
+brew install opencomplai
+```
+
+or in one step: `brew install Opencomplai/tap/opencomplai`.
+
+The tap is not yet published. The formula file lives at
+`packaging/homebrew/opencomplai.rb` in the repository, with the tap steps in
+`packaging/homebrew/README.md`. Windows users use the PowerShell script above, or
+`pip` or `uv`.
+
 ### Published packages
 
 | Package | PyPI | Install | Use when |
@@ -79,12 +143,6 @@ otherwise pip tries (and fails) to resolve `opencomplai-core` / `opencomplai-cli
 This installs the core engine, the CLI (which provides the `opencomplai`
 command), and the SDK in editable mode. `cryptography` is pulled in
 automatically as a dependency of `opencomplai-core`.
-
-!!! warning "Do not run `pip install -e packages/sdk-python` on its own"
-    On a fresh machine that fails with
-    `No matching distribution found for opencomplai-cli>=0.1.0-dev`, because the
-    SDK's dependencies are local monorepo packages not published to PyPI. Always
-    pass `core`, `cli`, and `sdk-python` together as shown above.
 
 ### Alternative: `uv` (workspace install)
 

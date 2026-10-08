@@ -212,3 +212,48 @@ def test_check_honours_legacy_verdict_in_intended_purpose(
     artifact = json.loads(result.stdout)
     assert artifact["result"] == "control_fail"
     assert "EU_AIA_ART6_HIGH_RISK" in artifact["failed_controls"]
+
+
+def test_checker_results_show_timeline_dates(monkeypatch) -> None:
+    import io
+    from datetime import date
+
+    from opencomplai_cli.commands import checker as checker_cmd
+    from opencomplai_core.compliance_checker.models import (
+        ComplianceCheckerResult,
+        ObligationItem,
+    )
+    from rich.console import Console
+
+    buf = io.StringIO()
+    monkeypatch.setattr(checker_cmd, "console", Console(file=buf, width=200))
+    result = ComplianceCheckerResult(
+        in_scope=True,
+        is_high_risk=True,
+        obligations=[
+            ObligationItem(
+                id="hr",
+                title="High risk",
+                body="b",
+                article_ref="Art. 16–21, Art. 43",  # noqa: RUF001
+            ),
+            ObligationItem(
+                id="t", title="Transparency", body="b", article_ref="Art. 50"
+            ),
+        ],
+    )
+    checker_cmd.display_results(result, today=date(2026, 10, 5))
+    out = buf.getvalue()
+    assert "Regulatory timeline" in out
+    row = next(line for line in out.splitlines() if "2027-12-02" in line)
+    assert "upcoming" in row
+    row = next(line for line in out.splitlines() if "2026-08-02" in line)
+    assert "in force" in row
+    assert "Reg. (EU) 2026/1744 (Digital Omnibus)" in out
+
+    buf.truncate(0)
+    buf.seek(0)
+    checker_cmd.display_results(
+        ComplianceCheckerResult(in_scope=False), today=date(2026, 10, 5)
+    )
+    assert "Regulatory timeline" not in buf.getvalue()

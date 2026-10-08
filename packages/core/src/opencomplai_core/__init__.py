@@ -18,7 +18,7 @@ from opencomplai_core.models import (
     SystemManifest,
 )
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 __all__ = [
     "FRAMEWORKS",
     "AssessmentInput",

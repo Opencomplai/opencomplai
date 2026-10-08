@@ -31,4 +31,6 @@ To prove that a compliance artifact was produced by a known install (not forged)
     opencomplai check --sign
     ```
 
-This signs the `ScanStatusArtifact` with the Ed25519 key in `~/.opencomplai/signing.key`. The signature can be verified by anyone who has the corresponding public key (`~/.opencomplai/signing.pub`).
+This signs the `ScanStatusArtifact` with the Ed25519 key in `~/.opencomplai/signing.key`, or with the key in the `SIGNING_KEY_PRIVATE` environment variable (base64-encoded PEM) when it is set, which suits CI where no key file exists. The signature can be verified by anyone who has the corresponding public key (`~/.opencomplai/signing.pub`).
+
+If neither key exists, `check --sign` exits `2` and writes no artifact. To sign when a key is present and carry on unsigned (with a warning) when it is not, use `opencomplai check --sign-if-available`.

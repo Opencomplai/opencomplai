@@ -15,8 +15,10 @@ non-deterministic so it is never mistaken for the default lexical evaluators' ou
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import urllib.error
+import urllib.parse
 import urllib.request
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -46,6 +48,42 @@ class ModelProviderClient(ABC):
     ) -> ProviderCompletion: ...
 
 
+def _is_loopback(host: str) -> bool:
+    if host == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
+
+
+def validate_base_url(url: str) -> str:
+    """Return `url` unchanged if safe to send a Bearer key to, else raise ValueError.
+
+    https anywhere; plain http only to a loopback host. No userinfo, query or fragment.
+    """
+    try:
+        parts = urllib.parse.urlsplit(url)
+        host = parts.hostname
+        _ = parts.port
+    except ValueError as exc:
+        msg = "provider base URL is malformed"
+        raise ValueError(msg) from exc
+    if not host:
+        msg = "provider base URL must include a host"
+        raise ValueError(msg)
+    if parts.username is not None or parts.password is not None:
+        msg = "provider base URL must not contain credentials (user:pass@)"
+        raise ValueError(msg)
+    if parts.query or parts.fragment:
+        msg = "provider base URL must not contain a query string or fragment"
+        raise ValueError(msg)
+    if parts.scheme == "https" or (parts.scheme == "http" and _is_loopback(host)):
+        return url
+    msg = "provider base URL must use https (plain http is allowed only for localhost/loopback)"
+    raise ValueError(msg)
+
+
 class OpenAICompatibleProvider(ModelProviderClient):
     """Client for any OpenAI-compatible chat completions endpoint.
 
@@ -56,7 +94,7 @@ class OpenAICompatibleProvider(ModelProviderClient):
     """
 
     def __init__(self, base_url: str = "https://api.openai.com/v1") -> None:
-        self._base_url = base_url.rstrip("/")
+        self._base_url = validate_base_url(base_url).rstrip("/")
 
     @property
     def provider_id(self) -> str:

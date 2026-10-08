@@ -10,6 +10,7 @@ from opencomplai_core.model_providers import (
     OpenAICompatibleProvider,
     ProviderCompletion,
     get_provider_client,
+    validate_base_url,
 )
 
 
@@ -60,3 +61,32 @@ def test_model_providers_module_never_imported_by_check_path():
 
     source = open(engine_module.__file__, encoding="utf-8").read()
     assert "model_providers" not in source
+
+
+@pytest.mark.parametrize(
+    ("url", "ok"),
+    [
+        ("https://example.com/v1", True),
+        ("http://localhost:8000/v1", True),
+        ("http://127.0.0.1:1/v1", True),
+        ("http://[::1]:1/v1", True),
+        ("http://example.com/v1", False),
+        ("ftp://127.0.0.1/v1", False),
+        ("https://user:pw@example.com/v1", False),
+        ("http://127.0.0.1.evil.com/v1", False),
+        ("", False),
+    ],
+)
+def test_base_url_validation(url, ok):
+    if ok:
+        assert validate_base_url(url) == url
+    else:
+        with pytest.raises(ValueError, match="provider base URL"):
+            validate_base_url(url)
+
+
+def test_get_provider_client_forwards_base_url():
+    client = get_provider_client("openai_compatible", base_url="https://gw.example/v1/")
+    assert client._base_url == "https://gw.example/v1"
+    with pytest.raises(ValueError, match="provider base URL"):
+        get_provider_client("openai_compatible", base_url="http://example.com/v1")

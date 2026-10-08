@@ -19,6 +19,7 @@ back into `main` here would be circular.
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import sys
 from datetime import UTC, datetime
@@ -50,8 +51,14 @@ def _main_module():
 
 
 def _mint_token(
-    *, system_id: str, commit_ref: str, halted_at: str, approver: str, key_path: Path
-) -> str:
+    *,
+    system_id: str,
+    commit_ref: str,
+    halted_at: str,
+    approver: str,
+    key_path: Path,
+    role: str | None = None,
+) -> tuple[str, dict]:
     """`base64(json payload) + "." + signature_b64`, signed over the JSON
     payload bytes under `SigningDomain.APPROVAL_TOKEN` — see
     `opencomplai_core.signing.sign_bundle_bytes`."""
@@ -62,6 +69,8 @@ def _mint_token(
         "approver": approver,
         "issued_at": datetime.now(UTC).isoformat(),
     }
+    if role is not None:
+        payload["role"] = role
     payload_bytes = json.dumps(payload, sort_keys=True).encode("utf-8")
     signature_b64 = sign_bundle_bytes(
         payload_bytes, key_path, SigningDomain.APPROVAL_TOKEN
@@ -93,6 +102,17 @@ def approve_cmd(
         help="Private signing key path (defaults to the local signing key from "
         "'opencomplai init'/'opencomplai keys rotate')",
     ),
+    role: str | None = typer.Option(
+        None,
+        "--role",
+        help="Approver's oversight role; must be one the manifest declares "
+        "(required when it declares any)",
+    ),
+    manifest: Path = typer.Option(
+        Path("system-manifest.json"),
+        "--manifest",
+        help="Manifest whose human_oversight roles are checked (a missing file is fine)",
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
     """Mint a signed HITL approval token for a HALTED_PENDING_REVIEW system.
@@ -114,11 +134,22 @@ def approve_cmd(
         )
         sys.exit(2)
 
+    from opencomplai_cli.check_signing import signing_key_available
+
     key_path = key if key is not None else main_mod._SIGNING_KEY
-    if not key_path.exists():
+    # An explicit --key beats the environment; the default may use SIGNING_KEY_PRIVATE.
+    if not (key_path.exists() if key is not None else signing_key_available(key_path)):
         main_mod.err_console.print(
             f"[red]Error:[/red] signing key not found: {key_path}"
         )
+        sys.exit(2)
+
+    from opencomplai_cli.commands import oversight_log
+
+    try:
+        role, role_declared = oversight_log.resolve_role(manifest, role)
+    except ValueError as exc:
+        main_mod.err_console.print(f"Error: {exc}", markup=False)
         sys.exit(2)
 
     token, payload = _mint_token(
@@ -127,7 +158,26 @@ def approve_cmd(
         halted_at=record["changed_at"],
         approver=approver,
         key_path=key_path,
+        role=role,
     )
+    try:
+        oversight_log.append_entry(
+            {
+                "event": "approval_minted",
+                "system_id": system_id,
+                "approver": approver,
+                "role": role,
+                "role_declared": role_declared,
+                "halted_at": payload["halted_at"],
+                "commit_ref": payload["commit_ref"],
+            },
+            key_path,
+        )
+    except OSError as exc:
+        main_mod.err_console.print(
+            f"Error: cannot write the oversight log: {exc}", markup=False
+        )
+        sys.exit(2)
 
     if output == OutputFormat.json:
         main_mod.console.print_json(json.dumps({"token": token, **payload}))
@@ -136,6 +186,8 @@ def approve_cmd(
         main_mod.console.print(f"  system_id:   {system_id}")
         main_mod.console.print(f"  halted_at:   {payload['halted_at']}")
         main_mod.console.print(f"  approver:    {approver}")
+        if role is not None:
+            main_mod.console.print(f"  role:        {role}", markup=False)
         main_mod.console.print(f"\n  {token}\n")
 
 
@@ -151,6 +203,12 @@ def resume_cmd(
         "--pub-key",
         help="Public signing key path (defaults to the local signing key from "
         "'opencomplai init'/'opencomplai keys rotate')",
+    ),
+    key: Path | None = typer.Option(
+        None,
+        "--key",
+        help="Private key used only to sign the oversight log entry (defaults to "
+        "the local signing key; the entry is written unsigned when none resolves)",
     ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
 ) -> None:
@@ -217,6 +275,38 @@ def resume_cmd(
         sys.exit(2)
 
     approver = payload.get("approver", "unknown")
+    role = payload.get("role")
+    from opencomplai_core.signing import SigningKeyError, resolve_key
+
+    from opencomplai_cli.commands import oversight_log
+
+    log_key = key if key is not None else main_mod._SIGNING_KEY
+    try:
+        resolve_key(log_key)
+    except SigningKeyError:
+        main_mod.err_console.print(
+            "oversight log entry written unsigned: no signing key", markup=False
+        )
+    try:
+        oversight_log.append_entry(
+            {
+                "event": "resume_granted",
+                "system_id": system_id,
+                "approver": approver,
+                "role": role,
+                "role_declared": bool(role),
+                "halted_at": payload.get("halted_at"),
+                "commit_ref": payload.get("commit_ref", ""),
+                "token_sha256": hashlib.sha256(token_str.encode("utf-8")).hexdigest(),
+            },
+            log_key,
+        )
+    except OSError as exc:
+        main_mod.err_console.print(
+            f"Error: cannot write the oversight log: {exc}", markup=False
+        )
+        sys.exit(2)
+
     save_state(
         state_dir,
         system_id,
@@ -240,5 +330,5 @@ def resume_cmd(
     else:
         main_mod.console.print(
             f"[bold green]System {system_id} resumed to RUNNING[/bold green] "
-            f"(approved by {approver})."
+            f"(approved by {approver}{f', role {role}' if role else ''})."
         )

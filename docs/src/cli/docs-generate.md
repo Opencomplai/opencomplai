@@ -25,6 +25,7 @@ Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 | `--output-dir` | `.` | Directory where the generated `dossier_<id>.json` file is written (local mode only). |
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
 | `--allow-incomplete` | off | Exit `0` even when the generated dossier fails Annex IV schema validation. Off by default — see [Fail-closed dossier gate](#fail-closed-dossier-gate) below. |
+| `--render` | *(none)* | Also write the dossier as `md` (Markdown) and/or `pdf`; repeatable. Local mode only. See [Rendered output](#rendered-output). |
 
 ## Modes
 
@@ -107,6 +108,17 @@ Existing CI pipelines that relied on `docs generate` always exiting `0` must
 add `--allow-incomplete` (CLI) or `allow_incomplete: true` (service request
 body) to restore the old behaviour — the dossier is generated and written
 identically either way; only the exit code / HTTP status changes.
+
+## Rendered output
+
+`--render md` writes `dossier_<id>.md` and `--render pdf` writes `dossier_<id>.pdf` next to the JSON
+(`--render md --render pdf` writes both). Without `--render` only the JSON is written. The files show
+what the dossier contains and nothing more: a provider placeholder, a "not specified" stub or an empty
+field is printed as `NOT PROVIDED`, and a dossier that fails validation, has a stub Section 2 or has
+`annex_iv_complete` false starts with an `INCOMPLETE` banner listing why. The exit code is unchanged: an
+incomplete HIGH-risk dossier still exits `2` (without `--allow-incomplete`) after its renders are written.
+Rendering is not signed and `verify` checks the JSON file only. PDF output needs the `reports` extra
+(fpdf2); if it is missing the command exits `1` after writing the JSON and Markdown.
 
 ## Halt / resume
 

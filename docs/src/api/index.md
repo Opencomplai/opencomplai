@@ -5,9 +5,9 @@ Complete API documentation for OpenComplai.
 ## Sections
 
 - [REST API](rest-api.md) - HTTP API reference
-- [Python SDK](python-sdk/index.md) - Python SDK documentation
+- [Python SDK](../sdk/quickstart.md) - Python SDK quickstart and [API reference](../sdk/api-reference.md)
 - [JavaScript SDK](javascript-sdk/index.md) - JavaScript SDK documentation
-- [Webhooks](webhooks.md) - Real-time event webhooks
+- [Webhooks](webhooks.md) - Webhooks (not implemented)
 
 ## Quick Links
 

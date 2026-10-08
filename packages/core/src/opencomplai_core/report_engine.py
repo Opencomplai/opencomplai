@@ -14,8 +14,8 @@ import json
 from pathlib import Path
 
 from opencomplai_core import __version__ as _core_version
-from opencomplai_core.control_catalog import get_catalog
-from opencomplai_core.frameworks import EU_AI_ACT
+from opencomplai_core.backlog import SortOrder, sort_rows
+from opencomplai_core.frameworks import EU_AI_ACT, requirement_title
 from opencomplai_core.models import (
     DISCLAIMER_V1,
     DISCLAIMER_V2,
@@ -28,6 +28,11 @@ from opencomplai_core.models import (
     SystemManifest,
 )
 from opencomplai_core.output_envelope import wrap_scan_output
+from opencomplai_core.regulatory_timeline import (
+    date_text,
+    format_entry,
+    timeline_for_articles,
+)
 
 _TEMPLATE_PATH = (
     Path(__file__).resolve().parent / "templates" / "report" / "report.html"
@@ -62,7 +67,9 @@ def _render_rule_results_table(risk_result: RiskResult | None) -> str:
     )
 
 
-def _render_gap_report_table(gap_report: GapReport | None) -> str:
+def _render_gap_report_table(
+    gap_report: GapReport | None, sort: SortOrder = SortOrder.article
+) -> str:
     if gap_report is None:
         return "<p><em>No gap report supplied — run <code>opencomplai gaps</code> first.</em></p>"
     rows = "\n".join(
@@ -71,7 +78,7 @@ def _render_gap_report_table(gap_report: GapReport | None) -> str:
         f"<td>{_esc(row.source.value)}</td>"
         f"<td>{_esc(row.evidence_ref)}</td>"
         f"<td>{_esc(row.rationale)}</td></tr>"
-        for row in gap_report.articles
+        for row in sort_rows(gap_report.articles, sort)
     )
     return (
         '<table id="gap-table"><thead><tr><th>Article</th><th>Status</th><th>Source</th>'
@@ -79,17 +86,18 @@ def _render_gap_report_table(gap_report: GapReport | None) -> str:
     )
 
 
-def _render_framework_section(framework_report: FrameworkReport) -> str:
+def _render_framework_section(
+    framework_report: FrameworkReport, sort: SortOrder = SortOrder.article
+) -> str:
     """One non-EU framework's heading, rows, exclusions and disclaimer."""
-    catalog = get_catalog()
     rows = "\n".join(
         f"<tr><td>{_esc(row.article)}</td>"
-        f"<td>{_esc(catalog[row.article].title if row.article in catalog else '—')}</td>"
+        f"<td>{_esc(requirement_title(row.article) or '—')}</td>"
         f'<td class="{_STATUS_CLASS[row.status.value]}">{_esc(row.status.value.upper())}</td>'
         f"<td>{_esc(row.source.value)}</td>"
         f"<td>{_esc(row.evidence_ref)}</td>"
         f"<td>{_esc(row.rationale)}</td></tr>"
-        for row in framework_report.report.articles
+        for row in sort_rows(framework_report.report.articles, sort)
     )
     meta = f"Data version {_esc(framework_report.data_version)}"
     if framework_report.derived_from:
@@ -101,11 +109,39 @@ def _render_framework_section(framework_report: FrameworkReport) -> str:
     return (
         f"\n\n<h2>{_esc(framework_report.label)}</h2>\n"
         f'<p class="meta">{meta}</p>\n'
-        "<table><thead><tr><th>Requirement</th><th>Title</th><th>Status</th>"
+        '<table class="gap-table"><thead><tr><th>Requirement</th><th>Title</th><th>Status</th>'
         "<th>Source</th><th>Evidence</th><th>Rationale</th></tr></thead>"
         f"<tbody>{rows}</tbody></table>\n"
         + (f"<p>Excluded</p><ul>{excluded}</ul>\n" if excluded else "")
         + f'<p class="meta">{_esc(DISCLAIMER_V2)}</p>'
+    )
+
+
+def _render_timeline_section(gap_report: GapReport | None) -> str:
+    """Dates for the gap rows' articles. Absolute dates only: no status words,
+    so the report stays reproducible."""
+    if gap_report is None:
+        return ""
+    rows_articles = {row.article for row in gap_report.articles}
+    entries = timeline_for_articles(rows_articles)
+    if not entries:
+        return ""
+    rows = "\n".join(
+        f"<tr><td>{_esc(date_text(e))}</td>"
+        f"<td>{_esc(e.title)}"
+        + (f"<br><em>{_esc(e.note)}</em>" if e.note else "")
+        + "</td>"
+        f"<td>{_esc(', '.join(a for a in e.articles if a in rows_articles))}</td>"
+        f"<td>{_esc(e.source)}</td>"
+        f"<td>{_esc(e.confidence)}</td></tr>"
+        for e in entries
+    )
+    return (
+        "\n\n<h2>Regulatory timeline</h2>\n"
+        '<table class="timeline-table"><thead><tr><th>Date</th><th>Obligation</th>'
+        "<th>Applies to</th><th>Source</th><th>Confidence</th></tr></thead>"
+        f"<tbody>{rows}</tbody></table>\n"
+        '<p class="meta">These dates are pending founder review and are not legal advice.</p>'
     )
 
 
@@ -151,6 +187,7 @@ def render_report(
     scan_summary: ScanSummary | None = None,
     framework_reports: dict[str, FrameworkReport] | None = None,
     fmt: str = "html",
+    sort: SortOrder = SortOrder.article,
 ) -> bytes | str:
     """Render a combined report. `fmt` is "html" or "pdf".
 
@@ -207,10 +244,12 @@ def render_report(
         "{{compliance_target}}": _esc(manifest.compliance_target),
         "{{high_risk_presumption}}": _esc(manifest.high_risk_presumption),
         "{{rule_results_table}}": _render_rule_results_table(risk_result),
-        "{{gap_report_table}}": _render_gap_report_table(gap_report),
+        "{{gap_report_table}}": _render_gap_report_table(gap_report, sort),
         "{{framework_reports_section}}": "".join(
-            _render_framework_section(framework_report) for framework_report in sections
+            _render_framework_section(framework_report, sort)
+            for framework_report in sections
         ),
+        "{{regulatory_timeline_section}}": _render_timeline_section(gap_report),
         "{{eval_summary_block}}": _render_eval_summary_block(eval_summary),
         "{{scan_summary_block}}": _render_scan_summary_block(scan_summary),
         "{{envelope_json}}": envelope_json,
@@ -244,14 +283,23 @@ def render_report(
         write_line(f"Intended purpose: {manifest.intended_purpose}")
         if gap_report is not None:
             write_line("Gap report:")
-            for row in gap_report.articles:
+            for row in sort_rows(gap_report.articles, sort):
                 write_line(
                     f"{row.article}: {row.status.value.upper()} "
                     f"({row.source.value}: {row.evidence_ref})"
                 )
+        if gap_report is not None:
+            lines = [
+                format_entry(e)
+                for e in timeline_for_articles(r.article for r in gap_report.articles)
+            ]
+            if lines:
+                write_line("Regulatory timeline:")
+                for line in lines:
+                    write_line(line)
         for framework_report in sections:
             write_line(f"{framework_report.label}:")
-            for row in framework_report.report.articles:
+            for row in sort_rows(framework_report.report.articles, sort):
                 write_line(
                     f"{row.article}: {row.status.value.upper()} "
                     f"({row.source.value}: {row.evidence_ref})"

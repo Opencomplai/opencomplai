@@ -91,6 +91,97 @@ describe('Gateway API routes', () => {
       expect(sentBody.compliance_targets).toEqual(['EU_AI_ACT', 'NIST_AI_RMF']);
       expect(sentBody.framework_inputs).toEqual(frameworkInputs);
     });
+
+    it('forwards human_oversight untouched', async () => {
+      const fetchSpy: ReturnType<typeof vi.fn> = vi.fn(
+        async () => new Response('{"valid":true}', { status: 200 }),
+      );
+      vi.stubGlobal('fetch', fetchSpy);
+      const block = {
+        roles: [{ role: 'Duty officer', can_intervene: true, conditions: ['Drift alarm'] }],
+        escalation: 'Duty officer, then CTO',
+        evidence_refs: ['docs/oversight.md'],
+      };
+      try {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/v1/manifests/validate',
+          payload: { system_id: 'test', intended_purpose: 'chatbot', human_oversight: block },
+        });
+        expect(res.statusCode).toBe(200);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      const sentBody = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+      expect(sentBody.human_oversight).toEqual(block);
+    });
+
+    it('omits human_oversight when absent', async () => {
+      const fetchSpy: ReturnType<typeof vi.fn> = vi.fn(
+        async () => new Response('{"valid":true}', { status: 200 }),
+      );
+      vi.stubGlobal('fetch', fetchSpy);
+      try {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/v1/manifests/validate',
+          payload: { system_id: 'test', intended_purpose: 'chatbot' },
+        });
+        expect(res.statusCode).toBe(200);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      const sentBody = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+      expect('human_oversight' in sentBody).toBe(false);
+    });
+
+    it('forwards agent_inventory untouched', async () => {
+      const fetchSpy: ReturnType<typeof vi.fn> = vi.fn(
+        async () => new Response('{"valid":true}', { status: 200 }),
+      );
+      vi.stubGlobal('fetch', fetchSpy);
+      const block = {
+        agents: [
+          {
+            id: 'triage',
+            name: 'Triage agent',
+            tools: [{ name: 'search', kind: 'function' }],
+            mandate: { permitted_actions: ['tool:search'] },
+          },
+        ],
+      };
+      try {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/v1/manifests/validate',
+          payload: { system_id: 'test', intended_purpose: 'chatbot', agent_inventory: block },
+        });
+        expect(res.statusCode).toBe(200);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      const sentBody = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+      expect(sentBody.agent_inventory).toEqual(block);
+    });
+
+    it('omits agent_inventory when absent', async () => {
+      const fetchSpy: ReturnType<typeof vi.fn> = vi.fn(
+        async () => new Response('{"valid":true}', { status: 200 }),
+      );
+      vi.stubGlobal('fetch', fetchSpy);
+      try {
+        const res = await app.inject({
+          method: 'POST',
+          url: '/v1/manifests/validate',
+          payload: { system_id: 'test', intended_purpose: 'chatbot' },
+        });
+        expect(res.statusCode).toBe(200);
+      } finally {
+        vi.unstubAllGlobals();
+      }
+      const sentBody = JSON.parse(String(fetchSpy.mock.calls[0][1]?.body));
+      expect('agent_inventory' in sentBody).toBe(false);
+    });
   });
 
   describe('GET /v1/docs', () => {
@@ -284,5 +375,59 @@ describe('M-05: path params are encoded before hitting upstream proxy URLs', () 
     // A raw '?' here would let the crafted id inject query params / change what
     // the upstream service receives — confirm no unescaped '?' made it through.
     expect(requestedUrl.split('?')).toHaveLength(1);
+  });
+});
+
+describe('ledger-history-tips forwards only its paging parameters', () => {
+  let app: FastifyInstance;
+  let fetchSpy: ReturnType<typeof vi.fn>;
+
+  beforeAll(async () => {
+    delete process.env.OPENCOMPLAI_API_KEY;
+    process.env.OPENCOMPLAI_AUTH_DISABLED = '1';
+    app = buildApp();
+    await app.ready();
+  });
+
+  afterAll(async () => {
+    await app.close();
+    delete process.env.OPENCOMPLAI_AUTH_DISABLED;
+  });
+
+  beforeEach(() => {
+    fetchSpy = vi.fn(async () => new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchSpy);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const upstream = (): URL => new URL(String(fetchSpy.mock.calls[0][0]));
+
+  it('forwards after_seq and limit to the vault', async () => {
+    await app.inject({
+      method: 'GET',
+      url: '/v1/evidence/ledger-history-tips?limit=500&after_seq=1500',
+    });
+    const url = upstream();
+    expect(url.pathname).toBe('/v1/evidence/ledger-history-tips');
+    expect(url.searchParams.get('limit')).toBe('500');
+    expect(url.searchParams.get('after_seq')).toBe('1500');
+  });
+
+  it('adds no query string when no paging parameter is given', async () => {
+    await app.inject({ method: 'GET', url: '/v1/evidence/ledger-history-tips' });
+    expect(upstream().search).toBe('');
+  });
+
+  it('drops empty paging parameters and any other query parameter', async () => {
+    await app.inject({
+      method: 'GET',
+      url: '/v1/evidence/ledger-history-tips?limit=10&after_seq=&tenant_id=other&debug=1',
+    });
+    const url = upstream();
+    expect(url.searchParams.get('limit')).toBe('10');
+    expect([...url.searchParams.keys()]).toEqual(['limit']);
   });
 });

@@ -20,6 +20,7 @@ _CATEGORY_MAP = {
     "vector_embedding": SignalCategory.EMBEDDINGS_VECTOR,
     "biometric": SignalCategory.BIOMETRIC,
     "scoring": SignalCategory.SCORING_PROFILING,
+    "agent_frameworks": SignalCategory.AGENT_FRAMEWORK,
 }
 
 
@@ -30,7 +31,7 @@ class AstUsageDetector(BaseDetector):
 
     @property
     def detector_version(self) -> str:
-        return "1.0.0"
+        return "1.1.0"
 
     @property
     def supported_languages(self) -> frozenset[str]:
@@ -43,9 +44,13 @@ class AstUsageDetector(BaseDetector):
     def detect(self, features: FeatureStore) -> list[EvidenceItem]:
         evidence: list[EvidenceItem] = []
         for imp in features.imports:
+            first = True
             for key, category in _CATEGORY_MAP.items():
                 token = match_token_identifier(imp.module, key)
                 if token:
+                    # evidence_id ignores category: later matches get a distinct label
+                    label = token if first else f"{token}@{category.value}"
+                    first = False
                     confidence = 0.75 if imp.scope.value == "prod" else 0.4
                     reach = (
                         Reachability.INTERNAL_CALLCHAIN
@@ -58,7 +63,7 @@ class AstUsageDetector(BaseDetector):
                             detector_version=self.detector_version,
                             evidence_kind=EvidenceKind.IMPORT,
                             category=category,
-                            token_label=token,
+                            token_label=label,
                             location=imp.location,
                             scope=imp.scope,
                             rationale_code="import_detected",
@@ -66,11 +71,14 @@ class AstUsageDetector(BaseDetector):
                             reachability=reach,
                         )
                     )
-                    break
         for call in features.callsites:
+            first = True
             for key, category in _CATEGORY_MAP.items():
                 token = match_token_identifier(call.name, key)
                 if token:
+                    # evidence_id ignores category: later matches get a distinct label
+                    label = token if first else f"{token}@{category.value}"
+                    first = False
                     confidence = 0.85 if call.scope.value == "prod" else 0.45
                     reach = (
                         Reachability.REACHABLE_ENTRYPOINT
@@ -83,7 +91,7 @@ class AstUsageDetector(BaseDetector):
                             detector_version=self.detector_version,
                             evidence_kind=EvidenceKind.CALLSITE,
                             category=category,
-                            token_label=token,
+                            token_label=label,
                             location=call.location,
                             scope=call.scope,
                             rationale_code="callsite_detected",
@@ -91,5 +99,4 @@ class AstUsageDetector(BaseDetector):
                             reachability=reach,
                         )
                     )
-                    break
         return evidence

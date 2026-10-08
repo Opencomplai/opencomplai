@@ -15,9 +15,10 @@ elements below.
 
 Status is a convention-based artifact probe per Art. 17(1) sub-point, run
 separately for each row below — "Present" means a matching file/path was
-found under `--repo-root` (heuristic, not a legal determination), "Missing"
-means none was, and "Unverified" means no `--repo-root` was supplied so the
-probe did not run. Fill in Reference / location and Owner with the actual
+found under `--repo-root` and carries content (heuristic, not a legal
+determination), "Unfilled" means a file was found but it is still a scaffold or
+has no content, "Missing" means none was, and "Unverified" means no
+`--repo-root` was supplied so the probe did not run. Fill in Reference / location and Owner with the actual
 policy/procedure regardless of probe status — probe status is a starting
 point for triage, not a substitute for review, and an empty or unfilled
 Reference/Owner cell is not evidence of a functioning QMS.

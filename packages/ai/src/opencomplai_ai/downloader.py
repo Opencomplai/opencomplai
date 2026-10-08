@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from rich.console import Console
@@ -77,9 +78,12 @@ def ensure_model(model_id: str) -> Path:
 
     spec = MODEL_CATALOG[model_id]
 
-    # CodeBERT ships no prebuilt ONNX artifact on the Hub, so the ONNX runtime
-    # path is produced by exporting the official PyTorch checkpoint on first use.
-    if spec.runtime == "onnxruntime":
+    # CodeBERT ships no prebuilt ONNX artifact on the Hub, so the codebert-onnx
+    # export is produced from the official PyTorch checkpoint on first use.
+    # Keyed on the id, not spec.runtime: that entry's runtime label is
+    # "deterministic" (it classifies without a model), and any other runtime
+    # would fall through to the plain-file download below.
+    if model_id == "codebert-onnx":
         return _ensure_onnx_export(spec)
 
     if not spec.filename:
@@ -163,12 +167,14 @@ def ensure_model(model_id: str) -> Path:
 def _ensure_onnx_export(spec) -> Path:
     """Export the PyTorch checkpoint to ONNX on first use and cache it.
 
-    Not used by ``IntentClassifier`` — that backend is a deterministic
-    code-signal matcher with no model artifact (see ``classifier.py``) and
-    never calls ``ensure_model``. This path exists only for an explicit,
-    optional prefetch/export of the ``codebert-onnx`` catalog entry (e.g. the
-    CLI's ``opencomplai ai configure``), which needs the ``[onnx]`` extra
-    (``optimum[onnxruntime]``) installed separately.
+    Python-API-only: this is reachable solely through ``ensure_model`` called
+    from user code. No CLI command calls it (``opencomplai ai configure`` only
+    saves the chosen id; the scan preload skips ``codebert-onnx``), and
+    nothing reads the ``model.onnx`` it writes. It is not used for
+    classification — ``IntentClassifier`` is a deterministic code-signal
+    matcher with no model artifact (see ``classifier.py``) and never calls
+    ``ensure_model``. It needs the ``[onnx]`` extra (``optimum[onnxruntime]``)
+    installed separately.
     """
     cache_dir = get_cache_dir()
     model_dir = cache_dir / "codebert-base"
@@ -177,15 +183,18 @@ def _ensure_onnx_export(spec) -> Path:
     if onnx_file.exists():
         return onnx_file
 
+    # The catalog display_name describes the deterministic classifier, not
+    # this export, so name the export itself in the prompts below.
+    spec = replace(spec, display_name=f"CodeBERT ONNX export ({spec.hf_repo})")
     require_online(f"Exporting {spec.display_name}")
 
     console = Console()
     console.print(
-        f"\n[bold]Preparing[/bold] {spec.display_name} (~{spec.size_mb} MB)\n"
+        f"\n[bold]Preparing[/bold] {spec.display_name}\n"
         f"  Source: {spec.hf_repo} (PyTorch checkpoint)\n"
         f"  Export: ONNX -> {onnx_file}\n"
         f"  Pin:    {describe_pin(spec.revision, spec.sha256)}\n"
-        f"  This runs once; the exported model is cached for future scans.\n"
+        f"  This runs once; the export is cached at the path above. Scans do not use it.\n"
     )
     _guard_pin(spec, console)
     _confirm(console, "Download and export now? [Y/n]: ", operation="Model export")

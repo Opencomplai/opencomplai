@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
   title: Opencomplai Gateway API
-  version: 0.1.0-dev
+  version: 0.9.0
   description: |
     REST API gateway for the Opencomplai compliance platform.
     All routes proxy to the appropriate Python service.
@@ -12,15 +12,27 @@ info:
     /v1/checker/* routes (called by the docs widget, not proxied here) are
     EU AI Act only.
 
+    Authentication: every /v1 route requires credentials, either an
+    x-api-key header (API-key mode) or an Authorization bearer JWT (OIDC
+    mode). A deployment uses one of the two. Only GET /health is open. The
+    gateway refuses to start unconfigured unless authentication is explicitly
+    disabled for local development (OPENCOMPLAI_AUTH_DISABLED=1).
+
 servers:
   - url: http://localhost:8080
     description: Local Docker Compose deployment
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
 
 paths:
   /health:
     get:
       operationId: getHealth
       summary: Service health check
+      description: The only route that needs no credentials.
+      security: []
       responses:
         "200":
           description: Service is healthy
@@ -28,6 +40,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
+        "429":
+          $ref: "#/components/responses/RequestRateLimited"
 
   /v1/manifests/validate:
     post:
@@ -45,12 +59,26 @@ paths:
       responses:
         "200":
           description: Manifest is valid
-        "422":
-          description: Validation error, including an unknown framework id
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorEnvelope"
+                $ref: "#/components/schemas/ManifestValidateResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: >-
+            The gateway rejected the body (gateway envelope: a required field
+            missing or empty, an empty compliance_targets list), or the risk
+            engine rejected the manifest, for example an unknown framework id
+            (upstream error shape, with detail holding the message)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ErrorEnvelope"
+                  - $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
 
   /v1/risk/classify:
     post:
@@ -70,6 +98,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RiskClassifyResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
 
   /v1/evidence/events:
     post:
@@ -88,6 +120,118 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AppendEventResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+
+  /v1/evidence/verify-chain:
+    get:
+      operationId: verifyEvidenceChain
+      summary: Verify the integrity of the tenant's evidence ledger chain (idempotent)
+      description: >-
+        Walks the caller's tenant ledger and reports whether every event still
+        links to its predecessor. Each tenant has its own independent chain.
+      responses:
+        "200":
+          description: Chain verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyChainResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/evidence/ledger-root:
+    get:
+      operationId: getLedgerRoot
+      summary: Current Merkle chain tip of the tenant's evidence ledger (idempotent)
+      description: >-
+        The hash an Annex IV dossier anchors to. For an empty ledger this is
+        the genesis hash (sha256 of the empty string).
+      responses:
+        "200":
+          description: Current chain tip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LedgerRootResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/evidence/ledger-history-tips:
+    get:
+      operationId: getLedgerHistoryTips
+      summary: Rolling Merkle tip after every event in the tenant's ledger (idempotent)
+      description: >-
+        Used to confirm that a dossier's recorded ledger_root_hash is a real
+        historical point in the chain. Without parameters the vault returns
+        every tip in one response, genesis hash first, and refuses with 413
+        once the tenant has more than 10,000 events. Pass limit (and, to
+        continue, after_seq) to read the chain a page at a time: the response
+        then lists the genesis hash separately and carries next_after_seq,
+        the after_seq value for the next page (null on the last page).
+        after_seq without limit is rejected with 422.
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5000
+          description: Maximum number of per-event tips to return; selects the paged response
+        - name: after_seq
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+          description: >-
+            Return tips only for events after this sequence number (0 or omitted
+            starts at the beginning of the chain). Take it
+            from the previous page's next_after_seq; requires limit.
+      responses:
+        "200":
+          description: >-
+            Chain tips in append order. The unpaged shape (no limit) has the
+            genesis hash at tips[0]; the paged shape (limit given) has it in
+            genesis and tips holds only this page's per-event tips.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/LedgerHistoryTipsResponse"
+                  - $ref: "#/components/schemas/LedgerHistoryTipsPageResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          description: >-
+            The tenant's ledger has too many events to return unpaged; page
+            with limit and after_seq
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "422":
+          description: after_seq given without limit, or a parameter out of range
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
 
   /v1/verify/claims:
     post:
@@ -106,11 +250,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VerifyClaimResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
 
   /v1/hitl/overrides:
     post:
       operationId: submitOverride
-      summary: Submit a HITL override action with mandatory rationale (non-idempotent)
+      summary: Submit a HITL override action with mandatory rationale (idempotent by idempotency_key)
+      description: >-
+        The decision is written to the evidence ledger before it is accepted;
+        if the ledger is unavailable the request fails with 503 and nothing is
+        recorded. Repeating a request with the same idempotency_key (derived
+        from the payload when omitted) replays the original response. The
+        gateway replaces actor_id with the authenticated caller's identity
+        (the JWT sub claim, or api-key-caller in API-key mode); it keeps the
+        value you send only when authentication is disabled or the token has
+        no sub claim.
       requestBody:
         required: true
         content:
@@ -120,18 +277,268 @@ paths:
       responses:
         "201":
           description: Override submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OverrideResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          description: idempotency_key was already used with a different payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
         "422":
-          description: Missing or empty rationale
+          description: >-
+            Missing or empty case_id, actor_id or rationale, or decision not
+            approved/rejected (gateway envelope); a whitespace-only rationale
+            is rejected by the risk engine (upstream error shape)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ErrorEnvelope"
+                  - $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/LedgerOrDependencyUnavailable"
+
+  /v1/hitl/overrides/{override_id}/second-approval:
+    post:
+      operationId: secondApproveOverride
+      summary: Complete a dual-control override with a second approver
+      description: >-
+        Completes an override submitted with requires_dual_approval. The
+        second approver must differ from the first and must send the first
+        approval's rationale_hash plus their own non-empty rationale. The
+        override_second_approved event is written to the evidence ledger
+        before the request is accepted. The gateway replaces actor_id with
+        the authenticated caller's identity; in API-key mode that is always
+        api-key-caller, so two distinct approvers need JWT/OIDC.
+      parameters:
+        - name: override_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SecondApprovalRequest"
+      responses:
+        "201":
+          description: Override completed (status accepted or rejected)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OverrideResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Same approver as the first approval (POLICY_DENIED)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "404":
+          description: No pending dual-control override with this id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "409":
+          description: ALREADY_COMPLETED or RATIONALE_HASH_MISMATCH
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "422":
+          description: Missing or empty field (gateway envelope), or whitespace-only rationale (upstream error shape)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ErrorEnvelope"
+                  - $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/LedgerOrDependencyUnavailable"
+
+  /v1/hitl/queue:
+    get:
+      operationId: listReviewQueue
+      summary: List items in the human-review queue (idempotent)
+      parameters:
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [queued, assigned, decided, expired]
+          description: Return only items in this state
+        - name: assigned_to
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Return only items assigned to this reviewer
+      responses:
+        "200":
+          description: Matching review items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewQueueListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/hitl/queue/{id}:
+    get:
+      operationId: getReviewQueueItem
+      summary: Get one review item with its redacted reviewer context (idempotent)
+      parameters:
+        - $ref: "#/components/parameters/ReviewId"
+      responses:
+        "200":
+          description: The review item and its context
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewQueueDetailResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Review item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/hitl/queue/{id}/assign:
+    post:
+      operationId: assignReviewQueueItem
+      summary: Assign a review item to a reviewer
+      description: >-
+        Sets the item to assigned for the named reviewer. The gateway replaces
+        reviewer_id with the authenticated caller's identity (the JWT sub
+        claim, or api-key-caller in API-key mode); it keeps the value you send
+        only when authentication is disabled or the token has no sub claim.
+      parameters:
+        - $ref: "#/components/parameters/ReviewId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewAssignRequest"
+      responses:
+        "200":
+          description: Updated review item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewAssignResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Review item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "422":
+          description: Missing or empty reviewer_id
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorEnvelope"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/hitl/queue/{id}/decide:
+    post:
+      operationId: decideReviewQueueItem
+      summary: Record the decision on a review item with mandatory rationale
+      description: >-
+        Submits a HITL override with the review id as the case and marks the
+        item decided. When no idempotency_key is given, one is derived from
+        the review id, so a second decision on the same item replays the first
+        unless its payload differs (409). The gateway replaces actor_id with
+        the authenticated caller's identity (the JWT sub claim, or
+        api-key-caller in API-key mode); it keeps the value you send only when
+        authentication is disabled or the token has no sub claim.
+      parameters:
+        - $ref: "#/components/parameters/ReviewId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewDecideRequest"
+      responses:
+        "201":
+          description: Decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewDecideResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Review item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "409":
+          description: idempotency_key was already used with a different payload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "422":
+          description: >-
+            Missing or empty actor_id or rationale, or decision not
+            approved/rejected (gateway envelope); a whitespace-only rationale
+            is rejected by the risk engine (upstream error shape)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ErrorEnvelope"
+                  - $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/LedgerOrDependencyUnavailable"
 
   /v1/docs/generate:
     post:
       operationId: generateDocs
       summary: Generate Annex IV technical documentation dossier (EU AI Act only; idempotent by system_id + commit_ref)
-      description: Builds the EU AI Act Annex IV dossier; other frameworks have no dossier.
+      description: >-
+        Builds the EU AI Act Annex IV dossier; other frameworks have no
+        dossier. The gateway forwards the body unchanged to the doc generator,
+        which validates it. The dossier is stored in the evidence vault and
+        can be fetched with GET /v1/docs/{dossier_id}. By default a dossier
+        that fails the Annex IV schema check is still stored but the request
+        is refused with 422 DOSSIER_SCHEMA_INVALID; set allow_incomplete to
+        accept it.
       requestBody:
         required: true
         content:
@@ -140,16 +547,133 @@ paths:
               $ref: "#/components/schemas/GenerateDocsRequest"
       responses:
         "200":
-          description: Dossier generated or returned from cache
+          description: Dossier generated and stored
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenerateDocsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: >-
+            The dossier failed schema validation and allow_incomplete was not
+            set (DOSSIER_SCHEMA_INVALID; the dossier is stored and its ids
+            are in the body), eval_report or corroboration_report is not a
+            valid report (INVALID_EVAL_REPORT, INVALID_CORROBORATION_REPORT),
+            or the body failed request validation (detail is a list)
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/DossierSchemaInvalidError"
+                  - $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          description: >-
+            Generation failed unexpectedly (SYSTEM_ERROR, with the message and
+            duration_ms), for example an unknown compliance_target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "502":
+          description: >-
+            The dossier was generated but could not be stored in the evidence
+            vault (VAULT_CAS_WRITE_FAILED, VAULT_EVENT_APPEND_FAILED or
+            VAULT_DOSSIER_INDEX_FAILED)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/docs:
+    get:
+      operationId: listDossiers
+      summary: List the dossiers stored for a system, newest first (idempotent)
+      parameters:
+        - name: system_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: System whose dossiers to list
+      responses:
+        "200":
+          description: Dossier index entries for the system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DossierListResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: system_id query parameter missing or empty
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryValidationError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "502":
+          description: The dossier index could not be read from the evidence vault
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/docs/{dossier_id}:
+    get:
+      operationId: getDossier
+      summary: Retrieve a generated dossier and its index metadata (idempotent)
+      parameters:
+        - name: dossier_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Dossier id returned in the dossier_id field of POST /v1/docs/generate
+      responses:
+        "200":
+          description: Dossier JSON with the metadata needed to verify it
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DossierResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Dossier not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "502":
+          description: The dossier index entry or its stored content could not be read or decoded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
 
   /v1/sync/metadata:
     post:
       operationId: syncMetadata
       summary: Sync allowlisted metadata through egress proxy (idempotent)
+      description: >-
+        The egress proxy checks the body against its field allowlist and
+        refuses the whole request with 403 EGRESS_BLOCKED if any other key is
+        present. When no dashboard is configured (PRO_DASHBOARD_URL unset)
+        nothing is sent anywhere: the proxy only confirms that the payload is
+        allowed. When one is configured, the proxy forwards the payload to it
+        and returns the dashboard's own response and status.
       requestBody:
         required: true
         content:
@@ -158,12 +682,46 @@ paths:
               $ref: "#/components/schemas/SyncMetadataRequest"
       responses:
         "200":
-          description: Metadata synced
+          description: >-
+            Payload validated. The body shown is the proxy's own confirmation,
+            returned when no dashboard is configured; with a dashboard
+            configured the body is the dashboard's response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncMetadataResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: >-
+            A field outside the allowlist, or a dashboard URL that is not an
+            allowed destination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EgressBlockedError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
 
   /v1/status:
     get:
       operationId: getStatus
       summary: Non-sensitive system status snapshot (idempotent)
+      description: >-
+        Probes every downstream service. Returns 200 even when a downstream
+        is degraded unless strict is set; this is not a liveness probe, use
+        GET /health for that.
+      parameters:
+        - name: strict
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Pass 1 or true to get 503 instead of 200 whenever any service is
+            not ok. The body is the same either way.
       responses:
         "200":
           description: Status snapshot
@@ -171,8 +729,360 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StatusResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          description: strict was set and at least one service is not ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatusResponse"
+
+  /v1/portfolio:
+    get:
+      operationId: getPortfolio
+      summary: AI systems on record with their latest compliance badge (idempotent)
+      description: >-
+        One entry per system_id for the caller's tenant, carrying the most
+        recently issued badge. Only systems with at least one issued badge
+        appear.
+      responses:
+        "200":
+          description: Portfolio
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/badges/issue:
+    post:
+      operationId: issueBadge
+      summary: Issue a compliance badge for a passing status artifact (idempotent by system_id + bundle_checksum)
+      description: >-
+        Refused unless artifact.result is pass and
+        artifact.pending_verifications_count is 0. Issuing the same
+        system_id and bundle_checksum again returns the existing badge, still
+        with 201, and created is false. When the vault has a badge public key
+        configured (OSS_BADGE_PUBLIC_KEY_PATH) a valid signature is required.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueBadgeRequest"
+      responses:
+        "201":
+          description: Badge issued, or the existing badge returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueBadgeResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: >-
+            Artifact does not meet the issuance criteria, signature missing or
+            invalid, or the request body failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/badges/verify/{badgeId}:
+    get:
+      operationId: verifyBadge
+      summary: Badge metadata without the raw artifact (idempotent)
+      parameters:
+        - $ref: "#/components/parameters/BadgeId"
+      responses:
+        "200":
+          description: Badge metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyBadgeResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Badge not found for the caller's tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/badges/{badgeId}/svg:
+    get:
+      operationId: getBadgeSvg
+      summary: SVG badge markup, wrapped in a JSON object (idempotent)
+      description: >-
+        The evidence vault serves the badge as image/svg+xml, but the gateway
+        does not forward that body as it is. It returns the SVG text inside a
+        JSON object, {"raw": "<svg ...>"}, with content type
+        application/json. Like every /v1 route it needs credentials, so the
+        URL cannot be used directly as the src of a README image; fetch it
+        with a credential and use the raw value.
+      parameters:
+        - $ref: "#/components/parameters/BadgeId"
+      responses:
+        "200":
+          description: The SVG document as text, in the raw field
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadgeSvgResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Badge not found for the caller's tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/ingest/status-artifact:
+    post:
+      operationId: ingestStatusArtifact
+      summary: Record a scan status artifact in the evidence ledger (non-idempotent)
+      description: >-
+        Forwarded through the egress proxy to the evidence vault, which appends
+        a pro_status_artifact_ingested ledger event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProIngestStatusArtifactRequest"
+      responses:
+        "201":
+          description: Ledger event appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProIngestResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Request body failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/ingest/dossier-metadata:
+    post:
+      operationId: ingestDossierMetadata
+      summary: Record dossier metadata in the evidence ledger (non-idempotent)
+      description: >-
+        Forwarded through the egress proxy to the evidence vault, which appends
+        a pro_dossier_metadata_ingested ledger event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProIngestDossierMetadataRequest"
+      responses:
+        "201":
+          description: Ledger event appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProIngestResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Request body failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
+
+  /v1/pro/ingest/metrics:
+    post:
+      operationId: ingestMetrics
+      summary: Record compliance metrics in the evidence ledger (non-idempotent)
+      description: >-
+        Forwarded through the egress proxy to the evidence vault, which appends
+        a pro_metrics_ingested ledger event.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProIngestMetricsRequest"
+      responses:
+        "201":
+          description: Ledger event appended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProIngestResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          description: Request body failed validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpstreamError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/DependencyUnavailable"
 
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: >-
+        API-key mode, for self-hosted single-operator deployments: the value
+        of OPENCOMPLAI_API_KEY. A shared key authenticates the deployment as a
+        whole, as the tenant named by OPENCOMPLAI_API_KEY_TENANT_ID (default
+        oss-default). Ignored when OIDC_JWKS_URI is set. See
+        docs/src/deployment/authentication.md.
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >-
+        OIDC mode, for multi-user deployments (OIDC_JWKS_URI set): an RS256
+        JWT verified against the identity provider's JWKS, with iss, aud, exp
+        and nbf enforced. The token must also carry the tenant claim named by
+        OIDC_TENANT_CLAIM. See docs/src/deployment/authentication.md.
+
+  headers:
+    RateLimitLimit:
+      description: Requests allowed in the window
+      schema:
+        type: integer
+    RateLimitRemaining:
+      description: Requests left in the window
+      schema:
+        type: integer
+    RateLimitReset:
+      description: Seconds until the window resets
+      schema:
+        type: integer
+    RetryAfter:
+      description: Seconds to wait before retrying; sent only with the rate limiter's own 429
+      schema:
+        type: integer
+
+  parameters:
+    ReviewId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Review id as returned by GET /v1/hitl/queue (rev_sha256:<hex>)
+
+    BadgeId:
+      name: badgeId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Badge id as returned by POST /v1/pro/badges/issue (sha256:<hex>)
+
+  responses:
+    Unauthorized:
+      description: >-
+        Credentials missing or invalid (POLICY_DENIED). The message says
+        which: "Invalid or missing API key." in API-key mode; "Missing Bearer
+        token.", "Invalid or expired JWT." or "Token missing tenant claim." in
+        OIDC mode.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+
+    RateLimited:
+      description: >-
+        Too many requests. After 10 failed authentication attempts from one
+        client within 60 seconds (the defaults) further failures return 429
+        RATE_LIMITED in the gateway envelope instead of 401. Separately, more
+        than 300 requests of any kind from one client within 60 seconds (the
+        default; the Docker Compose stack raises it to 1000) return the rate
+        limiter's own body, {statusCode, error, message}, with a Retry-After
+        header. Both limits are configurable.
+      headers:
+        Retry-After:
+          $ref: "#/components/headers/RetryAfter"
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/ErrorEnvelope"
+              - $ref: "#/components/schemas/RequestRateLimitError"
+
+    RequestRateLimited:
+      description: >-
+        More than 300 requests from one client within 60 seconds (the
+        default; configurable). The limiter sets the headers below.
+      headers:
+        Retry-After:
+          $ref: "#/components/headers/RetryAfter"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/RateLimitLimit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/RateLimitRemaining"
+        X-RateLimit-Reset:
+          $ref: "#/components/headers/RateLimitReset"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RequestRateLimitError"
+
+    DependencyUnavailable:
+      description: An upstream service could not be reached
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DependencyUnavailableError"
+
+    LedgerOrDependencyUnavailable:
+      description: >-
+        The evidence ledger is unavailable and the decision was not recorded
+        (AUDIT_UNAVAILABLE, upstream error shape), or an upstream service
+        could not be reached (DEPENDENCY_UNAVAILABLE)
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: "#/components/schemas/DependencyUnavailableError"
+              - $ref: "#/components/schemas/UpstreamError"
+
   schemas:
     HealthResponse:
       type: object
@@ -185,6 +1095,25 @@ components:
           type: string
         version:
           type: string
+
+    ManifestValidateResponse:
+      type: object
+      required: [valid, manifest]
+      properties:
+        valid:
+          type: boolean
+        manifest:
+          type: object
+          additionalProperties: true
+          description: The validated manifest, with defaults applied
+
+    BadgeSvgResponse:
+      type: object
+      required: [raw]
+      properties:
+        raw:
+          type: string
+          description: The SVG document, as text
 
     ErrorEnvelope:
       type: object
@@ -202,6 +1131,76 @@ components:
         correlation_id:
           type: string
         remediation_hint:
+          type: string
+
+    RequestRateLimitError:
+      type: object
+      required: [statusCode, error, message]
+      description: >-
+        Body the gateway's request rate limiter sends when a client exceeds
+        the global limit. It does not use the ErrorEnvelope shape.
+      properties:
+        statusCode:
+          type: integer
+          enum: [429]
+        error:
+          type: string
+          enum: [Too Many Requests]
+        message:
+          type: string
+          description: Rate limit exceeded, retry in <duration>
+
+    QueryValidationError:
+      type: object
+      required: [error_code, message, category, retryable, correlation_id]
+      description: >-
+        Same shape as ErrorEnvelope, but this route reports category
+        validation, which ErrorEnvelope's category enum does not list.
+      properties:
+        error_code:
+          type: string
+          enum: [VALIDATION_ERROR]
+        message:
+          type: string
+        category:
+          type: string
+          enum: [validation]
+        retryable:
+          type: boolean
+        correlation_id:
+          type: string
+
+    UpstreamError:
+      type: object
+      required: [detail]
+      description: >-
+        Error body from an internal service, forwarded unchanged by the
+        gateway. The services are FastAPI apps, so the body is
+        {"detail": ...}; detail is a string, an object (for example
+        {error_code, message, category, retryable}) or, for request validation
+        failures, a list of error objects.
+      properties:
+        detail: {}
+
+    DependencyUnavailableError:
+      type: object
+      required: [error_code, message, retryable]
+      description: >-
+        Returned with 503 when an upstream service cannot be reached. The
+        gateway adds category and correlation_id; the egress proxy's variant
+        carries only error_code, message and retryable.
+      properties:
+        error_code:
+          type: string
+          enum: [DEPENDENCY_UNAVAILABLE]
+        message:
+          type: string
+        category:
+          type: string
+          enum: [dependency]
+        retryable:
+          type: boolean
+        correlation_id:
           type: string
 
     SystemManifest:
@@ -241,6 +1240,20 @@ components:
           default: false
         commit_ref:
           type: string
+        human_oversight:
+          type: object
+          additionalProperties: true
+          description: >-
+            Structured human-oversight declaration (roles, escalation,
+            evidence references). Optional; forwarded untouched and validated
+            by the downstream service.
+        agent_inventory:
+          type: object
+          additionalProperties: true
+          description: >-
+            Declared agent inventory (agents, tools, mandate, delegation).
+            Optional; forwarded untouched and validated by the downstream
+            service.
 
     FrameworkInputs:
       type: object
@@ -332,6 +1345,54 @@ components:
         prev_hash:
           type: string
 
+    VerifyChainResponse:
+      type: object
+      required: [valid]
+      properties:
+        valid:
+          type: boolean
+          description: true when every event in the tenant's chain links to its predecessor
+
+    LedgerRootResponse:
+      type: object
+      required: [ledger_root_hash]
+      properties:
+        ledger_root_hash:
+          type: string
+          description: sha256:<hex> tip of the chain; the hash of the empty string when the ledger is empty
+
+    LedgerHistoryTipsResponse:
+      type: object
+      required: [tips, count]
+      properties:
+        tips:
+          type: array
+          items:
+            type: string
+          description: sha256:<hex> tip after each event, in append order, with the genesis hash at index 0
+        count:
+          type: integer
+
+    LedgerHistoryTipsPageResponse:
+      type: object
+      required: [genesis, tips, count, next_after_seq]
+      properties:
+        genesis:
+          type: string
+          description: sha256:<hex> genesis hash (sha256 of the empty string), the tip of an empty ledger
+        tips:
+          type: array
+          items:
+            type: string
+          description: sha256:<hex> tip after each event on this page, in append order; excludes the genesis hash
+        count:
+          type: integer
+          description: Number of entries in tips
+        next_after_seq:
+          type: [integer, "null"]
+          format: int64
+          description: after_seq to request the next page, or null when this is the last page
+
     VerifyClaimRequest:
       type: object
       required: [system_id, claim_ref, source_ref]
@@ -357,50 +1418,518 @@ components:
         response_hash:
           type: string
 
+    SecondApprovalRequest:
+      type: object
+      required: [actor_id, rationale, rationale_hash]
+      properties:
+        actor_id:
+          type: string
+          minLength: 1
+          description: Replaced by the authenticated caller's identity
+        rationale:
+          type: string
+          minLength: 1
+          description: The second approver's own rationale; only its hash is stored
+        rationale_hash:
+          type: string
+          minLength: 1
+          description: The first approval's rationale_hash
+        decision:
+          type: string
+          enum: [approved, rejected]
+          default: approved
+
     OverrideRequest:
       type: object
       required: [case_id, actor_id, rationale, decision]
       properties:
         case_id:
           type: string
+          minLength: 1
         actor_id:
           type: string
+          minLength: 1
+          description: >-
+            Replaced by the authenticated caller's identity (the JWT sub
+            claim, or api-key-caller in API-key mode); kept as sent only when
+            authentication is disabled or the token has no sub claim
         rationale:
           type: string
           minLength: 1
         decision:
           type: string
           enum: [approved, rejected]
+        requires_dual_approval:
+          type: boolean
+          description: >-
+            When true the response status is pending_second_approval until a
+            second approver completes it
+        idempotency_key:
+          type: string
+          description: >-
+            Same key with the same payload returns the original response;
+            the same key with a different payload is rejected with 409.
+            Derived from the payload when omitted.
+
+    OverrideResponse:
+      type: object
+      required: [override_id, rationale_hash, status]
+      properties:
+        override_id:
+          type: string
+        rationale_hash:
+          type: string
+          description: sha256:<hex> of the rationale; the rationale text itself is not stored
+        status:
+          type: string
+          enum: [accepted, pending_second_approval]
+          description: >-
+            Requests through the gateway are always accepted; it does not
+            forward requires_dual_approval, so pending_second_approval is not
+            reachable here.
+        vault_event_id:
+          type: [string, "null"]
+          description: Id of the ledger event that recorded the override
+
+    ReviewItem:
+      type: object
+      required:
+        - review_id
+        - tenant_id
+        - system_id
+        - commit_ref
+        - reason
+        - state
+        - payload_ref
+        - context_ref
+        - idempotency_key
+        - created_at
+      properties:
+        review_id:
+          type: string
+        tenant_id:
+          type: string
+        system_id:
+          type: string
+        commit_ref:
+          type: string
+        reason:
+          type: string
+          enum:
+            - low_confidence
+            - evaluator_fail
+            - modification_trap
+            - policy_block
+            - manual
+            - manifest_discrepancy
+            - evidence_stale
+            - manifest_change
+        state:
+          type: string
+          enum: [queued, assigned, decided, expired]
+        payload_ref:
+          type: string
+        context_ref:
+          type: string
+        reviewer_group:
+          type: [string, "null"]
+        assigned_to:
+          type: [string, "null"]
+        idempotency_key:
+          type: string
+        created_at:
+          type: string
+        expires_at:
+          type: [string, "null"]
+        decided_at:
+          type: [string, "null"]
+        linked_override_id:
+          type: [string, "null"]
+          description: Override recorded by the decision, once decided
+
+    RedactedReviewContext:
+      type: object
+      description: Reviewer-safe context; carries no raw prompts, outputs or personal data.
+      required:
+        - review_id
+        - reason
+        - detector_ids
+        - masked_excerpts
+        - aggregate_counts
+        - evidence_hashes
+      properties:
+        review_id:
+          type: string
+        reason:
+          type: string
+        detector_ids:
+          type: array
+          items:
+            type: string
+        masked_excerpts:
+          type: array
+          items:
+            type: string
+        aggregate_counts:
+          type: object
+          additionalProperties:
+            type: integer
+        evidence_hashes:
+          type: array
+          items:
+            type: string
+
+    ReviewQueueListResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReviewItem"
+
+    ReviewQueueDetailResponse:
+      type: object
+      required: [item, context]
+      properties:
+        item:
+          $ref: "#/components/schemas/ReviewItem"
+        context:
+          oneOf:
+            - $ref: "#/components/schemas/RedactedReviewContext"
+            - type: "null"
+
+    ReviewAssignRequest:
+      type: object
+      required: [reviewer_id]
+      properties:
+        reviewer_id:
+          type: string
+          minLength: 1
+          description: >-
+            Replaced by the authenticated caller's identity (the JWT sub
+            claim, or api-key-caller in API-key mode); kept as sent only when
+            authentication is disabled or the token has no sub claim
+
+    ReviewAssignResponse:
+      type: object
+      required: [item]
+      properties:
+        item:
+          $ref: "#/components/schemas/ReviewItem"
+
+    ReviewDecideRequest:
+      type: object
+      required: [actor_id, rationale, decision]
+      properties:
+        actor_id:
+          type: string
+          minLength: 1
+          description: >-
+            Replaced by the authenticated caller's identity (the JWT sub
+            claim, or api-key-caller in API-key mode); kept as sent only when
+            authentication is disabled or the token has no sub claim
+        rationale:
+          type: string
+          minLength: 1
+          description: Mandatory; must contain non-whitespace characters
+        decision:
+          type: string
+          enum: [approved, rejected]
+        idempotency_key:
+          type: string
+          description: Defaults to decide-<review id>
+
+    ReviewDecideResponse:
+      type: object
+      required: [item, override]
+      properties:
+        item:
+          $ref: "#/components/schemas/ReviewItem"
+        override:
+          $ref: "#/components/schemas/OverrideResponse"
 
     GenerateDocsRequest:
       type: object
       required: [system_id, commit_ref]
+      description: >-
+        Body of the doc generator's POST /v1/docs/generate. The gateway has no
+        schema of its own for this route and forwards the body as received.
       properties:
         system_id:
           type: string
         commit_ref:
           type: string
+          description: Git commit reference; required, there is no default
+        intended_purpose:
+          type: string
+          default: Not specified
+        provider_name:
+          type: string
+          default: Unknown Provider
+        compliance_target:
+          type: string
+          default: EU_AI_ACT
+          description: >-
+            Framework target recorded in the dossier. Must be EU_AI_ACT or
+            NIST_AI_RMF; any other value fails with 500 SYSTEM_ERROR
+        high_risk_presumption:
+          type: boolean
+          default: false
+        allow_incomplete:
+          type: boolean
+          default: false
+          description: >-
+            Accept a dossier that fails the Annex IV schema check (200 with
+            schema_valid false) instead of refusing it with 422
+        training_data_description:
+          type: [string, "null"]
+        model_architecture:
+          type: [string, "null"]
+        performance_metrics:
+          type: object
+          additionalProperties:
+            type: number
+        known_limitations:
+          type: array
+          items:
+            type: string
+        human_oversight_measures:
+          type: array
+          items:
+            type: string
+        human_oversight:
+          type: object
+          additionalProperties: true
+          description: >-
+            Structured human-oversight declaration (roles, escalation,
+            evidence references). Optional; forwarded untouched and validated
+            by the downstream service.
+        agent_inventory:
+          type: object
+          additionalProperties: true
+          description: >-
+            Declared agent inventory (agents, tools, mandate, delegation).
+            Optional; forwarded untouched and validated by the downstream
+            service.
+        monitoring_approach:
+          type: [string, "null"]
+        incident_response_procedure:
+          type: [string, "null"]
+        metrics_appropriateness_rationale:
+          type: [string, "null"]
+        lifecycle_changes:
+          type: array
+          items:
+            type: string
+        change_log_reference:
+          type: [string, "null"]
+        harmonised_standards:
+          type: array
+          items:
+            type: string
+        alternative_solutions:
+          type: [string, "null"]
+        eu_declaration_of_conformity_ref:
+          type: [string, "null"]
+        post_market_monitoring_plan_ref:
+          type: [string, "null"]
+        post_market_monitoring_summary:
+          type: [string, "null"]
+        eval_report:
+          type: [object, "null"]
+          additionalProperties: true
+          description: Full eval report as produced by the CLI; validated by the doc generator
+        corroboration_report:
+          type: [object, "null"]
+          additionalProperties: true
+          description: Full scan corroboration report; validated by the doc generator
 
     GenerateDocsResponse:
       type: object
-      required: [bundle_checksum, status]
+      required: [dossier_id, bundle_checksum, status, duration_ms, schema_valid]
       properties:
+        dossier_id:
+          type: string
+          description: Use it with GET /v1/docs/{dossier_id}
         bundle_checksum:
           type: string
         status:
           type: string
-          enum: [generated, cached, failed]
+          enum: [generated]
+          description: Always generated; a failure is reported as an error status instead
         duration_ms:
           type: integer
+        signature:
+          type: [string, "null"]
+        schema_valid:
+          type: boolean
+          description: false only when allow_incomplete was set; otherwise an invalid dossier is a 422
+        content_hash:
+          type: [string, "null"]
+          description: Content hash of the stored dossier
+        ledger_event_id:
+          type: [string, "null"]
+          description: Ledger event that records the dossier
 
-    SyncMetadataRequest:
+    DossierSchemaInvalidError:
       type: object
-      required: [system_id]
+      required: [detail]
+      description: >-
+        The 422 returned when the generated dossier fails the Annex IV schema
+        check. The dossier is stored and can be retrieved with the dossier_id
+        given here.
+      properties:
+        detail:
+          type: object
+          required: [error_code, message, dossier_id, bundle_checksum, schema_valid]
+          properties:
+            error_code:
+              type: string
+              enum: [DOSSIER_SCHEMA_INVALID]
+            message:
+              type: string
+            dossier_id:
+              type: string
+            bundle_checksum:
+              type: string
+            content_hash:
+              type: [string, "null"]
+            ledger_event_id:
+              type: [string, "null"]
+            schema_valid:
+              type: boolean
+              enum: [false]
+
+    DossierIndexEntry:
+      type: object
+      required:
+        - dossier_id
+        - system_id
+        - commit_ref
+        - content_hash
+        - bundle_checksum
+        - ledger_event_id
+        - created_at
+      properties:
+        dossier_id:
+          type: string
+        system_id:
+          type: string
+        commit_ref:
+          type: string
+        content_hash:
+          type: string
+        bundle_checksum:
+          type: string
+        ledger_event_id:
+          type: string
+        created_at:
+          type: string
+
+    DossierListResponse:
+      type: object
+      required: [system_id, count, dossiers]
       properties:
         system_id:
           type: string
-        endpoint:
+        count:
+          type: integer
+        dossiers:
+          type: array
+          items:
+            $ref: "#/components/schemas/DossierIndexEntry"
+
+    DossierResponse:
+      allOf:
+        - $ref: "#/components/schemas/DossierIndexEntry"
+        - type: object
+          required: [dossier]
+          properties:
+            dossier:
+              type: object
+              additionalProperties: true
+              description: The stored Annex IV dossier JSON
+
+    SyncMetadataRequest:
+      type: object
+      description: >-
+        Only the fields listed here may be sent; any other key is refused with
+        403 EGRESS_BLOCKED. The egress proxy checks field names only, not
+        their types, and requires none of them.
+      additionalProperties: false
+      properties:
+        system_id:
           type: string
+        commit_ref:
+          type: string
+        policy_bundle_version:
+          type: string
+        risk_class:
+          type: string
+        control_pass_rate:
+          type: number
+        control_fail_rate:
+          type: number
+        pending_verifications_count:
+          type: integer
+        bundle_checksum:
+          type: string
+        size_bytes:
+          type: integer
+        signed_by:
+          type: string
+        timestamp:
+          type: string
+        pass_count:
+          type: integer
+        fail_count:
+          type: integer
+        trap_frequency:
+          type: number
+        override_rate:
+          type: number
+        eval_set_id: {}
+        eval_overall_outcome: {}
+        eval_failed_evaluator_ids: {}
+
+    SyncMetadataResponse:
+      type: object
+      required: [status, destination, fields_validated, field_count]
+      properties:
+        status:
+          type: string
+          enum: [synced]
+        destination:
+          type: "null"
+          description: Always null; no dashboard was contacted
+        fields_validated:
+          type: boolean
+          enum: [true]
+        field_count:
+          type: integer
+          description: Number of fields in the request body
+
+    EgressBlockedError:
+      type: object
+      required: [error_code, message, category, retryable, policy_hash]
+      description: >-
+        Returned by the egress proxy with 403. It is not wrapped in detail and
+        carries no correlation_id.
+      properties:
+        error_code:
+          type: string
+          enum: [EGRESS_BLOCKED]
+        message:
+          type: string
+        category:
+          type: string
+          enum: [policy]
+        retryable:
+          type: boolean
+        policy_hash:
+          type: string
+          description: sha256:<hex> of the allowlist configuration that was in force
 
     StatusResponse:
       type: object
@@ -408,10 +1937,177 @@ components:
       properties:
         status:
           type: string
+        service:
+          type: string
         version:
           type: string
+        checked_at:
+          type: string
+          description: >-
+            ISO 8601 time the response was produced. The probe results in
+            services can be older: they are cached for STATUS_CACHE_TTL_MS
+            (5000 ms by default).
         services:
           type: object
+          description: >-
+            Per-service probe result keyed by service name; see
+            docs/src/deployment/observability.md for the fields
+
+    PortfolioSystem:
+      type: object
+      required: [system_id, badge_id, bundle_checksum, issued_at, status]
+      properties:
+        system_id:
+          type: string
+        badge_id:
+          type: string
+        bundle_checksum:
+          type: string
+        issued_at:
+          type: string
+        status:
+          type: string
+          enum: [compliant]
+
+    PortfolioResponse:
+      type: object
+      required: [systems, count]
+      properties:
+        systems:
+          type: array
+          description: Sorted by system_id
+          items:
+            $ref: "#/components/schemas/PortfolioSystem"
+        count:
+          type: integer
+
+    IssueBadgeRequest:
+      type: object
+      required: [system_id, bundle_checksum, artifact]
+      properties:
+        system_id:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: "^[A-Za-z0-9._-]+$"
+        bundle_checksum:
+          type: string
+        artifact:
+          type: object
+          additionalProperties: true
+          description: >-
+            The scan status artifact. Must carry result "pass" and
+            pending_verifications_count 0; a missing count is treated as
+            pending.
+        signature:
+          type: [string, "null"]
+          description: Required when the vault has a badge public key configured
+
+    IssueBadgeResponse:
+      type: object
+      required: [badge_id, system_id, issued_at, status_artifact_hash, created]
+      properties:
+        badge_id:
+          type: string
+        system_id:
+          type: string
+        issued_at:
+          type: string
+        status_artifact_hash:
+          type: string
+        created:
+          type: boolean
+          description: false when the badge already existed
+
+    VerifyBadgeResponse:
+      type: object
+      required: [badge_id, system_id, bundle_checksum, issued_at, status_artifact_hash, valid]
+      properties:
+        badge_id:
+          type: string
+        system_id:
+          type: string
+        bundle_checksum:
+          type: string
+        issued_at:
+          type: string
+        status_artifact_hash:
+          type: string
+        valid:
+          type: boolean
+
+    ProIngestStatusArtifactRequest:
+      type: object
+      required: [system_id, result]
+      properties:
+        system_id:
+          type: string
+        commit_ref:
+          type: [string, "null"]
+        result:
+          type: string
+        failed_controls:
+          type: array
+          items:
+            type: string
+        pending_verifications_count:
+          type: integer
+          default: 0
+        rationale_hash:
+          type: [string, "null"]
+        bundle_checksum:
+          type: [string, "null"]
+        risk_class:
+          type: [string, "null"]
+        timestamp:
+          type: [string, "null"]
+
+    ProIngestDossierMetadataRequest:
+      type: object
+      required: [system_id]
+      properties:
+        system_id:
+          type: string
+        policy_bundle_version:
+          type: [string, "null"]
+        bundle_checksum:
+          type: [string, "null"]
+        size_bytes:
+          type: [integer, "null"]
+        signed_by:
+          type: [string, "null"]
+        timestamp:
+          type: [string, "null"]
+
+    ProIngestMetricsRequest:
+      type: object
+      required: [system_id]
+      properties:
+        system_id:
+          type: string
+        pass_count:
+          type: [integer, "null"]
+        fail_count:
+          type: [integer, "null"]
+        control_pass_rate:
+          type: [number, "null"]
+        control_fail_rate:
+          type: [number, "null"]
+        trap_frequency:
+          type: [number, "null"]
+        override_rate:
+          type: [number, "null"]
+        timestamp:
+          type: [string, "null"]
+
+    ProIngestResponse:
+      type: object
+      required: [event_id, payload_hash]
+      properties:
+        event_id:
+          type: string
+        payload_hash:
+          type: string
 
     EuAiUsageEntry:
       type: object

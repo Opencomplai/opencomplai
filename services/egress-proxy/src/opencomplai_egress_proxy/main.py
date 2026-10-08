@@ -45,7 +45,7 @@ app = FastAPI(
         "Allowlisted outbound traffic enforcer. No other service in the Docker Compose "
         "deployment has outbound network access. Implements REQ-ARC-001."
     ),
-    version="0.1.0-dev",
+    version="0.9.0",
 )
 
 configure_telemetry("egress-proxy")

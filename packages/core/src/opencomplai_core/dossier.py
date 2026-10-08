@@ -7,9 +7,13 @@ Based on EU AI Act Article 11 and Annex IV requirements.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from typing import Any
 
-from opencomplai_core.models import ComplianceTarget
+from pydantic import BaseModel, Field, SerializerFunctionWrapHandler, model_serializer
+
+from opencomplai_core.agent_inventory import AgentInventory
+from opencomplai_core.models import ComplianceTarget, HumanOversight
+from opencomplai_core.serialization import OMIT_NONE, omit_by_table
 
 
 class AnnexIVSection1(BaseModel):
@@ -43,12 +47,24 @@ PROVIDER_SUPPLIED_PLACEHOLDER = (
 
 
 class AnnexIVSection3(BaseModel):
-    """Detailed information about monitoring, functioning and control (Annex IV, Section 3)."""
+    """Detailed information about monitoring, functioning and control (Annex IV, Section 3).
+
+    `human_oversight` is the manifest's structured oversight block copied
+    verbatim; it is left out of the serialised section when absent, so a
+    manifest without the block yields the same bytes as before it existed.
+    """
 
     human_oversight_measures: list[str] = Field(default_factory=list)
     monitoring_approach: str = PROVIDER_SUPPLIED_PLACEHOLDER
     incident_response_procedure: str = PROVIDER_SUPPLIED_PLACEHOLDER
     provider_supplied: bool = False
+    human_oversight: HumanOversight | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_oversight(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), {"human_oversight": OMIT_NONE})
 
 
 class AnnexIVSection4(BaseModel):
@@ -73,12 +89,27 @@ class ArticleTwelveRecordKeeping(BaseModel):
     distinct obligations: Art. 12 requires high-risk systems to log
     automatically over their lifetime, while Annex IV point 4 concerns the
     appropriateness of performance metrics.
+
+    The first three fields are provider declarations copied from the manifest;
+    absent means false (retention: absent, not null). `provider_supplied` says
+    whether the manifest declared the block at all. `ledger_root_hash` is
+    measured, not declared.
     """
 
-    logging_enabled: bool
-    log_retention_days: int
-    evidence_vault_enabled: bool
+    logging_enabled: bool = False
+    log_retention_days: int | None = Field(None, ge=1)
+    evidence_vault_enabled: bool = False
     ledger_root_hash: str | None = None
+    provider_supplied: bool = False
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_retention(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        data = handler(self)
+        if self.log_retention_days is None:
+            data.pop("log_retention_days", None)
+        return data
 
 
 class AnnexIVSection5(BaseModel):
@@ -177,6 +208,9 @@ class AnnexIVDossier(BaseModel):
     still a placeholder on a HIGH-risk system — a dossier is not "complete
     Annex IV" merely because every field is present.
 
+    `agent_inventory` is the manifest's declared inventory, omitted when absent
+    so a manifest without it yields the same bytes and checksum as before.
+
     This is the output of the Documentation Generator (REQ-DOC-001).
     In OSS mode: produced as a local bundle with a SHA-256 checksum.
     In Pro/Enterprise mode: signing is mandatory for badge issuance.
@@ -203,6 +237,11 @@ class AnnexIVDossier(BaseModel):
     # Annex IV Section 4.
     record_keeping: ArticleTwelveRecordKeeping | None = None
 
+    # Declared agent inventory, copied verbatim from the manifest. Annex IV has
+    # no agent point, so it sits beside record_keeping; nothing is derived from
+    # it and it is left out of the serialised dossier when absent.
+    agent_inventory: AgentInventory | None = None
+
     evidence_hashes: list[str] = Field(
         default_factory=list,
         description="SHA-256 hashes of evidence objects included in this dossier",
@@ -219,9 +258,10 @@ class AnnexIVDossier(BaseModel):
     signature_status: str = Field(
         "unsigned",
         description=(
-            "Trust level of this dossier: 'unsigned' (OSS default), "
-            "'hmac-local' (HMAC fallback with a local key), "
-            "or 'signed' (Pro/Enterprise asymmetric signing via HSM/KMS)."
+            "Trust level of this dossier: 'unsigned' (no Ed25519 key was "
+            "available) or 'ed25519' (asymmetric signature, verifiable with "
+            "the public key). Legacy 'hmac-local' is only ever read, never "
+            "written; it cannot be verified by a third party."
         ),
     )
 
@@ -280,6 +320,12 @@ class AnnexIVDossier(BaseModel):
             "Annex IV technical documentation file."
         ),
     )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_agent_inventory(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), {"agent_inventory": OMIT_NONE})
 
 
 def validate_dossier_schema(

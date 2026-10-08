@@ -170,7 +170,7 @@ def test_framework_reports_add_one_section_per_non_eu_framework(monkeypatch):
 
     section = html_doc[
         html_doc.index('<table id="gap-table">') : html_doc.index(
-            "<h2>Eval summary</h2>"
+            "<h2>Regulatory timeline</h2>"
         )
     ]
     assert section.count("<h2>") == 1
@@ -222,7 +222,9 @@ def test_no_framework_reports_leaves_the_report_as_before():
             fmt="html",
         )
         assert "{{framework_reports_section}}" not in html_doc
-        assert "</table>\n\n<h2>Eval summary</h2>" in html_doc
+        # the timeline section (not a framework section) follows the gap table
+        assert "</table>\n\n<h2>Regulatory timeline</h2>" in html_doc
+        assert "Data version" not in html_doc
         envelope = _envelope(html_doc)
         assert envelope["disclaimer"] == DISCLAIMER_V1
         assert "framework_reports" not in envelope["payload"]
@@ -243,3 +245,91 @@ def test_pdf_report_lists_framework_rows():
     ).decode("latin-1")
     assert "Fixture framework:" in text
     assert "FIXTURE:REQ-1: PARTIAL" in text
+
+
+def _nist_reports(gap_report: GapReport) -> dict[str, FrameworkReport]:
+    nist = GapReport(
+        system_id="test-sys",
+        commit_ref="HEAD",
+        generated_at=gap_report.generated_at,
+        articles=[
+            ArticleGapStatus(
+                article="NIST_AI_RMF:GOVERN 1.1",
+                status=GapStatus.MISSING,
+                source=ArticleGapSource.ARTIFACT,
+                evidence_ref="docs/x.md",
+                rationale="r",
+            )
+        ],
+    )
+    return {
+        "NIST_AI_RMF": FrameworkReport(
+            framework="NIST_AI_RMF",
+            label="NIST AI RMF",
+            data_version="cccccccccccc",
+            disclaimer_ref="DISCLAIMER_V2",
+            report=nist,
+        )
+    }
+
+
+def test_nist_framework_section_shows_title():
+    from opencomplai_core.nist_ai_rmf_subcategories import get_subcategories
+
+    gap_report = build_gap_report("test-sys", "HEAD", risk_result=_make_risk_result())
+    html_doc = render_report(
+        _make_manifest(),
+        gap_report=gap_report,
+        framework_reports=_nist_reports(gap_report),
+        fmt="html",
+    )
+    section = html_doc[html_doc.index("<h2>NIST AI RMF</h2>") :]
+    assert html.escape(get_subcategories()["GOVERN 1.1"].outcome) in section
+    assert "<td>—</td>" not in section
+
+
+def test_filter_script_targets_every_gap_table(monkeypatch):
+    monkeypatch.setitem(FRAMEWORKS, "FIXTURE", FIXTURE_PACK)
+    gap_report = build_gap_report("test-sys", "HEAD", risk_result=_make_risk_result())
+    html_doc = render_report(
+        _make_manifest(),
+        gap_report=gap_report,
+        framework_reports=_framework_reports(gap_report),
+        fmt="html",
+    )
+    assert "querySelectorAll('#gap-table, table.gap-table')" in html_doc
+    assert "querySelector('#gap-table')" not in html_doc
+    assert "cells[1]" not in html_doc
+    assert html_doc.count('<table class="gap-table">') == 1
+
+
+def test_report_html_has_regulatory_timeline_section():
+    manifest = _make_manifest()
+    risk_result = _make_risk_result()
+    gap_report = build_gap_report("test-sys", "HEAD", risk_result=risk_result)
+    html_doc = render_report(manifest, gap_report=gap_report, fmt="html")
+    assert isinstance(html_doc, str)
+    assert "<h2>Regulatory timeline</h2>" in html_doc
+    assert "2027-12-02" in html_doc
+    assert "2028-08-02" in html_doc
+    assert "date unconfirmed" in html_doc
+    assert "pending founder review" in html_doc
+    assert not re.search(
+        r"\b(days|ago|upcoming|in force)\b",
+        html_doc.split("<h2>Regulatory timeline</h2>")[1].split(
+            "<h2>Eval summary</h2>"
+        )[0],
+    )
+
+    # the signed/ingested envelope does not carry the timeline
+    envelope = re.search(
+        r'<script id="oc-envelope" type="application/json">(.*?)</script>',
+        html_doc,
+        re.S,
+    )
+    assert envelope
+    assert "regulatory_timeline" not in envelope.group(1)
+    assert "2027-12-02" not in envelope.group(1)
+
+    # no gap report: no heading at all
+    assert "Regulatory timeline" not in render_report(manifest, fmt="html")

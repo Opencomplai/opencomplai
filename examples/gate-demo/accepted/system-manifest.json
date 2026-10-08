@@ -1,0 +1,7 @@
+{
+  "system_id": "demo-accepted",
+  "intended_purpose": "managing the operation of critical road traffic infrastructure",
+  "compliance_target": "EU_AI_ACT",
+  "high_risk_presumption": true,
+  "commit_ref": "HEAD"
+}

@@ -69,12 +69,17 @@ release never needs it done by hand.
    gateway API.
 5. **Open a release PR** targeting `main`, get it reviewed, and merge it.
 6. **Tag the merge commit** `vX.Y.Z` and push the tag.
-7. **Pushing the tag triggers `.github/workflows/publish-pypi.yml`** — it
-   builds the checker widget, builds all four distributions, then publishes
-   them to PyPI in the dependency order above via **Trusted Publishing**
-   (OIDC; no stored API token) with PEP 740 attestations. Each upload uses
-   `skip-existing: true`, so re-pushing a tag for a version already on PyPI
-   is a no-op, not an error.
+7. **Pushing the tag triggers `.github/workflows/publish-pypi.yml`** — its
+   `build` job first checks the tag against the four manifest versions and
+   fails on any mismatch, builds the checker widget and all four
+   distributions, runs the wheel smoke test and generates a CycloneDX SBOM
+   per package (kept as a workflow-run artifact). Only then does the
+   `publish` job upload the tested distributions to PyPI in the dependency
+   order above via **Trusted Publishing** (OIDC; no stored API token) with
+   PEP 740 attestations. Each upload uses `skip-existing: true`, so
+   re-pushing a tag for a version already on PyPI is a no-op, not an error.
+   A manual `workflow_dispatch` run is a dry run: it builds, smoke tests
+   and produces SBOMs, and publishes nothing.
 8. **Create a GitHub Release** from the tag with the CHANGELOG section as the body.
 
 ---

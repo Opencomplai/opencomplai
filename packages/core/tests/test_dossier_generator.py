@@ -1,6 +1,7 @@
 """Tests for the Annex IV dossier generator (REQ-DOC-001)."""
 
-import os
+import inspect
+import json
 
 import pytest
 from opencomplai_core.dossier import (
@@ -10,6 +11,26 @@ from opencomplai_core.dossier import (
 from opencomplai_core.dossier_generator import generate_dossier
 from opencomplai_core.engine import assess
 from opencomplai_core.models import AssessmentInput, ModelMetadata, SystemManifest
+
+
+@pytest.fixture(autouse=True)
+def _clean_signing_env(monkeypatch):
+    for name in (
+        "DOSSIER_SIGNING_KEY_PATH",
+        "LOCAL_SIGNING_KEY_PATH",
+        "LOG_RETENTION_DAYS",
+        "SIGNING_KEY_PRIVATE",
+    ):
+        monkeypatch.delenv(name, raising=False)
+
+
+def _ed25519_key(tmp_path, name="ed25519"):
+    """Write an Ed25519 keypair under tmp_path; return (private, public) paths."""
+    from opencomplai_core.signing import generate_keypair
+
+    key_dir = tmp_path / name
+    generate_keypair(key_dir)
+    return key_dir / "signing.key", key_dir / "signing.pub"
 
 
 def _make_manifest(system_id: str = "test", purpose: str = "chatbot") -> SystemManifest:
@@ -50,7 +71,6 @@ def test_generate_dossier_has_bundle_checksum():
 
 def test_generate_dossier_unsigned_by_default():
     """OSS default: no signing key set, signature must be None."""
-    os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
     dossier = generate_dossier(_make_manifest(), _make_risk_result())
     assert dossier.signature is None
 
@@ -93,7 +113,9 @@ def test_all_annex_iv_sections_populated():
     assert dossier.section8 is not None
     assert dossier.section9 is not None
     assert dossier.record_keeping is not None
-    assert dossier.record_keeping.logging_enabled is True
+    # Nothing declared in the manifest, so nothing is asserted.
+    assert dossier.record_keeping.logging_enabled is False
+    assert dossier.record_keeping.evidence_vault_enabled is False
 
 
 def test_sections_6_to_9_are_present_and_honestly_labelled():
@@ -231,122 +253,182 @@ def test_ledger_root_hash_embedded_when_supplied():
 
 def test_signature_status_unsigned_by_default():
     """Gap #5: OSS default must self-describe as unsigned."""
-    os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
     dossier = generate_dossier(_make_manifest(), _make_risk_result())
     assert dossier.signature is None
     assert dossier.signature_status == "unsigned"
 
 
-def test_signature_status_hmac_when_signing_key_present(tmp_path):
-    """Gap #5: with LOCAL_SIGNING_KEY_PATH set, status reflects the HMAC fallback."""
+def test_local_signing_key_path_no_longer_signs(tmp_path, monkeypatch):
+    """LOCAL_SIGNING_KEY_PATH alone leaves the dossier unsigned, with a warning."""
     key_path = tmp_path / "signing.key"
     key_path.write_bytes(b"opencomplai-test-signing-key")
-    os.environ["LOCAL_SIGNING_KEY_PATH"] = str(key_path)
-    try:
+    monkeypatch.setenv("LOCAL_SIGNING_KEY_PATH", str(key_path))
+    with pytest.warns(UserWarning, match="LOCAL_SIGNING_KEY_PATH"):
         dossier = generate_dossier(_make_manifest(), _make_risk_result())
-        assert dossier.signature is not None
-        assert dossier.signature_status == "hmac-local"
-    finally:
-        os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
+    assert dossier.signature is None
+    assert dossier.signature_status == "unsigned"
 
 
-def test_signature_status_ed25519_when_pro_key_configured(tmp_path):
-    """Ed25519 (Pro) path takes precedence over HMAC and is verifiable."""
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+def test_signing_key_private_alone_signs(tmp_path, monkeypatch):
+    """SIGNING_KEY_PRIVATE alone (no DOSSIER_SIGNING_KEY_PATH) signs."""
+    import base64
+
+    from opencomplai_core.dossier_generator import BUNDLE_EXCLUDE
     from opencomplai_core.signing import SigningDomain, verify_bundle_bytes
 
-    private_key = Ed25519PrivateKey.generate()
-    priv_pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption(),
+    priv_path, pub_path = _ed25519_key(tmp_path)
+    monkeypatch.setenv(
+        "SIGNING_KEY_PRIVATE", base64.b64encode(priv_path.read_bytes()).decode()
     )
-    pub_pem = private_key.public_key().public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo,
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    assert dossier.signature is not None
+    assert dossier.signature_status == "ed25519"
+    bundle_json = dossier.model_dump_json(exclude=BUNDLE_EXCLUDE)
+    assert verify_bundle_bytes(
+        bundle_json.encode("utf-8"),
+        dossier.signature,
+        pub_path,
+        SigningDomain.DOSSIER_BUNDLE,
     )
-    priv_path = tmp_path / "ed25519.key"
-    pub_path = tmp_path / "ed25519.pub"
-    priv_path.write_bytes(priv_pem)
-    pub_path.write_bytes(pub_pem)
 
-    os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
-    os.environ["DOSSIER_SIGNING_KEY_PATH"] = str(priv_path)
-    try:
+
+def test_no_hmac_code_remains():
+    from opencomplai_core import dossier_generator
+
+    source = inspect.getsource(dossier_generator).lower()
+    assert "hmac" not in source
+    assert not hasattr(dossier_generator, "_sign_bundle")
+
+
+def test_failed_ed25519_signing_warns_and_stays_unsigned(tmp_path, monkeypatch):
+    bad_key = tmp_path / "garbage.key"
+    bad_key.write_bytes(b"not a pem key\n")
+    monkeypatch.setenv("DOSSIER_SIGNING_KEY_PATH", str(bad_key))
+    with pytest.warns(UserWarning, match="signing failed") as caught:
         dossier = generate_dossier(_make_manifest(), _make_risk_result())
-        assert dossier.signature is not None
-        assert dossier.signature_status == "ed25519"
-
-        # The dossier must be independently verifiable by an auditor who only
-        # holds the public key — the whole point of asymmetric signing.
-        bundle_json = dossier.model_dump_json(
-            exclude={
-                "dossier_id",
-                "generated_at",
-                "bundle_checksum",
-                "signature",
-                "signature_status",
-                "section2_complete",
-            }
-        )
-        assert verify_bundle_bytes(
-            bundle_json.encode("utf-8"),
-            dossier.signature,
-            pub_path,
-            SigningDomain.DOSSIER_BUNDLE,
-        )
-        # The same signature must not pass as any other kind of attestation.
-        assert not verify_bundle_bytes(
-            bundle_json.encode("utf-8"),
-            dossier.signature,
-            pub_path,
-            SigningDomain.BADGE,
-        )
-    finally:
-        os.environ.pop("DOSSIER_SIGNING_KEY_PATH", None)
+    assert dossier.signature is None
+    assert dossier.signature_status == "unsigned"
+    assert "not a pem key" not in " ".join(str(w.message) for w in caught)
 
 
-def test_ed25519_takes_precedence_over_hmac(tmp_path):
-    """When both keys are set, Ed25519 wins — never silently downgrade."""
-    from cryptography.hazmat.primitives import serialization
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+def test_signature_status_ed25519_when_pro_key_configured(tmp_path, monkeypatch):
+    """Ed25519 path signs and is verifiable with only the public key."""
+    from opencomplai_core.dossier_generator import BUNDLE_EXCLUDE
+    from opencomplai_core.signing import SigningDomain, verify_bundle_bytes
 
-    ed_priv = Ed25519PrivateKey.generate().private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,
-        encryption_algorithm=serialization.NoEncryption(),
+    priv_path, pub_path = _ed25519_key(tmp_path)
+    monkeypatch.setenv("DOSSIER_SIGNING_KEY_PATH", str(priv_path))
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    assert dossier.signature is not None
+    assert dossier.signature_status == "ed25519"
+
+    bundle_json = dossier.model_dump_json(exclude=BUNDLE_EXCLUDE)
+    assert verify_bundle_bytes(
+        bundle_json.encode("utf-8"),
+        dossier.signature,
+        pub_path,
+        SigningDomain.DOSSIER_BUNDLE,
     )
-    ed_path = tmp_path / "ed.key"
-    ed_path.write_bytes(ed_priv)
-    hmac_path = tmp_path / "hmac.key"
-    hmac_path.write_bytes(b"some-hmac-secret")
-
-    os.environ["LOCAL_SIGNING_KEY_PATH"] = str(hmac_path)
-    os.environ["DOSSIER_SIGNING_KEY_PATH"] = str(ed_path)
-    try:
-        dossier = generate_dossier(_make_manifest(), _make_risk_result())
-        assert dossier.signature_status == "ed25519"
-    finally:
-        os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
-        os.environ.pop("DOSSIER_SIGNING_KEY_PATH", None)
+    # The same signature must not pass as any other kind of attestation.
+    assert not verify_bundle_bytes(
+        bundle_json.encode("utf-8"), dossier.signature, pub_path, SigningDomain.BADGE
+    )
 
 
-def test_signature_status_does_not_change_bundle_checksum(tmp_path):
-    """signature_status is envelope metadata — it must not feed the checksum."""
-    os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
+def test_signed_dossier_uses_bundle_exclude_constant(tmp_path, monkeypatch):
+    import hashlib
+
+    from opencomplai_core.dossier_generator import BUNDLE_EXCLUDE
+
+    assert BUNDLE_EXCLUDE == {
+        "dossier_id",
+        "generated_at",
+        "bundle_checksum",
+        "signature",
+        "signature_status",
+        "section2_complete",
+    }
+    priv_path, _ = _ed25519_key(tmp_path)
+    monkeypatch.setenv("DOSSIER_SIGNING_KEY_PATH", str(priv_path))
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    digest = hashlib.sha256(
+        dossier.model_dump_json(exclude=BUNDLE_EXCLUDE).encode()
+    ).hexdigest()
+    assert dossier.bundle_checksum == f"sha256:{digest}"
+
+
+def test_ed25519_still_signs_when_local_signing_key_path_also_set(
+    tmp_path, monkeypatch
+):
+    ed_path, _ = _ed25519_key(tmp_path)
+    local = tmp_path / "local.key"
+    local.write_bytes(b"some-secret")
+    monkeypatch.setenv("LOCAL_SIGNING_KEY_PATH", str(local))
+    monkeypatch.setenv("DOSSIER_SIGNING_KEY_PATH", str(ed_path))
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    assert dossier.signature_status == "ed25519"
+
+
+def test_signature_status_does_not_change_bundle_checksum(tmp_path, monkeypatch):
+    """signature_status is envelope metadata - it must not feed the checksum."""
     unsigned = generate_dossier(_make_manifest(), _make_risk_result())
 
-    key_path = tmp_path / "signing.key"
-    key_path.write_bytes(b"opencomplai-test-signing-key")
-    os.environ["LOCAL_SIGNING_KEY_PATH"] = str(key_path)
-    try:
-        signed = generate_dossier(_make_manifest(), _make_risk_result())
-    finally:
-        os.environ.pop("LOCAL_SIGNING_KEY_PATH", None)
+    priv_path, _ = _ed25519_key(tmp_path)
+    monkeypatch.setenv("DOSSIER_SIGNING_KEY_PATH", str(priv_path))
+    signed = generate_dossier(_make_manifest(), _make_risk_result())
 
     assert unsigned.bundle_checksum == signed.bundle_checksum
     assert unsigned.signature_status != signed.signature_status
+
+
+# ---------------------------------------------------------------------------
+# Art. 12 record keeping: declared by the provider, never assumed
+# ---------------------------------------------------------------------------
+
+
+def test_manifest_without_record_keeping_declares_nothing():
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    rk = dossier.record_keeping
+    assert rk.logging_enabled is False
+    assert rk.evidence_vault_enabled is False
+    assert rk.provider_supplied is False
+    serialised = json.loads(dossier.model_dump_json())["record_keeping"]
+    assert "log_retention_days" not in serialised
+
+
+def test_declared_record_keeping_is_copied_and_env_retention_ignored(monkeypatch):
+    monkeypatch.setenv("LOG_RETENTION_DAYS", "9999")
+    manifest = _make_manifest().model_copy(
+        update={
+            "record_keeping": {
+                "logging_enabled": True,
+                "log_retention_days": 180,
+                "evidence_vault_enabled": False,
+            }
+        }
+    )
+    rk = generate_dossier(manifest, _make_risk_result()).record_keeping
+    assert rk.provider_supplied is True
+    assert rk.logging_enabled is True
+    assert rk.log_retention_days == 180
+    assert rk.evidence_vault_enabled is False
+
+    # Declared block without retention: the env value must never fill the gap.
+    manifest = _make_manifest().model_copy(
+        update={"record_keeping": {"logging_enabled": True}}
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.record_keeping.log_retention_days is None
+    assert "9999" not in dossier.model_dump_json()
+
+
+def test_ledger_root_hash_still_recorded_without_declaration():
+    root = "sha256:" + ("b" * 64)
+    rk = generate_dossier(
+        _make_manifest(), _make_risk_result(), ledger_root_hash=root
+    ).record_keeping
+    assert rk.ledger_root_hash == root
+    assert rk.provider_supplied is False
 
 
 # ---------------------------------------------------------------------------
@@ -756,3 +838,182 @@ def test_section7_alternative_solutions_free_text_never_warns(recwarn):
     )
     generate_dossier(manifest, _make_risk_result())
     assert len(recwarn) == 0
+
+
+# --- structured human oversight in Annex IV section 3 (SU-20a2) ---
+
+_OVERSIGHT_BLOCK = {
+    "roles": [
+        {
+            "role": "Duty officer",
+            "authority": "May suspend the system",
+            "can_intervene": True,
+            "conditions": ["Drift alarm fires"],
+            "training_ref": "training/oversight.md",
+        }
+    ],
+    "escalation": "Duty officer, then CTO",
+    "evidence_refs": ["docs/oversight.md"],
+}
+_SECTION3_OLD_KEYS = {
+    "human_oversight_measures",
+    "monitoring_approach",
+    "incident_response_procedure",
+    "provider_supplied",
+}
+
+
+def _oversight_manifest(**extra) -> SystemManifest:
+    return SystemManifest(
+        system_id="test",
+        intended_purpose="chatbot",
+        compliance_target="EU_AI_ACT",
+        high_risk_presumption=True,
+        commit_ref="abc123",
+        **extra,
+    )
+
+
+def test_section3_omits_human_oversight_when_absent():
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    assert set(dossier.section3.model_dump()) == _SECTION3_OLD_KEYS
+    assert set(json.loads(dossier.model_dump_json())["section3"]) == _SECTION3_OLD_KEYS
+
+
+def test_bundle_checksum_unchanged_when_oversight_absent():
+    import hashlib
+
+    from opencomplai_core.dossier_generator import BUNDLE_EXCLUDE
+
+    dossier = generate_dossier(_make_manifest(), _make_risk_result())
+    text = dossier.model_dump_json(exclude=BUNDLE_EXCLUDE)
+    assert 'human_oversight"' not in text
+    digest = f"sha256:{hashlib.sha256(text.encode()).hexdigest()}"
+    assert dossier.bundle_checksum == digest
+
+
+def test_section3_structured_oversight_counts_only_with_monitoring_and_incident():
+    full = {
+        "monitoring_approach": "Datadog drift checks",
+        "incident_response_procedure": "runbooks/ai-incident.md",
+    }
+    both = generate_dossier(
+        _oversight_manifest(human_oversight=_OVERSIGHT_BLOCK, **full),
+        _make_risk_result(),
+    )
+    assert both.section3.provider_supplied is True
+    assert both.section3.human_oversight_measures == []
+    alone = generate_dossier(
+        _oversight_manifest(human_oversight=_OVERSIGHT_BLOCK), _make_risk_result()
+    )
+    assert alone.section3.provider_supplied is False
+    legacy = generate_dossier(
+        _oversight_manifest(human_oversight_measures=["Two-person review"], **full),
+        _make_risk_result(),
+    )
+    assert legacy.section3.provider_supplied is True
+
+
+def test_section3_structured_oversight_without_roles_does_not_count():
+    from opencomplai_core.models import HumanOversight
+
+    manifest = _oversight_manifest(
+        monitoring_approach="Datadog drift checks",
+        incident_response_procedure="runbooks/ai-incident.md",
+    )
+    manifest.human_oversight = HumanOversight.model_construct(
+        roles=[], escalation="Call the CTO", evidence_refs=[]
+    )
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section3.provider_supplied is False
+
+
+def test_section3_legacy_only_manifest_unchanged():
+    dossier = generate_dossier(
+        _oversight_manifest(
+            human_oversight_measures=["Daily bias dashboard review"],
+            monitoring_approach="Datadog drift checks",
+            incident_response_procedure="runbooks/ai-incident.md",
+        ),
+        _make_risk_result(),
+    )
+    assert dossier.section3.human_oversight_measures == ["Daily bias dashboard review"]
+    assert dossier.section3.human_oversight is None
+    assert set(dossier.section3.model_dump()) == _SECTION3_OLD_KEYS
+    assert dossier.section3.provider_supplied is True
+
+
+def test_structured_oversight_copied_verbatim():
+    manifest = _oversight_manifest(human_oversight=_OVERSIGHT_BLOCK)
+    dossier = generate_dossier(manifest, _make_risk_result())
+    assert dossier.section3.human_oversight.model_dump(
+        mode="json"
+    ) == manifest.human_oversight.model_dump(mode="json")
+    assert json.loads(dossier.model_dump_json())["section3"]["human_oversight"] == (
+        manifest.human_oversight.model_dump(mode="json")
+    )
+
+
+_INVENTORY_BLOCK = {
+    "agents": [
+        {
+            "id": "triage",
+            "name": "Triage agent",
+            "tools": [{"name": "search", "kind": "function"}],
+            "mandate": {"permitted_actions": ["tool:search"]},
+        }
+    ]
+}
+
+
+def _inventory_manifest(with_block: bool, **extra) -> SystemManifest:
+    kwargs = {"agent_inventory": _INVENTORY_BLOCK} if with_block else {}
+    return SystemManifest(
+        system_id="test",
+        intended_purpose="chatbot",
+        compliance_target="EU_AI_ACT",
+        high_risk_presumption=True,
+        commit_ref="abc123",
+        **kwargs,
+        **extra,
+    )
+
+
+def test_dossier_omits_agent_inventory_when_absent():
+    dossier = generate_dossier(_inventory_manifest(False), _make_risk_result())
+    assert dossier.agent_inventory is None
+    assert "agent_inventory" not in dossier.model_dump_json()
+    assert "agent_inventory" not in dossier.model_dump()
+
+
+def test_bundle_checksum_unchanged_when_inventory_absent():
+    import hashlib
+
+    from opencomplai_core.dossier_generator import BUNDLE_EXCLUDE
+
+    dossier = generate_dossier(_inventory_manifest(False), _make_risk_result())
+    digest = hashlib.sha256(
+        dossier.model_dump_json(exclude=BUNDLE_EXCLUDE).encode()
+    ).hexdigest()
+    assert dossier.bundle_checksum == f"sha256:{digest}"
+
+
+def test_agent_inventory_copied_verbatim():
+    manifest = _inventory_manifest(True)
+    dossier = generate_dossier(manifest, _make_risk_result())
+    expected = manifest.agent_inventory.model_dump(mode="json")
+    assert dossier.agent_inventory.model_dump(mode="json") == expected
+    assert json.loads(dossier.model_dump_json())["agent_inventory"] == expected
+
+
+def test_agent_inventory_does_not_change_annex_iv_complete():
+    without = generate_dossier(_inventory_manifest(False), _make_risk_result())
+    with_block = generate_dossier(_inventory_manifest(True), _make_risk_result())
+    assert with_block.annex_iv_complete == without.annex_iv_complete
+    assert with_block.section3.provider_supplied == without.section3.provider_supplied
+
+
+def test_agent_inventory_changes_checksum_when_present():
+    without = generate_dossier(_inventory_manifest(False), _make_risk_result())
+    with_block = generate_dossier(_inventory_manifest(True), _make_risk_result())
+    assert with_block.bundle_checksum != without.bundle_checksum

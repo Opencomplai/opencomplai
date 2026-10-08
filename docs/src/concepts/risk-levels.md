@@ -15,7 +15,7 @@ Opencomplai reports one of four EU AI Act-aligned risk levels for every assessed
 
 ### Unacceptable
 
-AI practices that are prohibited outright under the EU AI Act. Examples include real-time remote biometric identification in public spaces, social scoring by public authorities, and systems that exploit psychological vulnerabilities. `opencomplai check` will return exit code `3` (`POLICY_BLOCK`) if a system is classified as unacceptable risk.
+AI practices that are prohibited outright under the EU AI Act. Examples include real-time remote biometric identification in public spaces, social scoring of natural persons, and systems that exploit psychological vulnerabilities. `opencomplai check` will return exit code `3` (`POLICY_BLOCK`) if a system is classified as unacceptable risk.
 
 ### High
 
@@ -33,7 +33,7 @@ High-risk systems must comply with obligations in Title III Chapter 2 (risk mana
 
 ### Limited
 
-Systems subject to transparency obligations under Art. 50 — e.g., chatbots that must disclose they are AI, deep-fake generators that must watermark outputs.
+Systems subject to transparency obligations under Art. 50 — e.g., chatbots that must disclose they are AI, providers of generative systems that must mark synthetic output machine-readably (Art. 50(2)) and deployers that must disclose deepfakes (Art. 50(4)); paragraph and actor are flagged for founder review.
 
 ### Minimal
 

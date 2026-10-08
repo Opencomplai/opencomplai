@@ -53,9 +53,19 @@ We follow coordinated disclosure:
 
 For users:
 
-- Releases are signed with Ed25519 (see `packages/core/src/opencomplai_core/signing.py`).
-- A Software Bill of Materials (SBOM) is published with releases.
-- Dependency vulnerability scanning runs in CI (`pip-audit` / `npm audit`).
+- PyPI releases are published with Trusted Publishing (no stored API token) and carry
+  PEP 740 attestations (`publish-pypi.yml` in the release repository).
+- Container images are built, signed with cosign keyless signing and given an SPDX SBOM
+  attestation by `supply-chain.yml` in the release repository
+  `Opencomplai/opencomplai-enterprise` when a release tag passes the Trivy gate, and pushed
+  to `ghcr.io/opencomplai/opencomplai-enterprise/<service>`. `sync/verify-sbom.sh` can
+  verify them only if the GHCR packages are public. We do not claim any particular image
+  tag is published; check the registry.
+- The release workflow generates a CycloneDX SBOM for each Python package and keeps it as a
+  build artifact of that workflow run. It is not uploaded to PyPI or to the GitHub Release.
+- Dependency vulnerability scanning runs in CI with `pip-audit`.
+- `packages/core/src/opencomplai_core/signing.py` signs compliance artifacts produced by the
+  CLI. It does not sign release files.
 
 For contributors:
 

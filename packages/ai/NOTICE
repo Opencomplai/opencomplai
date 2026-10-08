@@ -6,6 +6,10 @@ All models listed here are available under Apache 2.0 or MIT licenses.
 
 ------------------------------------------------------------------------------
 CodeBERT (microsoft/codebert-base)
+  Used only by the optional, Python-API-only ONNX export function
+  (opencomplai_ai.downloader.ensure_model("codebert-onnx")), which fetches the
+  PyTorch checkpoint when called. The "codebert-onnx" classification backend is
+  a deterministic code-signal matcher and loads no CodeBERT weights.
   License  : MIT
   Source   : https://huggingface.co/microsoft/codebert-base
   Paper    : "CodeBERT: A Pre-Trained Model for Programming and Natural Languages"

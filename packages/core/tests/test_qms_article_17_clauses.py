@@ -16,6 +16,14 @@ from opencomplai_core.models import (
 )
 from opencomplai_core.recommend_engine import render_recommendations
 
+_FILLED = (
+    "This procedure documents regulatory compliance, design control, quality "
+    "assurance, testing validation, technical specifications and standards, "
+    "data governance, risk management, post-market monitoring, incident "
+    "reporting, authority communication, record retention, resource planning "
+    "and accountability.\n"
+)
+
 _PRESENT_CLAUSE_FILES = {
     "a": "REGULATORY_COMPLIANCE_STRATEGY.md",
     "b": "DESIGN_CONTROL.md",
@@ -64,7 +72,7 @@ def test_six_of_thirteen_clauses_present_not_one_article_verdict(tmp_path: Path)
     """Accept criteria: evidence for 6/13 clauses -> 6 present / 7 missing,
     never a single pass/fail for the whole article."""
     for filename in _PRESENT_CLAUSE_FILES.values():
-        (tmp_path / filename).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / filename).write_text(_FILLED, encoding="utf-8")
 
     rows = qms_article_17_clause_statuses(tmp_path)
     assert len(rows) == 13
@@ -82,7 +90,7 @@ def test_six_of_thirteen_clauses_present_not_one_article_verdict(tmp_path: Path)
 
 def test_recommend_renders_per_clause_status_table(tmp_path: Path):
     for filename in _PRESENT_CLAUSE_FILES.values():
-        (tmp_path / filename).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / filename).write_text(_FILLED, encoding="utf-8")
 
     written = render_recommendations(
         _make_report(), tmp_path / "fixes", repo_root=tmp_path

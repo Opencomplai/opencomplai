@@ -1,0 +1,55 @@
+{
+  "system_id": "fixture-sys",
+  "commit_ref": "0123456789abcdef0123456789abcdef01234567",
+  "result": "control_fail",
+  "failed_controls": [
+    "EU_AIA_ART6_HIGH_RISK",
+    "EU_AIA_ART6_PROFILING"
+  ],
+  "eval_summary": {
+    "overall_outcome": "pass"
+  },
+  "gap_report": {
+    "system_id": "fixture-sys",
+    "commit_ref": "0123456789abcdef0123456789abcdef01234567",
+    "generated_at": "2026-01-02T03:04:05+00:00",
+    "articles": [
+      {
+        "article": "Art. 6",
+        "status": "missing",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case matches Annex III categories: essential_services.",
+        "confidence": 0.9,
+        "confidence_label": "measured"
+      },
+      {
+        "article": "Art. 9",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/risk_register.md",
+        "rationale": "Found candidate artifact for risk_register.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed"
+      },
+      {
+        "article": "Art. 13",
+        "status": "met",
+        "source": "artifact",
+        "evidence_ref": "INSTRUCTIONS.md",
+        "rationale": "Instructions for use found.",
+        "confidence": 0.8,
+        "confidence_label": "measured"
+      }
+    ]
+  }
+}

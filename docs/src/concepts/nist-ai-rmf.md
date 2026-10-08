@@ -115,10 +115,11 @@ gaps its rows cite is what changes them. It gates `check` only if you opt in (se
 - **An uncovered subcategory is `Unverified`, never fabricated.** If the crosswalk has
   no row for a subcategory's category, or the mapped article isn't present in the
   current run, the verdict says exactly that instead of guessing.
-- **ISO/IEC 42001 stays mapped-only.** The same crosswalk cites an ISO/IEC 42001:2023
+- **ISO/IEC 42001 clause citations stay mapped-only.** The same crosswalk cites an ISO/IEC 42001:2023
   clause per article (the "Mapped" column in `opencomplai gaps`'s default `EU_AI_ACT`
-  output), but no verdict is computed for it. `EU_AI_ACT` (evaluated) and `NIST_AI_RMF`
-  (derived) are the only targets.
+  output). That citation computes no verdict; ISO/IEC 42001 is assessed separately as
+  the attestation-led `ISO_IEC_42001` target. `EU_AI_ACT` (evaluated), `NIST_AI_RMF`
+  (derived) and `ISO_IEC_42001` (attestation-led) are the only targets.
 
 ## A living framework
 

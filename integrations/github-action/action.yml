@@ -1,0 +1,88 @@
+name: OpenComplAI check
+description: Run opencomplai check on a system manifest, comment the result on the pull request and fail the job on a failed gate.
+author: Opencomplai
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  manifest:
+    description: Path to the system manifest.
+    default: system-manifest.json
+  version:
+    description: Exact opencomplai release to install through uvx (pinned with ==).
+    default: "0.9.0"
+  install-from:
+    description: Path or package spec that replaces the pinned release (for testing a checkout).
+    default: ""
+  with:
+    description: Extra uvx --with specs, one per line.
+    default: ""
+  args:
+    description: Extra arguments for opencomplai check, split on whitespace.
+    default: ""
+  comment:
+    description: Post the result as one sticky pull request comment.
+    default: "true"
+  upload-sarif:
+    description: Upload the SARIF verdict to GitHub code scanning.
+    default: "false"
+  fail-on-error:
+    description: Fail the job when opencomplai check exits non-zero.
+    default: "true"
+  github-token:
+    description: Token used to post the pull request comment.
+    default: ${{ github.token }}
+
+outputs:
+  exit-code:
+    description: Exit code of opencomplai check.
+    value: ${{ steps.check.outputs.exit-code }}
+  summary-file:
+    description: Markdown summary, starting with the sticky comment marker.
+    value: ${{ steps.check.outputs.summary-file }}
+  sarif-file:
+    description: SARIF file path, empty when none was written.
+    value: ${{ steps.check.outputs.sarif-file }}
+
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+
+    - id: check
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        OC_VERSION: ${{ inputs.version }}
+        OC_INSTALL_FROM: ${{ inputs.install-from }}
+        OC_WITH: ${{ inputs.with }}
+        OC_MANIFEST: ${{ inputs.manifest }}
+        OC_ARGS: ${{ inputs.args }}
+        OC_OUT_DIR: ${{ runner.temp }}/opencomplai
+      run: bash "$ACTION_PATH/run.sh"
+
+    # A fork pull request has a read-only token: that must not fail the gate.
+    - if: inputs.comment == 'true' && github.event_name == 'pull_request'
+      shell: bash
+      continue-on-error: true
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        GH_TOKEN: ${{ inputs.github-token }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        BODY_FILE: ${{ steps.check.outputs.summary-file }}
+      run: bash "$ACTION_PATH/comment.sh"
+
+    - if: inputs.upload-sarif == 'true' && steps.check.outputs.sarif-file != ''
+      uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
+      with:
+        sarif_file: ${{ steps.check.outputs.sarif-file }}
+
+    - if: inputs.fail-on-error == 'true' && steps.check.outputs.exit-code != '0'
+      shell: bash
+      env:
+        EXIT_CODE: ${{ steps.check.outputs.exit-code }}
+      run: |
+        echo "::error::opencomplai check exited with code $EXIT_CODE"
+        exit "$EXIT_CODE"

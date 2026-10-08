@@ -1,3 +1,5 @@
+> **Legacy gateway walkthrough.** `manifest.yaml` here is a gateway-era YAML file, not a `system-manifest.json`, so `opencomplai check` does not read it. The sandbox for the gate is [`examples/gate-demo/`](../gate-demo/README.md).
+
 # Sample AI System — OpenComplAI Example
 
 This directory shows how to integrate an AI system with OpenComplAI for EU AI Act compliance.
@@ -41,7 +43,7 @@ Expected output:
 
 ## CI integration
 
-See `.github/workflows/compliance-gate.yml.example` in the repo root for a ready-to-use GitHub Actions workflow.
+See [`integrations/github-action/README.md`](../../integrations/github-action/README.md) for the GitHub Action.
 
 ## Customising `manifest.yaml`
 

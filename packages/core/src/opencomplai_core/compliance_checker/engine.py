@@ -64,6 +64,27 @@ def _determine_high_risk(answers: dict[str, Any]) -> bool:
     return True
 
 
+def _relies_on_art_6_3_derogation(answers: dict[str, Any]) -> bool:
+    """Annex III system the provider assesses as not high-risk (Art. 6(3))."""
+    annex_i = _answer_bool(answers, "hr1_annex_i") and _answer_bool(
+        answers, "hr8_conformity_assessment"
+    )
+    return (
+        _answer_bool(answers, "hr2_annex_iii")
+        and not annex_i
+        and not _answer_bool(answers, "hr7_profiling")
+        and any(
+            _answer_bool(answers, k)
+            for k in (
+                "hr3_art_6_3",
+                "hr4_narrow_task",
+                "hr5_no_significant_risk",
+                "hr6_accessory",
+            )
+        )
+    )
+
+
 def _dedupe_obligations(items: list[ObligationItem]) -> list[ObligationItem]:
     seen: set[str] = set()
     ordered: list[ObligationItem] = []
@@ -267,6 +288,12 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
         _entity_obligations(effective_entity, is_high_risk=is_high_risk)
     )
 
+    if effective_entity == EntityType.PROVIDER and _relies_on_art_6_3_derogation(
+        answers
+    ):
+        obligation_ids.append("provider_art_6_4_registration")
+        path.append("hr:derogation_registration")
+
     if _answer_bool(answers, "r4_transparency"):
         # Art. 50 disclosure duties apply in addition to high-risk obligations,
         # not instead of them, so the obligation itself is never gated on
@@ -284,6 +311,8 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
     if (
         _answer_bool(answers, "r5_fria")
         and is_high_risk
+        # Art. 27 applies to Art. 6(2) (Annex III) systems only.
+        and _answer_bool(answers, "hr2_annex_iii")
         and effective_entity == EntityType.DEPLOYER
     ):
         obligation_ids.append("fria")

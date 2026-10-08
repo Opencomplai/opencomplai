@@ -29,6 +29,14 @@ from opencomplai_core.telemetry import (
 )
 from pydantic import BaseModel, Field
 
+from opencomplai_risk_engine.dual_approval import (
+    SecondApprovalError,
+    SecondApprovalRequest,
+    check_second_approval,
+    done_key,
+    pending_key,
+    pending_record,
+)
 from opencomplai_risk_engine.service_auth_dependency import require_service_principal
 
 try:
@@ -70,7 +78,7 @@ app = FastAPI(
         "Implements REQ-RISK-001 (Annex III), REQ-RISK-002 (profiling), "
         "REQ-RISK-003 (modification trap)."
     ),
-    version="0.1.0-dev",
+    version="0.9.0",
 )
 
 configure_telemetry("risk-engine")
@@ -545,7 +553,81 @@ async def submit_override(request: OverrideRequest) -> OverrideResponse:
         status=status,
         vault_event_id=vault_event_id,
     )
+    if request.requires_dual_approval:
+        _store_accepted_override(
+            pending_key(override_id),
+            payload_fp,
+            pending_record(
+                request.case_id, request.actor_id, request.decision, rationale_hash
+            ),
+        )
     _store_accepted_override(idempotency_key, payload_fp, response.model_dump())
+    return response
+
+
+@router.post(
+    "/v1/hitl/overrides/{override_id}/second-approval",
+    response_model=OverrideResponse,
+    status_code=201,
+)
+async def second_approval(
+    override_id: str, request: SecondApprovalRequest
+) -> OverrideResponse:
+    """Complete a dual-control override with a distinct second approver."""
+    if not request.rationale.strip():
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error_code": "VALIDATION_ERROR",
+                "message": "rationale must be non-empty",
+                "category": "client",
+                "retryable": False,
+            },
+        )
+    p = _lookup_accepted_override(pending_key(override_id))
+    d = _lookup_accepted_override(done_key(override_id))
+    try:
+        check_second_approval(
+            p[1] if p else None,
+            d[1] if d else None,
+            request.actor_id,
+            request.rationale_hash,
+        )
+    except SecondApprovalError as e:
+        raise HTTPException(
+            status_code=e.status,
+            detail={
+                "error_code": e.error_code,
+                "message": e.message,
+                "category": "client",
+                "retryable": False,
+            },
+        ) from None
+    assert p is not None
+    pending_fp, pending = p
+    second_hash = f"sha256:{hashlib.sha256(request.rationale.encode()).hexdigest()}"
+    status = "accepted" if request.decision == "approved" else "rejected"
+    vault_event_id = await _record_hitl_event_strict(
+        event_type="override_second_approved",
+        payload={
+            "override_id": override_id,
+            "case_id": pending["case_id"],
+            "decision": request.decision,
+            "first_actor_id": pending["actor_id"],
+            "first_rationale_hash": pending["rationale_hash"],
+            "second_rationale_hash": second_hash,
+            "status": status,
+            "tenant_id": TENANT_ID,
+        },
+        actor_id=request.actor_id,
+    )
+    response = OverrideResponse(
+        override_id=override_id,
+        rationale_hash=second_hash,
+        status=status,
+        vault_event_id=vault_event_id,
+    )
+    _store_accepted_override(done_key(override_id), pending_fp, response.model_dump())
     return response
 
 

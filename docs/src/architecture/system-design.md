@@ -29,7 +29,7 @@ Step  2 — validate manifest               POST /v1/manifests/validate
 Step  3 — risk classify                   POST /v1/risk/classify
 Step  4 — trap-gate check (substantial modification / profiling)
 Step  5 — run controls                    POST /v1/verify/claims
-Step  6 — poll for verification results   GET  /v1/verify/claims/{id}
+Step  6 — read the verification outcome   returned by step 5 (pending is counted, not polled)
 Step  7 — generate Annex IV dossier       POST /v1/docs/generate
 Step  8 — finalise ScanStatusArtifact
 Step  9 — emit compliance_check_completed POST /v1/evidence/events
@@ -45,21 +45,24 @@ Host
   ▼
 gateway-api (frontend + internal networks)
   │
-  ├── /v1/risk/*      risk-engine    :8001 (internal)
-  ├── /v1/verify/*    evidence-vault :8002 (internal)
+  ├── /v1/manifests/*, /v1/risk/*, /v1/verify/*, /v1/hitl/*
+  │                   risk-engine    :8001 (internal)
+  ├── /v1/evidence/*, /v1/portfolio, /v1/pro/badges/*
+  │                   evidence-vault :8002 (internal)
   ├── /v1/docs/*      doc-generator  :8003 (internal)
-  └── /v1/evidence/*  evidence-vault :8002 (internal)
-                              │
-                        egress-proxy   :8004 (internal + external)
-                        (only service with outbound internet access)
+  ├── /v1/sync/*, /v1/pro/ingest/*
+  │                   egress-proxy   :8004 (internal + external)
+  │                   (the only application service on the external
+  │                    network; /v1/pro/ingest/* is forwarded on to evidence-vault)
+  └── /v1/status      probes all four services
 
 postgres :5432  (internal — evidence-vault + risk-engine)
 redis    :6379  (internal — risk-engine verification task queue)
 ```
 
-- **`internal` network**: fully isolated, no host internet access.
-- **`external` network**: only `egress-proxy` is attached. All outbound traffic must pass through it.
-- **`frontend` network**: only `gateway-api` is exposed to the host.
+- **`internal` network**: fully isolated, no outbound internet access.
+- **`external` network**: only `egress-proxy` is attached among the application services, so the backend services reach the internet only through it.
+- **`frontend` network**: an ordinary bridge that `gateway-api` (whose port is published to the host) shares with Prometheus and Grafana, which publish on loopback by default. These three have outbound access of their own.
 
 ## Security properties
 

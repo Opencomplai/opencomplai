@@ -1,0 +1,863 @@
+{
+  "ISO_IEC_42001:Clause 4.1": {
+    "title": "Understanding the organization and its context",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 4.2": {
+    "title": "Understanding the needs and expectations of interested parties",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 4.3": {
+    "title": "Determining the scope of the AI management system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 4.4": {
+    "title": "AI management system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 5.1": {
+    "title": "Leadership and commitment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 5.2": {
+    "title": "AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 5.3": {
+    "title": "Roles, responsibilities and authorities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.1.1": {
+    "title": "General",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.1.2": {
+    "title": "AI risk assessment",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.1.3": {
+    "title": "AI risk treatment",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.1.4": {
+    "title": "AI system impact assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.2": {
+    "title": "AI objectives and planning to achieve them",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 6.3": {
+    "title": "Planning of changes",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 7.1": {
+    "title": "Resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 7.2": {
+    "title": "Competence",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 7.3": {
+    "title": "Awareness",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 7.4": {
+    "title": "Communication",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 7.5": {
+    "title": "Documented information",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 8.1": {
+    "title": "Operational planning and control",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 8.2": {
+    "title": "AI risk assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 8.3": {
+    "title": "AI risk treatment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 8.4": {
+    "title": "AI system impact assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 9.1": {
+    "title": "Monitoring, measurement, analysis and evaluation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 9.2": {
+    "title": "Internal audit",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 9.3": {
+    "title": "Management review",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 10.1": {
+    "title": "Continual improvement",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 10.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:Clause 10.2": {
+    "title": "Nonconformity and corrective action",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 10.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.2.2": {
+    "title": "AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.2.3": {
+    "title": "Alignment with other organizational policies",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.2.4": {
+    "title": "Review of the AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.3.2": {
+    "title": "AI roles and responsibilities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.3.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.3.3": {
+    "title": "Reporting of concerns",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.3.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.4.2": {
+    "title": "Resource documentation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.4.3": {
+    "title": "Data resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.4.4": {
+    "title": "Tooling resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.4.5": {
+    "title": "System and computing resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.4.6": {
+    "title": "Human resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.6"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.5.2": {
+    "title": "AI system impact assessment process",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.5.3": {
+    "title": "Documentation of AI system impact assessments",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.5.4": {
+    "title": "Assessing AI system impact on individuals or groups of individuals",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.5.5": {
+    "title": "Assessing societal impacts of AI systems",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.1.2": {
+    "title": "Objectives for responsible development of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.1.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.1.3": {
+    "title": "Processes for responsible AI system design and development",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.1.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.2": {
+    "title": "AI system requirements and specification",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.3": {
+    "title": "Documentation of AI system design and development",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.4": {
+    "title": "AI system verification and validation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.5": {
+    "title": "AI system deployment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.6": {
+    "title": "AI system operation and monitoring",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.6"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.7": {
+    "title": "AI system technical documentation",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.7"
+      },
+      {
+        "kind": "artifact",
+        "ref": "provider_qms_bundle"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.6.2.8": {
+    "title": "AI system recording of event logs",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.8"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.7.2": {
+    "title": "Data for development and enhancement of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.7.3": {
+    "title": "Acquisition of data",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.7.4": {
+    "title": "Quality of data for AI systems",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.7.5": {
+    "title": "Data provenance",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.7.6": {
+    "title": "Data preparation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.6"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.8.2": {
+    "title": "System documentation and information for users",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "deployer_instructions"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.8.3": {
+    "title": "External reporting",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.8.4": {
+    "title": "Communication of incidents",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.8.5": {
+    "title": "Information for interested parties",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.9.2": {
+    "title": "Processes for responsible use of AI systems",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.9.3": {
+    "title": "Objectives for responsible use of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.9.4": {
+    "title": "Intended use of the AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.10.2": {
+    "title": "Allocating responsibilities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.10.3": {
+    "title": "Suppliers",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42001:A.10.4": {
+    "title": "Customers",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

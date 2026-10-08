@@ -1,5 +1,392 @@
 {
   "$defs": {
+    "AgentDelegation": {
+      "additionalProperties": false,
+      "properties": {
+        "max_depth": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Depth"
+        },
+        "may_delegate_to": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "May Delegate To",
+          "type": "array"
+        }
+      },
+      "title": "AgentDelegation",
+      "type": "object"
+    },
+    "AgentGuardrail": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Ref"
+        },
+        "kind": {
+          "minLength": 1,
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "AgentGuardrail",
+      "type": "object"
+    },
+    "AgentInventory": {
+      "additionalProperties": false,
+      "properties": {
+        "agents": {
+          "items": {
+            "$ref": "#/$defs/AgentSpec"
+          },
+          "minItems": 1,
+          "title": "Agents",
+          "type": "array"
+        },
+        "responsibility_map": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResponsibilityMap"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "agents"
+      ],
+      "title": "AgentInventory",
+      "type": "object"
+    },
+    "AgentLogging": {
+      "additionalProperties": false,
+      "properties": {
+        "captures_intent": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Captures Intent"
+        },
+        "decision_log_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decision Log Ref"
+        }
+      },
+      "title": "AgentLogging",
+      "type": "object"
+    },
+    "AgentMandate": {
+      "additionalProperties": false,
+      "description": "What the agent may and may not do, as the provider declared it.\n\nAn entry of the form ``tool:<name>`` in either action list must name a\ntool declared by the same agent (see :func:`check_inventory`).",
+      "properties": {
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expires At"
+        },
+        "granted_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Granted At"
+        },
+        "granted_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Granted By"
+        },
+        "limits": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Limits",
+          "type": "object"
+        },
+        "permitted_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Permitted Actions",
+          "type": "array"
+        },
+        "prohibited_actions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Prohibited Actions",
+          "type": "array"
+        },
+        "review_cadence": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Cadence"
+        }
+      },
+      "title": "AgentMandate",
+      "type": "object"
+    },
+    "AgentModelRef": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "via": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Via"
+        }
+      },
+      "required": [
+        "provider",
+        "model"
+      ],
+      "title": "AgentModelRef",
+      "type": "object"
+    },
+    "AgentSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "delegation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentDelegation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "guardrails": {
+          "items": {
+            "$ref": "#/$defs/AgentGuardrail"
+          },
+          "title": "Guardrails",
+          "type": "array"
+        },
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "logging": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentLogging"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "mandate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentMandate"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "models": {
+          "items": {
+            "$ref": "#/$defs/AgentModelRef"
+          },
+          "title": "Models",
+          "type": "array"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Id"
+        },
+        "tools": {
+          "items": {
+            "$ref": "#/$defs/AgentTool"
+          },
+          "title": "Tools",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "AgentSpec",
+      "type": "object"
+    },
+    "AgentTool": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "mcp",
+            "function",
+            "api"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "requires_approval": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requires Approval"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        },
+        "side_effects": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Side Effects"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "title": "AgentTool",
+      "type": "object"
+    },
     "AnnexIVSection1": {
       "description": "General description of the AI system (Annex IV, Section 1).",
       "properties": {
@@ -77,8 +464,19 @@
       "type": "object"
     },
     "AnnexIVSection3": {
-      "description": "Detailed information about monitoring, functioning and control (Annex IV, Section 3).",
+      "description": "Detailed information about monitoring, functioning and control (Annex IV, Section 3).\n\n`human_oversight` is the manifest's structured oversight block copied\nverbatim; it is left out of the serialised section when absent, so a\nmanifest without the block yields the same bytes as before it existed.",
       "properties": {
+        "human_oversight": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HumanOversight"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "human_oversight_measures": {
           "items": {
             "type": "string"
@@ -458,9 +856,10 @@
       "type": "object"
     },
     "ArticleTwelveRecordKeeping": {
-      "description": "Automatic logging and record-keeping (Article 12).\n\nWas previously emitted as \"Annex IV Section 4\", which conflated two\ndistinct obligations: Art. 12 requires high-risk systems to log\nautomatically over their lifetime, while Annex IV point 4 concerns the\nappropriateness of performance metrics.",
+      "description": "Automatic logging and record-keeping (Article 12).\n\nWas previously emitted as \"Annex IV Section 4\", which conflated two\ndistinct obligations: Art. 12 requires high-risk systems to log\nautomatically over their lifetime, while Annex IV point 4 concerns the\nappropriateness of performance metrics.\n\nThe first three fields are provider declarations copied from the manifest;\nabsent means false (retention: absent, not null). `provider_supplied` says\nwhether the manifest declared the block at all. `ledger_root_hash` is\nmeasured, not declared.",
       "properties": {
         "evidence_vault_enabled": {
+          "default": false,
           "title": "Evidence Vault Enabled",
           "type": "boolean"
         },
@@ -477,34 +876,171 @@
           "title": "Ledger Root Hash"
         },
         "log_retention_days": {
-          "title": "Log Retention Days",
-          "type": "integer"
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Log Retention Days"
         },
         "logging_enabled": {
+          "default": false,
           "title": "Logging Enabled",
+          "type": "boolean"
+        },
+        "provider_supplied": {
+          "default": false,
+          "title": "Provider Supplied",
           "type": "boolean"
         }
       },
-      "required": [
-        "logging_enabled",
-        "log_retention_days",
-        "evidence_vault_enabled"
-      ],
       "title": "ArticleTwelveRecordKeeping",
       "type": "object"
     },
     "ComplianceTarget": {
-      "description": "Compliance framework a system is assessed against (D-3c).\n\n`EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a\ndeterministic per-article verdict for it. `NIST_AI_RMF` is evaluated by\nre-projecting that same EU AI Act evidence through\n`data/framework_crosswalk.json` into per-subcategory NIST AI RMF 1.0\nverdicts (`nist_rmf_report.py`). Coverage is partial: a subcategory with\nno crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 is\nmapped only, not a target: it has no member here and is surfaced solely\nas a per-article reference (see `control_catalog` and\n`opencomplai gaps`'s Mapped column), never as an assessment target.",
+      "description": "Compliance framework a system is assessed against (D-3c).\n\n`EU_AI_ACT` is evaluated: `opencomplai gaps`/`check` compute a\ndeterministic per-article verdict for it. `NIST_AI_RMF` is evaluated by\nre-projecting that same EU AI Act evidence through\n`data/framework_crosswalk.json` into per-subcategory NIST AI RMF 1.0\nverdicts (`nist_rmf_report.py`). Coverage is partial: a subcategory with\nno crosswalk row stays Unverified, never guessed. ISO/IEC 42001:2023 has\nno member here, because a new member would change the published dossier\nschema: it is the `ISO_IEC_42001` native framework pack in\n`frameworks.py`, attestation-led (partial, unreviewed), selected through\n`compliance_targets` or `--target ISO_IEC_42001`. Its per-article clause\ncitation (`control_catalog`, the Mapped column of `opencomplai gaps`)\nstays a reference, not a verdict. Nothing here certifies ISO/IEC 42001\nconformity.",
       "enum": [
         "EU_AI_ACT",
         "NIST_AI_RMF"
       ],
       "title": "ComplianceTarget",
       "type": "string"
+    },
+    "HumanOversight": {
+      "additionalProperties": false,
+      "description": "Declared human-oversight arrangement; a statement, never verified.",
+      "properties": {
+        "escalation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Escalation"
+        },
+        "evidence_refs": {
+          "description": "Paths or URLs; never opened or checked.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Refs",
+          "type": "array"
+        },
+        "roles": {
+          "items": {
+            "$ref": "#/$defs/OversightRole"
+          },
+          "minItems": 1,
+          "title": "Roles",
+          "type": "array"
+        }
+      },
+      "required": [
+        "roles"
+      ],
+      "title": "HumanOversight",
+      "type": "object"
+    },
+    "OversightRole": {
+      "additionalProperties": false,
+      "description": "One person or team that oversees the system (Art. 14), as declared.",
+      "properties": {
+        "authority": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What this role may decide.",
+          "title": "Authority"
+        },
+        "can_intervene": {
+          "default": false,
+          "title": "Can Intervene",
+          "type": "boolean"
+        },
+        "conditions": {
+          "description": "When this role must act or stop the system.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Conditions",
+          "type": "array"
+        },
+        "role": {
+          "minLength": 1,
+          "title": "Role",
+          "type": "string"
+        },
+        "training_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pointer to training evidence; never opened or verified.",
+          "title": "Training Ref"
+        }
+      },
+      "required": [
+        "role"
+      ],
+      "title": "OversightRole",
+      "type": "object"
+    },
+    "ResponsibilityMap": {
+      "additionalProperties": false,
+      "description": "Free-form provider declaration; recorded verbatim, never interpreted.",
+      "properties": {
+        "customer_obligations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Customer Obligations",
+          "type": "array"
+        },
+        "upstream_provider_obligations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Upstream Provider Obligations",
+          "type": "array"
+        }
+      },
+      "title": "ResponsibilityMap",
+      "type": "object"
     }
   },
-  "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
+  "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\n`agent_inventory` is the manifest's declared inventory, omitted when absent\nso a manifest without it yields the same bytes and checksum as before.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
   "properties": {
+    "agent_inventory": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AgentInventory"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
     "annex_iv_complete": {
       "default": true,
       "description": "False when a HIGH-risk dossier still carries placeholder content for any of Annex IV Sections 6-9 (lifecycle changes, harmonised standards, EU declaration of conformity, post-market monitoring plan). These require provider attestation and cannot be derived from the repository. Do not present such a dossier as a complete Annex IV technical documentation file.",
@@ -627,7 +1163,7 @@
     },
     "signature_status": {
       "default": "unsigned",
-      "description": "Trust level of this dossier: 'unsigned' (OSS default), 'hmac-local' (HMAC fallback with a local key), or 'signed' (Pro/Enterprise asymmetric signing via HSM/KMS).",
+      "description": "Trust level of this dossier: 'unsigned' (no Ed25519 key was available) or 'ed25519' (asymmetric signature, verifiable with the public key). Legacy 'hmac-local' is only ever read, never written; it cannot be verified by a third party.",
       "title": "Signature Status",
       "type": "string"
     },

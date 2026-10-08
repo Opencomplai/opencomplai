@@ -9,7 +9,7 @@ Opencomplai is a monorepo with three deployment modes: local-only (CLI + SDK), s
 | `opencomplai-core` | Python package | Python 3.11, Pydantic v2 | Rule engine — deterministic risk assessment, no HTTP. |
 | `opencomplai-cli` | Python package | Python 3.11, Typer, Rich | CLI tool — `init`, `check`, `risk classify`, `validate-manifest`, `docs generate`, `sync metadata`, `dashboard`. |
 | `opencomplai` (SDK) | Python package | Python 3.11 | Stable pip-installable surface wrapping `core`. |
-| `gateway-api` | Service | Node.js 20, TypeScript, Fastify | REST API gateway — request validation, routing to backend services. |
+| `gateway-api` | Service | Node.js 24, TypeScript, Fastify | REST API gateway — request validation, routing to backend services. |
 | `risk-engine` | Service | Python, FastAPI | Risk classification as a service. |
 | `evidence-vault` | Service | Python, FastAPI, PostgreSQL | Append-only Merkle ledger + content-addressed evidence storage. |
 | `doc-generator` | Service | Python, FastAPI | Annex IV compliance dossier generation. |

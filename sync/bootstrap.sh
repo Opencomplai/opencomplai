@@ -23,7 +23,7 @@ echo "uv $(uv --version) — OK"
 
 # --- Node.js checks ---
 NODE_VERSION=$(node --version 2>/dev/null | sed 's/v//' || echo "0")
-REQUIRED_NODE="20"
+REQUIRED_NODE="24"
 NODE_MAJOR=$(echo "$NODE_VERSION" | cut -d. -f1)
 if [[ "$NODE_MAJOR" -lt "$REQUIRED_NODE" ]]; then
     echo "ERROR: Node.js $REQUIRED_NODE+ required. Found: $NODE_VERSION"

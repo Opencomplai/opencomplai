@@ -26,13 +26,14 @@ owner, a state, and the evidence backing it.
 | `evidence_refs` | Evidence-vault content hashes backing this control. |
 | `ttl_days` | Per-control override for the freshness window. `null` falls back to the catalog default for this article. |
 | `last_assessed_at` / `last_evidence_at` / `due_at` | Timestamps used to compute staleness. |
-| `waiver_rationale` | Set when a human manually waives a control (never set automatically). |
+| `waiver_rationale` | Set by a manual waiver, or by a manifest exclusion (`framework_inputs.<FW>.excluded`). |
+| `waiver_source` | `exclusion` or `manual` for a waived control; `null` on legacy rows, which are treated as manual. |
 
 ## States
 
 | State | Meaning |
 |---|---|
-| `satisfied` | The mapped article read `MET` on the run that derived this control, or a human attached evidence directly. |
+| `satisfied` | The mapped article read `MET` on the run that derived this control, or a human attached evidence directly. A scan detection alone never produces `MET`, so it never produces `satisfied`. |
 | `evidence_missing` | The mapped article read `PARTIAL`, `MISSING`, or `UNVERIFIED` and there is no surviving evidence to fall back on. |
 | `evidence_stale` | Evidence exists but its TTL has expired, or the manifest changed in a way that invalidates it (see [Freshness](#freshness) below). |
 | `pending_review` | Reserved for the review-queue integration; not set by the current derivation path. |
@@ -61,7 +62,8 @@ that has a vault configured upserts one control per article row in the gap
 report:
 
 - **`MET`** → `satisfied`, with the row's evidence hash appended to
-  `evidence_refs` (existing refs are kept, not replaced).
+  `evidence_refs` (existing refs are kept, not replaced). A scan detection alone
+  never reads `MET`, so it never produces a `satisfied` control.
 - **`PARTIAL` / `MISSING` / `UNVERIFIED`** → normally downgrades to
   `evidence_missing`, **except**: if the existing control is already
   `satisfied` with evidence a human attached manually, and the new row's
@@ -72,8 +74,9 @@ report:
   manifest change can stale it out. A hard signal (a failing rule,
   obligation, scan, or evaluator row) still downgrades the control
   regardless of manually-attached evidence.
-- A control already in `waived` is left untouched — an automated run never
-  overwrites a human waiver.
+- A manual waiver is never overwritten by an automated run. A waiver derived
+  from a manifest exclusion lifts when the exclusion is removed from the
+  manifest: the control is re-derived and its rationale cleared.
 - `owner`, `ttl_days`, and `waiver_rationale` are always carried forward
   verbatim from the existing row; derivation never sets or clears them.
 

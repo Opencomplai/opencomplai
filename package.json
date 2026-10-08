@@ -4,7 +4,7 @@
   "packageManager": "pnpm@9.15.9",
   "pnpm": {
     "overrides": {
-      "fast-uri": "3.1.2",
+      "fast-uri": "3.1.7",
       "protobufjs": "8.6.5"
     },
     "packageExtensions": {

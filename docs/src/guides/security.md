@@ -24,7 +24,7 @@ Every `opencomplai check` run can produce a cryptographically signed `ScanStatus
     opencomplai check --sign
     ```
 
-The private signing key is stored at `~/.opencomplai/signing.key` and never transmitted. The public key is registered with the dashboard when you enroll via `opencomplai dashboard enroll`.
+The private signing key is stored at `~/.opencomplai/signing.key` and never transmitted. In CI, where there is no key file, set `SIGNING_KEY_PRIVATE` to the base64-encoded PEM of the private key from your CI secret store; it takes precedence over the key file. `check --sign` exits `2` when neither exists; `check --sign-if-available` signs when a key is present and otherwise warns and writes an unsigned artifact. The GitHub Actions and GitLab CI connectors use `--sign` when `SIGNING_KEY_PRIVATE` is set and `--sign-if-available` otherwise. The public key is registered with the dashboard when you enroll via `opencomplai dashboard enroll`.
 
 **Key rotation:** to rotate the signing key, delete `~/.opencomplai/signing.key` and re-run `opencomplai init`. Re-enroll with `opencomplai dashboard enroll` to register the new key.
 
@@ -48,17 +48,17 @@ This is the **default** for a fresh installation.
 
 ## Supply chain
 
-SBOM generation is automated in `sync/verify-sbom.sh`. Run it to verify the supply-chain integrity of all installed packages.
+`sync/verify-sbom.sh` takes a published container image and verifies its cosign signature and its SBOM attestation. It does not generate an SBOM. It needs `cosign` and `jq`. By default it expands `<service>:<version>` to `ghcr.io/opencomplai/opencomplai-enterprise/<service>:<version>` and expects the signing identity of `supply-chain.yml` in the release repository `Opencomplai/opencomplai-enterprise`; a full image reference is used as is, and `OPENCOMPLAI_RELEASE_REPO=<owner>/<repo>` checks images built in another repository. Verification works only if the GHCR packages are public, and only for a tag that has actually been published (check the registry for the tags that exist).
 
 === "macOS / Linux"
     ```bash
-    ./sync/verify-sbom.sh
+    ./sync/verify-sbom.sh gateway-api:<version>
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     # Bash-only script — use WSL2 or Git Bash on Windows
-    ./sync/verify-sbom.sh
+    ./sync/verify-sbom.sh gateway-api:<version>
     ```
 
 See [Supply Chain](../security/supply-chain.md) for the full supply-chain security model.
@@ -67,6 +67,6 @@ See [Supply Chain](../security/supply-chain.md) for the full supply-chain securi
 
 The core Opencomplai threat model has three boundaries:
 
-1. **The local signing key** — protects artifact authenticity. Compromise of this key allows forged compliance artifacts. Mitigate with filesystem permissions and, in production, a managed KMS.
+1. **The signing key** (the local key file or `SIGNING_KEY_PRIVATE`) — protects artifact authenticity. Compromise of this key allows forged compliance artifacts. Mitigate with filesystem permissions and, in production, a managed KMS.
 2. **The PostgreSQL instance** — stores the evidence ledger. Compromise allows history tampering. Mitigate with row-level security, encrypted volumes, and restricted network access.
 3. **The egress-proxy** — enforces the outbound allowlist. Bypass allows exfiltration of metadata. The proxy is fail-closed: if the allowlist is not configured, all outbound traffic is blocked.

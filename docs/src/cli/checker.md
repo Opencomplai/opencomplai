@@ -1,6 +1,6 @@
 # checker
 
-Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
+Run the EU AI Act applicability checker (checker version `checker-2026-10-05`).
 
 ## Synopsis
 
@@ -19,7 +19,7 @@ Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
 | Option | Description |
 |---|---|
 | `--answers` | JSON file with checker answers (non-interactive / CI replay) |
-| `--entity-type` | Skip entity prompt when re-running for another operator role |
+| `--entity-type` | Operator role (`provider`, `deployer`, `distributor`, `importer`, `product_manufacturer`, `authorised_rep`); repeat the flag for each role. The entity question is skipped. An unknown value exits 2 |
 | `-o` / `--output` | `human` (default) or `json` |
 | `--export-json` | Write full result JSON to path |
 | `--export-md` | Write Markdown report |
@@ -73,6 +73,29 @@ Run the EU AI Act applicability checker (checker version `checker-2026-07-24`).
     # Pre-fill a manifest from checker results
     opencomplai checker --answers answers.json --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
     ```
+
+## Several roles
+
+A system can have more than one Article 3 role (a provider that also deploys
+it). Repeat `--entity-type`: the checker runs once per role and the results are
+merged (obligations are the union, listed once each). Each role also gets one
+line of rationale, written from the checker's own result, in the Markdown and
+JSON exports and in `checker_session.rationale`.
+
+```bash
+# First run creates the manifest (operator_roles and obligation_ids are recorded)
+opencomplai checker --answers answers.json --entity-type provider --entity-type deployer   --write-manifest system-manifest.json --intended-purpose "Screens job applicants"
+
+# Later run on the same file appends another role; nothing else is overwritten
+opencomplai checker --answers answers.json --entity-type importer --write-manifest system-manifest.json
+```
+
+When the manifest already exists, `--write-manifest` appends: `system_id`,
+`intended_purpose` (unless `--intended-purpose` is given), other fields and key
+order stay as they were, `operator_roles` and `checker_session.obligation_ids`
+grow, and `checker_session.verdict` keeps the more severe of the old and new
+tier. A manifest that is not valid JSON, or not an object, exits 2 and is left
+untouched. Without `--entity-type`, no `operator_roles` is written.
 
 ## Manifest fields
 

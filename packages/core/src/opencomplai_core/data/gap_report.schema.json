@@ -1,0 +1,202 @@
+{
+  "$defs": {
+    "ArticleGapSource": {
+      "description": "Which subsystem produced an ArticleGapStatus row's evidence.",
+      "enum": [
+        "rule",
+        "obligation",
+        "scan",
+        "evaluator",
+        "artifact",
+        "attestation",
+        "crosswalk",
+        "manifest"
+      ],
+      "title": "ArticleGapSource",
+      "type": "string"
+    },
+    "ArticleGapStatus": {
+      "description": "Met/Partial/Missing/Unverified status for a single EU AI Act article.",
+      "properties": {
+        "article": {
+          "description": "EU AI Act article reference, e.g. 'Art. 6'",
+          "title": "Article",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Heuristic confidence 0-1; null when not assessed",
+          "title": "Confidence"
+        },
+        "confidence_label": {
+          "$ref": "#/$defs/ConfidenceLabel",
+          "default": "heuristic_estimate"
+        },
+        "disclaimer_ref": {
+          "default": "DISCLAIMER_V1",
+          "title": "Disclaimer Ref",
+          "type": "string"
+        },
+        "evidence_ref": {
+          "description": "Rule id, obligation id, evaluator id, or scan finding reference",
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "rationale": {
+          "default": "",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ArticleGapSource"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        }
+      },
+      "required": [
+        "article",
+        "status",
+        "source",
+        "evidence_ref"
+      ],
+      "title": "ArticleGapStatus",
+      "type": "object"
+    },
+    "ConfidenceLabel": {
+      "description": "Honesty label for gap / report surfaces (heuristic aid, not legal determination).",
+      "enum": [
+        "heuristic_estimate",
+        "not_assessed",
+        "measured",
+        "attested"
+      ],
+      "title": "ConfidenceLabel",
+      "type": "string"
+    },
+    "GapStatus": {
+      "description": "Per-article compliance status shown by `opencomplai gaps`.",
+      "enum": [
+        "met",
+        "partial",
+        "missing",
+        "unverified"
+      ],
+      "title": "GapStatus",
+      "type": "string"
+    },
+    "PrincipleStatus": {
+      "description": "Rollup Met/Partial/Missing/Unverified status for one of the 6 EU Trustworthy\nAI principles, derived from the article-level rows already in a GapReport.",
+      "properties": {
+        "articles": {
+          "description": "Article references rolled up into this principle",
+          "items": {
+            "type": "string"
+          },
+          "title": "Articles",
+          "type": "array"
+        },
+        "principle_id": {
+          "description": "e.g. 'accountability'",
+          "title": "Principle Id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "principle_id",
+        "title",
+        "status"
+      ],
+      "title": "PrincipleStatus",
+      "type": "object"
+    },
+    "PrincipleSummary": {
+      "description": "6-principle rollup of a GapReport, additive to `opencomplai gaps --output json`.",
+      "properties": {
+        "principles": {
+          "items": {
+            "$ref": "#/$defs/PrincipleStatus"
+          },
+          "title": "Principles",
+          "type": "array"
+        }
+      },
+      "title": "PrincipleSummary",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.opencomplai.dev/gap_report/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Per-article Met/Partial/Missing/Unverified projection (opencomplai gaps).\n\nPurely a read-only projection of already-deterministic rule/obligation/scan/eval\noutputs \u2014 introduces no new analysis logic and does not affect exit codes.",
+  "properties": {
+    "articles": {
+      "items": {
+        "$ref": "#/$defs/ArticleGapStatus"
+      },
+      "title": "Articles",
+      "type": "array"
+    },
+    "commit_ref": {
+      "title": "Commit Ref",
+      "type": "string"
+    },
+    "evidence_hashes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Hashes",
+      "type": "array"
+    },
+    "generated_at": {
+      "title": "Generated At",
+      "type": "string"
+    },
+    "not_applicable": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Article -> reason it does not apply; omitted when empty",
+      "title": "Not Applicable",
+      "type": "object"
+    },
+    "principle_summary": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PrincipleSummary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "6-principle rollup, populated by `opencomplai gaps`"
+    },
+    "system_id": {
+      "title": "System Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "system_id",
+    "commit_ref",
+    "generated_at"
+  ],
+  "schema_version": "1",
+  "title": "GapReport",
+  "type": "object"
+}

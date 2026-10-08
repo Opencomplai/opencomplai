@@ -1,0 +1,80 @@
+# OpenComplAI compliance scan: GitLab CI/CD component.
+#
+# Use it from a project that has a system-manifest.json in the repo root
+# (see `opencomplai init`):
+#
+#   include:
+#     - component: $CI_SERVER_FQDN/<GITLAB-GROUP>/<PROJECT>/opencomplai@<VERSION>
+#       inputs:
+#         manifest: system-manifest.json
+#
+# The job runs `opencomplai check` and fails on exit codes 1 to 4:
+#   0 = pass             scan passed
+#   1 = control_fail     a required control failed
+#   2 = validation_fail  manifest or input validation error
+#   3 = policy_block     prohibited system
+#   4 = trap_detected    substantial-modification freeze
+#
+# The scan needs no key. To publish results, set `push: true` and add
+# OPENCOMPLAI_API_KEY (and OPENCOMPLAI_DASHBOARD_URL) as masked CI/CD
+# variables: Settings -> CI/CD -> Variables. No key is ever written in this file.
+spec:
+  inputs:
+    stage:
+      default: test
+      description: Pipeline stage that runs the job.
+    image:
+      default: python:3.11
+      description: Container image used to run the job.
+    version:
+      default: "0.9.0"
+      description: Exact opencomplai release to install (pinned with ==). Empty installs the latest release.
+    manifest:
+      default: system-manifest.json
+      description: Path to the system manifest.
+    extra_args:
+      default: ""
+      description: Extra arguments for opencomplai check, split on whitespace.
+    sarif:
+      type: boolean
+      default: false
+      description: Also write a SARIF file of the verdict and keep it as a job artifact.
+    push:
+      type: boolean
+      default: false
+      description: Publish the artifact with opencomplai push when OPENCOMPLAI_API_KEY is set.
+---
+opencomplai-scan:
+  stage: $[[ inputs.stage ]]
+  image: $[[ inputs.image ]]
+  before_script:
+    - |
+      if [ -n "$[[ inputs.version ]]" ]; then
+        pip install --quiet "opencomplai==$[[ inputs.version ]]"
+      else
+        pip install --quiet opencomplai
+      fi
+  script:
+    - |
+      sarif_args=""
+      if [ "$[[ inputs.sarif ]]" = "true" ]; then sarif_args="--sarif-output opencomplai.sarif"; fi
+      code=0
+      opencomplai check \
+        --manifest "$[[ inputs.manifest ]]" \
+        --sign-if-available \
+        --report-junit opencomplai-report.xml \
+        --summary-md opencomplai-summary.md \
+        $sarif_args $[[ inputs.extra_args ]] || code=$?
+      if [ "$[[ inputs.push ]]" = "true" ] && [ -n "${OPENCOMPLAI_API_KEY:-}" ]; then
+        opencomplai push || echo "opencomplai push failed; the check verdict is unchanged"
+      fi
+      if [ -f opencomplai-summary.md ]; then cat opencomplai-summary.md; fi
+      exit $code
+  artifacts:
+    when: always
+    expire_in: 30 days
+    reports:
+      junit: opencomplai-report.xml
+    paths:
+      - opencomplai-summary.md
+      - opencomplai.sarif

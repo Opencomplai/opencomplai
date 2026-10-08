@@ -64,6 +64,15 @@ Every `EvidenceItem` from the scan's `CorroborationReport` becomes one SARIF `re
 that actually fired, so GitHub's Security tab shows a distinct rule per detector/category
 combination rather than one generic "AI signal" rule.
 
+## `check --sarif-output`: the verdict, not the evidence
+
+`opencomplai check --sarif-output check.sarif` also writes SARIF 2.1.0, but of the **check
+verdict**: one `error` result per failed control, and with `--with-gaps` one result per gap row
+that is `missing` (`error`), `partial` (`warning`) or `unverified` (`note`); `met` rows are left
+out. Gap results use the rule id `gap/<evidence_ref>` and say they are a heuristic projection, not
+a compliance verdict. Every result points at line 1 of the manifest, which GitHub code scanning
+needs. `scan --sarif-output` (above) reports AI-signal evidence instead. Neither changes an exit code.
+
 ## Combining with `--framework-detectors`
 
 SARIF export picks up whatever evidence the scan produced — including

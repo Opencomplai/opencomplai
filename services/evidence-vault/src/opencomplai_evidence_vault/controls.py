@@ -56,6 +56,7 @@ class ControlInstanceDB(_Base):
     last_evidence_at: Mapped[str | None] = mapped_column(String, nullable=True)
     due_at: Mapped[str | None] = mapped_column(String, nullable=True)
     waiver_rationale: Mapped[str | None] = mapped_column(String, nullable=True)
+    waiver_source: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[str] = mapped_column(String, nullable=False)
 
 
@@ -84,6 +85,7 @@ _PATCHABLE_FIELDS = (
     "last_evidence_at",
     "due_at",
     "waiver_rationale",
+    "waiver_source",
 )
 
 
@@ -113,6 +115,7 @@ def _row_to_control(row: ControlInstanceDB) -> dict:
             "last_evidence_at": row.last_evidence_at,
             "due_at": row.due_at,
             "waiver_rationale": row.waiver_rationale,
+            "waiver_source": row.waiver_source,
         }
     )
     return instance.model_dump()
@@ -164,6 +167,7 @@ async def upsert_controls(
                 last_evidence_at=item.get("last_evidence_at"),
                 due_at=item.get("due_at"),
                 waiver_rationale=item.get("waiver_rationale"),
+                waiver_source=item.get("waiver_source"),
                 updated_at=now,
             )
             session.add(row)

@@ -45,6 +45,12 @@ not duplicates — reference: NIST AI RMF MEASURE 2.7 / EU AI Act Art. 15 (robus
 
 **Reference:** `packages/core/src/opencomplai_core/evaluators/adversarial.py`
 
+**Gap report:** Art. 15 cites `EVAL_ADVERSARIAL_V1` alongside the safety and leakage
+evaluators. A SKIPPED adversarial result (no prompt/output pairs, or no adversarial
+prompt) makes Art. 15 UNVERIFIED even when safety and leakage pass: the worst status
+wins. A run on the bundled seed corpus (`opencomplai eval` with no `--sample-set`) is
+heuristic evidence, so even a PASS maps to PARTIAL, never MET.
+
 ### How pairing works
 
 `EVAL_ADVERSARIAL_V1` pairs `sample_set.prompts[i]` with `sample_set.outputs[i]` when
@@ -96,6 +102,10 @@ calibration is GPAI-specific and must not slow down or spuriously fail a default
 
 Reference: GPAI documentation support / EU AI Act Art. 15 (accuracy metrics).
 **Source:** `packages/core/src/opencomplai_core/evaluators/calibration.py`.
+
+**Deliberately not mapped in the gap report.** Calibration is GPAI opt-in and SKIPPED by
+default, so citing it from Art. 15 would pin that article at UNVERIFIED for every
+non-GPAI system.
 
 ---
 

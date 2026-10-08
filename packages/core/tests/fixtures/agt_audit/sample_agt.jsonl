@@ -1,0 +1,8 @@
+{"timestamp": "2026-03-01T09:15:00Z", "agent_id": "agent-alpha", "action": "search_docs", "policy_decision": "allow", "matched_rule": "allow-read-only", "data": {"prompt": "Find the public onboarding guide"}, "content_hash": "synthetic-0001", "previous_hash": "genesis"}
+{"timestamp": "2026-03-01T09:40:12Z", "agent_id": "agent-alpha", "action": "send_email", "policy_decision": "deny", "matched_rule": "deny-external-mail", "data": {"prompt": "Mail the guide to an outside address"}, "content_hash": "synthetic-0002", "previous_hash": "synthetic-0001"}
+not a json line
+{"timestamp": "2026-03-02T14:05:30Z", "agent_id": "agent-beta", "action": "refund_payment", "policy_decision": "approval_required", "matched_rule": "needs-human-approval", "data": {"prompt": "Refund a synthetic order", "approver": "reviewer-one"}, "content_hash": "synthetic-0003", "previous_hash": "synthetic-0002"}
+
+{"timestamp": "2026-03-02T14:09:00Z", "agent_id": "agent-beta", "action": "refund_payment", "policy_decision": "allow", "matched_rule": "human-approved", "data": {"prompt": "Refund a synthetic order", "approver": "reviewer-one"}, "content_hash": "synthetic-0004", "previous_hash": "synthetic-0003"}
+{"timestamp": "2026-03-03T08:00:00Z", "agent_id": "agent-alpha", "action": "delete_records", "policy_decision": "escalate", "matched_rule": "escalate-destructive", "data": {"prompt": "Delete the synthetic archive"}, "content_hash": "synthetic-0005", "previous_hash": "synthetic-0004"}
+{"timestamp": "2026-03-03T08:30:45Z", "agent_id": "agent-beta", "action": "search_docs", "policy_decision": "allow", "matched_rule": "allow-read-only", "data": {"prompt": "Look up a synthetic policy"}, "content_hash": "synthetic-0006", "previous_hash": "synthetic-0005"}

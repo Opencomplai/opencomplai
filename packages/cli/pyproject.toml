@@ -1,13 +1,23 @@
 [project]
 name = "opencomplai-cli"
-version = "0.8.0"
+version = "0.9.0"
 description = "Opencomplai command-line interface for AI compliance: the EU AI Act, and NIST AI RMF derived from the same evidence"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]
 requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = [
-    "opencomplai-core[reports]>=0.8.0",
+    "opencomplai-core[reports]>=0.9.0",
     "typer>=0.9.0",
     "rich>=13.0.0",
     "questionary>=2.0.0",
@@ -16,6 +26,9 @@ dependencies = [
 [project.urls]
 Homepage = "https://opencomplai.com"
 Documentation = "https://docs.opencomplai.com"
+Source = "https://github.com/Opencomplai/opencomplai"
+Issues = "https://github.com/Opencomplai/opencomplai/issues"
+Changelog = "https://github.com/Opencomplai/opencomplai/blob/main/CHANGELOG.md"
 
 [project.scripts]
 opencomplai = "opencomplai_cli.main:app"

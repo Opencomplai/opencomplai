@@ -24,6 +24,9 @@ SIGNAL_TO_TAXONOMY: dict[SignalCategory, list[str]] = {
         "law_enforcement",
     ],
     SignalCategory.PII_DATAFLOW: ["essential_services"],
+    # Detection signals with no Annex III area of their own.
+    SignalCategory.AGENT_FRAMEWORK: [],
+    SignalCategory.MCP_SERVER: [],
 }
 
 # Annex III area id → taxonomy key (matches ANNEX_III_CATEGORIES after pack remap)

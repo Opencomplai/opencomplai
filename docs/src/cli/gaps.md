@@ -37,17 +37,18 @@ with `opencomplai check`. A framework that `opencomplai.yaml` gates (see
 | `--scan-report` | *(none)* | Path to a `CorroborationReport` JSON from a prior `opencomplai scan --output json` — resolves scan-sourced article rows |
 | `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON — resolves evaluator-sourced article rows (safety, bias, data-leakage) |
 | `--repo-root` | `.` | Repo root for artifact path probes (Arts. 9/13/14/16/24/43) |
-| `--target` | manifest | Framework to assess (`EU_AI_ACT`, `NIST_AI_RMF`); repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. More than one target prints a table per framework and adds a `frameworks` block to the JSON |
+| `--target` | manifest | Framework to assess (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`); repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. More than one target prints a table per framework and adds a `frameworks` block to the JSON. `ISO_IEC_42001` is the native pack, attestation-led (partial, unreviewed): most rows read Unverified until an attestation is recorded under `framework_inputs`. See [Frameworks](../frameworks/index.md) |
+| `--map-to` | *(none)* | `DORA` or `EBA`; repeat for both. Adds a mapped-only citation column per regime to the EU AI Act table and a `mapped_regimes` block to the JSON. A citation, not a verdict; low confidence, needs founder review. See [Mapped-only regimes](../concepts/mapped-regimes.md) |
 | `--output` / `-o` | `human` | `human` or `json` (JSON is wrapped in a versioned envelope — not a signed artifact) |
 
 ## Understanding gap statuses
 
 | Status | Meaning |
 |---|---|
-| **MET** | The mapped rule passed, or the mapped scan/evaluator source found no discrepancy. |
+| **MET** | The mapped rule passed, or a mapped scan finding falls inside the declared Annex III areas, or the mapped evaluator passed. A detection of agent frameworks, MCP servers or PII dataflow is never `MET` on its own. |
 | **PARTIAL** | A mapped evaluator returned a `warn` outcome. |
 | **MISSING** | A mapped rule failed, a scan finding in a mapped signal category maps to an Annex III area the declared purpose does not cover (a scan discrepancy), or a mapped evaluator failed. |
-| **UNVERIFIED** | No automated source was run for this article in this invocation — not the same as "failing." An obligation-only article (e.g. Art. 11, Art. 12) is always `UNVERIFIED`, since Opencomplai has no automated check for it; a rule/scan/evaluator-backed article is `UNVERIFIED` only when you didn't supply the input needed to resolve it (`--scan-report` and/or `--sample-set`). |
+| **UNVERIFIED** | No automated source was run for this article in this invocation — not the same as "failing." An obligation-only article (e.g. Art. 11, Art. 12) is always `UNVERIFIED`, since Opencomplai has no automated check for it; a rule/scan/evaluator-backed article is `UNVERIFIED` only when you didn't supply the input needed to resolve it (`--scan-report` and/or `--sample-set`). A scan-backed row with a detection but no verdict is also `UNVERIFIED` ("detected, no compliance verdict"): the scan found the signal, but a detection is not a compliance verdict. |
 
 **This distinction is deliberate, not a limitation to work around silently:** the rule
 engine alone cannot see everything. An article whose only mapped source is a pipeline

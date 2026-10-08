@@ -10,6 +10,7 @@ Step-by-step tutorials and how-to guides for OpenComplai.
 - [Performance](performance.md) - Optimize your integration for speed
 - [Deployment](deployment.md) - Deploy OpenComplai to production
 - [Security](security.md) - Security best practices
+- [Works alongside other tools](works-alongside.md) - Promptfoo, agent governance and GRC platforms: what each does and what OpenComplAI adds
 
 ## Quick Links
 

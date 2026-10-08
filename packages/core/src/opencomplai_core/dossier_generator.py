@@ -2,15 +2,15 @@
 Annex IV dossier generator.
 
 Builds a complete AnnexIVDossier from a system manifest and risk assessment
-result. Computes and sets the bundle_checksum. Local signing support via
-a private key file if LOCAL_SIGNING_KEY_PATH is configured.
+result. Computes and sets the bundle_checksum. The Article 12 record-keeping
+block states only what the manifest declares. Signing is Ed25519 only
+(DOSSIER_SIGNING_KEY_PATH or SIGNING_KEY_PRIVATE); otherwise the dossier is
+labelled unsigned. LOCAL_SIGNING_KEY_PATH no longer signs dossiers.
 """
 
 from __future__ import annotations
 
-import base64
 import hashlib
-import hmac
 import json
 import os
 import re
@@ -33,10 +33,45 @@ from opencomplai_core.dossier import (
     AnnexIVSection9,
     ArticleTwelveRecordKeeping,
 )
-from opencomplai_core.models import CorroborationReport, RiskResult, SystemManifest
+from opencomplai_core.models import (
+    ArticleGapSource,
+    ArticleGapStatus,
+    ConfidenceLabel,
+    CorroborationReport,
+    GapStatus,
+    HumanOversight,
+    RiskResult,
+    SystemManifest,
+)
 from opencomplai_core.rules import RULE_SET_VERSION
 
-__all__ = ["generate_dossier"]
+__all__ = [
+    "BUNDLE_EXCLUDE",
+    "RECORD_KEEPING_REVIEW_NOTE",
+    "generate_dossier",
+    "record_keeping_gap_status",
+]
+
+#: Fields left out of the bundle checksum and the signed bytes: envelope
+#: metadata and derived fields that are not document content. Shared with
+#: `dossier_verify` so generation and verification cannot disagree.
+BUNDLE_EXCLUDE = frozenset(
+    {
+        "dossier_id",
+        "generated_at",
+        "bundle_checksum",
+        "signature",
+        "signature_status",
+        "section2_complete",  # derived from section2 content
+    }
+)
+
+#: Lawyer-packet line for the Art. 12 declaration source (E-15).
+RECORD_KEEPING_REVIEW_NOTE = {
+    "source": "Regulation (EU) 2024/1689 Art. 12; manifest declaration",
+    "confidence": "low",
+    "needs_founder_review": True,
+}
 
 
 def _manifest_str(manifest: SystemManifest, field: str) -> str | None:
@@ -48,6 +83,64 @@ def _manifest_str(manifest: SystemManifest, field: str) -> str | None:
 def _manifest_list(manifest: SystemManifest, field: str) -> list[str]:
     value = getattr(manifest, field, None)
     return list(value) if isinstance(value, (list, tuple)) and value else []
+
+
+def _declared_block(manifest: SystemManifest) -> dict | None:
+    """The manifest's `record_keeping` block as a dict, or None when absent.
+
+    The one reader of the block: dossier content and the gap status both go
+    through here so there is a single interpretation of it.
+    """
+    block = getattr(manifest, "record_keeping", None)
+    if block is None:
+        return None
+    if isinstance(block, dict):
+        return block
+    dump = getattr(block, "model_dump", None)
+    return dump() if callable(dump) else None
+
+
+def _declared_record_keeping(
+    manifest: SystemManifest, ledger_root_hash: str | None
+) -> ArticleTwelveRecordKeeping:
+    """Art. 12 block from the manifest declaration only: absent means false."""
+    block = _declared_block(manifest)
+    if block is None:
+        return ArticleTwelveRecordKeeping(ledger_root_hash=ledger_root_hash)
+    days = block.get("log_retention_days")
+    return ArticleTwelveRecordKeeping(
+        logging_enabled=block.get("logging_enabled") is True,
+        log_retention_days=days if type(days) is int and days >= 1 else None,
+        evidence_vault_enabled=block.get("evidence_vault_enabled") is True,
+        ledger_root_hash=ledger_root_hash,
+        provider_supplied=True,
+    )
+
+
+def record_keeping_gap_status(manifest: SystemManifest) -> ArticleGapStatus | None:
+    """Gap candidate for the Art. 12 declaration; None when nothing declared.
+
+    A declaration is never verified here, so declared logging is PARTIAL at
+    best, never MET.
+    """
+    if _declared_block(manifest) is None:
+        return None
+    declared = _declared_record_keeping(manifest, None)
+    yes_no = ("no", "yes")
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.PARTIAL if declared.logging_enabled else GapStatus.MISSING,
+        source=ArticleGapSource.MANIFEST,
+        evidence_ref="manifest:record_keeping_declaration",
+        rationale=(
+            "Record keeping declared in the manifest: logging enabled "
+            f"{yes_no[declared.logging_enabled]}, retention declared "
+            f"{yes_no[declared.log_retention_days is not None]}. A declaration "
+            "only; not verified against the system."
+        ),
+        confidence=None,
+        confidence_label=ConfidenceLabel.NOT_ASSESSED,
+    )
 
 
 #: Section 2's stub fallback, reused here so Section 4's honesty check can't
@@ -166,21 +259,43 @@ def _is_recognised_harmonised_standard(entry: str) -> bool:
     return _is_real_attestation_text(match.group("reason"))
 
 
+def _structured_oversight(manifest: SystemManifest) -> HumanOversight | None:
+    """The manifest's structured oversight block, or None when absent or empty.
+
+    Tolerates a manifest object without the attribute and a plain dict.
+    """
+    block = getattr(manifest, "human_oversight", None)
+    if isinstance(block, dict):
+        try:
+            block = HumanOversight.model_validate(block)
+        except ValueError:
+            return None
+    if block is None or not (block.roles or block.escalation or block.evidence_refs):
+        return None
+    return block
+
+
 def _build_section3(manifest: SystemManifest) -> AnnexIVSection3:
     """Annex IV pt.3 — human oversight, monitoring approach, incident response.
 
     Counts as provider-supplied only when all three inputs are present: pt.3
     asks for oversight measures, monitoring approach, and incident response
     together, so a partially attested section must not pass the HIGH-risk gate.
+    Oversight is present when the legacy list is non-empty or the structured
+    block names at least one role; the block is copied verbatim and never
+    folded into the legacy list.
     """
     oversight = _manifest_list(manifest, "human_oversight_measures")
+    structured = _structured_oversight(manifest)
     monitoring = _manifest_str(manifest, "monitoring_approach")
     incident = _manifest_str(manifest, "incident_response_procedure")
+    oversight_set = bool(oversight) or bool(structured and structured.roles)
     return AnnexIVSection3(
         human_oversight_measures=oversight,
         monitoring_approach=monitoring or PROVIDER_SUPPLIED_PLACEHOLDER,
         incident_response_procedure=incident or PROVIDER_SUPPLIED_PLACEHOLDER,
-        provider_supplied=bool(oversight) and bool(monitoring) and bool(incident),
+        provider_supplied=oversight_set and bool(monitoring) and bool(incident),
+        human_oversight=structured,
     )
 
 
@@ -457,14 +572,8 @@ def generate_dossier(
                 _manifest_str(manifest, "metrics_appropriateness_rationale")
             ),
         ),
-        record_keeping=ArticleTwelveRecordKeeping(
-            logging_enabled=True,
-            log_retention_days=int(
-                os.environ.get("LOG_RETENTION_DAYS", "2555")
-            ),  # 7 years
-            evidence_vault_enabled=True,
-            ledger_root_hash=ledger_root_hash,
-        ),
+        record_keeping=_declared_record_keeping(manifest, ledger_root_hash),
+        agent_inventory=getattr(manifest, "agent_inventory", None),
         section6=_build_section6(manifest),
         section7=_build_section7(manifest),
         section8=_build_section8(manifest),
@@ -507,73 +616,49 @@ def generate_dossier(
         evidence_hashes=(evidence_hashes or []) + eval_evidence_hashes,
     )
 
-    # Compute bundle checksum over deterministic content only (excludes envelope
-    # metadata and mutable/derived fields that don't represent document content).
-    bundle_json = dossier.model_dump_json(
-        exclude={
-            "dossier_id",
-            "generated_at",
-            "bundle_checksum",
-            "signature",
-            "signature_status",
-            "section2_complete",  # derived from section2 content; not part of the evidence hash
-        }
-    )
+    # Compute bundle checksum over deterministic content only (BUNDLE_EXCLUDE
+    # drops envelope metadata and derived fields).
+    bundle_json = dossier.model_dump_json(exclude=BUNDLE_EXCLUDE)
     bundle_checksum = f"sha256:{hashlib.sha256(bundle_json.encode()).hexdigest()}"
     dossier.bundle_checksum = bundle_checksum
 
-    # Signing precedence: Ed25519 (Pro/Enterprise) → HMAC (OSS fallback) → unsigned.
-    # Ed25519 wins when DOSSIER_SIGNING_KEY_PATH points at a PEM private key;
-    # HMAC kicks in when only LOCAL_SIGNING_KEY_PATH is set. Each branch
-    # updates signature_status so the dossier self-describes its trust level.
+    # Ed25519 or unsigned; there is no symmetric fallback. The key is
+    # DOSSIER_SIGNING_KEY_PATH or SIGNING_KEY_PRIVATE (see signing.resolve_key).
     ed25519_key_path = os.environ.get("DOSSIER_SIGNING_KEY_PATH")
-    hmac_key_path = os.environ.get("LOCAL_SIGNING_KEY_PATH")
-
-    if ed25519_key_path:
+    if ed25519_key_path or os.environ.get("SIGNING_KEY_PRIVATE"):
         signature = _sign_bundle_ed25519(bundle_json, ed25519_key_path)
         if signature is not None:
             dossier.signature = signature
             dossier.signature_status = "ed25519"
-    elif hmac_key_path:
-        signature = _sign_bundle(bundle_json, hmac_key_path)
-        if signature is not None:
-            dossier.signature = signature
-            dossier.signature_status = "hmac-local"
+    if dossier.signature is None and os.environ.get("LOCAL_SIGNING_KEY_PATH"):
+        warnings.warn(
+            "LOCAL_SIGNING_KEY_PATH is no longer used for dossiers; the dossier "
+            "is unsigned. Set DOSSIER_SIGNING_KEY_PATH or SIGNING_KEY_PRIVATE "
+            "for an Ed25519 signature.",
+            stacklevel=2,
+        )
 
     return dossier
 
 
-def _sign_bundle(bundle_json: str, key_path: str) -> str | None:
+def _sign_bundle_ed25519(bundle_json: str, key_path: str | None) -> str | None:
     """
-    Sign the dossier bundle JSON using a local private key file (HMAC-SHA256).
+    Sign the dossier bundle JSON with an Ed25519 key.
 
-    OSS fallback when no Ed25519 key is configured. Verifiable only by holders
-    of the same symmetric key — adequate for in-org integrity, not for an
-    auditor who needs third-party verifiability.
-    Returns base64-encoded signature, or None if signing fails.
-    """
-    try:
-        key = Path(key_path).read_bytes()
-        sig = hmac.new(key, bundle_json.encode("utf-8"), hashlib.sha256).digest()
-        return base64.b64encode(sig).decode("utf-8")
-    except Exception:
-        return None
-
-
-def _sign_bundle_ed25519(bundle_json: str, key_path: str) -> str | None:
-    """
-    Sign the dossier bundle JSON with an Ed25519 PEM private key.
-
-    Pro/Enterprise path: produces an asymmetric signature an auditor can
-    verify with the published public key without needing the private key.
-    Returns base64-encoded signature, or None on any failure (missing key,
-    wrong format, cryptography lib not installed).
+    Returns the base64 signature, or None (with a warning) on any failure.
+    The warning names the error type only, never key material or key content.
     """
     try:
         from opencomplai_core.signing import SigningDomain, sign_bundle_bytes
 
         return sign_bundle_bytes(
-            bundle_json.encode("utf-8"), Path(key_path), SigningDomain.DOSSIER_BUNDLE
+            bundle_json.encode("utf-8"),
+            Path(key_path or ""),
+            SigningDomain.DOSSIER_BUNDLE,
         )
-    except Exception:
+    except Exception as exc:
+        warnings.warn(
+            f"Dossier signing failed ({type(exc).__name__}); the dossier is unsigned.",
+            stacklevel=3,
+        )
         return None

@@ -8,15 +8,15 @@ Performs two independent checks:
      Merkle-linked ledger is intact (no event has been modified in place).
 
   2. Dossier anchor   — when --dossier is supplied, walks the chain history
-     via /v1/evidence/ledger-history-tips and confirms the dossier's recorded
-     record_keeping.ledger_root_hash appears at some historical point in the
-     chain (dossiers generated before the Art. 12 record-keeping split still
-     carry this hash at the legacy section4.ledger_root_hash location, which
-     is read as a fallback). This catches the threat that Gap #4 was designed
-     to address: an attacker who truncates the ledger, removes an
-     inconvenient event, and then recomputes all subsequent prev_hash values
-     so verify-chain still returns True.  verify-chain alone cannot detect
-     that attack; the anchor check can.
+     (a page at a time) via /v1/evidence/ledger-history-tips and confirms the
+     dossier's recorded record_keeping.ledger_root_hash appears at some
+     historical point in the chain (dossiers generated before the Art. 12
+     record-keeping split still carry this hash at the legacy
+     section4.ledger_root_hash location, which is read as a fallback). This
+     catches the threat that Gap #4 was designed to address: an attacker who
+     truncates the ledger, removes an inconvenient event, and then recomputes
+     all subsequent prev_hash values so verify-chain still returns True.
+     verify-chain alone cannot detect that attack; the anchor check can.
 
 Usage:
     python3 verify_ledger.py
@@ -30,7 +30,8 @@ Zero runtime dependencies — uses only the Python standard library.
 Exit codes:
     0  — all checks pass (ledger valid; anchor matched if --dossier supplied)
     1  — chain integrity check failed (tampering or corruption detected)
-    2  — connectivity / configuration error
+    2  — connectivity / configuration error, rate limited (HTTP 429), or a
+         malformed vault response
     3  — dossier anchor mismatch (the dossier's root hash is not in chain history)
     4  — dossier anchor is null (anchoring failed at generation time)
 """
@@ -43,6 +44,25 @@ import os
 import sys
 import urllib.error
 import urllib.request
+from typing import NoReturn
+
+# Tips requested per page of /v1/evidence/ledger-history-tips: the vault's
+# maximum, so the fewest requests (the gateway rate-limits at 300 a minute by
+# default, and the walk can cover the whole chain).
+_TIPS_PAGE_SIZE = 5000
+
+
+class RateLimitedError(RuntimeError):
+    """The server answered HTTP 429."""
+
+    kind = "rate limited"
+
+
+class VaultProtocolError(RuntimeError):
+    """The vault's response broke the paging contract."""
+
+    kind = "vault protocol error"
+
 
 # ---------------------------------------------------------------------------
 # HTTP helpers (stdlib only)
@@ -58,6 +78,13 @@ def _get_json(url: str, timeout: int = 10) -> dict:
             return json.loads(body)
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
+        if exc.code == 429:
+            raise RateLimitedError(
+                f"HTTP 429 from {url}: {body} -- too many requests. Wait for "
+                "the rate-limit window to pass (the gateway's default is 60 "
+                "seconds) and run the check again; on a very large ledger "
+                "raise OPENCOMPLAI_RATE_LIMIT_MAX on the gateway."
+            ) from exc
         raise RuntimeError(f"HTTP {exc.code} from {url}: {body}") from exc
     except urllib.error.URLError as exc:
         raise RuntimeError(f"Cannot connect to {url}: {exc.reason}") from exc
@@ -139,17 +166,41 @@ def check_dossier_anchor(
             "generation time (check EVIDENCE_VAULT_URL on the doc-generator)."
         )
 
-    # Fetch the rolling chain tips from the evidence vault
+    # Fetch the rolling chain tips from the evidence vault a page at a time,
+    # stopping as soon as the anchor turns up.
     tips_url = base_url.rstrip("/") + "/v1/evidence/ledger-history-tips"
     print(f"[INFO]  Check 2 — fetching chain history from: {tips_url}")
-    data = _get_json(tips_url, timeout=timeout)
-    tips: list[str] = data.get("tips", [])
+    examined = 0
+    after_seq = 0
+    while True:
+        data = _get_json(
+            f"{tips_url}?limit={_TIPS_PAGE_SIZE}&after_seq={after_seq}",
+            timeout=timeout,
+        )
+        tips: list[str] = data.get("tips", [])
+        # A paged response lists the genesis hash separately from the per-event
+        # tips; the unpaged shape carries it at tips[0].
+        if after_seq == 0 and data.get("genesis"):
+            tips = [data["genesis"], *tips]
+        examined += len(tips)
+        if anchor in tips:
+            return True, ""
 
-    if anchor in tips:
-        return True, ""
+        # No cursor means the last page, or a vault that predates paging and
+        # ignored the parameters: either way the response was the whole chain.
+        next_after_seq = data.get("next_after_seq")
+        if next_after_seq is None:
+            break
+        if not isinstance(next_after_seq, int) or next_after_seq <= after_seq:
+            raise VaultProtocolError(
+                f"malformed cursor from the vault: {tips_url} returned "
+                f"next_after_seq={next_after_seq!r} after after_seq={after_seq} "
+                "(it must be an integer greater than the previous cursor)"
+            )
+        after_seq = next_after_seq
 
     return False, (
-        f"Dossier anchor '{anchor}' does not appear in {len(tips)} historical "
+        f"Dossier anchor '{anchor}' does not appear in {examined} historical "
         "chain tips — the ledger may have been truncated or events deleted since "
         "this dossier was generated."
     )
@@ -214,6 +265,13 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _exit_on_error(check: str, exc: RuntimeError) -> NoReturn:
+    """Report a failed check and exit 2, naming the kind of failure."""
+    kind = getattr(exc, "kind", "connectivity error")
+    print(f"[ERROR] {check} {kind}: {exc}", file=sys.stderr)
+    sys.exit(2)
+
+
 def main() -> None:
     args = _parse_args()
 
@@ -233,8 +291,7 @@ def main() -> None:
     try:
         chain_valid = check_chain_integrity(base_url, timeout=args.timeout)
     except RuntimeError as exc:
-        print(f"[ERROR] Check 1 connectivity error: {exc}", file=sys.stderr)
-        sys.exit(2)
+        _exit_on_error("Check 1", exc)
 
     if chain_valid:
         print("[PASS]  Check 1 — chain integrity: valid (no tampering detected)")
@@ -255,8 +312,7 @@ def main() -> None:
                 base_url, args.dossier, timeout=args.timeout
             )
         except RuntimeError as exc:
-            print(f"[ERROR] Check 2 connectivity error: {exc}", file=sys.stderr)
-            sys.exit(2)
+            _exit_on_error("Check 2", exc)
 
         if anchor_ok:
             print(

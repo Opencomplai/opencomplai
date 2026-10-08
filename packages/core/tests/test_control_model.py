@@ -34,6 +34,13 @@ FIXTURE_PACK = FrameworkPack(
 )
 
 
+# Watched fields the manifest serializer drops while they hold their default;
+# `fingerprint_manifest` skips them for the same reason.
+_OMIT_WHEN_EMPTY_WATCHED = {"operator_roles"}
+# Watched fields the serializer omits while unset (None).
+_OMIT_WHEN_UNSET_WATCHED = {"human_oversight"}
+
+
 def _manifest_kwargs(**overrides: object) -> dict:
     base: dict[str, object] = {
         "system_id": "sys-1",
@@ -111,10 +118,25 @@ class TestFingerprintManifest:
         assert fingerprint_manifest(manifest_a) == fingerprint_manifest(manifest_b)
 
     def test_watched_fields_all_present_on_system_manifest(self):
-        manifest = SystemManifest(**_manifest_kwargs())
-        dumped = manifest.model_dump()
-        for field in WATCHED_MANIFEST_FIELDS:
-            assert field in dumped
+        watched = set(WATCHED_MANIFEST_FIELDS)
+        assert _OMIT_WHEN_EMPTY_WATCHED <= watched
+
+        default_dump = SystemManifest(**_manifest_kwargs()).model_dump()
+        for field in watched - _OMIT_WHEN_EMPTY_WATCHED - _OMIT_WHEN_UNSET_WATCHED:
+            assert field in default_dump
+        # Omitted fields are not in model_dump(); they must still be real fields.
+        for field in watched:
+            assert field in SystemManifest.model_fields
+        # The exemption set cannot go stale: these really are omitted by default.
+        assert not (_OMIT_WHEN_EMPTY_WATCHED & set(default_dump))
+
+        # With every omit-when-empty field set, every watched name must be a
+        # real, serialisable manifest field.
+        populated = SystemManifest(
+            **_manifest_kwargs(operator_roles=["provider", "deployer"])
+        ).model_dump()
+        for field in watched - _OMIT_WHEN_UNSET_WATCHED:
+            assert field in populated
 
 
 class TestControlCatalog:
@@ -127,7 +149,9 @@ class TestControlCatalog:
     def test_get_catalog_returns_populated_dict(self):
         catalog = get_catalog()
         assert catalog
-        assert catalog is CONTROL_CATALOG
+        # Native non-EU packs (ISO_IEC_42001) now add entries, so the dict is a
+        # superset of CONTROL_CATALOG rather than the same object.
+        assert all(catalog[key] is entry for key, entry in CONTROL_CATALOG.items())
 
     def test_every_entry_has_title_and_ttl_shape(self):
         for entry in get_catalog().values():

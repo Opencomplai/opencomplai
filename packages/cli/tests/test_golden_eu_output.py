@@ -49,6 +49,11 @@ _VOLATILE = (
     ),
     (re.compile(r'("tool_version":\s*")[^"]*"'), r'\1<VERSION>"'),
     (re.compile(r'("install_id":\s*")[^"]*"'), r'\1<INSTALL_ID>"'),
+    (re.compile(r'("cli_version":\s*")[^"]*"'), r'\1<VERSION>"'),
+    (
+        re.compile(r'("policy_bundle_version":\s*")[^"]*"'),
+        r'\1<POLICY_BUNDLE>"',
+    ),
     (re.compile(r'("duration_ms":\s*)\d+'), r"\1<DURATION>"),
     (re.compile(r"\b[0-9a-f]{40}\b"), "<COMMIT>"),
 )
@@ -63,6 +68,14 @@ def _normalise(text: str, tmp_path: Path) -> str:
     # LF only, no trailing blanks, one final newline: stable across OSes
     # and untouched by whitespace-fixing hooks.
     return "\n".join(line.rstrip() for line in text.splitlines()) + "\n"
+
+
+def test_normalise_masks_machine_fields(tmp_path):
+    raw = '{"cli_version": "0.9.0", "policy_bundle_version": "cli-0.9.0"}'
+    out = _normalise(raw, tmp_path)
+    assert '"cli_version": "<VERSION>"' in out
+    assert '"policy_bundle_version": "<POLICY_BUNDLE>"' in out
+    assert "0.9.0" not in out
 
 
 def _assert_golden(name: str, text: str) -> None:
@@ -91,8 +104,12 @@ def cli(tmp_path, monkeypatch):
         "OPENCOMPLAI_API_URL",
         "OPENCOMPLAI_VAULT_URL",
         "OPENCOMPLAI_RISK_ENGINE_URL",
+        "GITHUB_SHA",
+        "CI_COMMIT_SHA",
     ):
         monkeypatch.delenv(var, raising=False)
+    # the goldens pin commit_ref "unresolved": never resolve an enclosing repo
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
     monkeypatch.setenv("OPENCOMPLAI_STATE_DIR", str(tmp_path / "state"))
     home = tmp_path / "home"
     monkeypatch.setattr(main, "_OPENCOMPLAI_DIR", home)

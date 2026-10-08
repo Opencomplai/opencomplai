@@ -4,7 +4,7 @@
   "principles": {
     "technical_robustness_safety": {
       "title": "Technical Robustness and Safety",
-      "articles": ["Art. 15", "Art. 25"]
+      "articles": ["Art. 15", "Art. 25", "Art. 72"]
     },
     "privacy_data_governance": {
       "title": "Privacy and Data Governance",
@@ -12,7 +12,7 @@
     },
     "transparency": {
       "title": "Transparency",
-      "articles": ["Art. 12", "Art. 13", "Art. 50"]
+      "articles": ["Art. 12", "Art. 13", "Art. 49", "Art. 50"]
     },
     "diversity_non_discrimination_fairness": {
       "title": "Diversity, Non-discrimination and Fairness",
@@ -24,7 +24,13 @@
     },
     "accountability": {
       "title": "Accountability",
-      "articles": ["Art. 4", "Art. 9", "Art. 11", "Art. 14", "Art. 16", "Art. 17", "Art. 24", "Art. 43", "Art. 53", "Art. 55"]
+      "articles": ["Art. 4", "Art. 9", "Art. 11", "Art. 14", "Art. 16", "Art. 17", "Art. 24", "Art. 26", "Art. 43", "Art. 53", "Art. 55", "Art. 73"]
     }
+  },
+  "review_flags": {
+    "Art. 26": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
+    "Art. 49": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
+    "Art. 72": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
+    "Art. 73": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true }
   }
 }

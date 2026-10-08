@@ -212,13 +212,27 @@ Warning: signing disabled — cryptography not installed. Run: pip install crypt
 
 ---
 
+## `opencomplai check --sign` exits 2 - no signing key
+
+**Symptom:**
+
+```text
+Error: --sign needs a signing key. Run opencomplai init or set SIGNING_KEY_PRIVATE (base64 PEM). Use --sign-if-available to write an unsigned artifact instead.
+```
+
+**Cause:** there is no `~/.opencomplai/signing.key` and `SIGNING_KEY_PRIVATE` is not set (typical in CI). Nothing is written.
+
+**Fix:** run `opencomplai init`, or set `SIGNING_KEY_PRIVATE` to the base64-encoded PEM, or use `--sign-if-available`, which prints a warning (`no signing key ... the artifact will be unsigned`) and writes an unsigned artifact.
+
+---
+
 ## Exit code reference
 
 | Code | `ScanResult` | Meaning |
 |---|---|---|
 | 0 | `pass` | All controls passed. |
 | 1 | `control_fail` | One or more critical controls failed. |
-| 2 | `validation_fail` | Manifest or input validation error. |
+| 2 | `validation_fail` | Manifest or input validation error, or `check --sign` with no signing key. |
 | 3 | `policy_block` | Egress or policy enforcement blocked the operation. |
 | 4 | `trap_detected` | Substantial modification or profiling trap triggered. |
 

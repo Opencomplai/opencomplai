@@ -4,15 +4,18 @@ Opencomplai can assess one AI system against several frameworks side by side. Th
 AI Act is the framework it evaluates natively and the default target; the table below
 says exactly how each other framework is assessed.
 
+Standing line: EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
+
 ## What each framework gets
 
 | Framework | Key | Status | How verdicts are produced |
 |---|---|---|---|
 | EU AI Act (Regulation (EU) 2024/1689) | `EU_AI_ACT` | **Evaluated** | Natively, per article: rules, obligations, the code scan, pipeline evaluators and documentation probes. The default target, and the only framework whose controls always gate `check`. |
 | NIST AI RMF 1.0 (NIST AI 100-1) | `NIST_AI_RMF` | **Derived, partial** | Re-projected from the EU AI Act evidence through a crosswalk, per subcategory. There is no NIST scanner: the crosswalk maps at category granularity, and several categories, including all of `MANAGE`, have no crosswalk row yet, so their rows stay **Unverified**. See [NIST AI RMF](../concepts/nist-ai-rmf.md). |
-| ISO/IEC 42001:2023 | — | **Mapped only** | A clause is cited per EU AI Act article (the `Mapped` column of `opencomplai gaps`). No verdict is computed, and it cannot be a target. |
+| ISO/IEC 42001:2023 | `ISO_IEC_42001` | **Attestation-led, partial** | Native rows per clause and Annex A control. Most rows are provider attestations that read **Unverified** until you record one under `framework_inputs`; four rows also look for a matching document, and the worse of the two wins. Nothing here certifies ISO/IEC 42001 conformity. Every row is flagged for founder review at low confidence. A clause is also still cited per EU AI Act article (the `Mapped` column of `opencomplai gaps`). |
+| DORA (Regulation (EU) 2022/2554) and EBA ICT guidelines | none | **Mapped only** | `gaps --map-to DORA\|EBA` adds a low-confidence citation per EU AI Act article. No status is computed, no probe exists and neither is a target. Flagged for founder review. See [Mapped regimes](../concepts/mapped-regimes.md). |
 
-`EU_AI_ACT` and `NIST_AI_RMF` are the only targets this release accepts. Any other key
+`EU_AI_ACT`, `NIST_AI_RMF` and `ISO_IEC_42001` are the only targets this release accepts. Any other key
 is an error: `gaps`, `check` and `validate-manifest` exit `2`. None of these verdicts is
 a legal determination or a certification.
 
@@ -49,7 +52,7 @@ releases did. Any other set adds:
 | `gaps` | One table per framework, in target order; `--output json` adds a `frameworks` block. |
 | `check --with-gaps` | `framework_reports` in `compliance-artifact.json`. |
 | `report` | One section per framework other than the EU AI Act. |
-| `recommend`, `controls` | Remediation files and controls (ids prefixed `<FW>:`) for natively evaluated frameworks other than the EU AI Act. None ships in this release, and NIST AI RMF, being derived, adds none. |
+| `recommend`, `controls` | Remediation files and controls (ids prefixed `<FW>:`) for natively evaluated frameworks other than the EU AI Act. `ISO_IEC_42001` is the one that ships in this release; NIST AI RMF, being derived, adds none. |
 
 The EU AI Act report is always computed, even when it is not a target, because it is
 the evidence the derived frameworks are built from. `gap_report` (EU AI Act) and
@@ -121,9 +124,10 @@ An attestation is recorded verbatim, and nothing checks it: it makes the require
 attestation source **Met**, with source `attestation` and confidence label `attested`.
 A row takes the worst status of its sources, so an attested requirement that also has,
 say, an artifact source stays Missing or Partial until that source is Met too. Only requirements whose
-framework data takes an attestation accept one. Neither framework in this release has
-such requirements: NIST AI RMF verdicts are derived from the EU AI Act evidence, so
-`NIST_AI_RMF` takes `excluded` only.
+framework data takes an attestation accept one. `ISO_IEC_42001` takes
+attestations on its requirements, with ids such as `ISO_IEC_42001:Clause 5.2`.
+NIST AI RMF verdicts are derived from the EU AI Act evidence, so `NIST_AI_RMF` takes
+`excluded` only.
 
 `gaps`, and `check` when it assesses the targets (`--with-gaps` or a gate), exit `2`
 when `framework_inputs` names an unknown framework, an id is not a requirement of that

@@ -1,0 +1,130 @@
+{
+  "$defs": {
+    "PackCompleteness": {
+      "additionalProperties": false,
+      "properties": {
+        "items_not_captured": {
+          "minimum": 0,
+          "title": "Items Not Captured",
+          "type": "integer"
+        },
+        "items_provided": {
+          "minimum": 0,
+          "title": "Items Provided",
+          "type": "integer"
+        },
+        "items_total": {
+          "minimum": 0,
+          "title": "Items Total",
+          "type": "integer"
+        },
+        "not_captured_items": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Not Captured Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "items_total",
+        "items_provided",
+        "items_not_captured",
+        "not_captured_items"
+      ],
+      "title": "PackCompleteness",
+      "type": "object"
+    },
+    "PackIntegrity": {
+      "additionalProperties": false,
+      "properties": {
+        "pack_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Pack Sha256",
+          "type": "string"
+        },
+        "signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Signature"
+        },
+        "signer_key_id": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{16}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Signer Key Id"
+        }
+      },
+      "required": [
+        "pack_sha256"
+      ],
+      "title": "PackIntegrity",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.opencomplai.dev/deployer_pack/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completeness": {
+      "$ref": "#/$defs/PackCompleteness"
+    },
+    "content": {
+      "additionalProperties": true,
+      "title": "Content",
+      "type": "object"
+    },
+    "generator_version": {
+      "title": "Generator Version",
+      "type": "string"
+    },
+    "integrity": {
+      "$ref": "#/$defs/PackIntegrity"
+    },
+    "issued_on": {
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "title": "Issued On",
+      "type": "string"
+    },
+    "kind": {
+      "const": "deployer_pack",
+      "default": "deployer_pack",
+      "title": "Kind",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "system_id": {
+      "title": "System Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "system_id",
+    "issued_on",
+    "generator_version",
+    "content",
+    "completeness",
+    "integrity"
+  ],
+  "title": "DeployerPack",
+  "type": "object"
+}

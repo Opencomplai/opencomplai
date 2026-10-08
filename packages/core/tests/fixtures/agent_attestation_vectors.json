@@ -1,0 +1,232 @@
+{
+  "domain": "agent-attestation",
+  "domain_prefix_utf8": "opencomplai.sig.v1",
+  "format": "agent_attestation_vectors/v1",
+  "key_id": "sha256:ae8e7d3bbb0cd5b6",
+  "key_id_vectors": [
+    {
+      "key_id": "sha256:ae8e7d3bbb0cd5b6",
+      "pem_text": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\n-----END PUBLIC KEY-----"
+    },
+    {
+      "key_id": "sha256:ae8e7d3bbb0cd5b6",
+      "pem_text": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\n-----END PUBLIC KEY-----\n"
+    },
+    {
+      "key_id": "sha256:ae8e7d3bbb0cd5b6",
+      "pem_text": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\n-----END PUBLIC KEY-----\r\n"
+    },
+    {
+      "key_id": "sha256:ae8e7d3bbb0cd5b6",
+      "pem_text": "  -----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\n-----END PUBLIC KEY-----  "
+    },
+    {
+      "key_id": "sha256:ffcfefd8100eae20",
+      "pem_text": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA6kpsY+KcUgq+9VB7Ey7F+ZVHdq6+vnuSQh7qaRRG0iw=\n-----END PUBLIC KEY-----\n"
+    }
+  ],
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\n-----END PUBLIC KEY-----\n",
+  "public_key_raw_hex": "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8",
+  "vectors": [
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": null,
+      "expected_status": "verified",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "valid",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+      "expected_code": null,
+      "expected_status": "verified",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "valid_with_matching_mandate",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-2",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-2\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "signature",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d32222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "tampered_agent_id",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2100-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2100-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "signature",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323130302d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "tampered_expiry_extended",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "NmpVoFP2e5zcgw6kKNaiHKETx/CxBPDEy6A70d/WZ6E6ahy9Fzbt9HvAJkzUF3U2jZA8+1+Uwr++t3QSlrx6DA==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "signature",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "wrong_domain_signature",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2026-03-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "OaZnwyz5NzZ1hc8F2RkQL+9DCb392MGfo4wNLTl9DDfUJF2uTb8YEPtnyJlA+f7nZqtHUQ1lg9UY4XpGJqQZDQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2026-03-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "expired",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323032362d30332d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "expired",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2028-01-01T00:00:00Z",
+        "issued_at": "2027-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "XSx/hO2zRd7F6yKs/48rMyiwI553SQAZDzvVAmM/OjUvmYFIUqVljoSrQqx25qyK99PVT+Ov2N/cPR3oTRkIBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2028-01-01T00:00:00Z\", \"issued_at\": \"2027-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "not_yet_valid",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323032382d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032372d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "not_yet_valid",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": "sha256:abababababababababababababababababababababababababababababababab",
+      "expected_code": "mandate_mismatch",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "mandate_mismatch",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:0000000000000000",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": "4RvbhgRH1VfvlmNO5XZxF7cRrYkCEw0/N9Qp2az/0RM9S9dg4r+pR/qgMnzFpiokJ5F5GuMza7y6LgLoXWzOBQ==",
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:0000000000000000\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": "key_id",
+      "expected_status": "invalid",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a30303030303030303030303030303030222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "wrong_key_id",
+      "now": "2026-06-01T00:00:00Z"
+    },
+    {
+      "attestation": {
+        "agent_id": "agent-1",
+        "expires_at": "2099-01-01T00:00:00Z",
+        "issued_at": "2026-01-01T00:00:00Z",
+        "issuer": "Example Issuer",
+        "key_id": "sha256:ae8e7d3bbb0cd5b6",
+        "mandate_sha256": "sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477",
+        "schema_version": "agent_attestation/v1",
+        "signature": null,
+        "system_id": "sys-1"
+      },
+      "canonical_payload": "{\"agent_id\": \"agent-1\", \"expires_at\": \"2099-01-01T00:00:00Z\", \"issued_at\": \"2026-01-01T00:00:00Z\", \"issuer\": \"Example Issuer\", \"key_id\": \"sha256:ae8e7d3bbb0cd5b6\", \"mandate_sha256\": \"sha256:fa90afaf79332ac065e90b1ee4e4c8ee78fdcd64dd6e3ec51051e62a8ad66477\", \"schema_version\": \"agent_attestation/v1\", \"system_id\": \"sys-1\"}",
+      "expect_mandate_sha256": null,
+      "expected_code": null,
+      "expected_status": "unsigned",
+      "message_hex": "6f70656e636f6d706c61692e7369672e7631006167656e742d6174746573746174696f6e007b226167656e745f6964223a20226167656e742d31222c2022657870697265735f6174223a2022323039392d30312d30315430303a30303a30305a222c20226973737565645f6174223a2022323032362d30312d30315430303a30303a30305a222c2022697373756572223a20224578616d706c6520497373756572222c20226b65795f6964223a20227368613235363a61653865376433626262306364356236222c20226d616e646174655f736861323536223a20227368613235363a66613930616661663739333332616330363565393062316565346534633865653738666463643634646436653365633531303531653632613861643636343737222c2022736368656d615f76657273696f6e223a20226167656e745f6174746573746174696f6e2f7631222c202273797374656d5f6964223a20227379732d31227d",
+      "name": "unsigned",
+      "now": "2026-06-01T00:00:00Z"
+    }
+  ]
+}

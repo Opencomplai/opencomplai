@@ -14,6 +14,7 @@ empty strings.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 from opencomplai_core.models import FrameworkInputs, SystemManifest
@@ -88,31 +89,11 @@ def test_legacy_manifest_json_without_annex_iv_fields_still_validates():
 
 # Every key `opencomplai init` wrote before compliance_targets/framework_inputs
 # existed, in the order it wrote them.
-_LEGACY_MANIFEST = {
-    "system_id": "sys-1",
-    "intended_purpose": "credit scoring",
-    "compliance_target": "EU_AI_ACT",
-    "high_risk_presumption": True,
-    "commit_ref": "abc123",
-    "training_data_description": "internal loan applications 2018-2024",
-    "model_architecture": "gradient boosted trees",
-    "performance_metrics": {"auc": 0.91},
-    "known_limitations": [],
-    "human_oversight_measures": [],
-    "monitoring_approach": None,
-    "incident_response_procedure": None,
-    "metrics_appropriateness_rationale": None,
-    "lifecycle_changes": [],
-    "change_log_reference": None,
-    "harmonised_standards": [],
-    "alternative_solutions": None,
-    "eu_declaration_of_conformity_ref": None,
-    "eu_declaration_of_conformity_sha256": None,
-    "post_market_monitoring_plan_ref": None,
-    "post_market_monitoring_summary": None,
-    "operator_role": None,
-    "checker_session": None,
-}
+_LEGACY_MANIFEST = json.loads(
+    (Path(__file__).parent / "fixtures" / "legacy_manifest.json").read_text(
+        encoding="utf-8"
+    )
+)
 
 
 def test_manifest_without_framework_fields_serialises_to_identical_bytes():
@@ -251,3 +232,15 @@ def test_manifest_rejects_invalid_framework_inputs():
                 framework_inputs={"NIST_AI_RMF": {"excluded": {"x": ""}}}
             )
         )
+
+
+def test_unknown_manifest_keys():
+    from opencomplai_core.models import unknown_manifest_keys
+
+    known = {"system_id": "s", "intended_purpose": "p"}
+    assert unknown_manifest_keys(known) == []
+    assert unknown_manifest_keys({**known, "intended_purpse": "x", "a_key": 1}) == [
+        "a_key",
+        "intended_purpse",
+    ]
+    assert unknown_manifest_keys(dict.fromkeys(SystemManifest.model_fields)) == []

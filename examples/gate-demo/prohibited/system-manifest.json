@@ -1,0 +1,7 @@
+{
+  "system_id": "demo-prohibited",
+  "intended_purpose": "social scoring system for citizen behaviour ranking",
+  "compliance_target": "EU_AI_ACT",
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD"
+}

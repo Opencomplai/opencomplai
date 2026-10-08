@@ -31,7 +31,24 @@ Create a system manifest and set up the local signing keypair.
 | `--monitoring-approach` | *(none)* | Annex IV §3 production monitoring summary. |
 | `--incident-response-procedure` | *(none)* | Annex IV §3 incident-response pointer or summary. |
 | `--section-extras-file` | *(none)* | Path to a JSON file with structured Section 2/3 inputs (`performance_metrics`, `known_limitations`, `human_oversight_measures`) merged into the manifest. |
+| `--from-model-card` | *(none)* | Path to a Hugging Face model card (`README.md`). Offline import of its front matter; values are recorded as attested, not verified. See [Import a Hugging Face model card](#import-a-hugging-face-model-card). |
 | `--output` / `-o` | `system-manifest.json` | Output path for the manifest file. |
+
+## Import a Hugging Face model card
+
+`--from-model-card README.md` reads the YAML front matter of a Hugging Face model card and fills three manifest fields, so you do not retype them:
+
+| Card field | Manifest field |
+|---|---|
+| `datasets` | `training_data_description` |
+| `base_model`, `library_name`, `pipeline_tag` | `model_architecture` |
+| `model-index[*].results[*].metrics[*]` (numeric values only) | `performance_metrics`, keyed `<dataset type>/<metric type>` |
+
+- The values are provider-declared. Each filled field is recorded in the manifest's `imported_evidence` as **attested, not verified**, with the card's file name (never its path), a SHA-256 of the front matter and the import date. `check` and `gaps` do not read this record, so verdicts and exit codes are the same with or without the import.
+- Nothing is fetched. The card is read from the file you give; there is no Hub lookup.
+- Explicit flags and `--section-extras-file` win: a field you already set is left alone and not recorded as imported.
+- `known_limitations` is not imported, because it lives in the card body rather than the front matter. Other front matter keys (license, tags, language) are ignored.
+- A card with no front matter, invalid YAML, or more than 262144 characters exits 2 and writes no manifest. `--from-model-card` cannot be combined with `--interactive`.
 
 ## Examples
 
@@ -82,7 +99,7 @@ Section 2/3 fields (with `null`/empty defaults when not supplied):
   "incident_response_procedure": null,
   "operator_role": "deployer",
   "checker_session": {
-    "checker_version": "checker-2026-07-24",
+    "checker_version": "checker-2026-10-05",
     "session_id": "uuid",
     "completed_at": "2026-06-09T12:00:00+00:00",
     "report_json_path": "./eu-ai-act-result.json",

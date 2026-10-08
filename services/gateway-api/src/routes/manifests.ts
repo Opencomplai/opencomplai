@@ -20,6 +20,10 @@ const SystemManifestSchema = z
     performance_metrics: z.record(z.string(), z.number()).optional(),
     known_limitations: z.array(z.string()).optional(),
     human_oversight_measures: z.array(z.string()).optional(),
+    // Loose on purpose: the risk engine owns validation of the structured block.
+    human_oversight: z.record(z.string(), z.unknown()).optional(),
+    // Loose on purpose: the risk engine and doc-generator own validation of the inventory.
+    agent_inventory: z.record(z.string(), z.unknown()).optional(),
     monitoring_approach: z.string().nullable().optional(),
     incident_response_procedure: z.string().nullable().optional(),
   })

@@ -9,6 +9,14 @@ from typer.testing import CliRunner
 
 runner = CliRunner()
 
+_FILLED = (
+    "This procedure documents regulatory compliance, design control, quality "
+    "assurance, testing validation, technical specifications and standards, "
+    "data governance, risk management, post-market monitoring, incident "
+    "reporting, authority communication, record retention, resource planning "
+    "and accountability.\n"
+)
+
 _PRESENT_CLAUSE_FILES = (
     "REGULATORY_COMPLIANCE_STRATEGY.md",  # (a)
     "DESIGN_CONTROL.md",  # (b)
@@ -50,7 +58,7 @@ def test_recommend_shows_six_present_seven_missing_not_one_article_verdict(
     """
     manifest_file = _write_manifest(tmp_path)
     for name in _PRESENT_CLAUSE_FILES:
-        (tmp_path / name).write_text("evidence\n", encoding="utf-8")
+        (tmp_path / name).write_text(_FILLED, encoding="utf-8")
 
     output_dir = tmp_path / "fixes"
     result = runner.invoke(

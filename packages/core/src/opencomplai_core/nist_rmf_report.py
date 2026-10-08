@@ -8,8 +8,7 @@ It mirrors `principle_report.py`'s worst-case rollup pattern (same
 a fixed principle map, and it additionally propagates the crosswalk row's
 own mapping confidence: a subcategory whose only crosswalk row is
 `confidence="low"` is never reported as more confident than that, no matter
-how "measured" the underlying EU AI Act evidence is (see the "evaluated"
-definition in `PLAN/CLOSE-P1/00-OVERVIEW.md`'s D-3).
+how "measured" the underlying EU AI Act evidence is.
 
 The crosswalk maps at CATEGORY granularity (e.g. "GOVERN 2", not "GOVERN
 2.2"), so every subcategory under a mapped category gets the same

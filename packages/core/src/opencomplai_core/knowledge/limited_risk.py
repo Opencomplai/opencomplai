@@ -11,6 +11,7 @@ for pre-existing systems on market before that date (for machine-readable markin
 
 Bundled into core (not the optional opencomplai-ai plugin) alongside the
 Annex III and Art. 5 packs so there is one source of truth.
+Paragraph and actor are flagged for founder review.
 opencomplai_ai.knowledge.limited_risk re-exports these same symbols; edit
 only here.
 """
@@ -30,7 +31,13 @@ class LimitedRiskEntry:
     code_signals: tuple[str, ...]
     exceptions: tuple[str, ...]
     applies_from: str  # ISO date string
+    actor: str  # "provider" or "deployer"
+    source: str
+    confidence: str
+    needs_founder_review: bool
 
+
+_SOURCE = "Regulation (EU) 2024/1689 Art. 50, paragraph per entry; wording not re-fetched (unverified)"
 
 LIMITED_RISK: list[LimitedRiskEntry] = [
     LimitedRiskEntry(
@@ -70,22 +77,23 @@ LIMITED_RISK: list[LimitedRiskEntry] = [
             "system authorized by law for detection of criminal offenses",
         ),
         applies_from="2026-08-02",
+        actor="provider",
+        source=_SOURCE,
+        confidence="medium",
+        needs_founder_review=True,
     ),
     LimitedRiskEntry(
         article="Art.50(2)",
-        trigger_type="synthetic_media_deepfake",
-        title="Synthetic media — deepfakes of real persons, places, or events",
+        trigger_type="synthetic_content_marking",
+        title="Synthetic audio, image, video or text output - machine-readable marking",
         obligation=(
-            "Machine-readable disclosure that content is artificially generated or manipulated; "
-            "deployer must mark synthetic image/video/audio/text in machine-readable format"
+            "Provider must ensure output is marked in a machine-readable format "
+            "and detectable as artificially generated or manipulated"
         ),
         keywords=(
-            "deepfake",
             "synthetic video",
             "synthetic audio",
             "AI-generated image",
-            "face swap",
-            "voice cloning",
             "synthetic media",
             "generative video",
             "text-to-image realistic",
@@ -93,9 +101,6 @@ LIMITED_RISK: list[LimitedRiskEntry] = [
             "AI avatar",
         ),
         code_signals=(
-            "deepfake",
-            "face_swap",
-            "voice_clone",
             "voice_synthesis",
             "synthetic_voice",
             "tts_realistic",
@@ -110,11 +115,35 @@ LIMITED_RISK: list[LimitedRiskEntry] = [
             "wavenet",
         ),
         exceptions=(
-            "authorized by law for criminal investigation",
-            "artistic, satirical, or fictional works with appropriate disclosure",
-            "content with human editorial review and editorial accountability",
+            "assistive function for standard editing that does not substantially alter the input",
+            "authorised by law for criminal offences",
         ),
         applies_from="2026-08-02",
+        actor="provider",
+        source=_SOURCE,
+        confidence="medium",
+        needs_founder_review=True,
+    ),
+    LimitedRiskEntry(
+        article="Art.50(4), first subparagraph",
+        trigger_type="synthetic_media_deepfake",
+        title="Deepfakes - disclosure by the deployer",
+        obligation=(
+            "Deployer must disclose that image, audio or video content constituting "
+            "a deepfake is artificially generated or manipulated"
+        ),
+        keywords=("deepfake", "face swap", "voice cloning"),
+        code_signals=("deepfake", "face_swap", "voice_clone"),
+        exceptions=(
+            "authorised by law for criminal offences",
+            "evidently artistic, creative, satirical or fictional work: "
+            "limited disclosure that does not hamper display",
+        ),
+        applies_from="2026-08-02",
+        actor="deployer",
+        source=_SOURCE,
+        confidence="medium",
+        needs_founder_review=True,
     ),
     LimitedRiskEntry(
         article="Art.50(3)",
@@ -137,9 +166,13 @@ LIMITED_RISK: list[LimitedRiskEntry] = [
         ),
         exceptions=("authorized for law enforcement",),
         applies_from="2026-08-02",
+        actor="deployer",
+        source=_SOURCE,
+        confidence="medium",
+        needs_founder_review=True,
     ),
     LimitedRiskEntry(
-        article="Art.50(4)",
+        article="Art.50(4), second subparagraph",
         trigger_type="ai_generated_text_public_interest",
         title="AI-generated text published to inform public on matters of public interest",
         obligation="Disclose content as AI-generated",
@@ -163,6 +196,10 @@ LIMITED_RISK: list[LimitedRiskEntry] = [
             "content with human editorial review and editorial accountability",
         ),
         applies_from="2026-08-02",
+        actor="deployer",
+        source=_SOURCE,
+        confidence="medium",
+        needs_founder_review=True,
     ),
 ]
 

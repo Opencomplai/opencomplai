@@ -206,23 +206,23 @@ For each gated callsite, the intent classifier evaluates three dimensions direct
 | `subject_type` | `natural_person` / `legal_entity` / `system` | Determines whether Articles 13–15 apply |
 | `consequential` | `yes` / `no` | Whether the AI output causes a real-world effect on rights, access, or benefits |
 
-These three dimensions are combined into a per-callsite `eu_obligation` list. For example, `autonomous` + `natural_person` + `yes` maps to `["Art.6(2)+Annex III", "technical dossier required", "conformity assessment", "EU DB registration"]` (HIGH_RISK). `display_only` + `legal_entity` + `yes` maps to `["Art.50 disclosure if user-facing"]` (MINIMAL_RISK).
+These three dimensions are combined into a per-callsite `eu_obligation` list. For example, `autonomous` + `natural_person` + `yes` maps to `["Art.6(2)+Annex III", "Art.9 risk mgmt", "Art.13 transparency", "Art.14 human oversight", "Art.43 conformity assessment", "Art.49 EU DB registration"]`. `display_only` + `legal_entity` + `yes` maps to `["Art.50 transparency disclosure if user-facing"]`.
 
 ### Prerequisites
 
-**ONNX path — CPU only, no C compiler required:**
+**Deterministic matcher (`codebert-onnx`) — base install, no download, no C compiler:**
 
 === "macOS / Linux"
     ```bash
-    pip install opencomplai-ai 'optimum[onnxruntime]'
+    pip install opencomplai-ai
     ```
 
 === "Windows (PowerShell)"
     ```powershell
-    pip install opencomplai-ai "optimum[onnxruntime]"
+    pip install opencomplai-ai
     ```
 
-**GGUF path — optional, supports larger models:**
+**GGUF path — optional, local LLM inference with larger models:**
 
 === "macOS / Linux"
     ```bash
@@ -238,7 +238,7 @@ These three dimensions are combined into a per-callsite `eu_obligation` list. Fo
 
 | Model ID | Size | License | Runtime | Install extra |
 |---|---|---|---|---|
-| `codebert-onnx` | 440 MB | MIT | onnxruntime | `optimum[onnxruntime]` |
+| `codebert-onnx` | no download | AGPL-3.0-only | deterministic matcher | base install |
 | `qwen2.5-coder-0.5b` | 400 MB | Apache-2.0 | llama-cpp | `[deep]` |
 | `qwen2.5-coder-1.5b` | 1 GB | Apache-2.0 | llama-cpp | `[deep]` |
 | `smollm2-1.7b` | 1.1 GB | Apache-2.0 | llama-cpp | `[deep]` |
@@ -246,7 +246,7 @@ These three dimensions are combined into a per-callsite `eu_obligation` list. Fo
 | `mistral-7b` | 4.1 GB | Apache-2.0 | llama-cpp | `[deep]` |
 | `saas` | — | — | http | — |
 
-The default model is `qwen2.5-coder-1.5b` (GGUF, requires `[deep]`). To use `codebert-onnx` (no llama-cpp, runs on any CPU):
+The default model is `qwen2.5-coder-1.5b` (GGUF, requires `[deep]` and a one-time model download); without `[deep]`, `--ai-intent` prints `AI intent skipped` and the scan continues without it. `codebert-onnx` is a deterministic code-signal matcher, not a neural model: it classifies callsites by matching them against the built-in Annex III, prohibited-practice and limited-risk signal lists, so it runs on any CPU with the base install, no llama-cpp, no download and no ONNX Runtime. The `codebert-onnx` id is kept for compatibility with existing configs and annotations; no CodeBERT model is loaded. To use it:
 
 === "macOS / Linux"
     ```bash
@@ -257,21 +257,6 @@ The default model is `qwen2.5-coder-1.5b` (GGUF, requires `[deep]`). To use `cod
     ```powershell
     opencomplai ai configure --model codebert-onnx --set-default
     ```
-
-### First run — ONNX export for `codebert-onnx`
-
-The first `--ai-intent` scan with `codebert-onnx` exports the model from the official PyTorch checkpoint (`microsoft/codebert-base`) and caches the ONNX graph locally. The CLI prompts once before downloading:
-
-```
-Preparing CodeBERT-base (ONNX) (~440 MB)
-  Source: microsoft/codebert-base (PyTorch checkpoint)
-  Export: ONNX -> ~/.cache/opencomplai/models/codebert-base/model.onnx
-  This runs once; the exported model is cached for future scans.
-
-Download and export now? [Y/n]:
-```
-
-Export takes 1–3 minutes on a typical laptop. All subsequent scans read `model.onnx` from cache with no network access and no prompt.
 
 ### Running the under-declared fixtures with `--ai-intent`
 
@@ -338,17 +323,19 @@ Use `--ai-legacy` to restore the previous `AI Intent Analysis` block that listed
 
 Expected annotation counts across the three fixtures:
 
-| Fixture | Callsites annotated | Typical `conf` |
+| Fixture | Callsites annotated | `confidence` |
 |---|---|---|
-| `under-declared-chatbot` | ~2 | > 0.93 |
-| `under-declared-scoring` | ~10 | > 0.90 |
-| `under-declared-analytics` | ~6 | > 0.90 |
+| `under-declared-chatbot` | 2 | 0.80 |
+| `under-declared-scoring` | 10 | 0.50 |
+| `under-declared-analytics` | 6 | 0.50 |
 
-The scoring fixture produces the highest annotation count because `rank_applicants`, `load_model`, and multiple feature-engineering callsites each generate an annotation. The analytics fixture's `chromadb` and `sentence-transformers` imports account for most of its annotations.
+Counts and confidence values above are from `--ai-intent --ai-model codebert-onnx --ai-legacy` runs.
+
+The scoring fixture produces the highest annotation count: its 10 annotations are `pickle`, `pathlib`, `Path`, `loads`, `read_bytes`, `load_classifier`, `predict`, `values`, `list` and `float` in `src/score.py`. The analytics fixture's 6 annotations are the `chromadb` and `sentence_transformers` imports plus the `SentenceTransformer`, `Client`, `encode` and `tolist` callsites in `src/search.py`; the chatbot fixture's 2 are `face_recognition` and `face_locations` in `src/face.py`.
 
 ### Confidence scores
 
-`conf` is the average cosine similarity between the callsite's embedding and the winning label pattern, averaged across all three dimensions. Scores above `0.90` are reliable. Scores between `0.70` and `0.90` are plausible but worth human review before acting on the `eu_obligation` output.
+`confidence` is not a similarity score or a calibrated probability. The deterministic matcher assigns a fixed value by match type (`0.5` to `0.8`), and the GGUF models report a fixed `0.75`. It tells you how the callsite was matched, not how reliable the classification is, so review the `eu_obligation` output before acting on it whatever the value.
 
 ### "no callsites annotated"
 
@@ -429,11 +416,16 @@ Use a baseline file to suppress already-accepted gaps:
 
 **What:** the scanner can flag MCP server imports/config and multi-agent patterns
 (`DET_AGENTS_MCP_V1` → `mcp_server` / `agent_framework`).
+MCP servers declared in `.mcp.json` or `mcp.json` are inventoried by name only (commands,
+arguments, environment values and URLs are never read into evidence). The agent-framework
+package list lives in `ai_signals.json`; a package listed in two categories reports both.
 
 **When:** repos that use Model Context Protocol tools or multi-agent frameworks.
 
 **Don't:** treat a detection as “high-risk under the Act.” It is a corroboration
 signal for Art. 14-style oversight discussions — not a legal classification.
+These signals appear in `opencomplai gaps` as `UNVERIFIED` rows for Art. 14 and
+Art. 15 ("detected, no compliance verdict"): a corroboration signal, not a verdict.
 
 ## Service-backed mode (Docker stack)
 

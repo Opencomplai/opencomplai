@@ -11,11 +11,13 @@ disabled --ai-intent for a backend that needs zero setup.
 
 from __future__ import annotations
 
+import sys
+
 import pytest
 
 pytest.importorskip("opencomplai_ai")
 
-from opencomplai_cli.main import _preload_ai_model
+from opencomplai_cli.main import _preload_ai_model, _require_ai_plugin
 
 
 def _forbid_ensure_model(monkeypatch):
@@ -46,3 +48,31 @@ def test_preload_still_calls_ensure_model_for_gguf_models(monkeypatch):
 
     assert _preload_ai_model("qwen2.5-coder-1.5b") is True
     assert calls == ["qwen2.5-coder-1.5b"]
+
+
+def test_preload_skip_message_keeps_the_deep_extra_in_the_install_command(
+    monkeypatch, tmp_path, capsys
+):
+    # Rich reads "[deep]" as a style tag and drops it unless the message is
+    # escaped, which turned the remediation into "pip install 'opencomplai-ai'".
+    # No cached file and no llama-cpp-python: the real ensure_model refuses
+    # with the real install hint.
+    monkeypatch.setattr("opencomplai_ai.downloader.get_cache_dir", lambda: tmp_path)
+    monkeypatch.setitem(sys.modules, "llama_cpp", None)
+
+    assert _preload_ai_model("qwen2.5-coder-1.5b") is False
+
+    err = capsys.readouterr().err
+    assert "AI intent skipped" in err
+    assert "pip install 'opencomplai-ai[deep]'" in err
+
+
+def test_missing_plugin_message_keeps_the_deep_extra_in_the_install_command(
+    monkeypatch, capsys
+):
+    monkeypatch.setitem(sys.modules, "opencomplai_ai", None)
+
+    with pytest.raises(SystemExit):
+        _require_ai_plugin()
+
+    assert "pip install 'opencomplai-ai[deep]'" in capsys.readouterr().err

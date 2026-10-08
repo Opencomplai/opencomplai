@@ -1,0 +1,37 @@
+[
+  {
+    "version": "1.5.0",
+    "summary": "Art. 27 gap-mapping addition. Earlier versions (1.0.0 to 1.4.0) are not reconstructed here and their contents are unverified.",
+    "changes": [
+      "Art. 27 added to the gap article map"
+    ],
+    "source": "CHANGELOG.md 0.8.0 Changed",
+    "confidence": "high",
+    "needs_founder_review": false
+  },
+  {
+    "version": "1.6.0",
+    "summary": "Rule-set changes that ship with opencomplai 0.9.0.",
+    "changes": [
+      "Scan findings alone no longer produce MET: scan rows are MET only for a mapped declared Annex III area, never for agent_framework, mcp_server or pii_dataflow",
+      "Artifact probes use real glob matching (docs/**/x* now matches nested files), skip .venv, node_modules and .git, de-duplicate matches, and provider_qms also matches any file under docs/qms/",
+      "Art. 17(1)(a)-(m) clause probes now require content (no scaffold placeholder, body keyword); a scaffold-only file reads Unfilled, not Present",
+      "Art. 50 limited-risk pack: marking is Art. 50(2) provider; deepfake disclosure is Art. 50(4) first subparagraph deployer; wording flagged for founder review",
+      "Added Art. 26, 49, 72 and 73 to the EU article map, with placeholder evidence sources for Art. 11-15, 26, 49, 50, 72 and 73; no new verdicts",
+      "Applicability: articles can move to `not_applicable` from a recorded checker session (data/gap_article_map.json `applies_when_any`)",
+      "Art. 14 reads an optional structured human_oversight manifest declaration: PARTIAL at most, never MET; Art. 12 reads record_keeping the same way; no change without the block",
+      "Art. 11, Art. 26 (deployer use records), Art. 49 and Art. 50 gain artifact probes (dossier_*.json capped at Partial; Art. 50 notice; Art. 49 registration file); statuses only ever reach Partial",
+      "Art. 12, 14, 15 and 26 read the manifest agent inventory and cross-check it with scanner findings; PARTIAL at most; no change without the inventory block",
+      "Art. 72 and Art. 73 now read real evidence (post-market monitoring plan file, root incident-log.json); both stay Partial at most; QMS clauses (h) and (i) also read the incident log",
+      "GPAI: a recorded GPAI checker session adds artifact probes for Annex XI/XII documentation to Art. 53 and 55 (gated by `when_obligation_any`)",
+      "check: accepted high-risk systems gate on Missing EU rows instead of the Art. 6 failure",
+      "Art. 12 reads an event-log file (oversight log); Partial at most",
+      "Art. 13 deployer_instructions probe checks Art. 13(3) topic markers",
+      "Art. 12 event-log probe also accepts the agent decision log",
+      "Art. 15 now also draws on EVAL_ADVERSARIAL_V1; a skipped adversarial evaluator makes Art. 15 UNVERIFIED."
+    ],
+    "source": "CHANGELOG.md 0.9.0",
+    "confidence": "high",
+    "needs_founder_review": false
+  }
+]

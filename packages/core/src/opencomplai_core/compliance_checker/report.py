@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -57,12 +58,24 @@ def _answer_entries(answers: dict[str, Any]) -> list[tuple[str, str, str]]:
     return entries
 
 
-def render_json(result: ComplianceCheckerResult, *, indent: int = 2) -> str:
-    """Serialize a checker result to JSON."""
-    return result.model_dump_json(indent=indent)
+def render_json(
+    result: ComplianceCheckerResult,
+    *,
+    indent: int = 2,
+    rationale: Sequence[str] | None = None,
+) -> str:
+    """Serialize a checker result to JSON (plus a top-level rationale list when given)."""
+    dumped = result.model_dump_json(indent=indent)
+    if not rationale:
+        return dumped
+    data = json.loads(dumped)
+    data["rationale"] = list(rationale)
+    return json.dumps(data, indent=indent, ensure_ascii=False)
 
 
-def render_markdown(result: ComplianceCheckerResult) -> str:
+def render_markdown(
+    result: ComplianceCheckerResult, *, rationale: Sequence[str] | None = None
+) -> str:
     """Render a checker result as Markdown using plain string templates."""
     lines: list[str] = [
         "# EU AI Act Compliance Checker Result",
@@ -111,11 +124,16 @@ def render_markdown(result: ComplianceCheckerResult) -> str:
     lines.extend(["## Determination path", ""])
     for step in result.determination_path:
         lines.append(f"- `{step}`")
+    if rationale:
+        lines.extend(["", "## Role rationale", ""])
+        lines.extend(f"- {line}" for line in rationale)
     lines.extend(["", "## Disclaimer", "", _DISCLAIMER, ""])
     return "\n".join(lines)
 
 
-def render_pdf(result: ComplianceCheckerResult) -> bytes:
+def render_pdf(
+    result: ComplianceCheckerResult, *, rationale: Sequence[str] | None = None
+) -> bytes:
     """Render a checker result to PDF bytes using fpdf2."""
     try:
         from fpdf import FPDF
@@ -176,6 +194,10 @@ def render_pdf(result: ComplianceCheckerResult) -> bytes:
     else:
         write_block("None.")
 
+    if rationale:
+        write_block("Role rationale", bold=True)
+        write_block("\n".join(f"- {line}" for line in rationale))
+
     write_block("Disclaimer", bold=True)
     write_block(_DISCLAIMER)
 
@@ -192,6 +214,7 @@ def export_all(
     output_dir: Path | str,
     *,
     basename: str = "compliance-checker-result",
+    rationale: Sequence[str] | None = None,
 ) -> dict[str, Path]:
     """Write JSON, Markdown, and PDF exports to output_dir."""
     target = Path(output_dir)
@@ -201,9 +224,9 @@ def export_all(
     md_path = target / f"{basename}.md"
     pdf_path = target / f"{basename}.pdf"
 
-    json_path.write_text(render_json(result), encoding="utf-8")
-    md_path.write_text(render_markdown(result), encoding="utf-8")
-    pdf_path.write_bytes(render_pdf(result))
+    json_path.write_text(render_json(result, rationale=rationale), encoding="utf-8")
+    md_path.write_text(render_markdown(result, rationale=rationale), encoding="utf-8")
+    pdf_path.write_bytes(render_pdf(result, rationale=rationale))
 
     return {
         "json": json_path,

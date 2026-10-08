@@ -34,7 +34,11 @@ All runtime configuration is provided through environment variables in `infra/co
 
 | Variable | Default | Description |
 |---|---|---|
-| `LOCAL_SIGNING_KEY_PATH` | *(unset)* | Path to an Ed25519 signing key for signed status artifacts. Leave unset for unsigned OSS mode. |
+| `SIGNING_KEY_PRIVATE` | *(unset)* | Base64-encoded PEM of the Ed25519 private key. Takes precedence over the key file; used by `check --sign`, `halt approve` and the CI connectors. |
+| *(key file)* `~/.opencomplai/signing.key` | created by `opencomplai init` | Default Ed25519 key for signing status artifacts when `SIGNING_KEY_PRIVATE` is not set. |
+| `LOCAL_SIGNING_KEY_PATH` | *(unset)* | Not used for artifact signing (see the two rows above). It no longer signs dossiers (they were HMAC-signed before, which no third party could verify); dossiers use `DOSSIER_SIGNING_KEY_PATH` or `SIGNING_KEY_PRIVATE` and are otherwise unsigned. |
+
+Without a key, `opencomplai check --sign` fails with exit 2; `--sign-if-available` writes an unsigned artifact and prints a warning.
 
 ### Risk engine — checker email delivery
 
@@ -63,6 +67,7 @@ see [the checker email section](#eu-ai-act-checker-email-on-the-docs-site).
 
 | Variable | Default | Description |
 |---|---|---|
+| `OBSERVABILITY_BIND_ADDR` | `127.0.0.1` | Host address the Prometheus and Grafana ports are published on. Loopback by default; set `0.0.0.0` (every IPv4 interface; `::` is the IPv6 equivalent) to expose them to other hosts — see [Observability](observability.md#network-exposure) first, Prometheus has no authentication. |
 | `PROMETHEUS_HOST_PORT` | `9090` | Host port for the Prometheus UI. |
 | `GRAFANA_HOST_PORT` | `3001` | Host port for the Grafana dashboards. |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | *(unset)* | OpenTelemetry collector endpoint. Leave unset to disable trace export. |

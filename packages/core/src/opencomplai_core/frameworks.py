@@ -46,7 +46,7 @@ class FrameworkPack:
     # Exactly one of `requirements` (native) and `derive` (derived) is set.
     requirements: Path | None = None
     derive: Callable[[GapReport], GapReport] | None = None
-    # Data a derived pack reads besides its requirements map, for data_version.
+    # Data a pack reads besides its requirements map, for data_version.
     data_files: tuple[Path, ...] = ()
 
 
@@ -56,6 +56,7 @@ FRAMEWORKS: dict[str, FrameworkPack] = {
         "EU AI Act (Regulation (EU) 2024/1689)",
         "DISCLAIMER_V1",
         requirements=_DATA_DIR / "gap_article_map.json",
+        data_files=(_DATA_DIR / "regulatory_timeline.json",),
     ),
     "NIST_AI_RMF": FrameworkPack(
         "NIST_AI_RMF",
@@ -65,6 +66,11 @@ FRAMEWORKS: dict[str, FrameworkPack] = {
             _DATA_DIR / "framework_crosswalk.json",
             _DATA_DIR / "nist_ai_rmf_subcategories.json",
         ),
+    ),
+    "ISO_IEC_42001": FrameworkPack(
+        "ISO_IEC_42001",
+        "ISO/IEC 42001:2023 AI management system (attestation-led, not a certification)",
+        requirements=_DATA_DIR / "iso_42001.json",
     ),
 }
 
@@ -110,6 +116,26 @@ def load_requirements_map(path: Path) -> dict[str, Any]:
         return json.load(handle)
 
 
+def requirement_title(requirement_id: str) -> str | None:
+    """Human text for a requirement id, or None when none is known. Never raises.
+
+    NIST AI RMF rows have no short title in the data, so the subcategory's
+    `outcome` is used. Native packs use the `title` of their requirements map.
+    """
+    framework = framework_of(requirement_id)
+    if framework == "NIST_AI_RMF":
+        # Lazy: avoids an import cycle through nist_rmf_report.
+        from opencomplai_core.nist_ai_rmf_subcategories import get_subcategories
+
+        entry = get_subcategories().get(requirement_id.partition(":")[2])
+        return entry.outcome if entry else None
+    pack = FRAMEWORKS.get(framework)
+    if pack is None or pack.requirements is None:
+        return None
+    entry = load_requirements_map(pack.requirements).get(requirement_id)
+    return entry.get("title") if isinstance(entry, dict) else None
+
+
 def data_version(pack: FrameworkPack) -> str:
     """Short hash of the pack's data, independent of line endings and key order."""
     paths = ([pack.requirements] if pack.requirements else []) + list(pack.data_files)
@@ -152,6 +178,8 @@ def evaluate_targets(
         corroboration_report=corroboration_report,
         eval_report=eval_report,
         repo_root=repo_root,
+        manifest=manifest,
+        checker_session=manifest.checker_session,
     )
     eu_pack = FRAMEWORKS[EU_AI_ACT]
     reports = {
@@ -183,6 +211,8 @@ def evaluate_targets(
                 repo_root=repo_root,
                 requirements=requirements,
                 attestations=inputs.attested,
+                manifest=manifest,
+                checker_session=manifest.checker_session,
             )
             attestable = {
                 rid
@@ -264,4 +294,21 @@ def gate_failures(
         if fw in frameworks
         for row in framework_report.report.articles
         if row.status in failing
+    ]
+
+
+def acceptance_gate_failures(
+    report: GapReport, fail_on: str = "missing", skip: Sequence[str] = ("Art. 6",)
+) -> list[str]:
+    """Ids of EU rows that fail for an accepted high-risk system, in report order.
+
+    Art. 6 is skipped: its row is sourced from the very rule the acceptance
+    covers, so counting it would make acceptance unreachable. Not `gate_failures`:
+    `validate_gate` keeps rejecting EU_AI_ACT for `--gate`.
+    """
+    failing = _FAIL_ON[fail_on]
+    return [
+        row.article
+        for row in report.articles
+        if row.status in failing and row.article not in skip
     ]

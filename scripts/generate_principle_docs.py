@@ -13,6 +13,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from opencomplai_core.gap_report import SCAN_NO_VERDICT
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 CORE_DATA = REPO_ROOT / "packages" / "core" / "src" / "opencomplai_core" / "data"
 OUTPUT_PATH = REPO_ROOT / "docs" / "src" / "concepts" / "eu-ai-act-principles.md"
@@ -22,11 +24,18 @@ def _load_json(name: str) -> dict:
     return json.loads((CORE_DATA / name).read_text(encoding="utf-8"))
 
 
+def _render_source(source: dict) -> str:
+    text = f"`{source['kind']}:{source['ref']}`"
+    if source["kind"] == "scan" and source["ref"] in SCAN_NO_VERDICT:
+        text += " (detection only, never Met)"
+    return text
+
+
 def _build_article_to_sources(gap_article_map: dict) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     for article, config in gap_article_map.items():
         sources = config.get("sources", [])
-        result[article] = [f"`{s['kind']}:{s['ref']}`" for s in sources] or [
+        result[article] = [_render_source(s) for s in sources] or [
             "_no automated source_"
         ]
     return result
@@ -81,7 +90,7 @@ def render() -> str:
 def main() -> None:
     content = render()
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(content, encoding="utf-8")
+    OUTPUT_PATH.write_text(content, encoding="utf-8", newline="\n")
     print(f"Wrote {OUTPUT_PATH}")
 
 

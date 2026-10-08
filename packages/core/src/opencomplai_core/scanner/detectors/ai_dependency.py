@@ -15,6 +15,7 @@ _CATEGORY_MAP = {
     "vector_embedding": SignalCategory.EMBEDDINGS_VECTOR,
     "biometric": SignalCategory.BIOMETRIC,
     "scoring": SignalCategory.SCORING_PROFILING,
+    "agent_frameworks": SignalCategory.AGENT_FRAMEWORK,
 }
 
 
@@ -25,7 +26,7 @@ class AiDependencyDetector(BaseDetector):
 
     @property
     def detector_version(self) -> str:
-        return "1.0.0"
+        return "1.1.0"
 
     @property
     def supported_languages(self) -> frozenset[str]:
@@ -38,9 +39,13 @@ class AiDependencyDetector(BaseDetector):
     def detect(self, features: FeatureStore) -> list[EvidenceItem]:
         evidence: list[EvidenceItem] = []
         for pkg in features.packages:
+            first = True
             for key, category in _CATEGORY_MAP.items():
                 token = match_token_identifier(pkg.name, key)
                 if token:
+                    # evidence_id ignores category: later matches get a distinct label
+                    label = token if first else f"{token}@{category.value}"
+                    first = False
                     confidence = (
                         0.5 if pkg.scope.value in ("test", "dev", "docs") else 0.7
                     )
@@ -50,12 +55,11 @@ class AiDependencyDetector(BaseDetector):
                             detector_version=self.detector_version,
                             evidence_kind=EvidenceKind.DEPENDENCY,
                             category=category,
-                            token_label=token,
+                            token_label=label,
                             location=pkg.location,
                             scope=pkg.scope,
                             rationale_code="manifest_dependency",
                             confidence=confidence,
                         )
                     )
-                    break
         return evidence

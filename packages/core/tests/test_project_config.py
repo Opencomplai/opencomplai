@@ -126,3 +126,29 @@ def test_load_project_config_rejects_malformed_files(tmp_path, text, message):
     config_file.write_text(text, encoding="utf-8")
     with pytest.raises(ValueError, match=message):
         load_project_config(config_file)
+
+
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        ("scan:\n  fail_on: loud\n", "scan.fail_on must be one of"),
+        ("scan:\n  fail_on: 3\n", "scan.fail_on must be one of"),
+        ('scan:\n  framework_detectors: "yes"\n', "scan.framework_detectors must be"),
+        ("scan:\n  allowlisted_categories: abc\n", "allowlisted_categories must be"),
+        ("scan:\n  allowlisted_categories: [1]\n", "allowlisted_categories must be"),
+        ("eval:\n  threshold_overrides: high\n", "threshold_overrides must map"),
+        (
+            "eval:\n  threshold_overrides: {bias: high}\n",
+            "threshold_overrides must map",
+        ),
+        (
+            "eval:\n  threshold_overrides: {bias: true}\n",
+            "threshold_overrides must map",
+        ),
+    ],
+)
+def test_load_project_config_rejects_wrong_types(tmp_path, text, message):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        load_project_config(config_file)

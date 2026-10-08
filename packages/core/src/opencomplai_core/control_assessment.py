@@ -77,39 +77,59 @@ def derive_controls(
     a hard signal and still downgrades to `evidence_missing` as before,
     regardless of any manually-attached evidence.
 
-    An existing instance already in `ControlState.WAIVED` is returned
-    unchanged: a human waiver is never overwritten by an automated
-    assessment. Otherwise `owner`, `ttl_days`, and `waiver_rationale` are
-    always copied verbatim from the existing instance with the same
-    `control_id` (never set or cleared by this function).
+    An existing instance in `ControlState.WAIVED` is returned unchanged
+    unless its `waiver_source` is `"exclusion"`: a manual (or legacy,
+    source-less) waiver is never overwritten by an automated assessment. An
+    exclusion-derived waiver whose id shows up as a row (the exclusion was
+    removed from the manifest) is re-derived like any other control, with
+    its `waiver_rationale` cleared. Otherwise `owner`, `ttl_days`, and
+    `waiver_rationale` are copied verbatim from the existing instance with
+    the same `control_id`.
 
     `catalog` is looked up by `row.article`; a missing entry does not fail —
     the derived control simply has no catalog TTL to inherit (`ttl_days`
     stays whatever the existing instance had, typically None).
 
+    Articles in `gap_report.not_applicable` create no controls (not even a
+    waived one: that is not the `excluded` path, whose waivers are sticky).
+
     `excluded` maps requirement ids the manifest declares out of scope
     (`framework_inputs.<FW>.excluded`, already removed from the report's
     rows) to their justification. Each becomes a `WAIVED` control appended
     after the row-derived ones, with the justification as its
-    `waiver_rationale`; owner, TTL and evidence carry over from the existing
-    instance.
+    `waiver_rationale` and `waiver_source="exclusion"`; owner, TTL and
+    evidence carry over from the existing instance. An existing manual or
+    legacy waiver for the same id is kept as is (not overwritten, not
+    duplicated).
     """
     resolved_now = now if now is not None else datetime.now(UTC).isoformat()
     existing_by_id = {c.control_id: c for c in existing_controls}
+    na = getattr(gap_report, "not_applicable", None) or {}
 
     derived: list[ControlInstance] = []
     for row in gap_report.articles:
+        if row.article in na:
+            continue
         obligation_id = row.article
         control_id = make_control_id(tenant_id, manifest.system_id, obligation_id)
         existing = existing_by_id.get(control_id)
 
+        lifted_exclusion = False
         if existing is not None and existing.state == ControlState.WAIVED:
-            derived.append(existing)
-            continue
+            if existing.waiver_source != "exclusion":
+                derived.append(existing)
+                continue
+            # Exclusion-derived waiver whose id reached the rows: the
+            # exclusion is gone, so derive the control normally.
+            lifted_exclusion = True
 
         owner = existing.owner if existing is not None else None
         ttl_days = existing.ttl_days if existing is not None else None
-        waiver_rationale = existing.waiver_rationale if existing is not None else None
+        waiver_rationale = (
+            existing.waiver_rationale
+            if existing is not None and not lifted_exclusion
+            else None
+        )
 
         catalog_entry = catalog.get(obligation_id)
         effective_ttl_days = (
@@ -129,6 +149,8 @@ def derive_controls(
             and bool(existing.evidence_refs)
             and (
                 row.source == ArticleGapSource.ARTIFACT
+                # a declaration is heuristic like a probe: keep attached evidence
+                or row.source == ArticleGapSource.MANIFEST
                 or row.status == GapStatus.UNVERIFIED
             )
         )
@@ -172,16 +194,25 @@ def derive_controls(
                 last_evidence_at=last_evidence_at,
                 due_at=due_at,
                 waiver_rationale=waiver_rationale,
+                waiver_source=None,
             )
         )
 
     for obligation_id, justification in excluded.items():
         control_id = make_control_id(tenant_id, manifest.system_id, obligation_id)
         existing = existing_by_id.get(control_id)
+        if (
+            existing is not None
+            and existing.state == ControlState.WAIVED
+            and existing.waiver_source != "exclusion"
+        ):
+            derived.append(existing)
+            continue
         waiver = {
             "state": ControlState.WAIVED,
             "last_assessed_at": resolved_now,
             "waiver_rationale": justification,
+            "waiver_source": "exclusion",
         }
         derived.append(
             existing.model_copy(update=waiver)

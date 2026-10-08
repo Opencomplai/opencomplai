@@ -386,9 +386,10 @@ def test_report_from_gaps_json_renders_one_section_per_other_framework(
 
     headings = re.findall(r"<h2>([^<]*)</h2>", page)
     gap_at = headings.index("Gap report")
-    assert headings[gap_at + 1 : gap_at + 4] == [
+    assert headings[gap_at + 1 : gap_at + 5] == [
         "NIST AI RMF 1.0 (derived from EU AI Act evidence)",
         "Fixture framework",
+        "Regulatory timeline",
         "Eval summary",
     ]
     assert "derived from EU_AI_ACT" in page
@@ -407,3 +408,18 @@ def test_report_from_gaps_json_renders_one_section_per_other_framework(
         "NIST_AI_RMF",
         "FIXTURE",
     ]
+
+
+def test_eu_and_nist_human_title_column_has_no_dash_for_known_rows(cli):
+    from opencomplai_core.nist_ai_rmf_subcategories import get_subcategories
+
+    code, stdout, stderr = cli(
+        "gaps", "--target", "EU_AI_ACT", "--target", "NIST_AI_RMF"
+    )
+    assert code == 0, stderr
+    nist_at = stdout.index("NIST AI RMF 1.0 (derived from EU AI Act evidence)")
+    eu_at = stdout.index("Opencomplai Gap Report")
+    block = _one_line(stdout[nist_at:] if nist_at > eu_at else stdout[nist_at:eu_at])
+    row = block[block.index("NIST_AI_RMF:GOVERN 1.1") :].split("NIST_AI_RMF:", 2)[1]
+    assert get_subcategories()["GOVERN 1.1"].outcome[:30] in block
+    assert "—" not in row.split("GOVERN 1.1", 1)[1][:40]

@@ -1,8 +1,9 @@
 {
-  "version": "1.1.0",
-  "ai_sdks": ["openai", "anthropic", "google-genai", "google-generativeai", "azure-ai-openai", "cohere", "mistralai", "groq", "together", "replicate", "huggingface_hub", "transformers", "sentence-transformers", "fireworks-ai", "perplexityai", "ai21", "stability-sdk", "elevenlabs", "deepgram", "assemblyai", "google-cloud-aiplatform", "ibm-watsonx-ai"],
-  "ml_frameworks": ["torch", "tensorflow", "keras", "sklearn", "xgboost", "lightgbm", "catboost", "onnxruntime", "llama-cpp-python", "vllm", "ollama", "mlflow", "bentoml"],
-  "orchestration": ["langchain", "llama-index", "llama_index", "semantic-kernel", "autogen", "crewai", "haystack", "dspy", "instructor", "guidance", "guardrails", "ragas"],
+  "version": "1.2.0",
+  "ai_sdks": ["openai", "anthropic", "google-genai", "google-generativeai", "litellm", "azure-ai-inference", "cohere", "mistralai", "groq", "together", "replicate", "huggingface_hub", "transformers", "sentence-transformers", "fireworks-ai", "perplexityai", "ai21", "stability-sdk", "elevenlabs", "deepgram", "assemblyai", "google-cloud-aiplatform", "ibm-watsonx-ai", "vertexai"],
+  "agent_frameworks": ["langgraph", "openai-agents", "pydantic-ai", "pydantic_ai", "smolagents", "google-adk", "google.adk", "@mastra/core", "crewai", "autogen"],
+  "ml_frameworks": ["torch", "tensorflow", "keras", "sklearn", "xgboost", "lightgbm", "catboost", "onnxruntime", "llama-cpp-python", "vllm", "ollama", "mlflow", "bentoml", "sagemaker", "wandb", "databricks-sdk", "databricks.sdk"],
+  "orchestration": ["langchain", "llama-index", "llama_index", "semantic-kernel", "autogen", "crewai", "haystack", "dspy", "instructor", "guidance", "guardrails", "ragas", "langfuse"],
   "vector_embedding": ["pinecone", "weaviate", "qdrant", "chromadb", "milvus", "faiss", "pgvector", "lancedb", "voyageai", "jina", "embedding", "rerank", "similarity_search"],
   "biometric": ["opencv", "mediapipe", "face_recognition", "deepface", "insightface", "retinaface", "librosa", "whisper", "speechbrain", "pyannote", "speaker", "emotion", "gait"],
   "scoring": ["score", "scoring", "rank", "ranking", "eligibility", "recommend", "recommendation", "fraud", "risk_score", "credit", "profiling", "decision", "classifier"],

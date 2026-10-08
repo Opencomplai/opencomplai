@@ -1,6 +1,6 @@
 """Opencomplai CLI."""
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 # Canonical project metadata — single source of truth for the `--version`
 # flag and the `opencomplai info` command. Mirrors the [project] table in

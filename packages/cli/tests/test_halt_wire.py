@@ -461,3 +461,89 @@ def test_approve_refuses_when_not_halted(tmp_path, monkeypatch):
     )
     assert result.exit_code == 2, result.output
     assert state_record(state_dir, "running-sys") is None
+
+
+# ---------------------------------------------------------------------------
+# (6) approve honours SIGNING_KEY_PRIVATE (SU-3a)
+# ---------------------------------------------------------------------------
+
+
+def _halt(state_dir: Path, system_id: str) -> None:
+    save_state(
+        state_dir,
+        system_id,
+        SystemState.HALTED_PENDING_REVIEW,
+        reason="trap_detected",
+        commit_ref="HEAD",
+    )
+
+
+def test_approve_with_env_key_and_no_key_file(tmp_path, monkeypatch):
+    import base64
+
+    from opencomplai_cli import main
+
+    state_dir = _isolate(tmp_path, monkeypatch)
+    key_dir = tmp_path / "keys"
+    generate_keypair(key_dir)
+    env_key = base64.b64encode((key_dir / "signing.key").read_bytes()).decode()
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", env_key)
+    monkeypatch.setattr(main, "_SIGNING_KEY", tmp_path / "missing" / "signing.key")
+    _halt(state_dir, "halt-env")
+
+    approved = runner.invoke(
+        app,
+        [
+            *["approve", "--system-id", "halt-env", "--approver", "qa@example.com"],
+            *["--output", "json"],
+        ],
+    )
+    assert approved.exit_code == 0, approved.output
+    token = json.loads(approved.stdout)["token"]
+
+    resumed = runner.invoke(
+        app,
+        [
+            *["resume", "--system-id", "halt-env", "--approval-token", token],
+            *["--pub-key", str(key_dir / "signing.pub")],
+        ],
+    )
+    assert resumed.exit_code == 0, resumed.output
+    assert load_state(state_dir, "halt-env") == SystemState.RUNNING
+
+
+def test_approve_without_any_key_exits_2(tmp_path, monkeypatch):
+    from opencomplai_cli import main
+
+    state_dir = _isolate(tmp_path, monkeypatch)
+    monkeypatch.delenv("SIGNING_KEY_PRIVATE", raising=False)
+    monkeypatch.setattr(main, "_SIGNING_KEY", tmp_path / "missing" / "signing.key")
+    _halt(state_dir, "halt-nokey")
+
+    result = runner.invoke(
+        app, ["approve", "--system-id", "halt-nokey", "--approver", "qa@example.com"]
+    )
+    assert result.exit_code == 2, result.output
+    assert load_state(state_dir, "halt-nokey") == SystemState.HALTED_PENDING_REVIEW
+
+
+def test_approve_explicit_missing_key_beats_env(tmp_path, monkeypatch):
+    import base64
+
+    state_dir = _isolate(tmp_path, monkeypatch)
+    key_dir = tmp_path / "keys"
+    generate_keypair(key_dir)
+    monkeypatch.setenv(
+        "SIGNING_KEY_PRIVATE",
+        base64.b64encode((key_dir / "signing.key").read_bytes()).decode(),
+    )
+    _halt(state_dir, "halt-explicit")
+
+    result = runner.invoke(
+        app,
+        [
+            *["approve", "--system-id", "halt-explicit", "--approver"],
+            *["qa@example.com", "--key", str(tmp_path / "nope.key")],
+        ],
+    )
+    assert result.exit_code == 2, result.output

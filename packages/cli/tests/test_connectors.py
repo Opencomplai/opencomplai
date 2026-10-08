@@ -8,6 +8,8 @@ import json
 import os
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 # ---------------------------------------------------------------------------
 # GitHub Actions connector tests
 # ---------------------------------------------------------------------------
@@ -833,3 +835,30 @@ class TestFailedControlsSummary:
             )
             assert run_connector(env={}, junit_path=os.devnull) == 1
         assert f"FAIL: control_fail — {GATED_SUMMARY}" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "module",
+    [
+        "opencomplai_cli.connectors.github_actions",
+        "opencomplai_cli.connectors.gitlab_ci",
+    ],
+)
+@pytest.mark.parametrize(
+    ("env", "flag"),
+    [
+        ({"SIGNING_KEY_PRIVATE": "abc"}, "--sign"),
+        ({"SIGNING_KEY_PRIVATE": ""}, "--sign-if-available"),
+        ({}, "--sign-if-available"),
+    ],
+)
+def test_connector_sign_flag_by_env(module, env, flag, tmp_path, monkeypatch):
+    import importlib
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("SIGNING_KEY_PRIVATE", raising=False)
+    run_connector = importlib.import_module(module).run_connector
+    with patch("subprocess.run") as mock_run:
+        mock_run.return_value = MagicMock(stdout="{}", stderr="", returncode=0)
+        run_connector(env=env)
+    assert mock_run.call_args[0][0][:3] == ["opencomplai", "check", flag]

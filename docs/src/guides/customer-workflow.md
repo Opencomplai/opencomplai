@@ -142,19 +142,19 @@ The **code corroboration scanner** cross-checks your `intended_purpose` against 
 
 #### Optional: local AI intent enrichment (`--ai-intent`)
 
-Add `--ai-intent` to layer semantic intent classification on top of signature detection. Each extracted callsite is classified locally (no data leaves the machine) across three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — and mapped to a per-callsite `eu_obligation` list.
+Add `--ai-intent` to layer intent classification on top of signature detection. Each extracted callsite is classified locally by the backends below (the opt-in `saas` backend is the exception: it sends redacted snippets to the hosted API after consent) across three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — and mapped to a per-callsite `eu_obligation` list.
 
-Install the AI plugin first. For CPU-only use (no C compiler needed):
+Install the AI plugin first. The `codebert-onnx` backend is a deterministic code-signal matcher: it runs on the base install, with no download and no extra packages. (The built-in default model is a local GGUF LLM, which needs the optional `[deep]` extra and a download; the commands below select `codebert-onnx` instead.)
 
 === "macOS / Linux"
     ```bash
-    pip install opencomplai-ai 'optimum[onnxruntime]'
+    pip install opencomplai-ai
     opencomplai ai configure --model codebert-onnx --set-default
     ```
 
 === "Windows (PowerShell)"
     ```powershell
-    pip install opencomplai-ai "optimum[onnxruntime]"
+    pip install opencomplai-ai
     opencomplai ai configure --model codebert-onnx --set-default
     ```
 
@@ -174,15 +174,28 @@ Then run the scan with intent enrichment:
     opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent --no-emit-evidence
     ```
 
-The first run with `codebert-onnx` exports the model from the PyTorch checkpoint (~440 MB, one-time download). Subsequent scans use the cached ONNX graph with no network access. The `AI Intent Analysis` block appears at the end of the output:
+The human-readable report gains an `EU AI Act Scan` block. Real output (excerpt) from a small repo that calls the Gemini API:
 
 ```
-AI Intent Analysis:
-  src/model.py:42  autonomy=autonomous  subject=natural_person  conf=0.9512
-  src/model.py:67  autonomy=advisory    subject=natural_person  conf=0.9301
+EU AI Act Scan
+  ────────────────────────────────────────
+
+  1. AI usage map (6 sites in 2 files)
+     llm_inference        2 files   create, gemini_api, load, openai
+     scoring              1 files   predict_proba
+
+  2. Prohibited (Art. 5) — 0 findings
+
+  3. High-risk (Annex III) — 0 findings
+
+  4. Limited-risk (Art. 50) — 2 findings
+     src/app/api/oracle/route.ts:4  gemini_api
+       Inform users they are interacting with an AI system at first interaction
+     src/app/api/oracle/route.ts:10  gemini_api
+       Inform users they are interacting with an AI system at first interaction
 ```
 
-An `autonomy=autonomous` + `subject=natural_person` classification maps to `["Art.6(2)+Annex III", "technical dossier required", "conformity assessment", "EU DB registration"]` — the same HIGH_RISK tier that an Annex III keyword match in your manifest would trigger. Use the annotations as a prompt to review whether your `intended_purpose` declaration accurately captures how the model output is actually used.
+A `decision_autonomy=autonomous` + `subject_type=natural_person` classification maps to `["Art.6(2)+Annex III", "Art.9 risk mgmt", "Art.13 transparency", "Art.14 human oversight", "Art.43 conformity assessment", "Art.49 EU DB registration"]` — the same HIGH_RISK tier that an Annex III keyword match in your manifest would trigger. Use the annotations as a prompt to review whether your `intended_purpose` declaration accurately captures how the model output is actually used.
 
 For the full model catalogue and a walkthrough of the under-declared example fixtures, see the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) and [scan command reference](../cli/scan.md#ai-intent-analysis---ai-intent).
 
@@ -267,7 +280,7 @@ Opencomplai gives you evidence and rule outputs — it does **not** make you com
    - **Section 5**: rationale + failed-rule remediation (carried by the rule outputs).
    When the manifest does not provide these, the generator falls back to stubs (`"Not specified in this release."`) and the dossier's `signature_status` makes the trust level explicit so an auditor cannot mistake the artifact for a fully populated one.
 5. **Run `verify-ledger` periodically** (weekly, and before any audit). If the chain breaks, evidence is no longer trustworthy.
-6. **Retain logs for the EU-AI-Act-required period** — default `LOG_RETENTION_DAYS=2555` (7 years) is already set in Section 4 of the dossier.
+6. **Declare your Article 12 record keeping in the manifest** (`record_keeping`: `logging_enabled`, `log_retention_days`, `evidence_vault_enabled`). The dossier repeats exactly what you declare; if you declare nothing it says logging is off and shows no retention period. Keeping the logs for as long as the Regulation requires is your responsibility.
 7. **If `EU_AIA_ART25_MODIFICATION_TRAP` fires** (substantial modification declared), do not redeploy until a fresh conformity assessment is signed off. The system enforces this with exit code 4.
 8. **Air-gap mode** — set `EGRESS_ALLOWED_DESTINATIONS=` (empty) in `infra/compose/.env` if the customer needs to prove no data leaves their network during assessments.
 
@@ -294,9 +307,10 @@ Generate a secret with:
 
 | `signature_status` | What it means | When |
 |---|---|---|
-| `unsigned` | No signature applied. Bundle checksum is still present for tamper detection. | OSS default. |
-| `hmac-local` | HMAC-SHA256 with a local symmetric key (`LOCAL_SIGNING_KEY_PATH`). Verifiable only by holders of the same key. | OSS with a configured local key — adequate for in-org integrity, not for third-party audit. |
-| `ed25519` | Asymmetric Ed25519 signature (`DOSSIER_SIGNING_KEY_PATH`). Verifiable by anyone holding the corresponding published public key. | Pro/Enterprise, or any deployment that publishes a verification key. |
+| `unsigned` | No signature applied. Bundle checksum is still present for tamper detection. | No Ed25519 key was available. |
+| `ed25519` | Asymmetric Ed25519 signature (`DOSSIER_SIGNING_KEY_PATH` or `SIGNING_KEY_PRIVATE`). Verifiable by anyone holding the corresponding published public key: `opencomplai verify <file> --kind dossier`. | Any deployment with an Ed25519 key. |
+
+`hmac-local` is a legacy value: dossiers are no longer signed with a symmetric key (`LOCAL_SIGNING_KEY_PATH` is ignored for dossiers), and `verify --kind dossier` reports one as invalid. Treat an `hmac-local` dossier as unverifiable.
 
 When both signing keys are set, Ed25519 always wins — the system never silently downgrades to a weaker mode.
 
@@ -305,7 +319,7 @@ When both signing keys are set, Ed25519 always wins — the system never silentl
 - It will not auto-fill training-data lineage, performance metrics, or oversight procedures. Those are human inputs into the dossier.
 - It will not classify by reading model weights or code — only by the manifest's free-text `intended_purpose` and explicit answers (`profiling_detected`, `substantial_modification`, `high_risk_presumption`).
 - It is not certification. The dossier is a structured input for an internal conformity assessment or a notified-body review — not a regulator-issued stamp.
-- The OSS edition produces an *unsigned* dossier by default, an `hmac-local` dossier when a symmetric key is configured, or an `ed25519` dossier when an Ed25519 PEM private key is configured. HSM/KMS key management, key rotation, and a hosted multi-tenant verification view are the Pro/Enterprise (SaaS) tier.
+- The OSS edition produces an *unsigned* dossier by default, or an `ed25519` dossier when an Ed25519 PEM private key is configured. HSM/KMS key management, key rotation, and a hosted multi-tenant verification view are the Pro/Enterprise (SaaS) tier.
 
 !!! tip "Not sure if the EU AI Act applies to your system?"
     Use the [EU AI Act Checker](../getting-started/eu-ai-act-checker.md) — an interactive wizard that runs entirely in the browser and walks through provider/deployer scope, high-risk classification, GPAI, and obligations. No account or backend required.

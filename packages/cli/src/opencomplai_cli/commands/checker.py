@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 import uuid
-from datetime import UTC, datetime
+from collections.abc import Callable, Sequence
+from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +23,20 @@ from opencomplai_core.compliance_checker import (
     render_pdf,
 )
 from opencomplai_core.compliance_checker.catalog import load_help_content
+from opencomplai_core.compliance_checker.merge import (
+    MergedCheckerResult,
+    merge_role_results,
+)
+from opencomplai_core.regulatory_timeline import (
+    articles_in_ref,
+    date_text,
+    provenance,
+    status_on,
+    timeline_for_articles,
+    today_utc,
+)
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Table
 
@@ -95,8 +109,13 @@ def _show_entity_guide() -> None:
     console.print(Panel(body, title="Operator roles (Article 3)", border_style="cyan"))
 
 
-def run_interactive_wizard(*, skip_allowed: bool = True) -> CheckerSession | None:
-    """Collect answers via terminal prompts. Returns None if skipped."""
+def run_interactive_wizard(
+    *, skip_allowed: bool = True, preset_entity: str | None = None
+) -> CheckerSession | None:
+    """Collect answers via terminal prompts. Returns None if skipped.
+
+    With ``preset_entity`` the E1 (operator role) question is not asked.
+    """
     console.print(
         Panel(
             "This wizard determines how the EU AI Act may apply to your AI system.\n"
@@ -120,11 +139,14 @@ def run_interactive_wizard(*, skip_allowed: bool = True) -> CheckerSession | Non
     if not answers["gate_is_ai_system"]:
         return CheckerSession(answers=answers)
 
-    _show_entity_guide()
-    entity = _select(
-        "Which kind of entity is your organisation?",
-        [(e.value, ENTITY_LABELS[e.value]) for e in EntityType],
-    )
+    if preset_entity is not None:
+        entity = preset_entity
+    else:
+        _show_entity_guide()
+        entity = _select(
+            "Which kind of entity is your organisation?",
+            [(e.value, ENTITY_LABELS[e.value]) for e in EntityType],
+        )
     answers["e1_entity_type"] = entity
 
     if entity == EntityType.AUTHORISED_REP.value:
@@ -250,15 +272,18 @@ def run_interactive_wizard(*, skip_allowed: bool = True) -> CheckerSession | Non
 
     if entity == EntityType.DEPLOYER.value:
         answers["r5_fria"] = _confirm(
-            "Are you a public body or private entity providing public services (FRIA under Art 27)?",
+            "Are you a body governed by public law, a private entity providing public services, or a deployer of an Annex III 5(b) or 5(c) system (credit scoring or life/health insurance pricing) (FRIA under Art 27)?",
             default=False,
         )
 
     return CheckerSession(answers=answers)
 
 
-def display_results(result: ComplianceCheckerResult) -> None:
-    """Render human-readable results with glossary."""
+def display_results(result: ComplianceCheckerResult, today: date | None = None) -> None:
+    """Render human-readable results with glossary.
+
+    `today` is the clock for the timeline status column (default: UTC today).
+    """
     headline_parts: list[str] = []
     if result.is_prohibited:
         headline_parts.append("[red]Prohibited[/red]")
@@ -299,6 +324,28 @@ def display_results(result: ComplianceCheckerResult) -> None:
             ot.add_row(item.title, item.article_ref, summary)
         console.print(ot)
 
+    if result.in_scope:
+        articles = [
+            a for o in result.obligations for a in articles_in_ref(o.article_ref)
+        ]
+        if result.is_prohibited:
+            articles.append("Art. 5")
+        entries = timeline_for_articles(articles)
+        if entries:
+            now = today or today_utc()
+            tt = Table(title="Regulatory timeline")
+            for column in ("Applies from", "Obligation", "Status", "Source"):
+                tt.add_column(column)
+            for e in entries:
+                status = status_on(e, now).replace("_", " ")
+                tt.add_row(
+                    escape(date_text(e)),
+                    escape(e.title),
+                    status,
+                    escape(provenance(e)),
+                )
+            console.print(tt)
+
     help_data = load_help_content()
     glossary = help_data.get("entity_definitions", {})
     if glossary:
@@ -320,6 +367,43 @@ def evaluate_and_finalize(session: CheckerSession) -> ComplianceCheckerResult:
     return result
 
 
+def parse_roles(values: list[str] | None) -> list[str]:
+    """Validate repeated --entity-type values; first-seen order, no duplicates."""
+    valid = [e.value for e in EntityType]
+    roles: list[str] = []
+    for raw in values or []:
+        role = raw.strip()
+        if role not in valid:
+            raise typer.BadParameter(
+                f"Unknown entity type {raw!r}. Valid values: {', '.join(valid)}"
+            )
+        if role not in roles:
+            roles.append(role)
+    return roles
+
+
+def evaluate_roles(
+    session_for_role: Callable[[str | None], CheckerSession | None],
+    roles: list[str],
+) -> MergedCheckerResult:
+    """Evaluate the checker once per role and merge (no roles: one plain run)."""
+    results: list[tuple[str, ComplianceCheckerResult]] = []
+    for role in roles or [None]:
+        session = session_for_role(role)
+        if session is None:
+            raise typer.Exit(0)
+        if role is not None:
+            session.answers["e1_entity_type"] = role
+        results.append((role or "", evaluate_and_finalize(session)))
+    if not roles:
+        result = results[0][1]
+        return MergedCheckerResult(result, [], [o.id for o in result.obligations], [])
+    merged = merge_role_results(results)
+    if merged.result.session_id is None:
+        merged.result.session_id = str(uuid.uuid4())
+    return merged
+
+
 def write_exports(
     result: ComplianceCheckerResult,
     *,
@@ -327,22 +411,27 @@ def write_exports(
     export_md: Path | None = None,
     export_pdf: Path | None = None,
     export_all_base: Path | None = None,
+    rationale: Sequence[str] | None = None,
 ) -> None:
     if export_all_base is not None:
         parent = export_all_base.parent
         base = export_all_base.stem
-        paths = export_all(result, parent, basename=base)
+        paths = export_all(result, parent, basename=base, rationale=rationale)
         console.print(f"Exported: {paths['json']}, {paths['markdown']}, {paths['pdf']}")
         return
     if export_json:
-        export_json.write_text(render_json(result), encoding="utf-8")
+        export_json.write_text(
+            render_json(result, rationale=rationale), encoding="utf-8"
+        )
         console.print(f"Wrote JSON: {export_json}")
     if export_md:
-        export_md.write_text(render_markdown(result), encoding="utf-8")
+        export_md.write_text(
+            render_markdown(result, rationale=rationale), encoding="utf-8"
+        )
         console.print(f"Wrote Markdown: {export_md}")
     if export_pdf:
         try:
-            export_pdf.write_bytes(render_pdf(result))
+            export_pdf.write_bytes(render_pdf(result, rationale=rationale))
             console.print(f"Wrote PDF: {export_pdf}")
         except ImportError as exc:
             err_console.print(f"[yellow]PDF export skipped:[/yellow] {exc}")
@@ -358,11 +447,19 @@ def load_answers_file(path: Path) -> CheckerSession:
 def build_checker_session_ref(
     result: ComplianceCheckerResult,
     report_json_path: Path | None = None,
-) -> dict[str, str]:
-    return {
+    *,
+    obligation_ids: Sequence[str] | None = None,
+    rationale: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    ref: dict[str, Any] = {
         "checker_version": CHECKER_VERSION,
         "session_id": result.session_id or str(uuid.uuid4()),
         "completed_at": datetime.now(UTC).isoformat(),
         "report_json_path": str(report_json_path) if report_json_path else "",
         "verdict": str(bridge_to_manifest_fields(result)["checker_verdict"]),
     }
+    if obligation_ids:
+        ref["obligation_ids"] = list(obligation_ids)
+    if rationale:
+        ref["rationale"] = list(rationale)
+    return ref

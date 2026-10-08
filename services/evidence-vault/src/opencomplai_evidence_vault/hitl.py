@@ -192,8 +192,8 @@ async def summarize_review_items(
 
     Note that the mean is computed over every decided item for the tenant.
     Only the two timestamp columns are selected rather than whole rows, but it
-    is still an unbounded scan; windowing it belongs with the same Phase 3
-    pagination tail as ``verify-chain``/``history-tips``, not here.
+    is still an unbounded scan; windowing it is separate from the bounded
+    ``verify-chain``/``history-tips`` walks and not done here.
     """
     pending_stmt = (
         select(ReviewItemDB.state, ReviewItemDB.reason, func.count())
