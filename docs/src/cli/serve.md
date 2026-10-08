@@ -7,7 +7,7 @@ browse recent history without leaving your laptop.
 
 **Don't:** confuse this with Pro / `dashboard enroll` / `dashboard-saas`. Serve
 never talks to SaaS ingest, never holds tenant tokens, and binds to
-`127.0.0.1` only.
+loopback only (`127.0.0.1` / `localhost`).
 
 ## Install
 
@@ -16,11 +16,43 @@ pip install 'opencomplai[serve]'
 # or: pip install 'opencomplai-cli[serve]'
 ```
 
+The `serve` extra pulls in `uvicorn`. Without it the command exits `2` and
+tells you to install the extra.
+
+## Synopsis
+
+=== "macOS / Linux"
+    ```bash
+    opencomplai serve [PROJECT_ROOT] [OPTIONS]
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai serve [PROJECT_ROOT] [OPTIONS]
+    ```
+
+## Arguments
+
+| Argument | Default | Description |
+|---|---|---|
+| `PROJECT_ROOT` | `.` | Project directory to scan. Must stay on this machine. |
+
+## Options
+
+| Option | Default | Description |
+|---|---|---|
+| `--host` | `127.0.0.1` | Loopback host only. Values other than `127.0.0.1` or `localhost` are rejected (exit `2`). |
+| `--port` | `8420` | Local TCP port for the dashboard. |
+
+These flags match `opencomplai serve --help` (`run_serve(project_root, host, port)`).
+
 ## Example
 
 ```bash
 opencomplai serve .
 # open http://127.0.0.1:8420/
+
+opencomplai serve . --host 127.0.0.1 --port 8420
 ```
 
 History is stored under `~/.opencomplai/scan-history/` (capped at 50 runs per
