@@ -9,7 +9,7 @@ For JavaScript/TypeScript integration, call the [Gateway API REST Reference](../
 ```typescript
 // Health check (no authentication required)
 const health = await fetch('http://localhost:8080/health').then(r => r.json());
-// { status: 'ok', service: 'gateway-api', version: '0.9.0' }
+// { status: 'ok', service: 'gateway-api', version: '0.9.1' }
 
 // Risk classification (requires an API key)
 const risk = await fetch('http://localhost:8080/v1/risk/classify', {

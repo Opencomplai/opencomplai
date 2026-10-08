@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import base64
 import json
+import logging
 import os
 import time
 
@@ -55,8 +56,10 @@ EVIDENCE_VAULT_URL = os.environ.get("EVIDENCE_VAULT_URL", "http://evidence-vault
 app = FastAPI(
     title="Opencomplai Documentation Generator",
     description="Annex IV technical documentation dossier generator (REQ-DOC-001).",
-    version="0.9.0",
+    version="0.9.1",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("doc-generator")
 
@@ -447,6 +450,11 @@ async def generate_docs(
     except HTTPException:
         raise
     except Exception as exc:
+        if isinstance(exc, ValidationError):
+            # pydantic messages quote the submitted values; log the class only.
+            logger.warning("Dossier request validation failed: %s", type(exc).__name__)
+        else:
+            logger.exception("Dossier generation failed unexpectedly")
         duration_ms = int((time.monotonic() - start) * 1000)
         raise HTTPException(
             status_code=500,

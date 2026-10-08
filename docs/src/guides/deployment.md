@@ -35,13 +35,13 @@ POSTGRES_PASSWORD=use_a_strong_random_password
 === "macOS / Linux"
     ```bash
     curl http://localhost:8080/health
-    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
     ```
 
 === "Windows (PowerShell)"
     ```powershell
     Invoke-WebRequest -Uri "http://localhost:8080/health"
-    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
     ```
 
 All services expose a `/health` endpoint for load balancer or monitoring integration.

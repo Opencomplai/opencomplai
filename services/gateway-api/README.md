@@ -108,7 +108,7 @@ either one overrides `OPENCOMPLAI_AUTH_DISABLED`.
 
 | Endpoint | Auth | Answers |
 |---|---|---|
-| `GET /health` | none | The gateway process is alive: `{"status":"ok","service":"gateway-api","version":"0.9.0"}`. Contacts nothing. Use for liveness and the Compose healthcheck. |
+| `GET /health` | none | The gateway process is alive: `{"status":"ok","service":"gateway-api","version":"0.9.1"}`. Contacts nothing. Use for liveness and the Compose healthcheck. |
 | `GET /v1/status` | required | Probes all four downstream services and reports each. Returns 200 even when degraded; add `?strict=1` to get 503 instead. |
 
 See [Observability](../../docs/src/deployment/observability.md) for how to monitor these.

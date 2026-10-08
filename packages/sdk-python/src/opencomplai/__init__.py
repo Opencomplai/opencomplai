@@ -51,7 +51,7 @@ from opencomplai_core.models import (
 
 from opencomplai.agent_log import AgentDecisionLog
 
-__version__ = "0.9.0"
+__version__ = "0.9.1"
 __all__ = [
     "FRAMEWORKS",
     "AgentDecisionLog",

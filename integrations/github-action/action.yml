@@ -11,7 +11,7 @@ inputs:
     default: system-manifest.json
   version:
     description: Exact opencomplai release to install through uvx (pinned with ==).
-    default: "0.9.0"
+    default: "0.9.1"
   install-from:
     description: Path or package spec that replaces the pinned release (for testing a checkout).
     default: ""

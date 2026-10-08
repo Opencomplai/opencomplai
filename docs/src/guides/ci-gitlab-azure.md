@@ -32,7 +32,7 @@ include:
 | --- | --- | --- |
 | `stage` | `test` | Pipeline stage that runs the job |
 | `image` | `python:3.11` | Container image |
-| `version` | `0.9.0` | Exact opencomplai release to install; empty installs the latest |
+| `version` | `0.9.1` | Exact opencomplai release to install; empty installs the latest |
 | `manifest` | `system-manifest.json` | Path to the system manifest |
 | `extra_args` | empty | Extra arguments for `opencomplai check` |
 | `sarif` | `false` | Also write a SARIF file and keep it as a job artifact |
@@ -87,7 +87,7 @@ steps:
     inputs:
       versionSpec: "3.11"
 
-  - script: pip install --quiet "opencomplai==0.9.0"
+  - script: pip install --quiet "opencomplai==0.9.1"
     displayName: Install OpenComplAI CLI
 
   - script: |

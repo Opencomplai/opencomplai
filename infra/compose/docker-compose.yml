@@ -86,6 +86,7 @@ services:
       # cache all persist through evidence-vault's HTTP API (PERSIST-RISK),
       # which already owns the one Postgres+RLS deployment in this stack
       # (TEN-VAULT). Previously provisioned but unused.
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       PORT: "8001"
       EVIDENCE_VAULT_URL: http://evidence-vault:8002
       INTERNAL_SERVICE_TOKEN_SECRET: ${INTERNAL_SERVICE_TOKEN_SECRET:?INTERNAL_SERVICE_TOKEN_SECRET is required}
@@ -135,6 +136,7 @@ services:
       context: ../..
       dockerfile: infra/docker/evidence-vault.Dockerfile
     environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       DATABASE_URL: postgresql://${POSTGRES_USER:-opencomplai}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opencomplai}
       EVIDENCE_DATA_DIR: /data/evidence
       KEY_DATA_DIR: /data/keys
@@ -174,6 +176,7 @@ services:
       context: ../..
       dockerfile: infra/docker/doc-generator.Dockerfile
     environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       EVIDENCE_VAULT_URL: http://evidence-vault:8002
       PORT: "8003"
       INTERNAL_SERVICE_TOKEN_SECRET: ${INTERNAL_SERVICE_TOKEN_SECRET:?INTERNAL_SERVICE_TOKEN_SECRET is required}
@@ -204,6 +207,7 @@ services:
       context: ../..
       dockerfile: infra/docker/egress-proxy.Dockerfile
     environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
       ALLOWED_DESTINATIONS: ${EGRESS_ALLOWED_DESTINATIONS:-}
       PORT: "8004"
       INTERNAL_SERVICE_TOKEN_SECRET: ${INTERNAL_SERVICE_TOKEN_SECRET:?INTERNAL_SERVICE_TOKEN_SECRET is required}

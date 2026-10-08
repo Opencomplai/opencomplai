@@ -9,6 +9,40 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.1] — 2026-10-08
+
+### Added
+
+- The Python services (risk-engine, evidence-vault, doc-generator,
+  egress-proxy) now log one JSON object per line to standard output (`ts`,
+  `level`, `logger`, `service`, `msg`, plus `exc_info`, and `trace_id` inside
+  an active OpenTelemetry span), and log errors that their request handlers
+  used to swallow. `LOG_LEVEL` sets the level (default `INFO`; an
+  unrecognised value falls back to `INFO` with a warning), and the Compose
+  stack now passes it to each service. Validation failures caused by client
+  input log only the exception class, never the submitted values. Uvicorn's
+  own startup and access lines stay plain text. Thanks to @Reh1t (#93).
+
+### Changed
+
+- The adversarial evaluator (`EVAL_ADVERSARIAL_V1`) recognises two more
+  refusal-suppression prompts ("never say 'as an AI'", "do not say 'I
+  cannot'"), one more compliant-output phrasing and five more refusal
+  phrasings ("I'm sorry, but", "I am unable to", ...), so results on the same
+  samples can differ from 0.9.0. Thanks to @Reh1t (#91).
+- `configure_telemetry()` in `opencomplai-core` now also sets up logging, with
+  or without OpenTelemetry installed: it adds the new
+  `opencomplai_core.telemetry.JsonFormatter` handler to the root logger (once,
+  next to any handlers already there), sets the root level from `LOG_LEVEL`
+  (default `INFO`) and keeps `httpx`/`httpcore` at `WARNING` or above, since
+  their request lines carry full URLs.
+
+### Fixed
+
+- risk-engine: an override idempotency key containing a space or control
+  character no longer breaks the duplicate-override lookup; the key is
+  percent-encoded in the request path.
+
 ## [0.9.0] — 2026-10-08
 
 ### Breaking
@@ -822,6 +856,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.9.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.1
 [0.9.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.0
 [0.8.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.8.0
 [0.7.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.7.1

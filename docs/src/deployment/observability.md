@@ -16,6 +16,18 @@ Opencomplai emits OpenTelemetry (OTel) traces and Prometheus metrics from every 
 
 ---
 
+## Logs
+
+The Python services write logs to standard output as one JSON object per line. Each line carries `ts`, `level`, `logger`, `service`, `msg` and, for logged exceptions, `exc_info`. `trace_id` appears only when an OpenTelemetry span is active, for example with external OpenTelemetry instrumentation, so you can match a log line to its trace. `OTEL_SERVICE_NAME` sets the `service` field. uvicorn's own startup and access lines keep its plain-text format.
+
+### Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `LOG_LEVEL` | `INFO` | Log level name (`DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`, case-insensitive) or number. An unrecognised value falls back to `INFO` and logs a warning. |
+
+---
+
 ## Quick Start
 
 1. Copy the env template and enable OTel:
@@ -131,7 +143,7 @@ backend on every request.
 {
   "status": "degraded",
   "service": "gateway-api",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "checked_at": "2026-07-30T20:35:00Z",
   "services": {
     "risk-engine":    { "status": "ok", "latency_ms": 12 },

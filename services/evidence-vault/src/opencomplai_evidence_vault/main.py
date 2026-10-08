@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import logging
 import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -101,6 +102,8 @@ from opencomplai_evidence_vault.models import (
 )
 from opencomplai_evidence_vault.models import Base as _LedgerBase
 from opencomplai_evidence_vault.service_auth_dependency import require_service_principal
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("evidence-vault")
 
@@ -466,7 +469,7 @@ def create_app() -> FastAPI:
             "Append-only Merkle-linked event ledger and content-addressable evidence store. "
             "Implements PRD requirements REQ-EV-001, REQ-EV-002, REQ-EV-003."
         ),
-        version="0.9.0",
+        version="0.9.1",
         lifespan=lifespan,
     )
 
@@ -535,6 +538,7 @@ def create_app() -> FastAPI:
         except HTTPException:
             raise
         except Exception as exc:
+            logger.warning("Database connectivity check failed: %s", type(exc).__name__)
             raise HTTPException(
                 status_code=503,
                 detail=f"database connectivity check failed: {exc.__class__.__name__}",
@@ -672,6 +676,7 @@ def create_app() -> FastAPI:
         try:
             content = base64.b64decode(request_body.content_base64, validate=True)
         except Exception as exc:
+            logger.warning("Invalid base64 content received: %s", type(exc).__name__)
             raise HTTPException(
                 status_code=422, detail=f"Invalid base64 content: {exc}"
             ) from exc

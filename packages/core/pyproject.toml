@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai-core"
-version = "0.9.0"
+version = "0.9.1"
 description = "Opencomplai core engine for AI compliance: the EU AI Act, and NIST AI RMF derived from the same evidence"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }

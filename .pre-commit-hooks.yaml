@@ -7,7 +7,7 @@
     `opencomplai-check` instead once you have a manifest and want a real CI gate.
   entry: opencomplai scan --quick --repo-root .
   language: python
-  additional_dependencies: ["opencomplai-cli==0.9.0"]
+  additional_dependencies: ["opencomplai-cli==0.9.1"]
   pass_filenames: false
   always_run: true
 
@@ -20,6 +20,6 @@
     VALIDATION_FAIL, POLICY_BLOCK, or TRAP_DETECTED (see exit codes in README).
   entry: opencomplai check
   language: python
-  additional_dependencies: ["opencomplai-cli==0.9.0"]
+  additional_dependencies: ["opencomplai-cli==0.9.1"]
   pass_filenames: false
   always_run: true

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import os
 from logging.config import fileConfig
 
@@ -9,8 +10,9 @@ from sqlalchemy import engine_from_config, pool
 
 config = context.config
 
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
+# An in-process run (EVIDENCE_VAULT_AUTO_MIGRATE) keeps the service's own logging.
+if config.config_file_name is not None and not logging.getLogger().handlers:
+    fileConfig(config.config_file_name, disable_existing_loggers=False)
 
 target_metadata = Base.metadata
 

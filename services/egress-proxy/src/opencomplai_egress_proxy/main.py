@@ -11,6 +11,7 @@ The only component allowed to make outbound network calls. Enforces:
 from __future__ import annotations
 
 import json
+import logging
 import os
 import urllib.request
 
@@ -45,8 +46,10 @@ app = FastAPI(
         "Allowlisted outbound traffic enforcer. No other service in the Docker Compose "
         "deployment has outbound network access. Implements REQ-ARC-001."
     ),
-    version="0.9.0",
+    version="0.9.1",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("egress-proxy")
 
@@ -103,7 +106,10 @@ def _emit_egress_blocked(
         with urllib.request.urlopen(req, timeout=3) as resp:
             return json.loads(resp.read()).get("event_id")
     except Exception:
-        return None  # non-blocking; vault unavailability is logged separately
+        logger.warning(
+            "Failed to record egress_blocked event in Evidence Vault", exc_info=True
+        )
+        return None  # non-blocking; the failure is logged above
 
 
 def _blocked_response(field_name: str, destination: str) -> JSONResponse:
@@ -154,7 +160,8 @@ async def gateway_health() -> Response:
                 status_code=r.status_code,
                 media_type=r.headers.get("content-type"),
             )
-    except Exception:
+    except Exception as exc:
+        logger.warning("Gateway health check failed: %s", type(exc).__name__)
         return JSONResponse(
             status_code=503, content={"status": "degraded", "service": "egress-proxy"}
         )
@@ -177,7 +184,8 @@ async def sync_metadata(request: Request) -> Response:
 
     try:
         payload = await request.json()
-    except Exception:
+    except Exception as exc:
+        logger.warning("Invalid JSON in sync_metadata payload: %s", type(exc).__name__)
         return JSONResponse(
             status_code=422,
             content={
@@ -213,6 +221,7 @@ async def sync_metadata(request: Request) -> Response:
                 media_type="application/json",
             )
         except Exception as exc:
+            logger.exception("Pro dashboard unreachable")
             return JSONResponse(
                 status_code=503,
                 content={
@@ -279,6 +288,7 @@ async def pro_ingest(sub_path: str, request: Request) -> Response:
                 media_type=r.headers.get("content-type", "application/json"),
             )
     except Exception as exc:
+        logger.exception("Evidence vault unreachable during Pro ingest forward")
         return JSONResponse(
             status_code=503,
             content={
@@ -327,6 +337,7 @@ async def proxy_to_gateway(path: str, request: Request) -> Response:
                 media_type=r.headers.get("content-type"),
             )
     except Exception as exc:
+        logger.exception("Gateway proxy request failed")
         return JSONResponse(
             status_code=503,
             content={

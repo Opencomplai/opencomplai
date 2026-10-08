@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import logging
+
+import pytest
 from opencomplai_core import telemetry
 from opencomplai_core.telemetry import (
     ALL_EVENTS,
@@ -42,6 +45,16 @@ def test_all_prd_events_defined() -> None:
         assert name
 
 
+@pytest.fixture
+def restore_root_logging():
+    root = logging.getLogger()
+    handlers, level = root.handlers[:], root.level
+    yield
+    root.handlers[:] = handlers
+    root.setLevel(level)
+
+
+@pytest.mark.usefixtures("restore_root_logging")
 def test_configure_telemetry_does_not_raise() -> None:
     """configure_telemetry must be safe to call even if OTel deps are absent."""
     configure_telemetry("test-service")

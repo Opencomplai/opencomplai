@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import urllib.request as urlreq
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -78,8 +80,10 @@ app = FastAPI(
         "Implements REQ-RISK-001 (Annex III), REQ-RISK-002 (profiling), "
         "REQ-RISK-003 (modification trap)."
     ),
-    version="0.9.0",
+    version="0.9.1",
 )
+
+logger = logging.getLogger(__name__)
 
 configure_telemetry("risk-engine")
 
@@ -215,6 +219,7 @@ async def validate_manifest(request: ManifestValidateRequest) -> dict:
         resolve_targets(manifest)  # rejects unknown framework ids
         return {"valid": True, "manifest": manifest.model_dump()}
     except Exception as exc:
+        logger.warning("Manifest validation failed: %s", type(exc).__name__)
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
@@ -336,6 +341,7 @@ def _vault_request(method: str, path: str, body: dict | None = None) -> dict | N
         with urlreq.urlopen(req, timeout=5) as resp:
             return json.loads(resp.read())
     except Exception:
+        logger.exception("Vault request failed")
         return None
 
 
@@ -347,7 +353,9 @@ def _lookup_accepted_override(idempotency_key: str) -> tuple[str, dict] | None:
     when the vault is down; a lookup miss here at worst re-runs an override
     that would otherwise have been served from cache.
     """
-    result = _vault_request("GET", f"/v1/hitl/overrides/{idempotency_key}")
+    result = _vault_request(
+        "GET", f"/v1/hitl/overrides/{quote(idempotency_key, safe=':')}"
+    )
     if result is None or not result.get("found"):
         return None
     return result["payload_fingerprint"], result["response_json"]
@@ -402,6 +410,7 @@ async def _record_hitl_event(
         with urlreq.urlopen(req, timeout=5) as resp:
             return json.loads(resp.read()).get("event_id")
     except Exception:
+        logger.exception("Failed to record HITL event in Evidence Vault")
         return None
 
 
@@ -651,6 +660,7 @@ async def run_evals_endpoint(request: EvalRunRequest) -> dict:
     try:
         sample_set = EvalSampleSet.model_validate(request.sample_set)
     except Exception as exc:
+        logger.warning("Eval sample set validation failed: %s", type(exc).__name__)
         raise HTTPException(
             status_code=422,
             detail={

@@ -1,9 +1,6 @@
-# Code owners. The handle below was taken from the repo docs and is unverified:
-# founder to confirm it, or swap it for a team (for example @OpenComplai/maintainers).
-# Enforcement (branch-protection "Require review from Code Owners") is a repository setting, not code.
+# Code owners. Enforcement (branch-protection "Require review from Code Owners") is a repository setting, not code.
 * @OpenComplaiCTO
 
 /.github/ @OpenComplaiCTO
 /scripts/ @OpenComplaiCTO
-/dashboard-saas/schemas/ @OpenComplaiCTO
 /packages/core/src/opencomplai_core/compliance_checker/ @OpenComplaiCTO

@@ -27,7 +27,7 @@ spec:
       default: python:3.11
       description: Container image used to run the job.
     version:
-      default: "0.9.0"
+      default: "0.9.1"
       description: Exact opencomplai release to install (pinned with ==). Empty installs the latest release.
     manifest:
       default: system-manifest.json

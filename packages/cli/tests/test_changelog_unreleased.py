@@ -82,6 +82,12 @@ def _v090_breaking() -> str:
     return m.group(1)
 
 
+def _latest_release() -> str:
+    m = re.search(r"^## \[\d+\.\d+\.\d+\][^\n]*\n(.*?)(?=^## \[)", _text(), re.S | re.M)
+    assert m, "no released block"
+    return m.group(1)
+
+
 def _guide() -> str:
     return GUIDE.read_text(encoding="utf-8") if GUIDE.is_file() else ""
 
@@ -167,7 +173,11 @@ def test_every_shipped_theme_has_a_line(theme):
 @pytest.mark.parametrize("kind", sorted(INTERNAL))
 def test_release_notes_have_no_internal_content(kind):
     pattern = re.compile(INTERNAL[kind], re.I | re.M)
-    for name, text in (("release block", _unreleased()), ("upgrade guide", _guide())):
+    for name, text in (
+        ("release block", _unreleased()),
+        ("latest release block", _latest_release()),
+        ("upgrade guide", _guide()),
+    ):
         lines = [ln for ln in text.splitlines() if pattern.search(ln)]
         assert not lines, f"{kind} in the {name}: {lines}"
 

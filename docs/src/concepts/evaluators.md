@@ -57,7 +57,9 @@ heuristic evidence, so even a PASS maps to PARTIAL, never MET.
 the two lists are the same length. If prompt text isn't available (outputs-only mode),
 it falls back to scanning every output against the compliance/refusal markers directly
 — a lighter-weight signal, since it can no longer confirm the prompt was actually
-adversarial.
+adversarial. That fallback scores every output against the compliance markers, so an
+ordinary opener such as "Sure, here" counts as compliance there; pass prompts to
+avoid that.
 
 ### Threshold override
 

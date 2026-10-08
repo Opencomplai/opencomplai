@@ -1,22 +1,62 @@
 """
-OpenTelemetry instrumentation helpers shared across Python services.
+OpenTelemetry instrumentation and logging helpers shared across Python services.
 
 Provides:
 - The canonical PRD Section 11.1 telemetry event names as constants.
-- ``configure_telemetry()`` — wires up the OTel SDK from environment variables.
+- ``JsonFormatter`` — renders log records as one JSON object per line.
+- ``configure_telemetry()`` — wires up JSON logging and the OTel SDK from
+  environment variables.
 - ``emit_event()`` — records a span and increments a Prometheus counter.
 - ``get_meter()`` — returns a configured OTel ``Meter``.
 - ``metrics_response()`` — produces a FastAPI Prometheus ``/metrics`` response.
 
-All entry points are graceful no-ops if the optional OpenTelemetry / Prometheus
-client packages are not installed, so importing this module never fails and
-services can boot without telemetry in air-gapped or stripped-down environments.
+The OpenTelemetry and Prometheus entry points are graceful no-ops if the
+optional client packages are not installed, so importing this module never
+fails and services can boot without telemetry in air-gapped or stripped-down
+environments. JSON logging needs only the standard library.
 """
 
 from __future__ import annotations
 
+import json
+import logging
 import os
+import sys
+from datetime import UTC, datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
+
+
+class JsonFormatter(logging.Formatter):
+    """Render each log record as a single-line JSON object."""
+
+    def __init__(self, service_name: str) -> None:
+        super().__init__()
+        self.service_name = service_name
+
+    def format(self, record: logging.LogRecord) -> str:
+        log_obj: dict[str, Any] = {
+            "ts": datetime.fromtimestamp(record.created, tz=UTC).isoformat(),
+            "level": record.levelname,
+            "logger": record.name,
+            "service": self.service_name,
+            "msg": record.getMessage(),
+        }
+        if record.exc_info:
+            log_obj["exc_info"] = self.formatException(record.exc_info)
+
+        try:
+            from opentelemetry import trace
+
+            span = trace.get_current_span()
+            if span and span.is_recording():
+                log_obj["trace_id"] = f"{span.get_span_context().trace_id:032x}"
+        except ImportError:
+            pass
+
+        return json.dumps(log_obj)
+
 
 # ---------------------------------------------------------------------------
 # PRD Section 11.1 telemetry event names (canonical — never deviate)
@@ -56,16 +96,50 @@ def _try_import_otel() -> tuple[Any, Any]:
         return None, None
 
 
+def _resolve_log_level() -> tuple[int, str | None]:
+    """Return ``(level, rejected)`` from ``LOG_LEVEL``; unusable values give INFO."""
+    raw = os.environ.get("LOG_LEVEL")
+    if raw is None:
+        return logging.INFO, None
+    name = raw.strip().upper()
+    try:
+        level = int(name) if name.isdecimal() else logging.getLevelNamesMapping()[name]
+    except (KeyError, ValueError):
+        return logging.INFO, raw
+    return level, None
+
+
 def configure_telemetry(service_name: str) -> None:
     """
-    Configure the OpenTelemetry SDK for a Python service.
+    Configure JSON logging and the OpenTelemetry SDK for a Python service.
+
+    Logging: adds one JSON handler (stdout) to the root logger unless one is
+    already installed, leaving any other root handlers alone, and sets the root
+    level. Never raises; an unusable ``LOG_LEVEL`` falls back to INFO with a
+    warning.
 
     Reads the following environment variables:
       OTEL_SERVICE_NAME            — overrides ``service_name`` if set
       OTEL_EXPORTER_OTLP_ENDPOINT  — optional gRPC OTLP endpoint for traces
+      LOG_LEVEL                    — level name (case-insensitive) or number
 
-    No-op when ``opentelemetry`` is not installed.
+    The OpenTelemetry part is a no-op when ``opentelemetry`` is not installed.
     """
+    resolved_service_name = os.environ.get("OTEL_SERVICE_NAME", service_name)
+    level, rejected = _resolve_log_level()
+
+    root = logging.getLogger()
+    if not any(isinstance(h.formatter, JsonFormatter) for h in root.handlers):
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(JsonFormatter(resolved_service_name))
+        root.addHandler(handler)
+    root.setLevel(level)
+    # httpx logs every request URL, query string included, at INFO.
+    for name in ("httpx", "httpcore"):
+        logging.getLogger(name).setLevel(max(level, logging.WARNING))
+    if rejected is not None:
+        logger.warning("Unrecognised LOG_LEVEL %r; falling back to INFO", rejected)
+
     trace, metrics = _try_import_otel()
     if trace is None or metrics is None:
         return
@@ -84,9 +158,7 @@ def configure_telemetry(service_name: str) -> None:
     except ImportError:
         return
 
-    resource = Resource.create(
-        {SERVICE_NAME: os.environ.get("OTEL_SERVICE_NAME", service_name)}
-    )
+    resource = Resource.create({SERVICE_NAME: resolved_service_name})
 
     tracer_provider = TracerProvider(resource=resource)
 

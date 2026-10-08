@@ -75,7 +75,7 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<db> alembic upgrade 
     # All services should show "(healthy)"
 
     curl http://localhost:8080/health
-    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
     ```
 
 === "Windows (PowerShell)"
@@ -84,7 +84,7 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<db> alembic upgrade 
     # All services should show "(healthy)"
 
     Invoke-WebRequest -Uri "http://localhost:8080/health"
-    # {"status":"ok","service":"gateway-api","version":"0.9.0"}
+    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
     ```
 
 ## Service ports (default)

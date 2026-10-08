@@ -2132,7 +2132,7 @@ wheels = [
 
 [[package]]
 name = "opencomplai"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "packages/sdk-python" }
 dependencies = [
     { name = "opencomplai-cli" },
@@ -2168,7 +2168,7 @@ provides-extras = ["dev", "reports", "inspect-bridge", "serve"]
 
 [[package]]
 name = "opencomplai-ai"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "packages/ai" }
 dependencies = [
     { name = "huggingface-hub" },
@@ -2206,7 +2206,7 @@ provides-extras = ["deep", "onnx", "dev"]
 
 [[package]]
 name = "opencomplai-cli"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "opencomplai-core", extra = ["reports"] },
@@ -2242,7 +2242,7 @@ provides-extras = ["dev", "serve"]
 
 [[package]]
 name = "opencomplai-core"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "packages/core" }
 dependencies = [
     { name = "cryptography" },
@@ -2276,7 +2276,7 @@ provides-extras = ["dev", "reports", "inspect-bridge"]
 
 [[package]]
 name = "opencomplai-doc-generator"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "services/doc-generator" }
 dependencies = [
     { name = "fastapi" },
@@ -2318,7 +2318,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "opencomplai-egress-proxy"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "services/egress-proxy" }
 dependencies = [
     { name = "fastapi" },
@@ -2360,7 +2360,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "opencomplai-evidence-vault"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "services/evidence-vault" }
 dependencies = [
     { name = "aiosqlite" },
@@ -2412,7 +2412,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "opencomplai-risk-engine"
-version = "0.9.0"
+version = "0.9.1"
 source = { editable = "services/risk-engine" }
 dependencies = [
     { name = "fastapi" },

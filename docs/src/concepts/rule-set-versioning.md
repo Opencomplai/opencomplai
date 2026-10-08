@@ -49,6 +49,8 @@ treating it as a regression in your system.
 The three move independently. A new rule can change a verdict without changing the schema, and a new
 optional field can widen the schema without touching a rule. `check` also stamps `cli_version` and
 `manifest_sha256` before signing, so a signed artifact says which tool and which manifest produced it.
+Evaluator signature lists (for example the adversarial evaluator's phrasings) are not part of the rule
+set; they change with the package version, so `cli_version` identifies them.
 
 ## What the version does not do
 
