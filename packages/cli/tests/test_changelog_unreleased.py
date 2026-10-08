@@ -41,12 +41,7 @@ THEMES = {
     "ISO 42001": r"42001",
     "DORA mapping": r"DORA",
     "GPAI": r"GPAI",
-    "ingest summaries": r"summaries",
-    "register": r"register",
-    "report shares": r"share",
-    "account export and closure": r"export.{0,60}(organisation|tenant)|erasure|purge",
-    "alerts": r"alert",
-    "audit log": r"audit",
+    "push summaries": r"summaries",
 }
 
 
@@ -94,6 +89,10 @@ def _guide() -> str:
 # The release block is the body of the public GitHub Releases and is synced to
 # the public repository word for word: none of these may appear in it.
 INTERNAL = {
+    "non-public product": (
+        r"\bdashboard\b|admin-api|render-api|/platform/|ALERT_FIRED|share link|shared report"
+        r"|\bingest (server|contract|schema|endpoint|kind)"
+    ),
     "private dashboard paths": r"dashboard-saas/",
     "private trust pack": r"docs/trust|trust\s+pack|CAIQ|SIG Lite|pentest",
     "review packet": r"lawyer",
@@ -110,17 +109,12 @@ INTERNAL = {
 BREAKING = {
     "sign without a key": "--sign-if-available",
     "multi-system manifest": "`systems`",
-    "satisfy evidence note": "evidence_note",
     "HMAC dossiers": "UNSUPPORTED_SIGNATURE",
-    "audit chain": "chain_head",
-    "tenant roles": "admin-only",
     "portfolio status": "scan_passed",
     "ledger tips paging": "after_seq",
-    "ingest body cap": "2 MiB",
     "signing key validation": "base64",
     "AI base install": "onnxruntime",
     "compose loopback": "OBSERVABILITY_BIND_ADDR",
-    "push order": "SCHEMA_VIOLATION",
 }
 
 SUPERSEDED = [
@@ -139,10 +133,7 @@ SUPERSEDED = [
 ]
 
 KNOWN_LIMITS = [
-    "earlier events are kept but not chained",
-    "cannot reach Sign out everywhere",
     "not yet published in the GitLab CI/CD Catalog",
-    "whatever `OPENCOMPLAI_REQUIRE_RLS_POSTURE` is set to",
     "only the last system's report",
     "in the locale encoding",
     "GHCR packages are public",
