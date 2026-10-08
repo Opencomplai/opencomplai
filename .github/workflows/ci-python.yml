@@ -474,4 +474,5 @@ jobs:
           echo "Gate self-test OK: unapproved dependency correctly detected (exit 1)"
 
       - name: Scan repo for unapproved AI/LLM packages
-        run: "$RUNNER_TEMP/ai_package_gate.sh" .
+        run: |
+          "$RUNNER_TEMP/ai_package_gate.sh" .
