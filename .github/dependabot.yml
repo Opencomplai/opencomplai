@@ -29,6 +29,13 @@ updates:
       interval: "weekly"
       day: "monday"
       time: "06:00"
+    # TypeScript 7 drops the JS compiler API that typescript-eslint 8.x loads,
+    # so eslint fails at startup; Vite majors are taken deliberately.
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
     groups:
       gateway-api:
         patterns:
