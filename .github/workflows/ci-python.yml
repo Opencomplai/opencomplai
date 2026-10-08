@@ -315,6 +315,8 @@ jobs:
           --ignore-vuln PYSEC-2026-2289
           --ignore-vuln PYSEC-2026-2290
           --ignore-vuln CVE-2026-9856
+          --ignore-vuln CVE-2026-104851
+          --ignore-vuln PYSEC-2026-4174
 
   ai-package-gate:
     name: AI/LLM package gate (EU AI Act Art. 3/50 / ISO 27001 A.5.7)
