@@ -1,6 +1,8 @@
 import { FastifyReply } from 'fastify';
 import { loadSharedSecret, mintServiceToken } from './serviceAuth';
 
+const PROXY_TIMEOUT_MS = Number(process.env.PROXY_TIMEOUT_MS) || 30000;
+
 /**
  * The four internal Python services (risk-engine, evidence-vault,
  * doc-generator, egress-proxy) require a signed service token on every
@@ -29,6 +31,13 @@ export async function proxyToService(
   // back to its own OSS_DEFAULT_TENANT_ID.
   const tenantId = reply.request?.tenantId;
   const tenantHeaders: Record<string, string> = tenantId ? { 'X-Tenant-Id': tenantId } : {};
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS);
+  
+  const onClientDisconnect = (): void => controller.abort();
+  reply.request?.raw?.on('close', onClientDisconnect);
+
   try {
     const response = await fetch(url, {
       method,
@@ -38,6 +47,7 @@ export async function proxyToService(
         ...tenantHeaders,
       },
       body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
     });
 
     const raw = await response.text();
@@ -51,13 +61,22 @@ export async function proxyToService(
     }
 
     reply.status(response.status).send(data);
-  } catch {
+  } catch (err: unknown) {
+    const isAbort = err instanceof Error && err.name === 'AbortError';
+    reply.request?.log?.error(
+      { err, upstream_url: url }, 
+      isAbort ? `Upstream proxy aborted (timeout or client disconnect)` : 'Upstream proxy failed'
+    );
+
     reply.status(503).send({
       error_code: 'DEPENDENCY_UNAVAILABLE',
-      message: `Upstream service unavailable: ${url}`,
+      message: 'Upstream service unavailable.',
       category: 'dependency',
       retryable: true,
-      correlation_id: reply.request.id,
+      correlation_id: reply.request?.id,
     });
+  } finally {
+    clearTimeout(timeoutId);
+    reply.request?.raw?.off('close', onClientDisconnect);
   }
 }

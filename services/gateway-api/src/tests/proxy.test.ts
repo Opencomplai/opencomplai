@@ -7,7 +7,12 @@ function fakeReply(tenantId?: string): FastifyReply {
   return {
     status: vi.fn().mockReturnThis(),
     send: vi.fn().mockReturnThis(),
-    request: tenantId !== undefined ? { tenantId, id: 'req-1' } : undefined,
+    request: {
+      tenantId,
+      id: 'req-1',
+      log: { error: vi.fn() },
+      raw: { on: vi.fn(), off: vi.fn() },
+    },
   } as unknown as FastifyReply;
 }
 
