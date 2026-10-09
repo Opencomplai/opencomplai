@@ -218,6 +218,7 @@ class IntentClassifier:
         ai_usage_type: str | None = None,
         gate_reason: str | None = None,
         legacy: bool = False,
+        import_only: bool = False,
     ) -> IntentAnnotation | None:
         tok = token or snippet.split("\n")[0][:80]
         annex = _match_annex_iii(snippet, declared_purpose, token=tok)
@@ -313,6 +314,26 @@ class IntentClassifier:
                 model_id="codebert-onnx",
                 confidence=confidence,
             )
+
+            if risk_tier == "high_risk" and import_only and not annex.declared_purpose_used:
+                ann = ann.model_copy(
+                    update={
+                        "risk_tier": "candidate",
+                        "eu_obligation": [],
+                        "explanation": (
+                            f'Matched "{annex.entry_title}" vocabulary but AST '
+                            "indicates it is only imported (not actively invoked). "
+                            "This finding is downgraded to candidate status."
+                        ),
+                        "needed_action": (
+                            "[Needs use-case confirmation] Please verify if this imported library is actively "
+                            "used for the flagged purpose in downstream files. If it is, update the declared_purpose "
+                            "to make that explicit so the scanner can escalate to high_risk."
+                        ),
+                    }
+                )
+                return ann
+
             if risk_tier == "minimal":
                 ann = ann.model_copy(
                     update={

@@ -334,6 +334,7 @@ def _build_eu_ai_scan_summary(
     prohibited: list[EuAiRegulatoryFinding] = []
     high_risk: list[EuAiRegulatoryFinding] = []
     limited: list[EuAiRegulatoryFinding] = []
+    candidates: list[EuAiRegulatoryFinding] = []
 
     for ev in regulatory_evidence:
         ann = ev.intent_annotation
@@ -369,12 +370,15 @@ def _build_eu_ai_scan_summary(
             high_risk.append(finding)
         elif ann.risk_tier == "limited_risk":
             limited.append(finding)
+        elif ann.risk_tier == "candidate":
+            candidates.append(finding)
 
     return EuAiScanSummary(
         capabilities=capabilities,
         prohibited=prohibited,
         high_risk=high_risk,
         limited_risk=limited,
+        candidates=candidates,
         gated_callsite_count=len(usage_matches),
         regulatory_finding_count=len(regulatory_evidence),
     )

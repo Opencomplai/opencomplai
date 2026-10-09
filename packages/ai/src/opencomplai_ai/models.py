@@ -17,10 +17,10 @@ DecisionAutonomy = Literal[
 ]
 SubjectType = Literal["natural_person", "legal_entity", "system", "unknown"]
 Consequential = Literal["yes", "no", "unknown"]
-RiskTier = Literal["prohibited", "high_risk", "limited_risk", "minimal"]
+RiskTier = Literal["prohibited", "high_risk", "limited_risk", "minimal", "candidate"]
 
 REGULATORY_RISK_TIERS: frozenset[str] = frozenset(
-    {"prohibited", "high_risk", "limited_risk"}
+    {"prohibited", "high_risk", "limited_risk", "candidate"}
 )
 
 # Annex III area → SignalCategory name (used by derive_eu_obligations and detector)
