@@ -1203,6 +1203,7 @@ class EuAiScanSummary(BaseModel):
     prohibited: list[EuAiRegulatoryFinding] = Field(default_factory=list)
     high_risk: list[EuAiRegulatoryFinding] = Field(default_factory=list)
     limited_risk: list[EuAiRegulatoryFinding] = Field(default_factory=list)
+    candidates: list[EuAiRegulatoryFinding] = Field(default_factory=list)
     gated_callsite_count: int = 0
     regulatory_finding_count: int = 0
 

@@ -54,7 +54,7 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "docs/risk_register.md",
-        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only â€” not a full obligation assessment.",
         "confidence": 0.6,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
@@ -94,7 +94,7 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "INSTRUCTIONS.md",
-        "rationale": "Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic content markers — a bare or empty file is not a set of instructions for use.",
+        "rationale": "Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic content markers â€” a bare or empty file is not a set of instructions for use.",
         "confidence": 0.35,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"
@@ -134,7 +134,7 @@
         "status": "partial",
         "source": "artifact",
         "evidence_ref": "docs/qms.md",
-        "rationale": "Found candidate artifact/signal for 'provider_qms' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+        "rationale": "Found candidate artifact/signal for 'provider_qms' (1 path(s), 0 code hint(s)). Heuristic only â€” not a full obligation assessment.",
         "confidence": 0.55,
         "confidence_label": "heuristic_estimate",
         "disclaimer_ref": "DISCLAIMER_V1"

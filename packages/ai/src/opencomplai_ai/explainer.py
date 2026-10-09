@@ -253,6 +253,7 @@ class IntentExplainer:
         ai_usage_type: str | None = None,
         gate_reason: str | None = None,
         legacy: bool = False,
+        import_only: bool = False,
     ) -> IntentAnnotation | None:
         try:
             with self._lock:

@@ -43,6 +43,7 @@ class SaaSIntentClient:
         ai_usage_type: str | None = None,
         gate_reason: str | None = None,
         legacy: bool = False,
+        import_only: bool = False,
     ) -> IntentAnnotation | None:
         # Checked before the API key: offline mode is a hard operator policy
         # and must not depend on whether credentials happen to be configured.

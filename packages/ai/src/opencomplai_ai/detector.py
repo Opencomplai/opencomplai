@@ -50,6 +50,7 @@ class IntentDetector(BaseDetector):
         evidence: list[EvidenceItem] = []
         usage_matches = usage_matches or {}
 
+        from opencomplai_core.scanner.feature_types import ImportRef
         callsites = [*features.callsites, *features.imports]
         for i, ref in enumerate(callsites):
             token = getattr(ref, "name", None) or getattr(ref, "module", "")
@@ -66,6 +67,7 @@ class IntentDetector(BaseDetector):
                 "token": token,
                 "ai_usage_type": ai_usage_type,
                 "legacy": ai_legacy,
+                "import_only": isinstance(ref, ImportRef),
             }
             if usage:
                 classify_kwargs["gate_reason"] = usage.reason

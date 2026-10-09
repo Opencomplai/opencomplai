@@ -2553,7 +2553,8 @@ _INTENT_TIER_ORDER = {
     "autonomous_high_risk": 1,
     "advisory_high_risk": 2,
     "high_risk": 3,
-    "other": 4,
+    "candidate": 4,
+    "other": 5,
 }
 
 _INTENT_DETAIL_LIMIT = 10
@@ -2631,7 +2632,14 @@ def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) ->
         if f.eu_obligation:
             console.print(f"       [yellow]{f.eu_obligation[0]}[/yellow]")
 
-    console.print("\n  [bold]5. Declaration cross-check[/bold]")
+    if summary.candidates:
+        console.print(
+            f"\n  [bold]5. Needs use-case confirmation (Candidate)[/bold] - {len(summary.candidates)} findings"
+        )
+        for f in summary.candidates[: 10 if not verbose else None]:
+            console.print(f"     [yellow]{f.location}[/yellow]  {f.function}")
+
+    console.print("\n  [bold]6. Declaration cross-check[/bold]")
     console.print(
         f"     declared:      {', '.join(report.declared_categories) or '(none)'}"
     )
@@ -2647,10 +2655,11 @@ def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) ->
         *summary.prohibited,
         *summary.high_risk,
         *summary.limited_risk,
+        *summary.candidates,
     ]
     with_rationale = [f for f in all_regulatory if f.rationale is not None]
     console.print(
-        f"\n  [bold]6. Flag rationale[/bold] — {len(with_rationale)} flagged lines"
+        f"\n  [bold]7. Flag rationale[/bold] — {len(with_rationale)} flagged lines"
     )
     if not with_rationale:
         console.print("     [dim](no regulatory-tier findings to explain)[/dim]")
@@ -2686,6 +2695,8 @@ def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) ->
 
 
 def _intent_risk_tier(ann) -> str:
+    if getattr(ann, "risk_tier", None) == "candidate":
+        return "candidate"
     if getattr(ann, "art5_prohibited", False):
         return "prohibited"
     if ann.decision_autonomy == "autonomous" and ann.consequential in (

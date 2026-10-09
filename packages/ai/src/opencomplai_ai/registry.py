@@ -17,7 +17,7 @@ __all__ = ["ModelNotInstalledError", "ModelRegistry"]
 
 
 class _IntentBackendProtocol:
-    def classify(self, snippet: str) -> IntentAnnotation: ...
+    def classify(self, snippet: str, **kwargs) -> IntentAnnotation: ...
 
 
 class ModelRegistry:

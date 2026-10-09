@@ -136,8 +136,8 @@ def test_render_eu_ai_scan_sections():
     assert "2. Prohibited" in output
     assert "3. High-risk" in output
     assert "4. Limited-risk" in output
-    assert "5. Declaration cross-check" in output
-    assert "6. Flag rationale" in output
+    assert "6. Declaration cross-check" in output
+    assert "7. Flag rationale" in output
     assert "WHY:" in output
     assert "ACTION:" in output
     assert "APIRouter" not in output
