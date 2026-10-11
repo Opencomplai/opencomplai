@@ -14,7 +14,7 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
-    "@fastify/rate-limit": "^11.2.0",
+    "@fastify/rate-limit": "^11.2.1",
     "@fastify/swagger": "^9.9.0",
     "@fastify/swagger-ui": "^6.1.1",
     "fastify": "^5.12.5",
@@ -22,10 +22,10 @@
     "zod": "^4.6.5"
   },
   "optionalDependencies": {
-    "@opentelemetry/auto-instrumentations-node": "^0.80.0",
-    "@opentelemetry/exporter-prometheus": "^0.222.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.81.0",
+    "@opentelemetry/exporter-prometheus": "^0.223.0",
     "@opentelemetry/resources": "^2.11.0",
-    "@opentelemetry/sdk-node": "^0.222.0",
+    "@opentelemetry/sdk-node": "^0.223.0",
     "@opentelemetry/semantic-conventions": "^1.43.0"
   },
   "devDependencies": {
@@ -39,7 +39,7 @@
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
     "typescript": "^5.3.3",
-    "vite": "^7.3.6",
+    "vite": "^7.3.7",
     "vitest": "^5.0.1"
   }
 }
