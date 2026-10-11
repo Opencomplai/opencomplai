@@ -33,7 +33,7 @@ def _read_all(state_dir: Path) -> dict:
     if not path.exists():
         return {}
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         # A corrupt or unreadable state file must not crash every subsequent
         # check/docs-generate call — treat it as "no record", the same as a
@@ -71,7 +71,9 @@ def save_state(
         "reason": reason,
         "commit_ref": commit_ref,
     }
-    _state_file(state_dir).write_text(json.dumps(records, indent=2, sort_keys=True))
+    _state_file(state_dir).write_text(
+        json.dumps(records, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
 
 def state_record(state_dir: Path, system_id: str) -> dict | None:

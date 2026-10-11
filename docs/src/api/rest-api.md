@@ -102,7 +102,7 @@ Health check for the gateway API process. The only endpoint that needs no creden
 {
   "status": "ok",
   "service": "gateway-api",
-  "version": "0.9.1"
+  "version": "0.9.2"
 }
 ```
 
@@ -574,7 +574,7 @@ The request also accepts the optional Annex IV inputs `training_data_description
 
 ## `POST /v1/evidence/events`
 
-Append an event to the append-only Merkle-linked evidence ledger.
+Append an event to the append-only hash-chained evidence ledger.
 
 **Request body:**
 
@@ -629,7 +629,7 @@ Verify the integrity of the caller's evidence ledger. Each tenant has its own in
 
 ## `GET /v1/evidence/ledger-root`
 
-Return the current Merkle tip of the ledger: the hash an Annex IV dossier anchors to, so later tampering with older events can be detected.
+Return the current chain tip of the ledger: the hash an Annex IV dossier anchors to, so later tampering with older events can be detected.
 
 **Response `200`:**
 
@@ -645,7 +645,7 @@ For an empty ledger this is the genesis hash, the SHA-256 of the empty string.
 
 ## `GET /v1/evidence/ledger-history-tips`
 
-Return the rolling Merkle tip after every event, so you can confirm that a dossier's recorded `ledger_root_hash` is a real point in the chain. Read the chain a page at a time with `limit` and `after_seq`; without them the whole list comes back in one response, which is only allowed for ledgers of up to 10,000 events.
+Return the rolling chain tip after every event, so you can confirm that a dossier's recorded `ledger_root_hash` is a real point in the chain. Read the chain a page at a time with `limit` and `after_seq`; without them the whole list comes back in one response, which is only allowed for ledgers of up to 10,000 events.
 
 **Query parameters:**
 
@@ -950,8 +950,8 @@ Record compliance metrics in the evidence ledger (a `pro_metrics_ingested` event
 | `GET` | `/v1/docs/{dossier_id}` | doc-generator | Retrieve a dossier (EU AI Act only) |
 | `POST` | `/v1/evidence/events` | evidence-vault | Append ledger event |
 | `GET` | `/v1/evidence/verify-chain` | evidence-vault | Verify ledger chain integrity |
-| `GET` | `/v1/evidence/ledger-root` | evidence-vault | Current Merkle tip |
-| `GET` | `/v1/evidence/ledger-history-tips` | evidence-vault | Merkle tip after every event |
+| `GET` | `/v1/evidence/ledger-root` | evidence-vault | Current chain tip |
+| `GET` | `/v1/evidence/ledger-history-tips` | evidence-vault | Chain tip after every event |
 | `POST` | `/v1/sync/metadata` | egress-proxy | Sync metadata to dashboard |
 | `GET` | `/v1/status` | gateway-api | Aggregate downstream status |
 | `GET` | `/v1/portfolio` | evidence-vault | Systems on record with latest badge |

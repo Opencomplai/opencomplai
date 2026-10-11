@@ -9,6 +9,83 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.2] — 2026-10-11
+
+### Added
+
+- The GitHub Action keeps the compliance artifact. `upload-artifact` (default
+  `true`; set it to `"false"` to skip) uploads `compliance-artifact.json` as a
+  workflow artifact kept for 90 days, named by the new `artifact-name` input
+  (default `compliance-artifact-<commit sha>`). The new `sign` input signs the
+  artifact when your signing key is in the environment (it warns and writes the
+  artifact unsigned otherwise), the new `with-gaps` input adds the per-article
+  gap report to it, and the new `artifact-file` output gives its path.
+- Documentation: the `check` page now has a row for every option, the
+  `OPENCOMPLAI_CHECK_ARGS` variable and a "Reports for CI" section; the agent
+  commands page covers `attest`, `verify-log`, `import-log` and
+  `dispute-report` with every option and exit code; the GitHub Action has its
+  own guide page; the CI recipes guide adds a scheduled re-run, attaching the
+  artifact to a release, recording agent decisions and scoring recorded model
+  responses offline; the SDK reference documents `AgentDecisionLog`; and the
+  works-alongside guide has a section on feeding the
+  artifact to the governance platform you already use.
+
+### Changed
+
+- An agent mandate whose `expires_at` is before today (UTC date) now makes the
+  Art. 26 row Missing, and a guardrail whose `evidence_ref`
+  names a file that does not exist or lies outside the repository now makes
+  the Art. 15 row Missing, so a gap report can show Missing where 0.9.1 did
+  not.
+- The backlog no longer shows a single application date for an article that two
+  regulatory timeline entries date differently (for example an Annex III and an
+  Annex I entry). Before, the earlier date was shown; now the deadline is empty
+  and the row sorts with the undated ones. Entries with an unknown date are
+  still ignored.
+- `opencomplai scan` now maps a declared purpose to Annex III and Art. 5 areas
+  with the same word-boundary matcher that `check` uses. A purpose such as
+  "analytics reporting" no longer maps to employment in a scan while `check`
+  reports minimal, and a keyword that is only part of a longer word no longer
+  matches, so scan results on the same input can differ from 0.9.1.
+- The adversarial evaluator (`EVAL_ADVERSARIAL_V1`, signature set 1.2.0) and
+  the safety evaluator (`EVAL_SAFETY_LEXICAL_V1`, signature set 1.1.0) now
+  normalise text (NFKC, zero-width characters removed, curly quotes folded)
+  and match each signature as a whole word. "act as Daniel" no longer matches
+  "act as dan", a refusal written with a curly apostrophe is recognised, and
+  the safety injection and jailbreak markers no longer match inside longer
+  words, so results on the same samples can differ from 0.9.1.
+- Documentation wording: `opencomplai docs generate` is named as the gate for
+  the high-risk dossier and the pages say that `check` does not validate the
+  dossier; the evidence ledger is described as a hash chain, not a Merkle
+  tree, in the docs and API summaries; the `verify-log --vault` option says the
+  whole log entry is stored in the vault object store; the checker page states
+  the golden fixture and shared vector counts it is verified against; and the
+  performance page uses the right container image path.
+
+### Fixed
+
+- A `check` over several manifests with `--report-junit`, `--sarif-output` or
+  `--summary-md` wrote every system to the same path, so only the last system's
+  report survived. Each system now writes `<stem>.<system_id><ext>` beside the
+  path you gave; a single-manifest run still writes the exact path.
+- A `check` over several manifests with `--sample-set` passed the same file to
+  every system, so only the system whose id matched it could pass. Each system
+  now gets its own copy with its `system_id` filled in; your file is never
+  modified.
+- Non-ASCII manifests, tokens and state files no longer fail on Windows hosts
+  whose default code page is not UTF-8: the CLI and library now read and write
+  these text files as UTF-8.
+- An Art. 72 post-market monitoring plan rendered by `recommend` and left
+  unedited, or with only its placeholders deleted, was read as authored text.
+  The template's own lines no longer count, so the plan now reads Unfilled at
+  low confidence instead of Present, and a line that is only a label (such as
+  `Owner:`) is not counted as content.
+- `opencomplai ai status` counts the files inside nested cache folders (it only
+  counted top-level files), shows `<1 MB` for a small cache, shows a model
+  whose size is not known as `unknown` instead of `~0 MB`, and says a model
+  that has to be downloaded is not yet downloaded when its cache folder exists
+  but is empty.
+
 ## [0.9.1] — 2026-10-08
 
 ### Added
@@ -856,6 +933,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.9.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.2
 [0.9.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.1
 [0.9.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.0
 [0.8.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.8.0

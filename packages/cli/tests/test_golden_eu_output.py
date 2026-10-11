@@ -147,10 +147,16 @@ def _init(cli, purpose: str, target: str = "EU_AI_ACT") -> None:
     )
 
 
-def _read(path: str, tmp_path: Path, encoding: str | None = None) -> str:
-    # The manifest and artifact are written with the locale encoding (cp1252
-    # on Windows), so read them back the same way; report.html is UTF-8.
+def _read(path: str, tmp_path: Path, encoding: str = "utf-8") -> str:
+    # init, check and report all write UTF-8, so decode as UTF-8 on every host
+    # whatever the locale is (cp1252 on Windows).
     return _normalise(Path(path).read_text(encoding=encoding), tmp_path)
+
+
+def test_golden_reads_are_utf8(tmp_path):
+    path = tmp_path / "utf8.txt"
+    path.write_bytes("risk review — quarterly\n".encode())
+    assert _read(str(path), tmp_path) == "risk review — quarterly\n"
 
 
 def test_init_manifest(cli, tmp_path):

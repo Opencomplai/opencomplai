@@ -165,7 +165,7 @@ class ScanRequest(BaseModel):
 
 ### `LedgerEvent`
 
-A single entry in the append-only Merkle-linked evidence ledger.
+A single entry in the append-only hash-chained evidence ledger.
 
 ```python
 class LedgerEvent(BaseModel):
@@ -173,7 +173,7 @@ class LedgerEvent(BaseModel):
     ts: datetime
     event_type: str     # e.g. "compliance_check_started"
     payload_hash: str   # SHA-256 of event payload
-    prev_hash: str      # SHA-256 of previous event (Merkle chain)
+    prev_hash: str      # SHA-256 of previous event (hash chain)
     signer_id: str | None
 ```
 

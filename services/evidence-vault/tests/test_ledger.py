@@ -1,4 +1,4 @@
-"""Tests for the Merkle-linked event ledger (REQ-EV-001)."""
+"""Tests for the hash-chained event ledger (REQ-EV-001)."""
 
 from __future__ import annotations
 

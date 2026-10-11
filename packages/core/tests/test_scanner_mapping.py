@@ -2,8 +2,14 @@
 
 from __future__ import annotations
 
-from opencomplai_core.models import SignalCategory
-from opencomplai_core.rules import ANNEX_III_CATEGORIES, UNACCEPTABLE_RISK_SIGNALS
+import pytest
+from opencomplai_core.models import AssessmentInput, ModelMetadata, SignalCategory
+from opencomplai_core.rules import (
+    ANNEX_III_CATEGORIES,
+    UNACCEPTABLE_RISK_SIGNALS,
+    AnnexIIIClassifierRule,
+    match_annex_iii_categories,
+)
 from opencomplai_core.scanner.mapping import (
     derive_declared_categories,
     signal_category_to_taxonomy,
@@ -59,3 +65,75 @@ def test_unacceptable_signal_in_purpose():
     assert "unacceptable" in declared or any(
         s in "social scoring system" for s in UNACCEPTABLE_RISK_SIGNALS
     )
+
+
+def test_analytics_dashboard_yields_no_employment_category():
+    assert "employment" not in derive_declared_categories("analytics dashboard")
+
+
+def test_resume_screening_for_hiring_still_yields_employment():
+    assert "employment" in derive_declared_categories(
+        "automated resume screening for hiring"
+    )
+
+
+def test_part_word_keyword_does_not_map():
+    assert derive_declared_categories("inference cascade service") == []
+
+
+def test_part_word_prohibited_signal_does_not_map():
+    assert derive_declared_categories("olive rbi planner") == []
+
+
+def test_social_scoring_still_unacceptable():
+    assert "unacceptable" in derive_declared_categories("social scoring system")
+
+
+def _rule_input(use_case: str) -> AssessmentInput:
+    return AssessmentInput(
+        model=ModelMetadata(
+            name="m",
+            version="1.0",
+            modality="text",
+            use_case=use_case,
+            deployment_context="production",
+        ),
+        answers={},
+    )
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "analytics dashboard",
+        "automated resume screening for hiring",
+        "inference cascade service",
+        "olive rbi planner",
+        "social scoring system",
+        "candidate ranking for hiring",
+        "credit scoring to approve consumer loan applicants",
+        "credit scoring for corporate bond portfolio counterparty",
+    ],
+)
+def test_declared_categories_agree_with_rule_engine(text):
+    declared = [c for c in derive_declared_categories(text) if c != "unacceptable"]
+    engine = sorted(match_annex_iii_categories(text).categories)
+    assert declared == engine
+    assert AnnexIIIClassifierRule().evaluate(_rule_input(text)).passed is (not engine)
+
+
+def test_match_annex_iii_categories_reports_gated_areas():
+    m = match_annex_iii_categories("credit risk scorecard for our bond portfolio")
+    assert m.subject_gated
+    assert m.categories == []
+
+
+def test_bare_label_tokens_do_not_add_areas():
+    assert signal_category_to_taxonomy(SignalCategory.AI_SDK, "credit") == []
+    assert signal_category_to_taxonomy(
+        SignalCategory.SCORING_PROFILING, "classifier"
+    ) == [
+        "employment",
+        "essential_services",
+        "law_enforcement",
+    ]

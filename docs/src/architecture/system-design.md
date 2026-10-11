@@ -71,7 +71,7 @@ redis    :6379  (internal — risk-engine verification task queue)
 | Egress allowlisting | `EGRESS_ALLOWED_DESTINATIONS` in `.env`; empty = fully air-gapped |
 | Signed artifacts | Ed25519 keypair in `~/.opencomplai/`; `--sign` flag on `check` |
 | Immutable evidence | Content-addressed storage (SHA-256 keyed) in evidence-vault |
-| Tamper detection | Merkle-linked `LedgerEvent` chain; verifiable with `tools/verify-ledger/` |
+| Tamper detection | hash-chained `LedgerEvent` chain; verifiable with `tools/verify-ledger/` |
 | Read-only containers | All service containers run `read_only: true` with `tmpfs: /tmp` |
 | Non-root | All containers run as UID 1001 |
 

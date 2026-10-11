@@ -14,9 +14,9 @@ Every compliance check produces evidence objects that can be audited independent
 
 In service-backed mode (Docker Compose stack), evidence objects are stored in the `evidence-vault` service using a content-addressed model: each object's SHA-256 hash is its storage key. This means evidence objects are immutable — the same hash always refers to the same content.
 
-## The Merkle ledger
+## The hash-chained ledger
 
-The evidence-vault service maintains an append-only Merkle-linked event ledger. Each `LedgerEvent` records:
+The evidence-vault service maintains an append-only hash-chained event ledger. Each `LedgerEvent` records:
 
 - `event_id` — UUID
 - `ts` — timestamp

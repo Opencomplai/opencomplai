@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -57,6 +59,36 @@ def test_install_sh_fails_clearly_without_uv(tmp_path: Path) -> None:
     )
     assert proc.returncode == 1, proc.stdout + proc.stderr
     assert "uv" in proc.stdout + proc.stderr
+
+
+def test_install_ps1_fails_clearly_without_uv(tmp_path: Path) -> None:
+    ps = shutil.which("powershell.exe") or shutil.which("pwsh")
+    if ps is None:
+        pytest.skip("PowerShell not available")
+    env = {"PATH": str(tmp_path), "HOME": str(tmp_path), "USERPROFILE": str(tmp_path)}
+    if sys.platform == "win32":
+        root = os.environ.get("SystemRoot", r"C:\Windows")
+        env["PATH"] = os.pathsep.join([str(tmp_path), str(Path(root) / "System32")])
+        env["SystemRoot"] = root
+        env["windir"] = os.environ.get("windir", root)
+    proc = subprocess.run(
+        [
+            ps,
+            "-NoProfile",
+            "-NonInteractive",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            str(_PS1),
+        ],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    assert "uv is not installed" in proc.stdout + proc.stderr
 
 
 def test_install_ps1_wraps_uv_with_python_floor() -> None:

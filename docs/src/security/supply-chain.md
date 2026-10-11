@@ -127,6 +127,12 @@ image nobody had checked.
 Unfixable findings are excluded (`ignore-unfixed`). They cannot be acted on
 here, and a gate that cannot be made green is one people learn to route around.
 
+The Trivy record, [`infra/docker/TRIVY-LAST-RUN.md`](https://github.com/Opencomplai/opencomplai/blob/main/infra/docker/TRIVY-LAST-RUN.md),
+is a point-in-time record of the release gate's scan on the five images. It is not a
+guarantee that the images are clean today. Refresh it by re-running the build and scan
+commands recorded in the file whenever the pinned Trivy version or a `FROM` base digest
+changes; `test_docker_images_hardening.py` fails until it matches.
+
 ## Python packages
 
 PyPI releases are published with **Trusted Publishing (OIDC)**, with no API

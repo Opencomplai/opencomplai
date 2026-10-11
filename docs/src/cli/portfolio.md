@@ -33,12 +33,15 @@ applies to each system.
 |---|---|---|
 | `--manifest` / `-m` | `system-manifest.json` | Repeatable, one system per manifest. A value with `*`, `?` or `[` that is not an existing file is expanded by the CLI itself, so quoting works the same in PowerShell. A pattern that matches nothing exits `2`. |
 | `--output-dir` | `.` | Base directory. Each system writes into a subdirectory of it. |
+| `--sample-set` | *(none)* | One shared file. Each system reads its own copy, `<system_id>/sample-set.json`, with `system_id` set to that system's id. The file you passed is never modified. |
 
 ## Output files
 
 ```text
 out/
   alpha/compliance-artifact.json     # one directory per system_id
+  alpha/sample-set.json              # written when --sample-set is given
+  alpha/eval-report.json             # written when --sample-set is given
   beta/compliance-artifact.json
   portfolio-summary.json
 ```

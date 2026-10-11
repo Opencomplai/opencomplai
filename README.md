@@ -106,9 +106,14 @@ more than the code actually does: every field is either automated from your
 manifest and risk classification, wired evidence loaded from a real scan/eval
 report, or an explicit provider-attestation placeholder when nobody has
 supplied it yet. Opencomplai assembles supporting evidence — **it does not
-certify that you are compliant**, and a dossier still carrying placeholders
-for a HIGH-risk system fails the release gate rather than being presented as
-complete. See [Controls Lifecycle](docs/src/concepts/controls.md) and the
+certify that you are compliant**. For a HIGH-risk system,
+`opencomplai docs generate` is the release gate for the dossier: it exits 2
+(`VALIDATION_FAIL`), and the doc-generator service returns 422, while the
+dossier still carries placeholders, unless `--allow-incomplete` is passed.
+`opencomplai check` does not validate the dossier, so a CI job gates on this
+only if it runs `docs generate` (see
+[docs generate](docs/src/cli/docs-generate.md)). See
+[Controls Lifecycle](docs/src/concepts/controls.md) and the
 [Annex IV Coverage Ledger](docs/src/concepts/annex-iv-coverage.md) for the
 full breakdown.
 

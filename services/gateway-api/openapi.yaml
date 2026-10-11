@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
   title: Opencomplai Gateway API
-  version: 0.9.1
+  version: 0.9.2
   description: |
     REST API gateway for the Opencomplai compliance platform.
     All routes proxy to the appropriate Python service.
@@ -149,7 +149,7 @@ paths:
   /v1/evidence/ledger-root:
     get:
       operationId: getLedgerRoot
-      summary: Current Merkle chain tip of the tenant's evidence ledger (idempotent)
+      summary: Current chain tip of the tenant's evidence ledger (idempotent)
       description: >-
         The hash an Annex IV dossier anchors to. For an empty ledger this is
         the genesis hash (sha256 of the empty string).
@@ -170,7 +170,7 @@ paths:
   /v1/evidence/ledger-history-tips:
     get:
       operationId: getLedgerHistoryTips
-      summary: Rolling Merkle tip after every event in the tenant's ledger (idempotent)
+      summary: Rolling chain tip after every event in the tenant's ledger (idempotent)
       description: >-
         Used to confirm that a dossier's recorded ledger_root_hash is a real
         historical point in the chain. Without parameters the vault returns

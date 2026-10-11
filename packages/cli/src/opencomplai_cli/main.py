@@ -5028,9 +5028,11 @@ def ai_configure_cmd(
     else:
         import questionary
 
+        from opencomplai_cli.ai_status import spec_size_label
+
         choices = []
         for mid, spec in MODEL_CATALOG.items():
-            label = f"{mid:<28} [{spec.size_mb} MB,  {spec.license},  {spec.runtime}]"
+            label = f"{mid:<28} [{spec_size_label(spec.size_mb)},  {spec.license},  {spec.runtime}]"
             if mid == "qwen2.5-coder-1.5b":
                 label += "  ← recommended"
             if mid == "codebert-onnx":
@@ -5068,6 +5070,12 @@ def ai_status_cmd() -> None:
     from opencomplai_ai.config import get_active_model, get_cache_dir
     from opencomplai_ai.models import MODEL_CATALOG
 
+    from opencomplai_cli.ai_status import (
+        cache_files,
+        format_cache_size,
+        spec_size_label,
+    )
+
     active = get_active_model()
     spec = MODEL_CATALOG.get(active)
     cache_dir = get_cache_dir()
@@ -5076,7 +5084,7 @@ def ai_status_cmd() -> None:
     console.print(f"  active model  : {active}")
     if spec:
         console.print(f"  display name  : {spec.display_name}")
-        console.print(f"  size          : ~{spec.size_mb} MB")
+        console.print(f"  size          : {spec_size_label(spec.size_mb)}")
         console.print(f"  runtime       : {spec.runtime}")
         console.print(f"  license       : {spec.license}")
         deep_status = (
@@ -5088,17 +5096,21 @@ def ai_status_cmd() -> None:
             console.print(f"  llama-cpp     : {deep_status}")
     console.print(f"  cache dir     : {cache_dir}")
 
-    if cache_dir.exists():
-        total = sum(f.stat().st_size for f in cache_dir.iterdir() if f.is_file())
-        console.print(f"  cache size    : {total // (1024 * 1024)} MB")
-        cached = [f.name for f in cache_dir.iterdir() if f.is_file()]
-        if cached:
-            console.print(f"  cached files  : {', '.join(cached)}")
+    files = cache_files(cache_dir)
+    if files:
+        from rich.markup import escape
+
+        console.print(
+            f"  cache size    : {format_cache_size(sum(n for _, n in files))}"
+        )
+        console.print(f"  cached files  : {', '.join(escape(p) for p, _ in files)}")
     elif spec is None or spec.needs_preload:
         # codebert-onnx (deterministic matcher) and saas (cloud client) have no
         # local artifact, so an empty cache is not a missing download. Models
         # downloaded earlier are still listed above when the cache exists.
         console.print("  cache dir     : (empty — model not yet downloaded)")
+    elif cache_dir.exists():
+        console.print("  cache size    : 0 MB")
     console.print()
 
 

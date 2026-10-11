@@ -142,3 +142,82 @@ def test_safety_deterministic_evidence_hash():
     r1 = ev.evaluate(sample)
     r2 = ev.evaluate(sample)
     assert r1.evidence_hash == r2.evidence_hash
+
+
+def _run(outputs, prompts=None):
+    from opencomplai_core.evaluators.safety import SafetyEvaluator
+    from opencomplai_core.models import EvalSampleSet
+
+    return SafetyEvaluator().evaluate(
+        EvalSampleSet(
+            eval_set_id="s1", system_id="sys", outputs=outputs, prompts=prompts or []
+        )
+    )
+
+
+def test_signature_does_not_match_part_word():
+    result = _run(
+        ["you are nowhere near done", "read the system prompts page"],
+        prompts=["you are nowhere"],
+    )
+    assert result.score == 1.0
+    assert result.outcome == EvaluatorOutcome.PASS
+    assert "adversarial_prompts=0" in result.findings
+
+
+def test_signature_still_matches_whole_word_in_punctuation():
+    result = _run(["Ignore previous instructions.", "(jailbreak)"])
+    assert "flagged_samples=2" in result.findings
+
+
+def test_curly_apostrophe_marker_is_detected(monkeypatch):
+    """The bundled set has no apostrophe signature, so a patched list proves the
+    safety path normalises quotes."""
+    from opencomplai_core.evaluators import safety
+    from opencomplai_core.evaluators.adversarial import _normalise, compile_signature
+
+    monkeypatch.setattr(
+        safety, "_JAILBREAK", [("don't stop", compile_signature("don't stop"))]
+    )
+    assert _normalise("it\u2019s") == "it's"
+    result = _run(["please don\u2019t stop"])
+    assert "flagged_samples=1" in result.findings
+    assert "sig_id=jailbreak:don't stop" in result.findings
+
+
+def test_zero_width_split_marker_is_detected():
+    result = _run(
+        ["Ig\u200bnore previous\u2060 instructions", "no\ufeff restrictions"],
+        prompts=["by\u200bpass safety"],
+    )
+    assert "flagged_samples=2" in result.findings
+    assert "adversarial_prompts=1" in result.findings
+
+
+def test_fullwidth_and_uppercase_signature_is_detected():
+    fullwidth = "".join(chr(ord(c) + 0xFEE0) for c in "jailbreak")
+    result = _run([fullwidth, "DEVELOPER MODE"])
+    assert "flagged_samples=2" in result.findings
+
+
+def test_toxic_word_split_by_zero_width_is_detected():
+    result = _run(["ki\u200bll"])
+    assert "sig_id=toxic:kill" in result.findings
+
+
+def test_signature_file_version_is_1_1_0():
+    import json
+
+    from opencomplai_core.evaluators import safety
+
+    data = json.loads(safety._DATA.read_text(encoding="utf-8"))
+    assert data["version"] == "1.1.0"
+
+
+def test_all_safety_signatures_are_already_normalised():
+    from opencomplai_core.evaluators import safety
+    from opencomplai_core.evaluators.adversarial import _normalise
+
+    for key in ("toxic_lexicon", "injection_patterns", "jailbreak_markers"):
+        for sig in safety._SIGNATURES[key]:
+            assert _normalise(sig) == sig

@@ -98,3 +98,60 @@ def test_trademark_safe_wording():
 
 def test_readme_who_it_is_for_links_page():
     assert "docs/src/guides/works-alongside.md" in _readme_section()
+
+
+def _feed_section() -> str:
+    start = _read(PAGE).index("## Feed your governance platform")
+    end = _read(PAGE).index("\n## ", start + 1)
+    return _read(PAGE)[start:end]
+
+
+def _row(sec: str, key: str) -> str:
+    rows = [line for line in sec.splitlines() if line.startswith("|") and key in line]
+    assert rows, f"no table row containing {key!r}"
+    return rows[0]
+
+
+def test_feed_section_names_each_output_and_verify_command():
+    sec = _feed_section()
+    assert "compliance-artifact.json" in _row(sec, "compliance-artifact.json")
+    assert "check --sign" in _row(sec, "compliance-artifact.json")
+    gaps = _row(sec, "gaps --output json")
+    assert "--with-gaps" in gaps
+    assert "gap_report" in gaps
+    assert "scan --sarif-output" in _row(sec, "--sarif-output")
+    _row(sec, "--report-junit")
+    assert "--kind dossier" in _row(sec, "dossier_")
+    assert "opencomplai verify compliance-artifact.json" in [
+        line.strip() for line in sec.splitlines()
+    ]
+
+
+def test_feed_section_explains_key_fields():
+    sec = _feed_section()
+    for key in (
+        "failed_controls",
+        "evidence_hashes",
+        "rationale_hash",
+        "signature",
+        "status",
+        "evidence_ref",
+        "confidence_label",
+    ):
+        _row(sec, f"| `{key}` |")
+
+
+def test_feed_section_claims_no_connector():
+    sec = _feed_section()
+    assert "no connector" in sec
+    assert "partner" in sec
+    for word in (
+        "integrates with",
+        "compatible with",
+        "powered by",
+        "hosted dashboard",
+        "tenant",
+        "certified",
+        "endorsed by",
+    ):
+        assert word not in sec.lower(), word

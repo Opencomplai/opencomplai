@@ -97,7 +97,7 @@ for framework, report in reports.items():
   results are auditable and CI-gateable.
 - **Code corroboration** — detect when a manifest under-declares (claims minimal risk while
   the code does biometric identification, profiling, etc.).
-- **Merkle-linked evidence** — findings carry verifiable evidence items for audit trails.
+- **Hash-chained evidence** — findings carry verifiable evidence items for audit trails.
 
 ## Documentation
 

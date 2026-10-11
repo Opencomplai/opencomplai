@@ -90,9 +90,12 @@ llama.cpp is installed (for the GGUF models), the cache directory
     opencomplai ai status
     ```
 
-`ai status` has no options. For `codebert-onnx` and `saas` an empty cache is
-normal, because neither has a local file; no "not yet downloaded" line is
-printed for them.
+`ai status` has no options. The size shows `unknown` for backends with no
+download (`codebert-onnx`, `saas`). The cache size and the file list include
+files in subdirectories, listed by relative path, and sizes under 1 MB show
+`<1 MB`. For a model that needs a download, a cache directory with no files
+counts as not downloaded; `codebert-onnx` and `saas` never print the "not yet
+downloaded" line.
 
 ## Exit codes
 

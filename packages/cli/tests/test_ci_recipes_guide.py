@@ -8,6 +8,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
 _ROOT = Path(__file__).resolve().parents[3]
@@ -102,3 +103,80 @@ def test_recipes_page_avoids_legacy_auth_vars() -> None:
 
 def test_ci_guide_still_has_two_yaml_blocks() -> None:
     assert len(_blocks(_GUIDE, "yaml")) == 2
+
+
+_MIRROR = _ROOT / "docs" / "ci" / "github-actions.yml"
+_DASHBOARD_MIRROR = _ROOT / "dashboard-saas" / "docs" / "ci" / "github-actions.yml"
+_NEW_SECTIONS = (
+    "Scheduled re-run",
+    "Attach the artifact to a release",
+    "Record agent decisions",
+    "Score recorded model responses offline",
+)
+
+
+def _scheduled_block() -> str:
+    blocks = _blocks(_section(_RECIPES, "Scheduled re-run"), "yaml")
+    assert len(blocks) == 1
+    return blocks[0]
+
+
+def test_four_new_recipe_sections_present() -> None:
+    for h in _NEW_SECTIONS:
+        assert _section(_RECIPES, h).strip()
+
+
+def test_scheduled_recipe_gates_on_diff() -> None:
+    block = _scheduled_block()
+    parsed = yaml.safe_load(block)
+    assert isinstance(parsed, dict)
+    assert "diff" in block
+    assert "--fail-on-regression" in block
+    assert "--with-gaps" in block
+    assert "schedule" in block
+    steps = parsed["jobs"]["opencomplai-rerun"]["steps"]
+    run_text = "\n".join(str(s.get("run", "")) for s in steps)
+    assert "set -e" not in run_text
+
+
+def test_release_recipe_uploads_the_artifact() -> None:
+    sec = _section(_RECIPES, "Attach the artifact to a release")
+    assert "gh release upload" in sec
+    assert "compliance-artifact.json" in sec
+    blocks = _blocks(sec, "yaml")
+    assert len(blocks) == 1
+    assert isinstance(yaml.safe_load(blocks[0]), dict)
+
+
+def test_decision_log_recipe_names_real_api() -> None:
+    sec = _section(_RECIPES, "Record agent decisions")
+    for word in ("AgentDecisionLog", "dispute-report", "--source native", "verify-log"):
+        assert word in sec
+
+
+def test_sample_set_recipe_pairs_prompts_and_outputs() -> None:
+    sec = _section(_RECIPES, "Score recorded model responses offline")
+    for word in (
+        "--provider",
+        "completions",
+        "raw_decode",
+        "--sample-set eval-set.json",
+    ):
+        assert word in sec
+    assert not re.search(r"OPENCOMPLAI_PROVIDER_API_KEY=\S", sec)
+
+
+def test_commented_job_mirrors_scheduled_recipe() -> None:
+    block = _scheduled_block()
+    lines = _MIRROR.read_text(encoding="utf-8").splitlines()
+    last = max(i for i, ln in enumerate(lines) if ln and not ln.startswith("#"))
+    tail = lines[last + 1 :]
+    assert tail
+    assert all(ln.startswith("#") for ln in tail)
+    uncommented = [ln[2:] if ln.startswith("# ") else "" for ln in tail]
+    assert block in "\n".join(uncommented) + "\n"
+    if not _DASHBOARD_MIRROR.exists():
+        pytest.skip("dashboard-saas tree is absent from this checkout")
+    assert _DASHBOARD_MIRROR.read_text(encoding="utf-8") == _MIRROR.read_text(
+        encoding="utf-8"
+    )

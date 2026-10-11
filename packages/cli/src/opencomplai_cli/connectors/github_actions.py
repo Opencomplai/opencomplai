@@ -125,7 +125,7 @@ def _gha_cmd(cmd: str, value: str) -> None:
 def _set_output(name: str, value: str) -> None:
     output_file = os.environ.get("GITHUB_OUTPUT", "")
     if output_file:
-        with open(output_file, "a") as fh:
+        with open(output_file, "a", encoding="utf-8") as fh:
             fh.write(f"{name}={value}\n")
     else:
         _gha_cmd("set-output", f"name={name}::{value}")
@@ -134,7 +134,7 @@ def _set_output(name: str, value: str) -> None:
 def _append_summary(markdown: str) -> None:
     summary_file = os.environ.get("GITHUB_STEP_SUMMARY", "")
     if summary_file:
-        with open(summary_file, "a") as fh:
+        with open(summary_file, "a", encoding="utf-8") as fh:
             fh.write(markdown + "\n")
 
 

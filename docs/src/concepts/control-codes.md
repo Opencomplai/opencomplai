@@ -164,11 +164,11 @@ is promoted to `failed_controls`.
 
 **What it checks**
 
-Scans every output and prompt in the sample set against three deterministic signature
+Scores every output; counts attack markers in prompts as coverage. Text is matched against three deterministic signature
 lists:
 
 - **Toxic lexicon** — words associated with harmful, hateful, or abusive content.
-- **Injection patterns** — substrings that indicate prompt-injection attempts
+- **Injection patterns** — phrases matched as whole words after normalisation that indicate prompt-injection attempts
   (e.g. `ignore previous instructions`).
 - **Jailbreak markers** — strings that indicate attempts to bypass safety constraints
   (e.g. `you are now DAN`).

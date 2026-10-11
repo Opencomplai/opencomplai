@@ -1,9 +1,9 @@
 """
-Append-only Merkle-linked event ledger.
+Append-only hash-chained event ledger.
 
 Every event is chained to the previous event via prev_hash, forming a
-tamper-evident chain. Modifying any event causes all subsequent events'
-prev_hash values to become invalid (REQ-EV-001).
+tamper-evident chain: a linear hash chain, not a tree. Modifying any event
+causes all subsequent events' prev_hash values to become invalid (REQ-EV-001).
 
 Chain format v2: each event's hash commits to the event *and* to its
 prev_hash, so the rolling tip after event N commits to the entire chain
@@ -121,7 +121,7 @@ async def get_chain_tip(
     """
     Return the prev_hash to use for the next event, scoped to tenant_id.
 
-    Each tenant has its own independent Merkle chain — sharing one chain
+    Each tenant has its own independent hash chain — sharing one chain
     across tenants would leak cross-tenant signal (event count/timing) via
     the chain tip a dossier anchors to, and materialise every tenant's
     events together in verify_chain/history_tips. If the ledger is empty for
@@ -306,7 +306,7 @@ async def compute_history_tips_page(
     limit: int,
 ) -> tuple[list[str], int | None]:
     """
-    Return one page of the tenant's rolling Merkle tips and the cursor for the
+    Return one page of the tenant's rolling chain tips and the cursor for the
     next page.
 
     Each event's hash commits to its own prev_hash, so the tip after event N
@@ -330,7 +330,7 @@ async def compute_history_tips(
     session: AsyncSession, tenant_id: str = OSS_DEFAULT_TENANT_ID
 ) -> list[str]:
     """
-    Walk the tenant's ledger chain in order and return the rolling Merkle tip
+    Walk the tenant's ledger chain in order and return the rolling chain tip
     after each event.
 
     The first element is the genesis hash (sha256 of ""), the Nth element is
@@ -361,7 +361,7 @@ async def verify_chain(
     """
     Verify the integrity of the tenant's ledger chain.
 
-    Returns True if all events form a valid Merkle chain.
+    Returns True if all events form a valid hash chain.
     Returns False if any event's prev_hash does not match the rolling hash of
     the chain prefix before it (tamper detection — REQ-EV-001).  Because each
     event's hash commits to its own prev_hash, the rolling value at step N

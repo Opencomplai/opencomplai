@@ -7,6 +7,7 @@ rendering the banner and exited 1.
 """
 
 import io
+import json
 import os
 import subprocess
 import sys
@@ -18,6 +19,14 @@ from opencomplai_cli._encoding import (
     encoding_is_lossy,
     install_ascii_fallback,
 )
+from opencomplai_core.models import (
+    HumanOversight,
+    OversightRole,
+    SystemManifest,
+    SystemState,
+)
+from opencomplai_core.signing import generate_keypair
+from opencomplai_core.system_state_store import save_state
 
 BANNER = "Opencomplai — Open-source AI compliance for a trustworthy future."
 
@@ -126,3 +135,124 @@ def test_help_survives_a_legacy_codepage():
 
     assert proc.returncode == 0, proc.stderr.decode("utf-8", errors="replace")
     assert b"Opencomplai - Open-source AI compliance" in proc.stdout
+
+
+_PROBE = "import locale;print(locale.getpreferredencoding(False))"
+_RUN = (
+    "import sys; sys.argv[0]='opencomplai'; from opencomplai_cli.main import app; app()"
+)
+
+
+def _run_non_utf8(args, cwd, env_extra=None, code=_RUN):
+    """Run the CLI with UTF-8 mode off and a non-UTF-8 locale (the Windows default)."""
+    env = dict(os.environ)
+    env.pop("PYTHONUTF8", None)
+    env["PYTHONPATH"] = os.pathsep.join(p for p in sys.path if p)
+    env["PYTHONIOENCODING"] = "utf-8"
+    env["LC_ALL"] = "C"
+    env["PYTHONCOERCECLOCALE"] = "0"
+    env["HOME"] = env["USERPROFILE"] = str(cwd)
+    env.update(env_extra or {})
+    return subprocess.run(
+        [sys.executable, "-X", "utf8=0", "-c", code, *args],
+        capture_output=True,
+        cwd=cwd,
+        env=env,
+    )
+
+
+@pytest.fixture(scope="module")
+def _non_utf8_locale(tmp_path_factory):
+    out = _run_non_utf8([], tmp_path_factory.mktemp("probe"), code=_PROBE)
+    enc = out.stdout.decode("ascii", errors="replace").strip().lower().replace("_", "-")
+    if enc in {"utf-8", "utf8"}:
+        pytest.skip("locale default is UTF-8; the test would pass vacuously")
+
+
+# argv must stay ASCII: an ASCII locale decodes non-ASCII arguments with
+# surrogate escapes on POSIX; the non-ASCII text goes through the manifest file.
+@pytest.mark.usefixtures("_non_utf8_locale")
+def test_qms_generate_non_ascii_without_utf8_mode(tmp_path):
+    manifest = tmp_path / "m.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "system_id": "Sys-Lodz",
+                "intended_purpose": "Überwachung der Qualität",
+                # rendered into the QMS document (clause h), so the output proves the read
+                "monitoring_approach": "Überwachung der Qualität",
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out.md"
+    proc = _run_non_utf8(
+        [
+            "qms",
+            "generate",
+            "--manifest",
+            str(manifest),
+            "--system-id",
+            "Sys-Lodz",
+            "--repo-root",
+            str(tmp_path),
+            "--output",
+            str(out),
+            "--scan-report",
+            str(tmp_path / "missing-scan.json"),
+            "--eval-report",
+            str(tmp_path / "missing-eval.json"),
+        ],
+        tmp_path,
+    )
+    assert proc.returncode == 0, proc.stderr.decode("utf-8", errors="replace")
+    assert "Überwachung" in out.read_bytes().decode("utf-8")
+
+
+# argv must stay ASCII: an ASCII locale decodes non-ASCII arguments with
+# surrogate escapes on POSIX; the non-ASCII text goes through the manifest file.
+@pytest.mark.usefixtures("_non_utf8_locale")
+def test_oversight_log_non_ascii_without_utf8_mode(tmp_path):
+    generate_keypair(tmp_path / "keys")
+    state = tmp_path / "state"
+    save_state(
+        state,
+        "ov-sys",
+        SystemState.HALTED_PENDING_REVIEW,
+        reason="trap_detected",
+        commit_ref="abc",
+    )
+    manifest = SystemManifest(
+        system_id="ov-sys",
+        intended_purpose="Überwachung der Qualität",
+        human_oversight=HumanOversight(roles=[OversightRole(role="Aufsicht")]),
+    )
+    mpath = tmp_path / "m.json"
+    mpath.write_text(
+        json.dumps(manifest.model_dump(mode="json"), ensure_ascii=False),
+        encoding="utf-8",
+    )
+    proc = _run_non_utf8(
+        [
+            "approve",
+            "--system-id",
+            "ov-sys",
+            "--approver",
+            "qa@example.com",
+            "--key",
+            str(tmp_path / "keys" / "signing.key"),
+            "--role",
+            "Aufsicht",
+            "--manifest",
+            str(mpath),
+            "--output",
+            "json",
+        ],
+        tmp_path,
+        {"OPENCOMPLAI_STATE_DIR": str(state)},
+    )
+    assert proc.returncode == 0, proc.stderr.decode("utf-8", errors="replace")
+    log = (state / "oversight-log.json").read_bytes().decode("utf-8")
+    entry = json.loads(log.splitlines()[-1])
+    assert entry["payload"]["role"] == "Aufsicht"

@@ -12,6 +12,7 @@ import re
 from pathlib import Path
 
 import typer.main
+import yaml
 
 # Importing main registers every command and every verify kind.
 from opencomplai_cli.main import app
@@ -204,3 +205,173 @@ def test_verify_kinds_table_lists_every_registered_kind():
             rows.add(match.group(1))
     missing = sorted(kinds - rows)
     assert not missing, f"verify.md Kinds table has no row for: {missing}"
+
+
+# --- Reverse guard: every real option of a documented command is named ---------
+
+_ACTION_YML = _ROOT / "integrations" / "github-action" / "action.yml"
+_ACTION_PAGE = _ROOT / "docs" / "src" / "guides" / "github-action.md"
+
+# For these the option must sit in the first cell of a table row, so deleting
+# its row fails. Every other command with a page only needs the name in a code
+# span, as the forward guard does.
+_STRICT = {"check", "agents"}
+
+# ratchet: a follow-up epic documents these; the stale-entry test fails when one
+# is documented but still listed.
+_KNOWN_UNDOCUMENTED: dict[str, set[str]] = {
+    "checker": {"--local"},
+    "dashboard": {"--local-only"},
+    "docs": {"--manifest", "--no-push", "--push"},
+    "gaps": {"--sort", "--strict"},
+    "incident": {"--closed-at", "--party-kind", "--ref"},
+    "init": {"--repo-root", "--scan"},
+    "recommend": {"--sort"},
+    "report": {"--sort"},
+    "scan": {
+        "--ai-deep",
+        "--ai-verbose",
+        "--no-emit-evidence",
+        "--no-enqueue-review",
+        "--strict",
+    },
+}
+
+_TABLE_ROW_RE = re.compile(r"^\|([^|]*)\|")
+
+
+def _table_options(text: str) -> set[str]:
+    """Options named in the first cell of a Markdown table row."""
+    found: set[str] = set()
+    for line in text.splitlines():
+        match = _TABLE_ROW_RE.match(line)
+        if match:
+            found |= set(_OPTION_RE.findall(match.group(1)))
+    return found
+
+
+def _command_pages(name: str, command) -> list[Path]:
+    paths = [_CLI_DOCS / f"{_ALIAS.get(name, name)}.md"]
+    if hasattr(command, "commands"):  # a group may use `<name>-<sub>.md` pages
+        paths += sorted(_CLI_DOCS.glob(f"{name}-*.md"))
+    return [p for p in paths if p.exists()]
+
+
+def _real_options(command) -> set[str]:
+    """Long option names of a command and, for a group, its subcommands."""
+    names: set[str] = set()
+    for param in command.params:
+        if getattr(param, "hidden", False):
+            continue
+        names.update(
+            o
+            for o in (
+                *getattr(param, "opts", []),
+                *getattr(param, "secondary_opts", []),
+            )
+            if o.startswith("--")
+        )
+    for sub in getattr(command, "commands", {}).values():
+        if not getattr(sub, "hidden", False):
+            names |= _real_options(sub)
+    return names - {"--help"}
+
+
+def _documented_commands():
+    """(name, command, page text) for every visible command that has a page."""
+    click_app = typer.main.get_command(app)
+    for name, command in sorted(click_app.commands.items()):
+        if getattr(command, "hidden", False):
+            continue
+        pages = _command_pages(name, command)
+        if pages:
+            text = "\n".join(p.read_text(encoding="utf-8") for p in pages)
+            yield name, command, text
+
+
+def _named(name: str, text: str) -> set[str]:
+    if name in _STRICT:
+        return _table_options(text)
+    return set(_OPTION_RE.findall(text))
+
+
+def test_pages_name_every_real_option():
+    seen = set()
+    unnamed: dict[str, list[str]] = {}
+    for name, command, text in _documented_commands():
+        seen.add(name)
+        gap = (
+            _real_options(command)
+            - _named(name, text)
+            - _KNOWN_UNDOCUMENTED.get(name, set())
+        )
+        if gap:
+            unnamed[name] = sorted(gap)
+    assert _STRICT <= seen, "a strict command lost its page: the guard is vacuous"
+    assert not unnamed, f"real options named on no page (or in no table row): {unnamed}"
+
+
+def test_known_undocumented_entries_are_real_and_still_missing():
+    documented = {name: (cmd, text) for name, cmd, text in _documented_commands()}
+    problems: list[str] = []
+    for name, options in _KNOWN_UNDOCUMENTED.items():
+        if name in _STRICT or name not in documented:
+            problems.append(f"{name}: not a non-strict command with a page")
+            continue
+        command, text = documented[name]
+        problems += [
+            f"{name} {opt}: not a real option"
+            for opt in options - _real_options(command)
+        ]
+        problems += [
+            f"{name} {opt}: now documented, remove it from _KNOWN_UNDOCUMENTED"
+            for opt in options & _named(name, text)
+        ]
+    assert not problems, problems
+
+
+def test_check_page_guard_fails_when_any_option_row_is_removed():
+    click_app = typer.main.get_command(app)
+    real = _real_options(click_app.commands["check"])
+    lines = (_CLI_DOCS / "check.md").read_text(encoding="utf-8").splitlines()
+    assert not real - _table_options("\n".join(lines)), "check.md already has a gap"
+    tried = 0
+    for i, line in enumerate(lines):
+        row = _table_options(line)
+        if not row:
+            continue
+        without = "\n".join(lines[:i] + lines[i + 1 :])
+        missing = real - _table_options(without)
+        assert missing, f"removing row {line[:40]!r} went unnoticed"
+        assert row <= missing, (
+            f"removing row {line[:40]!r} did not fail for its options"
+        )
+        tried += 1
+    assert tried >= 20, f"only {tried} option rows found in check.md"
+
+
+def test_check_args_variable_is_documented():
+    pages = [_CLI_DOCS / "check.md", _ACTION_PAGE]
+    missing = [
+        p.name
+        for p in pages
+        if "OPENCOMPLAI_CHECK_ARGS" not in p.read_text(encoding="utf-8")
+    ]
+    assert not missing, f"OPENCOMPLAI_CHECK_ARGS not documented on: {missing}"
+
+
+def test_github_action_page_names_every_input_and_output():
+    spec = yaml.safe_load(_ACTION_YML.read_text(encoding="utf-8"))
+    wanted = [*spec["inputs"], *spec["outputs"]]
+    assert len(wanted) >= 10, "action.yml lost its inputs or outputs"
+    cells = [
+        m.group(1)
+        for line in _ACTION_PAGE.read_text(encoding="utf-8").splitlines()
+        if (m := _TABLE_ROW_RE.match(line))
+    ]
+    missing = [k for k in wanted if not any(f"`{k}`" in c for c in cells)]
+    assert not missing, f"github-action.md has no table row for: {missing}"
+
+
+def test_github_action_page_is_in_nav():
+    assert "guides/github-action.md" in _nav()

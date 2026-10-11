@@ -9,7 +9,8 @@ With `opencomplai gaps --sort priority`, and the same option on
 [`recommend`](../cli/recommend.md) and [`report`](../cli/report.md), rows are sorted by:
 
 1. rows that still need work before rows that are `met`;
-2. the earliest known application date of the article, rows with no known date last;
+2. the known application date of the article, rows with no single known date last (an article that two
+   timeline entries date differently, such as an Annex III and an Annex I entry, has no single date);
 3. status, worst first (`missing`, then `partial`, then `unverified`);
 4. effort, smallest first (S, M, L);
 5. the original article order, as the tie-break.
@@ -20,7 +21,7 @@ The default, `--sort article`, keeps the article order every earlier release use
 
 | Input | Source |
 |---|---|
-| Deadline | The per-article application date in the regulatory timeline data. The sorter never writes a date and ignores entries whose date is unknown. |
+| Deadline | The per-article application date in the regulatory timeline data. The sorter never writes a date and ignores entries whose date is unknown. When entries that name the same article carry different dates, the article has no date. |
 | Status | The row's own gap status. |
 | Effort | A maintainer's rough engineering estimate stored with the remediation templates. It is an ordering hint, not a compliance claim, and not a time estimate for your system. |
 

@@ -27,8 +27,8 @@ The Opencomplai gateway API is a JSON-over-HTTP service that proxies requests to
 | `GET` | `/v1/docs/{dossier_id}` | Retrieve a dossier |
 | `POST` | `/v1/evidence/events` | Append a ledger event |
 | `GET` | `/v1/evidence/verify-chain` | Verify the ledger chain |
-| `GET` | `/v1/evidence/ledger-root` | Current ledger Merkle tip |
-| `GET` | `/v1/evidence/ledger-history-tips` | Merkle tip after every event |
+| `GET` | `/v1/evidence/ledger-root` | Current ledger chain tip |
+| `GET` | `/v1/evidence/ledger-history-tips` | Chain tip after every event |
 | `POST` | `/v1/sync/metadata` | Sync metadata to the dashboard |
 | `GET` | `/v1/status` | Aggregate status of the downstream services |
 | `GET` | `/v1/portfolio` | Systems on record with their latest badge |

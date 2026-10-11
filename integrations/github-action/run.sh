@@ -4,8 +4,9 @@
 # Env in:  OC_VERSION (exact release, required), OC_INSTALL_FROM (optional path or
 #          spec that replaces the pinned package, used by the self-test),
 #          OC_WITH (newline list of extra --with specs), OC_MANIFEST, OC_ARGS
-#          (extra check args, split on whitespace), OC_OUT_DIR.
-# Out:     exit-code, summary-file, sarif-file in $GITHUB_OUTPUT.
+#          (extra check args, split on whitespace), OC_OUT_DIR, OC_SIGN and
+#          OC_WITH_GAPS (the exact string "true" adds --sign-if-available / --with-gaps).
+# Out:     exit-code, summary-file, sarif-file, artifact-file in $GITHUB_OUTPUT.
 # This script always exits 0: failing the job is the caller's decision.
 set -uo pipefail
 
@@ -15,7 +16,8 @@ out_dir="${OC_OUT_DIR:-${RUNNER_TEMP:-/tmp}/opencomplai}"
 mkdir -p "$out_dir"
 summary="$out_dir/summary.md"
 sarif="$out_dir/results.sarif"
-rm -f "$summary" "$sarif"
+artifact="$out_dir/compliance-artifact.json"
+rm -f "$summary" "$sarif" "$artifact"
 
 if [ -n "${OC_INSTALL_FROM:-}" ]; then
   from="$OC_INSTALL_FROM"
@@ -31,7 +33,11 @@ done <<<"${OC_WITH:-}"
 
 read -r -a extra <<<"${OC_ARGS:-}"
 cmd+=(opencomplai check --manifest "$manifest" --output-dir "$out_dir"
-  --summary-md "$summary" --sarif-output "$sarif" ${extra[@]+"${extra[@]}"})
+  --summary-md "$summary" --sarif-output "$sarif")
+# Flags come before the user's args so `args` can still add a strict --sign.
+if [ "${OC_SIGN:-false}" = true ]; then cmd+=(--sign-if-available); fi
+if [ "${OC_WITH_GAPS:-false}" = true ]; then cmd+=(--with-gaps); fi
+cmd+=(${extra[@]+"${extra[@]}"})
 
 "${cmd[@]}"
 code=$?
@@ -44,10 +50,12 @@ else
     "$MARKER" "$code" >"$summary"
 fi
 [ -s "$sarif" ] || sarif=""
+[ -s "$artifact" ] || artifact=""
 
 {
   echo "exit-code=$code"
   echo "summary-file=$summary"
   echo "sarif-file=$sarif"
+  echo "artifact-file=$artifact"
 } >>"${GITHUB_OUTPUT:-/dev/null}"
 exit 0

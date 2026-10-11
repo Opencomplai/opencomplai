@@ -29,6 +29,7 @@ if not (_REPO / "scripts" / "gitleaks.toml").is_file():
 
 _FILES = sorted(_WORKFLOWS.glob("*.yml"))
 _USES = re.compile(r"^\s*(?:-\s+)?uses:\s*(\S+)(.*)$")
+_CHECKOUT_V7 = re.compile(r"@([0-9a-f]{40}) # v7$")
 
 
 def _lines(path: Path) -> list[tuple[int, str]]:
@@ -53,6 +54,39 @@ def test_all_actions_pinned_to_full_sha() -> None:
         "actions must be pinned to a 40-hex SHA with a trailing '# tag' comment:\n"
         + "\n".join(bad)
     )
+
+
+def test_checkout_pins_are_v7() -> None:
+    shas: set[str] = set()
+    seen = 0
+    bad = []
+    for f in _FILES:
+        for n, line in _lines(f):
+            if "actions/checkout@" not in line:
+                continue
+            seen += 1
+            m = _CHECKOUT_V7.search(line.rstrip())
+            if m is None:
+                bad.append(f"{f.name}:{n}: {line.strip()}")
+            else:
+                shas.add(m.group(1))
+    assert seen, "no actions/checkout pin found under .github/workflows"
+    assert not bad, "checkout pins must be a 40-hex SHA with '# v7':\n" + "\n".join(bad)
+    assert len(shas) == 1, f"checkout pins name more than one SHA: {sorted(shas)}"
+
+    oss = _REPO / "oss-public" / ".github" / "workflows"
+    assert oss.is_dir(), "oss-public workflows directory is missing"
+    oss_seen = 0
+    oss_bad = []
+    for f in sorted(oss.glob("*.yml")):
+        for n, line in _lines(f):
+            if "actions/checkout@" not in line:
+                continue
+            oss_seen += 1
+            if not line.rstrip().endswith("actions/checkout@v7"):
+                oss_bad.append(f"{f.name}:{n}: {line.strip()}")
+    assert oss_seen, "no actions/checkout line found under oss-public workflows"
+    assert not oss_bad, "oss-public checkout lines must be @v7:\n" + "\n".join(oss_bad)
 
 
 def test_every_workflow_declares_permissions() -> None:
@@ -117,6 +151,54 @@ def test_dco_and_secret_scan_workflows_exist() -> None:
     scan = (_WORKFLOWS / "secret-scan.yml").read_text(encoding="utf-8")
     assert "--config scripts/gitleaks.toml" in scan
     assert "--gitleaks-ignore-path" not in scan
+
+
+# --- dependabot.yml ----------------------------------------------------------
+
+
+def _dependabot_cfg() -> dict:
+    path = _REPO / ".github" / "dependabot.yml"
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def _dependabot_updates() -> list[dict]:
+    return _dependabot_cfg()["updates"]
+
+
+def test_dependabot_config_parses_with_unique_scopes() -> None:
+    cfg = _dependabot_cfg()
+    assert cfg["version"] == 2
+    updates = cfg["updates"]
+    for u in updates:
+        assert "package-ecosystem" in u, u
+        assert "directory" in u, u
+    scopes = [(u["package-ecosystem"], u["directory"]) for u in updates]
+    dupes = sorted({s for s in scopes if scopes.count(s) > 1})
+    assert not dupes, f"duplicate dependabot scopes: {dupes}"
+
+
+def test_dependabot_checker_widget_entry_matches_gateway_style() -> None:
+    updates = _dependabot_updates()
+    widget = [
+        u
+        for u in updates
+        if u["package-ecosystem"] == "npm" and u["directory"] == "/docs/checker-widget"
+    ]
+    assert len(widget) == 1, "expected exactly one npm entry for /docs/checker-widget"
+    assert (_REPO / "docs" / "checker-widget").is_dir()
+    assert (_REPO / "docs" / "checker-widget" / "package-lock.json").is_file()
+
+    gateway = next(
+        u
+        for u in updates
+        if u["package-ecosystem"] == "npm" and u["directory"] == "/services/gateway-api"
+    )
+    for key in ("schedule", "labels", "open-pull-requests-limit", "ignore"):
+        assert widget[0][key] == gateway[key], key
+
+    groups = list(widget[0]["groups"].values())
+    assert len(groups) == 1, "checker-widget must hold exactly one group"
+    assert groups[0]["patterns"] == ["*"]
 
 
 def test_public_allowlist_ships_governance_files() -> None:

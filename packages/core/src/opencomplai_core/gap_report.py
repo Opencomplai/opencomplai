@@ -10,7 +10,7 @@ lives in `data/gap_article_map.json`.
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -322,6 +322,7 @@ def build_gap_report(
     *,
     manifest: SystemManifest | None = None,
     checker_session: CheckerSessionRef | None = None,
+    today: date | None = None,
 ) -> GapReport:
     """Project rule/obligation/scan/eval/artifact outputs into a per-article gap report.
 
@@ -334,10 +335,13 @@ def build_gap_report(
     or with none recorded, the output is unchanged. A source with
     `when_obligation_any` is skipped unless the session recorded one of those
     obligation ids (GPAI documentation probes), so sessionless output is unchanged.
+    `today` (default: the current UTC date) is the date agent mandate expiry is
+    compared with.
     """
     article_map = requirements if requirements is not None else load_gap_article_map()
     articles: list[ArticleGapStatus] = []
     not_applicable: dict[str, str] = {}
+    effective_today = today if today is not None else datetime.now(UTC).date()
 
     for article, config in article_map.items():
         reason = _not_applicable_reason(article, config, manifest, checker_session)
@@ -374,7 +378,13 @@ def build_gap_report(
             ):
                 # Ordinary worst-wins, not the manifest_row supersession below:
                 # an agent PARTIAL must never hide an artifact MISSING.
-                candidate = agent_gap_status(article, manifest, corroboration_report)
+                candidate = agent_gap_status(
+                    article,
+                    manifest,
+                    corroboration_report,
+                    today=effective_today,
+                    repo_root=repo_root,
+                )
             elif kind == "manifest" and manifest is not None:
                 candidate = manifest_gap_status(ref, manifest)
                 if candidate is not None and manifest_row is None:

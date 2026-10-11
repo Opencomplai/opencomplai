@@ -71,7 +71,7 @@ def _write_client_secret(raw_secret: str) -> None:
     doesn't apply the same way.
     """
     _OPENCOMPLAI_DIR.mkdir(parents=True, exist_ok=True)
-    _CLIENT_SECRET_FILE.write_text(raw_secret)
+    _CLIENT_SECRET_FILE.write_text(raw_secret, encoding="utf-8")
     try:
         os.chmod(_CLIENT_SECRET_FILE, 0o600)
     except (OSError, NotImplementedError):
@@ -81,7 +81,7 @@ def _write_client_secret(raw_secret: str) -> None:
 def _read_client_secret() -> str | None:
     if not _CLIENT_SECRET_FILE.exists():
         return None
-    secret = _CLIENT_SECRET_FILE.read_text().strip()
+    secret = _CLIENT_SECRET_FILE.read_text(encoding="utf-8").strip()
     return secret or None
 
 
@@ -117,14 +117,14 @@ def _load_egress_allowlist() -> dict:
     if not _EGRESS_ALLOWLIST.exists():
         return {}
     try:
-        return json.loads(_EGRESS_ALLOWLIST.read_text())
+        return json.loads(_EGRESS_ALLOWLIST.read_text(encoding="utf-8"))
     except Exception:
         return {}
 
 
 def _write_egress_allowlist(data: dict) -> None:
     _OPENCOMPLAI_DIR.mkdir(parents=True, exist_ok=True)
-    _EGRESS_ALLOWLIST.write_text(json.dumps(data, indent=2) + "\n")
+    _EGRESS_ALLOWLIST.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
 def _append_ledger_event(event: dict) -> None:
@@ -137,7 +137,7 @@ def _ledger_events() -> list[dict]:
     if not _LEDGER_FILE.exists():
         return []
     events: list[dict] = []
-    for line in _LEDGER_FILE.read_text().splitlines():
+    for line in _LEDGER_FILE.read_text(encoding="utf-8").splitlines():
         try:
             events.append(json.loads(line))
         except Exception:
@@ -236,7 +236,7 @@ def enroll(
             "[red]Error:[/red] signing.pub not found — run `opencomplai init` first."
         )
         sys.exit(2)
-    public_key_pem = _SIGNING_PUB.read_text().strip()
+    public_key_pem = _SIGNING_PUB.read_text(encoding="utf-8").strip()
 
     # --- POST /v1/admin/enroll ---
     try:

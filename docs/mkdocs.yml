@@ -153,6 +153,7 @@ nav:
     - Supply-Chain Security: security/supply-chain.md
     - Key Management: security/key-management.md
     - CI Integration: guides/ci-integration.md
+    - GitHub Action: guides/github-action.md
     - CI for GitLab and Azure: guides/ci-gitlab-azure.md
     - CI Recipes (other systems): guides/ci-recipes.md
     - Pre-commit Integration: guides/pre-commit.md

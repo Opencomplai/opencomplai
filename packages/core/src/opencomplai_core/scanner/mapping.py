@@ -4,9 +4,8 @@ from __future__ import annotations
 
 from opencomplai_core.models import SignalCategory
 from opencomplai_core.rules import (
-    ANNEX_III_CATEGORIES,
-    UNACCEPTABLE_RISK_SIGNALS,
-    normalize_text,
+    match_annex_iii_categories,
+    match_prohibited_signals,
 )
 
 SIGNAL_TO_TAXONOMY: dict[SignalCategory, list[str]] = {
@@ -56,25 +55,15 @@ def signal_category_to_taxonomy(
         mapped = [_AREA_TO_TAXONOMY[annex_iii_area]]
     else:
         mapped = list(SIGNAL_TO_TAXONOMY.get(category, []))
-    label = normalize_text(token_label)
-    for tax_key, keywords in ANNEX_III_CATEGORIES.items():
-        if any(normalize_text(kw) in label for kw in keywords):
-            if tax_key not in mapped:
-                mapped.append(tax_key)
-    for signal in UNACCEPTABLE_RISK_SIGNALS:
-        if normalize_text(signal) in label and "unacceptable" not in mapped:
-            mapped.append("unacceptable")
+    mapped.extend(match_annex_iii_categories(token_label).categories)
+    if match_prohibited_signals(token_label):
+        mapped.append("unacceptable")
     return sorted(set(mapped))
 
 
 def derive_declared_categories(declared_purpose: str) -> list[str]:
-    """Reuse AnnexIIIClassifierRule substring matching with normalised text."""
-    use_case = normalize_text(declared_purpose)
-    matched: list[str] = []
-    for category, keywords in ANNEX_III_CATEGORIES.items():
-        if any(normalize_text(kw) in use_case for kw in keywords):
-            matched.append(category)
-    for signal in UNACCEPTABLE_RISK_SIGNALS:
-        if normalize_text(signal) in use_case and "unacceptable" not in matched:
-            matched.append("unacceptable")
-    return sorted(matched)
+    """Declared Annex III / Art. 5 areas, using the rule engine's own matcher."""
+    categories = set(match_annex_iii_categories(declared_purpose).categories)
+    if match_prohibited_signals(declared_purpose):
+        categories.add("unacceptable")
+    return sorted(categories)

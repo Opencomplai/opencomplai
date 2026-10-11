@@ -9,7 +9,7 @@ Opencomplai is a **compliance toolkit**, not a certification service. It produce
 1. **Classifies** an AI system under EU AI Act risk levels: Unacceptable, High, Limited, Minimal.
 2. **Runs deterministic compliance rules** (Articles 5, 6, 25, Annex III) and produces pass/fail with a written rationale for each.
 3. **Generates an Annex IV technical-documentation dossier** (Article 11) per release candidate.
-4. **Records every check as a Merkle-linked ledger event** so the evidence chain can be independently verified.
+4. **Records every check as a hash-chained ledger event** so the evidence chain can be independently verified.
 
 It is **not** a policy/training/ticketing platform, and it does not auto-discover AI systems. Nothing happens in the running Docker stack until a customer pushes a manifest through it.
 
@@ -255,7 +255,7 @@ Opencomplai produces exactly four artifacts. There is no scheduled email, no com
 | 1 | Human assessment table | `opencomplai check` stdout | Quick read: risk level + per-rule pass/fail + rationale. |
 | 2 | `compliance-artifact.json` (`ScanStatusArtifact`) | working directory | Machine-readable CI gate result. Fields: `result`, `failed_controls`, `evidence_hashes`, `rationale_hash`, `signature`. |
 | 3 | `dossier_<id>.json` (Annex IV technical documentation) | `--output-dir` or evidence-vault CAS | The deliverable a regulator or notified body asks for under Article 11. Five sections: (1) system description, (2) development process + training data, (3) human oversight & monitoring, (4) logging, (5) risk management. SHA-256 `bundle_checksum`. |
-| 4 | Merkle-linked ledger events | `evidence-vault` PostgreSQL | Tamper-evident audit trail (`compliance_check_started`, `compliance_check_completed`, …). Independently verifiable. |
+| 4 | hash-chained ledger events | `evidence-vault` PostgreSQL | Tamper-evident audit trail (`compliance_check_started`, `compliance_check_completed`, …). Independently verifiable. |
 
 **CI exit codes** double as the report for automated gates:
 
@@ -462,7 +462,7 @@ The seeder runs automatically on `docker compose up`. To run it manually or expl
 2. Notice the 3-week scan gap in the timeline (indices 15–17 missing).
 3. Check the two dossiers — one generated before the halt (`v2.0.1-demo`), one after remediation (`v2.0.1-remediated-demo`).
 4. Inspect bias alerts: severity drops from HIGH to LOW across 4 alerts post-remediation.
-5. Run `verify-ledger` to confirm the Merkle chain is intact across the halt:
+5. Run `verify-ledger` to confirm the hash chain is intact across the halt:
 
     === "macOS / Linux"
         ```bash

@@ -7,8 +7,6 @@ The Action reports what the check found. It does not certify anything and is not
 
 Marketplace publication is pending. Until it is listed, reference the Action by path in this
 repository or copy `integrations/github-action/` into yours.
-The default `version` is the next release; it cannot be installed until that release is on PyPI,
-so set `version` to a published release in the meantime.
 
 ## Usage
 
@@ -31,8 +29,18 @@ jobs:
           manifest: system-manifest.json
 ```
 
-Pin every `uses:` to a full commit SHA with a trailing version comment. The Action never passes
-`--sign`: signing stays your decision (add `--sign-if-available` or `--sign` through `args`).
+Pin every `uses:` to a full commit SHA with a trailing version comment.
+
+Signing needs the `sign` input set to `"true"` and a signing key in the job environment
+(`SIGNING_KEY_PRIVATE`, from a secret). Without a key the artifact is written unsigned and the
+check warns. Passing `--sign` through `args` is strict: a missing key then fails the check.
+
+## Evidence artifact
+
+Each run uploads `compliance-artifact.json` as one workflow artifact named by `artifact-name`
+(default `compliance-artifact-<commit sha>`), retained 90 days. It is uploaded even when the
+gate fails. Set `upload-artifact: "false"` to skip it. When a run is repeated in the same
+workflow, give each call its own `artifact-name`.
 
 ## Inputs
 
@@ -45,6 +53,10 @@ Pin every `uses:` to a full commit SHA with a trailing version comment. The Acti
 | `args` | empty | Extra `opencomplai check` arguments, split on whitespace (for example `--change-context model_retrain`) |
 | `comment` | `true` | Post or update one sticky comment on pull request events |
 | `upload-sarif` | `false` | Upload the SARIF verdict to code scanning |
+| `upload-artifact` | `true` | Upload `compliance-artifact.json` as a workflow artifact |
+| `artifact-name` | `compliance-artifact-<sha>` | Name of the uploaded artifact, unique within a workflow run |
+| `sign` | `false` | Sign the artifact when a signing key is in the environment (`--sign-if-available`) |
+| `with-gaps` | `false` | Add the per-article gap report to the artifact (`--with-gaps`) |
 | `fail-on-error` | `true` | Fail the job when `check` exits non-zero |
 | `github-token` | `github.token` | Token for the comment |
 
@@ -55,6 +67,7 @@ Pin every `uses:` to a full commit SHA with a trailing version comment. The Acti
 | `exit-code` | Exit code of `opencomplai check` |
 | `summary-file` | Markdown summary, starting with the sticky comment marker |
 | `sarif-file` | SARIF file path, empty when none was written |
+| `artifact-file` | Path of `compliance-artifact.json`, empty when none was written |
 
 ## Exit codes
 

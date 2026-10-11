@@ -56,7 +56,7 @@ EVIDENCE_VAULT_URL = os.environ.get("EVIDENCE_VAULT_URL", "http://evidence-vault
 app = FastAPI(
     title="Opencomplai Documentation Generator",
     description="Annex IV technical documentation dossier generator (REQ-DOC-001).",
-    version="0.9.1",
+    version="0.9.2",
 )
 
 logger = logging.getLogger(__name__)
@@ -167,7 +167,7 @@ class DossierSummary(BaseModel):
 
 async def _fetch_ledger_root(tenant_id: str) -> str | None:
     """
-    Read the current Merkle chain tip from the evidence-vault.
+    Read the current chain tip from the evidence-vault.
 
     Returned hash is embedded in `record_keeping.ledger_root_hash` so the dossier
     self-anchors to ledger state at issuance time. Returns None on any
@@ -377,7 +377,7 @@ async def generate_docs(
         )
         risk_result = assess(assessment_input)
 
-        # Anchor the dossier to the current Merkle root so any future tampering
+        # Anchor the dossier to the current chain tip so any future tampering
         # of older ledger events becomes detectable by re-fetching the root
         # and comparing. Best-effort: if the vault is unreachable we still
         # emit a dossier, just without the anchor.

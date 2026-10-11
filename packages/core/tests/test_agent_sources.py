@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 
 import pytest
 from opencomplai_core.agent_sources import (
@@ -313,3 +314,108 @@ def test_map_lists_agent_ref_on_the_four_articles_and_never_first():
 @pytest.mark.parametrize("article", ["Art. 6", "Art. 9", "Art. 13"])
 def test_other_articles_get_no_agent_row(article):
     assert agent_gap_status(article, _manifest(), None) is None
+
+
+_TODAY = date(2026, 10, 11)
+
+
+def _with(**changes) -> SystemManifest:
+    return _manifest({**_AGENT, **changes})
+
+
+def _mandate(expires_at: str | None) -> SystemManifest:
+    mandate = {"permitted_actions": ["tool:approve-wire-9"]}
+    if expires_at is not None:
+        mandate["expires_at"] = expires_at
+    return _with(mandate=mandate)
+
+
+def _art26(manifest, **kw):
+    return agent_gap_status("Art. 26", manifest, None, today=_TODAY, **kw)
+
+
+def test_art26_expired_mandate_is_missing() -> None:
+    row = _art26(_mandate("2026-10-10"))
+    assert row.status is GapStatus.MISSING
+    assert "mandate has expired" in row.rationale
+    assert _art26(_mandate("2026-10-11")).status is GapStatus.PARTIAL
+    assert _art26(_mandate("2026-10-10T23:59:59Z")).status is GapStatus.MISSING
+    assert _art26(_mandate("2026-10-11T01:00:00+05:00")).status is GapStatus.MISSING
+
+
+def test_art26_future_or_absent_expiry_is_partial() -> None:
+    for exp in (None, "2099-01-01"):
+        assert _art26(_mandate(exp)).status is GapStatus.PARTIAL
+
+
+def _art15(manifest, repo_root):
+    return agent_gap_status(
+        "Art. 15", manifest, None, today=_TODAY, repo_root=repo_root
+    )
+
+
+def _guard(ref: str | None) -> SystemManifest:
+    g = {"kind": "output filter"}
+    if ref is not None:
+        g["evidence_ref"] = ref
+    return _with(guardrails=[g])
+
+
+def test_art15_missing_guardrail_evidence_is_missing(tmp_path) -> None:
+    row = _art15(_guard("docs/g.md"), tmp_path)
+    assert row.status is GapStatus.MISSING
+    assert "guardrail evidence file is missing" in row.rationale
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "g.md").write_text("g", encoding="utf-8")
+    assert _art15(_guard("docs/g.md"), tmp_path).status is GapStatus.PARTIAL
+
+
+def test_art15_evidence_ref_escaping_repo_is_missing(tmp_path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    outside = tmp_path / "outside.md"
+    outside.write_text("x", encoding="utf-8")
+    assert _art15(_guard("../outside.md"), repo).status is GapStatus.MISSING
+    assert _art15(_guard(str(outside)), repo).status is GapStatus.MISSING
+
+
+def test_art15_art26_valid_inputs_keep_partial(tmp_path) -> None:
+    m = _manifest()
+    assert _art15(m, tmp_path).status is GapStatus.PARTIAL
+    assert _art26(m, repo_root=tmp_path).status is GapStatus.PARTIAL
+    assert _art15(_guard("https://example.org/g"), tmp_path).status is GapStatus.PARTIAL
+
+
+def test_no_today_and_no_repo_root_keeps_today_result() -> None:
+    m = _with(
+        mandate={"permitted_actions": ["x"], "expires_at": "2000-01-01"},
+        guardrails=[{"kind": "f", "evidence_ref": "absent.md"}],
+    )
+    assert agent_gap_status("Art. 26", m, None).status is GapStatus.PARTIAL
+    assert agent_gap_status("Art. 15", m, None).status is GapStatus.PARTIAL
+
+
+def test_build_gap_report_passes_today_and_repo_root(tmp_path) -> None:
+    report = build_gap_report(
+        "s",
+        "HEAD",
+        manifest=_mandate("2026-10-10"),
+        repo_root=tmp_path,
+        today=_TODAY,
+    )
+    rows = [a for a in report.articles if a.article == "Art. 26"]
+    assert rows
+    assert all(r.status is GapStatus.MISSING for r in rows)
+
+
+def test_incomplete_reasons_carry_no_names_or_paths(tmp_path) -> None:
+    ref = "docs/secret-evidence.md"
+    m = _with(
+        mandate={"permitted_actions": ["x"], "expires_at": "2000-01-01"},
+        guardrails=[{"kind": "f", "evidence_ref": ref}],
+    )
+    for art in ("Art. 15", "Art. 26"):
+        row = agent_gap_status(art, m, None, today=_TODAY, repo_root=tmp_path)
+        assert row.status is GapStatus.MISSING
+        for banned in (_NAME, "agent-a1", ref):
+            assert banned not in row.rationale

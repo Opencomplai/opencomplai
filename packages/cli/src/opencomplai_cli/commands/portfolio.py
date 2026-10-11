@@ -66,6 +66,11 @@ def safe_dir_name(system_id: str) -> str:
     return "_" if name in ("", ".", "..") else name
 
 
+def _per_system_path(path: Path, sid: str) -> Path:
+    """`r.xml` + `alpha` -> `r.alpha.xml`, so systems never share a report file."""
+    return path.with_name(f"{path.stem}.{safe_dir_name(sid)}{path.suffix}")
+
+
 def _read_raw(path: Path) -> object:
     from opencomplai_cli.inputs import read_json_file
 
@@ -73,6 +78,30 @@ def _read_raw(path: Path) -> object:
         return read_json_file(path)
     except Exception:  # the child run reports the real error
         return None
+
+
+def _per_system_sample_set(path: Path | None, sid: str, sys_dir: Path) -> Path | None:
+    """Copy of the shared sample set with `system_id` set to `sid`, written to
+    `sys_dir`. Anything unreadable or malformed returns `path` unchanged so the
+    child run prints its normal error; the shared file is never modified."""
+    if path is None:
+        return None
+    try:
+        raw = json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError):
+        return path
+    if not isinstance(raw, dict) or not isinstance(raw.get("system_id"), str):
+        return path
+    try:
+        sys_dir.mkdir(parents=True, exist_ok=True)
+        copy = sys_dir / "sample-set.json"
+        copy.write_text(
+            json.dumps({**raw, "system_id": sid}, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except OSError:
+        return path
+    return copy
 
 
 def _system_id(path: Path) -> str:
@@ -123,6 +152,13 @@ def run_portfolio(
             "output_dir": sys_dir,
             "output": _consoles()[2].human,
         }
+        for key in ("report_junit", "sarif_output", "summary_md"):
+            if params.get(key) is not None:
+                params[key] = _per_system_path(Path(params[key]), sid)
+        if params.get("sample_set_file") is not None:
+            params["sample_set_file"] = _per_system_sample_set(
+                params["sample_set_file"], sid, sys_dir
+            )
         try:
             invoke(**params)
             code = 0
@@ -159,7 +195,7 @@ def run_portfolio(
     out = ctx_params["output"]
     console = _consoles()[0]
     if getattr(out, "value", out) == "json":
-        console.print_json(path.read_text())
+        console.print_json(path.read_text(encoding="utf-8"))
     else:
         console.print("\n[bold]Portfolio[/bold]")
         for e in sorted(entries, key=lambda e: e["system_id"]):

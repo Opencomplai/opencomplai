@@ -7,12 +7,15 @@ writes equal the same builder applied to the written compliance-artifact.json.
 
 from __future__ import annotations
 
+import ast
 import io
 import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import jsonschema
+import opencomplai_cli
+import opencomplai_core
 import pytest
 from opencomplai_cli import main
 from opencomplai_cli.connectors import github_actions
@@ -244,13 +247,72 @@ def test_docs_generate_failed_write_leaves_no_dossier(cli, monkeypatch):
     assert list(Path(".").glob("dossier_*.json")) == []
 
 
-def test_cli_json_reads_pass_utf8():
-    import re
+def _bare_text_io(source: str) -> list[int]:
+    """Line numbers of text-mode file IO calls that pass no ``encoding``."""
+    lines = source.splitlines()
+    bad: list[int] = []
+    for node in ast.walk(ast.parse(source)):
+        if not isinstance(node, ast.Call):
+            continue
+        if any(k.arg == "encoding" for k in node.keywords):
+            continue
+        fn = node.func
+        if isinstance(fn, ast.Attribute) and fn.attr in ("read_text", "write_text"):
+            hit = True
+        elif (isinstance(fn, ast.Name) and fn.id == "open") or (
+            isinstance(fn, ast.Attribute)
+            and fn.attr == "open"
+            and not (isinstance(fn.value, ast.Name) and fn.value.id == "webbrowser")
+        ):
+            # builtin open(file, mode); Path.open(mode)
+            pos = 1 if isinstance(fn, ast.Name) else 0
+            mode = next((k.value for k in node.keywords if k.arg == "mode"), None)
+            if mode is None and len(node.args) > pos:
+                mode = node.args[pos]
+            is_bin = (
+                isinstance(mode, ast.Constant)
+                and isinstance(mode.value, str)
+                and "b" in mode.value
+            )
+            hit = not is_bin
+        else:
+            hit = False
+        if hit and "_CONFIG_FILE" not in lines[node.lineno - 1]:
+            bad.append(node.lineno)
+    return sorted(bad)
 
-    src = Path(main.__file__).read_text(encoding="utf-8")
-    bare = [
-        ln
-        for ln in src.splitlines()
-        if re.search(r"\.read_text\(\)", ln) and "_CONFIG_FILE" not in ln
+
+def test_cli_json_reads_pass_utf8():
+    offenders = []
+    for root in (
+        Path(opencomplai_cli.__file__).parent,
+        Path(opencomplai_core.__file__).parent,
+    ):
+        for path in sorted(root.rglob("*.py")):
+            src = path.read_text(encoding="utf-8-sig")
+            offenders += [
+                f"{path.relative_to(root.parent)}:{n}" for n in _bare_text_io(src)
+            ]
+    assert offenders == []
+
+
+def test_text_io_guard_flags_bare_calls():
+    flagged = [
+        "p.read_text()",
+        'p.write_text("x")',
+        "open(p)",
+        'open(p, "w")',
+        'p.open("a")',
     ]
-    assert bare == []
+    clean = [
+        'p.read_text(encoding="utf-8")',
+        'open(p, "rb")',
+        'p.open("wb")',
+        "webbrowser.open(u)",
+        "_CONFIG_FILE.read_text()",
+        'p.read_text(\n    encoding="utf-8")',
+    ]
+    for snippet in flagged:
+        assert _bare_text_io(snippet) == [1], snippet
+    for snippet in clean:
+        assert _bare_text_io(snippet) == [], snippet

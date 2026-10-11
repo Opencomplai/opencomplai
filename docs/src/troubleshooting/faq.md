@@ -152,7 +152,7 @@ The `SubstantialModificationRule` (`EU_AIA_ART25_MODIFICATION_TRAP`) triggers wh
 |---|---|---|
 | `gateway-api` | 8080 (default) | Main API entry point |
 | `risk-engine` | internal | Risk classification and rule evaluation |
-| `evidence-vault` | internal | Append-only Merkle ledger + CAS |
+| `evidence-vault` | internal | Append-only hash-chained ledger + CAS |
 | `doc-generator` | internal | Annex IV dossier generation |
 | `egress-proxy` | internal | Outbound allowlist enforcement |
 | `postgres` | internal | Persistent store |
