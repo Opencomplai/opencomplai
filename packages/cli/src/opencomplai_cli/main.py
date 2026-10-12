@@ -2931,8 +2931,25 @@ def scan_cmd(
             "emit ledger events. Prints detected categories and a suggested `init` command."
         ),
     ),
+    propose: bool = typer.Option(
+        False,
+        "--propose",
+        help=(
+            "Write classification-proposal.json: a suggested classification from "
+            "your code that `opencomplai accept --proposal` can confirm"
+        ),
+    ),
 ) -> None:
     """Cross-check declared purpose against AI capability signals in the repo."""
+    if propose:
+        if quick or ai_legacy:
+            err_console.print(
+                "[red]Error:[/red] --propose needs a manifest and the default "
+                "intent analysis (not --quick or --ai-legacy)."
+            )
+            sys.exit(2)
+        _require_ai_plugin()
+        ai_intent = True  # the proposal is built from the intent findings
     if quick:
         fail_on = FailOnLevel.none
         emit_evidence = False
@@ -3040,6 +3057,15 @@ def scan_cmd(
         ai_legacy=ai_legacy,
     )
 
+    if propose and report.eu_ai_scan is None:
+        # "none" would otherwise read as "analysed, nothing found".
+        err_console.print(
+            "[red]Error:[/red] --propose needs the intent analysis, which did "
+            "not run (model not loaded, plugin missing or analysis failed); "
+            "no proposal written."
+        )
+        sys.exit(2)
+
     if output == OutputFormat.json:
         envelope = wrap_scan_output(
             json.loads(report.model_dump_json()),
@@ -3095,6 +3121,15 @@ def scan_cmd(
             json.dumps(report_to_sarif(report), indent=2), encoding="utf-8"
         )
         console.print(f"[dim]SARIF written to {sarif_output}[/dim]")
+
+    if propose:
+        from opencomplai_cli.commands.proposal import write_scan_proposal
+
+        (err_console if output == OutputFormat.json else console).print(
+            f"Proposal written: {write_scan_proposal(report, manifest, repo_root)}",
+            soft_wrap=True,
+            markup=False,
+        )
 
     if enqueue_review and report.severity in (
         DiscrepancySeverity.MAJOR,
@@ -3421,8 +3456,17 @@ def check_cmd(
             scan_config=scan_config,
         )
         scan_summary = scan_summary_from_report(scan_report)
+        from opencomplai_cli import proposal_gate
+
+        # Summary and fail-on gate only; scan_report (sidecar, gaps) is untouched.
+        scan_summary, gate_report = proposal_gate.apply_confirmed_proposal(
+            scan_summary,
+            scan_report,
+            proposal_gate.confirmed_proposal_area(manifest, repo_root),
+            baseline_categories,
+        )
         eval_hashes = list(dict.fromkeys((eval_hashes or []) + scan_hashes))
-        scan_failed = _scan_should_fail(scan_report, scan_fail_on, baseline_categories)
+        scan_failed = _scan_should_fail(gate_report, scan_fail_on, baseline_categories)
 
     if api_available:
         artifact, risk_high = _run_service_check(

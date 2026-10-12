@@ -24,6 +24,12 @@ person relied on, never a finding that the exemption is valid; it always carries
 signing domain, and ``apply_acceptance`` and ``check`` ignore it. source:
 Regulation (EU) 2024/1689 Art. 6(3) as encoded in the checker questions
 (unverified beyond the repo text); confidence: medium; needs_founder_review: true.
+
+The ``classification_proposal_confirmation`` record states that a person
+confirmed a classification proposal (``classification_proposal``) as shown. It
+carries ``proposal_sha256`` and ``confirmed_area`` inside the signed bytes, shares
+the acceptance signing domain, and ``apply_acceptance`` and ``check`` ignore it.
+source: product design; confidence: medium; needs_founder_review: true.
 """
 
 from __future__ import annotations
@@ -53,7 +59,13 @@ from opencomplai_core.signing import (
 CLASSIFICATION_ACCEPTANCE = "classification_acceptance"
 TRAP_APPROVAL = "trap_approval"
 ART_6_3_EXEMPTION = "art_6_3_exemption"
-RECORD_TYPES = (CLASSIFICATION_ACCEPTANCE, TRAP_APPROVAL, ART_6_3_EXEMPTION)
+PROPOSAL_CONFIRMATION = "classification_proposal_confirmation"
+RECORD_TYPES = (
+    CLASSIFICATION_ACCEPTANCE,
+    TRAP_APPROVAL,
+    ART_6_3_EXEMPTION,
+    PROPOSAL_CONFIRMATION,
+)
 RECORD_DIR = ".opencomplai/acceptances"
 ART6_CONTROL = "EU_AIA_ART6_HIGH_RISK"
 SCHEMA_VERSION = 1
@@ -78,6 +90,10 @@ class AcceptanceStatus:
     state: str  # valid|absent|malformed|unsigned|tampered|mismatch|untrusted|stale
     reason: str
     record: dict[str, Any] | None = None
+
+
+def _non_empty_str(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
 
 
 def record_path(repo_root: Path, system_id: str, record_type: str) -> Path:
@@ -116,10 +132,22 @@ def build_record(
     public_key_pem: str,
     change_context: str | None = None,
     grounds: Sequence[str] | None = None,
+    proposal_sha256: str | None = None,
+    confirmed_area: str | None = None,
 ) -> dict[str, Any]:
     """Unsigned record. ``accepted_at`` is a caller-supplied ISO 8601 UTC string."""
     if record_type not in RECORD_TYPES:
         raise ValueError(f"unknown record_type: {record_type}")
+    if record_type == PROPOSAL_CONFIRMATION:
+        if not _non_empty_str(proposal_sha256) or not _non_empty_str(confirmed_area):
+            raise ValueError(
+                "a proposal confirmation requires proposal_sha256 and confirmed_area"
+            )
+    elif proposal_sha256 is not None or confirmed_area is not None:
+        raise ValueError(
+            "proposal_sha256 and confirmed_area only apply to a "
+            "classification_proposal_confirmation record"
+        )
     if record_type == TRAP_APPROVAL and not change_context:
         raise ValueError("a trap approval requires change_context")
     if record_type == ART_6_3_EXEMPTION:
@@ -149,6 +177,9 @@ def build_record(
     if record_type == ART_6_3_EXEMPTION:
         record["grounds"] = [g for g in ART_6_3_GROUND_IDS if g in (grounds or ())]
         record["needs_legal_review"] = True
+    if record_type == PROPOSAL_CONFIRMATION:
+        record["proposal_sha256"] = proposal_sha256
+        record["confirmed_area"] = confirmed_area
     return record
 
 
@@ -253,6 +284,11 @@ def _evaluate(
             or record.get("needs_legal_review") is not True
         ):
             return AcceptanceStatus("malformed", "required fields are empty")
+    if record_type == PROPOSAL_CONFIRMATION and not (
+        _non_empty_str(record.get("proposal_sha256"))
+        and _non_empty_str(record.get("confirmed_area"))
+    ):
+        return AcceptanceStatus("malformed", "required fields are empty")
     return AcceptanceStatus("valid", "record is valid", record)
 
 

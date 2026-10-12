@@ -102,7 +102,7 @@ Health check for the gateway API process. The only endpoint that needs no creden
 {
   "status": "ok",
   "service": "gateway-api",
-  "version": "0.10.0"
+  "version": "0.11.0"
 }
 ```
 

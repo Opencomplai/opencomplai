@@ -9,6 +9,61 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-10-12
+
+### Added
+
+- A labelled benchmark measures how well the code-signal matcher points a
+  program at an Annex III area. It scans 46 synthetic programs (29 across the
+  eight areas, 17 with no area, including look-alikes such as a photo filter
+  and a speech-to-text notes app) on two paths, `scan --ai-intent` and the
+  default `check --scan`, and the new concepts page "Annex III detection
+  benchmark" lists precision and recall per area. Overall it measures 73.3%
+  precision and 75.9% recall on the intent path, and 44.4% and 13.8% on the
+  default scan path. The programs are short, written for the benchmark and
+  labelled by one author, so the table is a baseline for tuning the signals,
+  not accuracy on real repositories. `packages/ai/tests/benchmark/run_benchmark.py`
+  re-runs it offline from a source checkout.
+- `opencomplai scan --propose` suggests a classification from your code; you
+  confirm it. It turns on the intent analysis and writes
+  `classification-proposal.json`: the most supported Annex III area (or
+  `none`), the supporting and minority evidence with file and line, any
+  prohibited-practice signals, and a confidence label (`none`, `low`, `medium`
+  or `high`). The label counts the call sites that support the area; it is not
+  a probability. The proposal stays unconfirmed, is not a legal determination,
+  and needs `opencomplai-ai` (without it the command prints the install hint
+  and exits 1). Under `--fail-on` the exit code can differ from a plain scan of
+  the same repository, because the intent analysis is on.
+- `opencomplai accept --proposal <file>` shows a proposal and, only after a
+  yes, writes a signed `classification_proposal_confirmation` record with the
+  proposal's digest and area. `--yes` confirms without the prompt for CI. A
+  proposal that is not confirmed writes nothing and exits 1; one edited before
+  confirming, or written for a different manifest, exits 2. Your signing key is
+  used as for the other `accept` records. The record states only that a person
+  confirmed the proposal as shown.
+
+### Changed
+
+- `check --scan` reports a `confirmed_proposal:<area>` row in the scan summary
+  when a proposal you confirmed names an Annex III area that your declared
+  purpose does not cover. The row counts as major under `--fail-on`, so
+  `--fail-on major` and `--fail-on new-major` fail the check, while
+  `--fail-on critical` and `none` do not. A missing, unconfirmed, edited or stale proposal changes nothing,
+  and the declared purpose stays the source of the classification.
+- The scanner's token dictionary (`ai_signals.json`) moves from 1.2.0 to
+  1.3.0, so scan results for the same input can differ from 0.10.0. General
+  audio and vision toolkits (`librosa`, `whisper`, `speechbrain`, `pyannote`,
+  `mediapipe`) and the bare words `emotion` and `speaker` no longer map a
+  program to the biometrics area; the toolkits still count as AI present, and
+  specific names (`emotion_recognition`, `speaker_recognition`, `voiceprint`,
+  `gait_recognition`, `fer` and a few more) were added. The vector-index
+  packages `faiss` and `pgvector` no longer map a similarity search or a vector
+  store to essential services; they too still count as AI present. `opencv`
+  still maps to biometrics. On the benchmark's default scan path overall
+  precision moves from 25.0% to 44.4% with recall unchanged.
+- The declared-purpose hint of `scan --ai-intent` matches whole words, so
+  "interface" is no longer read as "face" and "example" no longer as "exam".
+
 ## [0.10.0] — 2026-10-12
 
 ### Added
@@ -1013,6 +1068,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.11.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.0
 [0.10.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.10.0
 [0.9.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.2
 [0.9.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.1

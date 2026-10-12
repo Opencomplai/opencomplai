@@ -375,3 +375,15 @@ def test_github_action_page_names_every_input_and_output():
 
 def test_github_action_page_is_in_nav():
     assert "guides/github-action.md" in _nav()
+
+
+def test_scan_page_documents_propose_wording_and_ai_plugin():
+    text = (_CLI_DOCS / "scan.md").read_text(encoding="utf-8")
+    assert "`--propose`" in text
+    assert "suggests a classification from your code" in text
+    assert "optional AI plugin" in text
+    # The install hint is whatever `_require_ai_plugin` prints; read it from the source.
+    source = (_SRC / "main.py").read_text(encoding="utf-8")
+    hint = re.search(r"Basic:\s+(pip install [\w-]+)", source)
+    assert hint, "main.py lost the install hint printed by _require_ai_plugin"
+    assert hint.group(1) in text

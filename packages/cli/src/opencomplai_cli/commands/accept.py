@@ -79,8 +79,10 @@ def accept_cmd(
     accepted_by: str = typer.Option(
         ..., "--accepted-by", help="Who is accepting (name or email)"
     ),
-    statement: str = typer.Option(
-        ..., "--statement", help="Free-text statement, in your own words"
+    statement: str | None = typer.Option(
+        None,
+        "--statement",
+        help="Free-text statement, in your own words (required unless --proposal)",
     ),
     repo_root: Path = typer.Option(
         Path("."), "--repo-root", help="Repository root the record is written under"
@@ -107,6 +109,18 @@ def accept_cmd(
         "hr4_narrow_task, hr5_no_significant_risk or hr6_accessory. Default: the "
         "manifest's checker_session.derogation_grounds",
     ),
+    proposal: Path | None = typer.Option(
+        None,
+        "--proposal",
+        help="Confirm a classification-proposal.json written by 'scan --propose' "
+        "(a suggestion from your code; you confirm it)",
+    ),
+    yes: bool = typer.Option(
+        False,
+        "--yes",
+        "-y",
+        help="Confirm without the prompt (only with --proposal)",
+    ),
     key: Path | None = typer.Option(
         None,
         "--key",
@@ -118,7 +132,8 @@ def accept_cmd(
     """Write a signed acceptance record bound to the manifest, then commit it.
 
     Exit 0 on success, 2 on invalid input, a missing signing key, or a
-    prohibited (Art. 5) system; nothing is written on exit 2.
+    prohibited (Art. 5) system; nothing is written on exit 2. With
+    ``--proposal``, exit 1 when the person does not confirm; nothing is written.
     """
     main_mod = _main_module()
     if trap_approval:
@@ -128,7 +143,16 @@ def accept_cmd(
     else:
         record_type = CLASSIFICATION_ACCEPTANCE
 
-    if not accepted_by.strip() or not statement.strip():
+    if proposal is None and yes:
+        _fail("--yes only applies with --proposal.")
+    if proposal is not None and (trap_approval or exemption or change_context):
+        _fail(
+            "--proposal cannot be combined with --trap-approval, --exemption "
+            "or --change-context."
+        )
+    if not accepted_by.strip() or (
+        proposal is None and not (statement and statement.strip())
+    ):
         _fail("--accepted-by and --statement must not be empty.")
     if exemption and trap_approval:
         _fail("--exemption and --trap-approval cannot be combined.")
@@ -153,6 +177,21 @@ def accept_cmd(
         manifest = load_manifest(manifest_file)
     except Exception as exc:
         _fail(f"manifest validation error: {exc}")
+
+    if proposal is not None:
+        from opencomplai_cli.commands.proposal import confirm_and_record
+
+        confirm_and_record(
+            proposal_file=proposal,
+            manifest=manifest,
+            accepted_by=accepted_by,
+            statement=statement,
+            repo_root=repo_root,
+            key=key,
+            yes=yes,
+            output=output,
+        )
+        return
 
     key_path = key if key is not None else main_mod._SIGNING_KEY
     try:
@@ -184,7 +223,7 @@ def accept_cmd(
             system_id=manifest.system_id,
             manifest_fingerprint=fingerprint,
             accepted_by=accepted_by.strip(),
-            statement=statement.strip(),
+            statement=(statement or "").strip(),
             accepted_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             public_key_pem=public_pem,
             change_context=change_context.strip() if trap_approval else None,

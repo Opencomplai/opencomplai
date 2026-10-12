@@ -68,6 +68,16 @@ The three log options feed the `summaries` block of the artifact. The summaries 
 before signing, so a signed artifact covers them. A missing file is not an error, and a
 summary that cannot be built is left out with a warning.
 
+With `--scan`, a classification proposal that you confirmed (written by
+[`scan --propose`](scan.md#suggesting-a-classification-propose), confirmed by
+[`accept --proposal`](accept.md#confirming-a-classification-proposal)) and that names an
+Annex III area your declared purpose does not cover adds a `confirmed_proposal:<area>`
+row to the scan summary, for example `confirmed_proposal:employment`. The row counts as
+`major` under `--fail-on`, so `--fail-on major` and `--fail-on new-major` fail the check
+and `--fail-on critical` and `none` do not. A missing, unconfirmed, edited or stale
+proposal changes nothing, and the declared purpose stays the source of the
+classification.
+
 ## Several manifests
 
 Pass `-m` more than once (or a glob such as `-m "systems/*.json"`; the CLI expands
