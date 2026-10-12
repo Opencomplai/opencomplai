@@ -143,7 +143,7 @@ backend on every request.
 {
   "status": "degraded",
   "service": "gateway-api",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "checked_at": "2026-07-30T20:35:00Z",
   "services": {
     "risk-engine":    { "status": "ok", "latency_ms": 12 },

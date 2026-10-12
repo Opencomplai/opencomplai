@@ -54,7 +54,7 @@ Errors come in three shapes, depending on who produced them.
 ```json
 {
   "error_code": "DEPENDENCY_UNAVAILABLE",
-  "message": "Upstream service unavailable: http://risk-engine:8001/v1/risk/classify",
+  "message": "Upstream service unavailable.",
   "category": "dependency",
   "retryable": true,
   "correlation_id": "req-1"
@@ -102,7 +102,7 @@ Health check for the gateway API process. The only endpoint that needs no creden
 {
   "status": "ok",
   "service": "gateway-api",
-  "version": "0.11.0"
+  "version": "0.11.1"
 }
 ```
 
