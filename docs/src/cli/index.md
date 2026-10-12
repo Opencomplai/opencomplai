@@ -21,6 +21,7 @@ The `opencomplai` command comes from the `opencomplai-cli` package; each command
 - [risk classify](risk-classify.md): classify the risk level for an intended purpose.
 - [verify-output](verify-output.md): verify an AI output claim against ground-truth sources.
 - [verify](verify.md): check that a signed file is intact.
+- [export](export.md): write one neutral evidence package, as JSON or CSV, for a governance tool to read.
 - [docs generate](docs-generate.md): generate an Annex IV technical documentation dossier.
 - [instructions generate](instructions-generate.md): draft the Art. 13(3) instructions for use.
 - [sync metadata](sync-metadata.md): sync allowlisted compliance metadata to the Premium Dashboard.
@@ -32,6 +33,6 @@ The `opencomplai` command comes from the `opencomplai-cli` package; each command
 - [keys](keys.md): manage the local Ed25519 signing keypair.
 - [ai](ai.md): choose and inspect the backend used by the AI intent scan.
 - [info and version](info.md): show what is installed.
-- [deployer-pack](deployer-pack.md): seal an instructions-for-use document into one portable file.
+- [deployer-pack](deployer-pack.md): seal an instructions-for-use document into one portable file, or import a provider's pack as upstream evidence.
 - [portfolio](portfolio.md): check several systems in one command.
 - [Exit codes](exit-codes.md): the fixed, contractual exit codes for CI gating.

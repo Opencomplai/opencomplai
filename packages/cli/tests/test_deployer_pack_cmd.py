@@ -255,3 +255,137 @@ def test_check_with_pack_dir_adds_packs_summary(env, monkeypatch):
     raw = _check(env, monkeypatch)
     assert raw["summaries"]["packs"]["issued"] == 1
     assert SENTINEL_SYSTEM not in json.dumps(raw)
+
+
+def _manifest(tmp_path: Path, **extra) -> Path:
+    """The deployer's own manifest: a system id different from the provider's `sys-1`."""
+    path = tmp_path / "system-manifest.json"
+    payload = SystemManifest(
+        system_id="deployer-sys", intended_purpose="support", commit_ref="HEAD"
+    ).model_dump(mode="json")
+    path.write_text(json.dumps({**payload, **extra}, indent=2), encoding="utf-8")
+    return path
+
+
+def _import(path: Path, manifest: Path, *args: str):
+    return runner.invoke(
+        app,
+        ["deployer-pack", "import", str(path), "--manifest", str(manifest), *args],
+    )
+
+
+def _tamper(path: Path) -> None:
+    pack = json.loads(path.read_text(encoding="utf-8"))
+    pack["content"]["points"][0]["content"] = "tampered"
+    path.write_text(json.dumps(pack), encoding="utf-8")
+
+
+def test_import_signed_pack_records_reference(env, monkeypatch):
+    pub = _keys(env, monkeypatch)
+    assert _build(env, "--sign").exit_code == 0
+    path = _only_pack(env / "out")
+    pack = json.loads(path.read_text(encoding="utf-8"))
+    manifest = _manifest(env)
+
+    result = _import(path, manifest, "--pub-key", str(pub))
+    assert result.exit_code == 0, result.output
+    evidence = json.loads(manifest.read_text(encoding="utf-8"))["imported_evidence"]
+    key = f"deployer_pack:{pack['integrity']['pack_sha256'][:12]}"
+    assert list(evidence) == [key]
+    assert evidence[key] == {
+        "source": "deployer_pack",
+        "status": "imported_pack",
+        "source_file": path.name,
+        "pack_sha256": pack["integrity"]["pack_sha256"],
+        "provider_system_id": "sys-1",
+        "verification": "verified",
+        "signer_key_id": hashlib.sha256(pub.read_bytes()).hexdigest()[:16],
+        "imported_on": "2026-10-07",
+    }
+
+
+def test_import_unsigned_pack_recorded_as_unsigned(env):
+    assert _build(env).exit_code == 0
+    manifest = _manifest(env)
+    result = _import(_only_pack(env / "out"), manifest)
+    assert result.exit_code == 0, result.output
+    assert "unsigned" in result.output
+    (entry,) = json.loads(manifest.read_text(encoding="utf-8"))[
+        "imported_evidence"
+    ].values()
+    assert entry["verification"] == "unsigned"
+    assert entry["signer_key_id"] is None
+
+
+def test_import_tampered_pack_refused_and_nothing_written(env, monkeypatch):
+    pub = _keys(env, monkeypatch)
+    assert _build(env, "--sign").exit_code == 0
+    path = _only_pack(env / "out")
+    _tamper(path)
+    manifest = _manifest(env)
+    before = manifest.read_bytes()
+    result = _import(path, manifest, "--pub-key", str(pub))
+    assert result.exit_code == 2, result.output
+    assert manifest.read_bytes() == before
+
+
+def test_import_signed_pack_without_key_exits_2(env, monkeypatch):
+    _keys(env, monkeypatch)
+    assert _build(env, "--sign").exit_code == 0
+    manifest = _manifest(env)
+    before = manifest.read_bytes()
+    result = _import(_only_pack(env / "out"), manifest)
+    assert result.exit_code == 2, result.output
+    assert manifest.read_bytes() == before
+
+
+def test_import_twice_is_idempotent(env, monkeypatch):
+    pub = _keys(env, monkeypatch)
+    assert _build(env, "--sign").exit_code == 0
+    path = _only_pack(env / "out")
+    manifest = _manifest(env)
+    assert _import(path, manifest, "--pub-key", str(pub)).exit_code == 0
+    first = manifest.read_bytes()
+    monkeypatch.setattr(cmd, "_today", lambda: "2026-10-08")
+    again = _import(path, manifest, "--pub-key", str(pub), "-o", "json")
+    assert again.exit_code == 0, again.output
+    assert json.loads(again.stdout)["recorded"] is False
+    assert manifest.read_bytes() == first
+
+
+def test_import_missing_manifest_exits_2_and_creates_nothing(env):
+    assert _build(env).exit_code == 0
+    manifest = env / "absent.json"
+    result = _import(_only_pack(env / "out"), manifest)
+    assert result.exit_code == 2, result.output
+    assert not manifest.exists()
+
+
+def test_import_preserves_other_manifest_keys(env):
+    assert _build(env).exit_code == 0
+    manifest = _manifest(env, x_local_note="keep me", operator_role="deployer")
+    before = json.loads(manifest.read_text(encoding="utf-8"))
+    assert _import(_only_pack(env / "out"), manifest).exit_code == 0
+    after = json.loads(manifest.read_text(encoding="utf-8"))
+    assert after.pop("imported_evidence")
+    assert after == before
+
+
+def test_import_json_output_shape(env):
+    assert _build(env).exit_code == 0
+    manifest = _manifest(env)
+    result = _import(_only_pack(env / "out"), manifest, "-o", "json")
+    assert result.exit_code == 0, result.output
+    out = json.loads(result.stdout)
+    assert set(out) == {
+        "pack_id",
+        "pack_sha256",
+        "provider_system_id",
+        "verification",
+        "signer_key_id",
+        "manifest",
+        "recorded",
+    }
+    assert out["pack_id"] == out["pack_sha256"][:12]
+    assert out["verification"] == "unsigned"
+    assert out["recorded"] is True

@@ -16,6 +16,7 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from typing import NamedTuple
 
 from opencomplai_core.knowledge.subject_cues import (
     NATURAL_PERSON_CUES as _NATURAL_PERSON_CUES,
@@ -436,32 +437,52 @@ _ANNEX_III_MATCHERS: dict[str, _CompiledKeywordMatcher] = {
 _UNACCEPTABLE_RISK_MATCHER = _CompiledKeywordMatcher(UNACCEPTABLE_RISK_SIGNALS)
 
 
+class AnnexIIIMatch(NamedTuple):
+    """Annex III areas for a text: flagged, and matched only via person-scoped vocabulary."""
+
+    categories: list[str]
+    subject_gated: list[str]
+
+
+def match_annex_iii_categories(use_case: str) -> AnnexIIIMatch:
+    """The rule engine's Annex III category match, shared with the scanner."""
+    use_case = normalize_text(use_case)
+    matched_categories: list[str] = []
+    gated_only: list[str] = []
+    subject_non_person = _subject_looks_non_person(use_case)
+
+    for category in ANNEX_III_CATEGORIES:
+        matched_kw = _match_pack_keywords(_ANNEX_III_MATCHERS[category], use_case)
+        if not matched_kw:
+            continue
+        if subject_non_person and all(
+            normalize_text(kw) in SUBJECT_GATED_KEYWORDS for kw in matched_kw
+        ):
+            # Every keyword that fired for this category came from a
+            # natural-person-scoped sub-point, and the use case text has
+            # a positive product/entity cue with no person cue (e.g.
+            # "counterparty", "portfolio", "vendor"). Don't classify
+            # product/service scoring as Annex III high-risk.
+            gated_only.append(category)
+            continue
+        matched_categories.append(category)
+    return AnnexIIIMatch(matched_categories, gated_only)
+
+
+def match_prohibited_signals(use_case: str) -> list[str]:
+    """Art. 5 signals found in a text (word-boundary match, shared with the scanner)."""
+    return _UNACCEPTABLE_RISK_MATCHER.find_matching_keywords(normalize_text(use_case))
+
+
 class AnnexIIIClassifierRule(BaseRule):
     rule_id = "EU_AIA_ART6_HIGH_RISK"
     rule_name = "High-Risk System Classification (Article 6 / Annex III)"
     reference = "EU AI Act, Article 6, Annex III"
 
     def evaluate(self, input: AssessmentInput) -> RuleResult:
-        use_case = normalize_text(input.model.use_case)
-        matched_categories: list[str] = []
-        gated_only: list[str] = []
-        subject_non_person = _subject_looks_non_person(use_case)
-
-        for category in ANNEX_III_CATEGORIES:
-            matched_kw = _match_pack_keywords(_ANNEX_III_MATCHERS[category], use_case)
-            if not matched_kw:
-                continue
-            if subject_non_person and all(
-                normalize_text(kw) in SUBJECT_GATED_KEYWORDS for kw in matched_kw
-            ):
-                # Every keyword that fired for this category came from a
-                # natural-person-scoped sub-point, and the use case text has
-                # a positive product/entity cue with no person cue (e.g.
-                # "counterparty", "portfolio", "vendor"). Don't classify
-                # product/service scoring as Annex III high-risk.
-                gated_only.append(category)
-                continue
-            matched_categories.append(category)
+        match = match_annex_iii_categories(input.model.use_case)
+        matched_categories = match.categories
+        gated_only = match.subject_gated
 
         is_high_risk = len(matched_categories) > 0
 
@@ -494,11 +515,10 @@ class UnacceptableRiskRule(BaseRule):
     reference = "EU AI Act, Article 5"
 
     def evaluate(self, input: AssessmentInput) -> RuleResult:
-        use_case = normalize_text(input.model.use_case)
         # No co-occurrence requirement here: Art. 5 signals are curated
         # prohibited-practice phrases, not expanded vocabulary, and a single
         # match should surface. Word-boundary matching still applies.
-        matched = _UNACCEPTABLE_RISK_MATCHER.find_matching_keywords(use_case)
+        matched = match_prohibited_signals(input.model.use_case)
         is_unacceptable = len(matched) > 0
 
         return RuleResult(

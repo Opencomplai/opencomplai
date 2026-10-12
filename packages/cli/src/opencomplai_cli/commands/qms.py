@@ -124,7 +124,7 @@ def generate_cmd(
             sys.exit(2)
         try:
             manifest = SystemManifest.model_validate(
-                json.loads(manifest_file.read_text())
+                json.loads(manifest_file.read_text(encoding="utf-8"))
             )
         except Exception as e:
             _main.err_console.print(f"[red]Validation error:[/red] {e}")
@@ -134,7 +134,7 @@ def generate_cmd(
     if scan_report_file.exists():
         try:
             scan_report = CorroborationReport.model_validate(
-                json.loads(scan_report_file.read_text())
+                json.loads(scan_report_file.read_text(encoding="utf-8"))
             )
         except Exception as exc:
             _main.err_console.print(
@@ -145,7 +145,7 @@ def generate_cmd(
     if eval_report_file.exists():
         try:
             eval_report = EvalReport.model_validate(
-                json.loads(eval_report_file.read_text())
+                json.loads(eval_report_file.read_text(encoding="utf-8"))
             )
         except Exception as exc:
             _main.err_console.print(

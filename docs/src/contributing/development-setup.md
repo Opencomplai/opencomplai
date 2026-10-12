@@ -149,7 +149,7 @@ If any step fails, re-run after fixing the reported issue.
     ```bash
     # Python (ruff + mypy)
     uv run ruff check .
-    uv run mypy packages/
+    uv run --with mypy==2.3.0 python tools/mypy-gate/mypy_gate.py --check
 
     # Node.js
     cd services/gateway-api && pnpm lint
@@ -159,11 +159,16 @@ If any step fails, re-run after fixing the reported issue.
     ```powershell
     # Python (ruff + mypy)
     uv run ruff check .
-    uv run mypy packages/
+    uv run --with mypy==2.3.0 python tools/mypy-gate/mypy_gate.py --check
 
     # Node.js
     cd services/gateway-api; pnpm lint
     ```
+
+The mypy step is a ratchet gate, not a clean-run requirement: it fails only when a
+package's error count rises above `tools/mypy-gate/baseline.json`. mypy is pinned to the
+`mypy_version` recorded in that baseline. Run `--update` only after a change lowers a
+count or the pin moves, and commit `baseline.json` together with the CI pin.
 
 ## 6. Optional: start the full Docker Compose stack
 
@@ -196,7 +201,7 @@ opencomplai/
 ├── services/
 │   ├── gateway-api/       # REST API — Node.js + TypeScript + Fastify
 │   ├── risk-engine/       # Risk classification — Python + FastAPI
-│   ├── evidence-vault/    # Merkle ledger + CAS — Python + FastAPI + PostgreSQL
+│   ├── evidence-vault/    # hash-chained ledger + CAS — Python + FastAPI + PostgreSQL
 │   ├── doc-generator/     # Annex IV dossier generator — Python + FastAPI
 │   └── egress-proxy/      # Allowlisted egress enforcer — Python + FastAPI
 ├── infra/

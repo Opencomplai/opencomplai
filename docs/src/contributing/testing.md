@@ -181,9 +181,10 @@ the published wheels fail to ship. `bash scripts/smoke_wheel_install.sh` covers 
 builds the core, CLI and SDK wheels, installs only those into a clean venv and runs
 `--version`, `init`, `check --with-gaps` (EU AI Act and NIST AI RMF targets, checking
 `framework_reports`, `gap_report` and `nist_rmf_report`), an offline `docs generate` and a
-`check --gate NIST_AI_RMF` that must fail, from outside the repo. It needs `uv` and runs
+`check --gate NIST_AI_RMF` that must fail, from outside the repo. It needs `uv` and network access (it resolves the newest `typer` from PyPI) and runs
 on Linux and Git Bash on Windows. It also runs `--version` from a `uv tool` install and a
 `pipx` install of the same wheels, so the meta-package's own executable is covered.
+A base-image digest bump also needs the Trivy record refreshed; see [supply chain](../security/supply-chain.md).
 
 ---
 

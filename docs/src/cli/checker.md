@@ -97,6 +97,10 @@ grow, and `checker_session.verdict` keeps the more severe of the old and new
 tier. A manifest that is not valid JSON, or not an object, exits 2 and is left
 untouched. Without `--entity-type`, no `operator_roles` is written.
 
+`checker_session.derogation_grounds` lists the Art. 6(3) answers the run relied
+on to find an Annex III system not high-risk. It is omitted otherwise, and an
+append replaces it with the latest run's value.
+
 ## Manifest fields
 
 `--write-manifest` records the checker's tier label (`prohibited_practice`,

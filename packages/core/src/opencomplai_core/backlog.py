@@ -2,7 +2,8 @@
 
 Order: actionable rows first, then earliest deadline, worst status, smallest
 effort, original position. Deadlines are read from the regulatory timeline
-(`regulatory_timeline.py`, per-article `applies_from`, nulls ignored); this
+(`regulatory_timeline.py`, per-article `applies_from`: one known date is shown,
+entries that disagree give no single date, nulls ignored); this
 module never writes dates. Effort (S/M/L) is a maintainer engineering estimate
 stored in `template_map.json`, not a compliance claim. No clock is read, so no
 relative days exist anywhere (E-14). `build_gap_report` and `GapReport.articles`
@@ -36,11 +37,15 @@ def effort_for(article: str) -> str | None:
 
 
 def deadline_for(article: str) -> date | None:
-    """Earliest known `applies_from` for an EU article, else None."""
+    """The one known `applies_from` for an EU article, else None.
+
+    Null-dated entries are ignored; entries that disagree (for example an
+    Annex III and an Annex I entry) give no single date.
+    """
     if not article.startswith("Art. "):
         return None
-    known = [e.applies_from for e in timeline_for_articles([article]) if e.applies_from]
-    return date.fromisoformat(min(known)) if known else None
+    known = {e.applies_from for e in timeline_for_articles([article]) if e.applies_from}
+    return date.fromisoformat(next(iter(known))) if len(known) == 1 else None
 
 
 def _deadline(article: str, deadlines: Mapping[str, date] | None) -> date | None:

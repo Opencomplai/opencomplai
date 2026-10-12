@@ -5,6 +5,7 @@
 ```python
 from opencomplai import (
     assess,
+    AgentDecisionLog,
     AssessmentInput,
     ModelMetadata,
     RiskLevel,
@@ -229,6 +230,53 @@ from the EU AI Act `GapReport` to this framework's `GapReport`), plus `data_file
 | `articles` | `list[ArticleGapStatus]` | One row per requirement: `article` (the id; prefixed `<FW>:` outside the EU AI Act), `status` (`met`, `partial`, `missing`, `unverified`), `source`, `evidence_ref`, `rationale`, `confidence`, `confidence_label`. |
 | `evidence_hashes` | `list[str]` | Hashes of the evidence the rows cite. |
 | `principle_summary` | `PrincipleSummary \| None` | EU AI Act principle rollup, filled in by `opencomplai gaps`. |
+
+---
+
+## `AgentDecisionLog`
+
+A tamper-evident, optionally signed log of an agent's decisions: a hash chain with one
+entry per decision. Only metadata is stored. The tool input is hashed to
+`sha256:<hex>` and never written.
+
+```python
+from pathlib import Path
+
+from opencomplai import AgentDecisionLog
+
+log = AgentDecisionLog("agent-log.jsonl", signing_key=Path("keys/agent.pem"))
+log.record(
+    agent_id="support-bot",
+    tool="refund_order",
+    intent="Refund order 1042 after a damaged-item report",
+    tool_input={"order_id": 1042, "amount": 19.99},
+    outcome="success",
+    mandate_ref="MANDATE-7",
+)
+```
+
+**Constructor:** `AgentDecisionLog(path, *, signing_key=None, clock=None)`. `path` is the
+JSONL file. `signing_key` is a path to a PEM private key or the PEM bytes; without it,
+entries are chained but unsigned.
+
+| Method | Returns | Description |
+|---|---|---|
+| `record(*, agent_id, tool, intent, tool_input, outcome, mandate_ref=None, outside_mandate=False)` | `dict` | Appends one entry. `outcome` is `success`, `failure` or `blocked`. `intent` is at most 1000 characters. `tool_input` is stored only as its SHA-256. Raises `ValueError` on bad fields. |
+| `entries()` | `list[dict]` | Every entry in order, with `seq`, `ts`, `prev_hash`, `hash` and `signature` when signed. |
+| `head()` | `str` | Hash of the newest entry. |
+| `len(log)` | `int` | Number of entries. |
+| `verify(*, public_key=None, require_signed=False, expected_head=None, expected_count=None)` | `LogVerification` | Checks the chain, the schema of every entry and, when `public_key` is given, the signatures. Without a public key it checks chain integrity only. |
+
+**`LogVerification` fields:** `ok`, `count`, `head`, `signed_count`,
+`verified_signatures`, `error` and `bad_seq` (the first bad entry, when there is one).
+
+**Truncation ceiling:** a chain cannot detect removal of the newest entries. Store
+`head()` and `len(log)` outside the log, then pass them to `verify` as `expected_head`
+and `expected_count` to catch truncation.
+
+The same log is checked from the command line with
+[`opencomplai agents verify-log`](../cli/agents.md) and
+[`opencomplai verify --kind agent-log`](../cli/verify.md).
 
 ---
 

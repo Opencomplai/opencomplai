@@ -75,7 +75,7 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<db> alembic upgrade 
     # All services should show "(healthy)"
 
     curl http://localhost:8080/health
-    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
+    # {"status":"ok","service":"gateway-api","version":"0.11.0"}
     ```
 
 === "Windows (PowerShell)"
@@ -84,7 +84,7 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<db> alembic upgrade 
     # All services should show "(healthy)"
 
     Invoke-WebRequest -Uri "http://localhost:8080/health"
-    # {"status":"ok","service":"gateway-api","version":"0.9.1"}
+    # {"status":"ok","service":"gateway-api","version":"0.11.0"}
     ```
 
 ## Service ports (default)
@@ -93,7 +93,7 @@ DATABASE_URL=postgresql://<user>:<password>@localhost:5432/<db> alembic upgrade 
 |---|---|---|
 | gateway-api | 8080 | Main entry point — all external traffic |
 | risk-engine | 8001 | Risk classification (internal only) |
-| evidence-vault | 8002 | Append-only Merkle ledger + CAS (internal only) |
+| evidence-vault | 8002 | Append-only hash-chained ledger + CAS (internal only) |
 | doc-generator | 8003 | Annex IV dossier generator (internal only) |
 | egress-proxy | 8004 | Allowlisted outbound enforcer (internal only) |
 | prometheus | 9090 | Metrics scraper (host-accessible) |

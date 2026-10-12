@@ -56,7 +56,9 @@ def declared_roles(manifest_path: Path) -> list[str]:
     if not manifest_path.exists():
         return []
     try:
-        manifest = SystemManifest.model_validate_json(manifest_path.read_text())
+        manifest = SystemManifest.model_validate_json(
+            manifest_path.read_text(encoding="utf-8")
+        )
     except (OSError, ValueError) as exc:
         raise ValueError(f"cannot read manifest {manifest_path}: {exc}") from None
     if manifest.human_oversight is None:

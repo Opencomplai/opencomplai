@@ -104,6 +104,9 @@ def write_or_append_manifest(
         old = old if isinstance(old, dict) else {}
         session = dict(old)
         session.update(ref)
+        if "derogation_grounds" not in ref:
+            # Grounds follow the latest run; a stale one must not outlive its answers.
+            session.pop("derogation_grounds", None)
         if _rank(old.get("verdict")) < _rank(ref["verdict"]):
             session["verdict"] = old["verdict"]
         if report_path is None and old.get("report_json_path"):

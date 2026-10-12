@@ -1028,6 +1028,8 @@
       "type": "object"
     }
   },
+  "$id": "https://schemas.opencomplai.dev/annex_iv_dossier/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\n`agent_inventory` is the manifest's declared inventory, omitted when absent\nso a manifest without it yields the same bytes and checksum as before.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
   "properties": {
     "agent_inventory": {
@@ -1183,6 +1185,7 @@
     "section4",
     "section5"
   ],
+  "schema_version": "1",
   "title": "AnnexIVDossier",
   "type": "object"
 }

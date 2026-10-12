@@ -9,6 +9,218 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.0] — 2026-10-12
+
+### Added
+
+- A labelled benchmark measures how well the code-signal matcher points a
+  program at an Annex III area. It scans 46 synthetic programs (29 across the
+  eight areas, 17 with no area, including look-alikes such as a photo filter
+  and a speech-to-text notes app) on two paths, `scan --ai-intent` and the
+  default `check --scan`, and the new concepts page "Annex III detection
+  benchmark" lists precision and recall per area. Overall it measures 73.3%
+  precision and 75.9% recall on the intent path, and 44.4% and 13.8% on the
+  default scan path. The programs are short, written for the benchmark and
+  labelled by one author, so the table is a baseline for tuning the signals,
+  not accuracy on real repositories. `packages/ai/tests/benchmark/run_benchmark.py`
+  re-runs it offline from a source checkout.
+- `opencomplai scan --propose` suggests a classification from your code; you
+  confirm it. It turns on the intent analysis and writes
+  `classification-proposal.json`: the most supported Annex III area (or
+  `none`), the supporting and minority evidence with file and line, any
+  prohibited-practice signals, and a confidence label (`none`, `low`, `medium`
+  or `high`). The label counts the call sites that support the area; it is not
+  a probability. The proposal stays unconfirmed, is not a legal determination,
+  and needs `opencomplai-ai` (without it the command prints the install hint
+  and exits 1). Under `--fail-on` the exit code can differ from a plain scan of
+  the same repository, because the intent analysis is on.
+- `opencomplai accept --proposal <file>` shows a proposal and, only after a
+  yes, writes a signed `classification_proposal_confirmation` record with the
+  proposal's digest and area. `--yes` confirms without the prompt for CI. A
+  proposal that is not confirmed writes nothing and exits 1; one edited before
+  confirming, or written for a different manifest, exits 2. Your signing key is
+  used as for the other `accept` records. The record states only that a person
+  confirmed the proposal as shown.
+
+### Changed
+
+- `check --scan` reports a `confirmed_proposal:<area>` row in the scan summary
+  when a proposal you confirmed names an Annex III area that your declared
+  purpose does not cover. The row counts as major under `--fail-on`, so
+  `--fail-on major` and `--fail-on new-major` fail the check, while
+  `--fail-on critical` and `none` do not. A missing, unconfirmed, edited or stale proposal changes nothing,
+  and the declared purpose stays the source of the classification.
+- The scanner's token dictionary (`ai_signals.json`) moves from 1.2.0 to
+  1.3.0, so scan results for the same input can differ from 0.10.0. General
+  audio and vision toolkits (`librosa`, `whisper`, `speechbrain`, `pyannote`,
+  `mediapipe`) and the bare words `emotion` and `speaker` no longer map a
+  program to the biometrics area; the toolkits still count as AI present, and
+  specific names (`emotion_recognition`, `speaker_recognition`, `voiceprint`,
+  `gait_recognition`, `fer` and a few more) were added. The vector-index
+  packages `faiss` and `pgvector` no longer map a similarity search or a vector
+  store to essential services; they too still count as AI present. `opencv`
+  still maps to biometrics. On the benchmark's default scan path overall
+  precision moves from 25.0% to 44.4% with recall unchanged.
+- The declared-purpose hint of `scan --ai-intent` matches whole words, so
+  "interface" is no longer read as "face" and "example" no longer as "exam".
+
+## [0.10.0] — 2026-10-12
+
+### Added
+
+- `opencomplai export` writes one neutral evidence package from a compliance
+  artifact written by `check --with-gaps`, as JSON or, with `--format csv`, as
+  a flat CSV with one row per article. The package holds the system identity,
+  the provenance and verdict fields, one entry per gap-report article and the
+  original artifact embedded unchanged. `--artifact-out` writes the embedded
+  artifact so `opencomplai verify` can check its signature offline. The command
+  reads one file, writes only the paths you give it, and exits 0 once the
+  package is written whatever verdict the artifact holds (2 when the input
+  cannot be read). The JSON package is described by the new published schema
+  `evidence_package.schema.json`.
+- `check` stamps two optional fields into the artifact before signing:
+  `tree_sha256`, a digest of the content of the tracked and the untracked,
+  non-ignored files, and `tree_dirty`, true when a tracked file is modified or
+  an untracked, non-ignored file exists. Both are left out outside a git
+  repository or when git is not available.
+- `opencomplai accept --exemption` writes a signed Article 6(3) exemption
+  record that lists the grounds you relied on; give them with the repeatable
+  `--ground` option, or they default to the grounds the checker kept in the
+  manifest. The record states what you declared; it does not decide whether
+  the exemption applies, and it is marked as needing legal review inside the
+  signed bytes. The manifest's `checker_session` now keeps
+  `derogation_grounds`, the Article 6(3) answers the last checker run relied
+  on.
+- `opencomplai check --require-exemption-record` is an opt-in gate. When the
+  checker session relies on the Article 6(3) derogation (it lists
+  `provider_art_6_4_registration`) and the repository holds no valid signed
+  exemption record, `check` exits 1 with `EU_AIA_ART6_3_EXEMPTION_RECORD`. A
+  record that is absent, unsigned, tampered, untrusted or stale (the manifest
+  or its grounds changed after signing) counts as missing. Without the flag
+  the exit code is unchanged.
+- `opencomplai deployer-pack import` verifies a provider's deployer pack and
+  records a reference to it (pack id, bundle hash, the provider's system id,
+  `verified` or `unsigned`, and the signer key id) under the manifest's
+  `imported_evidence` map. An invalid pack is refused before anything is
+  written, and importing the same pack again changes nothing. The record is
+  provenance only: `check` and `gaps` do not read it.
+- The Annex IV dossier schema, `annex_iv_dossier.schema.json`, now has the
+  stable `$id` `https://schemas.opencomplai.dev/annex_iv_dossier/v1`, as the
+  artifact and gap report schemas do.
+
+### Changed
+
+- Upgrade note: older consumers of the artifact JSON must accept two new
+  optional fields, `tree_sha256` and `tree_dirty`. A reader that rejects
+  unknown keys will refuse a 0.10.0 artifact until it is widened; an artifact
+  written outside a git repository does not carry them.
+- The scan input digest now covers the content of the scanned files instead of
+  the absolute path of the repository, so one tree gives one digest in two
+  directories. The digest, and the scan id derived from it, differ from 0.9.2
+  for the same tree.
+- With `check --with-gaps`, the Art. 49 row of a session that lists
+  `provider_art_6_4_registration` now also reports the state of the signed
+  exemption record. A valid record does not make the row Met; the registration
+  evidence still decides that. The manifest fingerprint now includes the
+  Article 6(3) grounds when there are any, so changing a ground makes a signed
+  exemption record stale (and a classification acceptance of that manifest
+  too). A manifest without grounds keeps its fingerprint.
+
+### Fixed
+
+- A scoring or profiling signal in the code with no resolved Annex III area no
+  longer maps to employment, essential services and law enforcement at once.
+  It maps to no area until `--ai-intent` resolves one, and a resolved area
+  still maps to exactly that one, so scan results for such code can differ
+  from 0.9.2.
+- Two simultaneous second approvals of one dual-control override could both be
+  written to the ledger. The first now claims the override and the second
+  answers 409 `ALREADY_COMPLETED`; the risk engine answers 503
+  `AUDIT_UNAVAILABLE` when the evidence vault cannot be reached, and a failed
+  ledger write releases the claim so a retry works. Upgrade the risk engine and
+  the evidence vault together: a risk engine that talks to an older vault
+  answers 503 for every second approval.
+- Thirteen documentation links whose fragment pointed at a heading that does
+  not exist now resolve, and the documentation build fails on a broken
+  fragment.
+
+## [0.9.2] — 2026-10-11
+
+### Added
+
+- The GitHub Action keeps the compliance artifact. `upload-artifact` (default
+  `true`; set it to `"false"` to skip) uploads `compliance-artifact.json` as a
+  workflow artifact kept for 90 days, named by the new `artifact-name` input
+  (default `compliance-artifact-<commit sha>`). The new `sign` input signs the
+  artifact when your signing key is in the environment (it warns and writes the
+  artifact unsigned otherwise), the new `with-gaps` input adds the per-article
+  gap report to it, and the new `artifact-file` output gives its path.
+- Documentation: the `check` page now has a row for every option, the
+  `OPENCOMPLAI_CHECK_ARGS` variable and a "Reports for CI" section; the agent
+  commands page covers `attest`, `verify-log`, `import-log` and
+  `dispute-report` with every option and exit code; the GitHub Action has its
+  own guide page; the CI recipes guide adds a scheduled re-run, attaching the
+  artifact to a release, recording agent decisions and scoring recorded model
+  responses offline; the SDK reference documents `AgentDecisionLog`; and the
+  works-alongside guide has a section on feeding the
+  artifact to the governance platform you already use.
+
+### Changed
+
+- An agent mandate whose `expires_at` is before today (UTC date) now makes the
+  Art. 26 row Missing, and a guardrail whose `evidence_ref`
+  names a file that does not exist or lies outside the repository now makes
+  the Art. 15 row Missing, so a gap report can show Missing where 0.9.1 did
+  not.
+- The backlog no longer shows a single application date for an article that two
+  regulatory timeline entries date differently (for example an Annex III and an
+  Annex I entry). Before, the earlier date was shown; now the deadline is empty
+  and the row sorts with the undated ones. Entries with an unknown date are
+  still ignored.
+- `opencomplai scan` now maps a declared purpose to Annex III and Art. 5 areas
+  with the same word-boundary matcher that `check` uses. A purpose such as
+  "analytics reporting" no longer maps to employment in a scan while `check`
+  reports minimal, and a keyword that is only part of a longer word no longer
+  matches, so scan results on the same input can differ from 0.9.1.
+- The adversarial evaluator (`EVAL_ADVERSARIAL_V1`, signature set 1.2.0) and
+  the safety evaluator (`EVAL_SAFETY_LEXICAL_V1`, signature set 1.1.0) now
+  normalise text (NFKC, zero-width characters removed, curly quotes folded)
+  and match each signature as a whole word. "act as Daniel" no longer matches
+  "act as dan", a refusal written with a curly apostrophe is recognised, and
+  the safety injection and jailbreak markers no longer match inside longer
+  words, so results on the same samples can differ from 0.9.1.
+- Documentation wording: `opencomplai docs generate` is named as the gate for
+  the high-risk dossier and the pages say that `check` does not validate the
+  dossier; the evidence ledger is described as a hash chain, not a Merkle
+  tree, in the docs and API summaries; the `verify-log --vault` option says the
+  whole log entry is stored in the vault object store; the checker page states
+  the golden fixture and shared vector counts it is verified against; and the
+  performance page uses the right container image path.
+
+### Fixed
+
+- A `check` over several manifests with `--report-junit`, `--sarif-output` or
+  `--summary-md` wrote every system to the same path, so only the last system's
+  report survived. Each system now writes `<stem>.<system_id><ext>` beside the
+  path you gave; a single-manifest run still writes the exact path.
+- A `check` over several manifests with `--sample-set` passed the same file to
+  every system, so only the system whose id matched it could pass. Each system
+  now gets its own copy with its `system_id` filled in; your file is never
+  modified.
+- Non-ASCII manifests, tokens and state files no longer fail on Windows hosts
+  whose default code page is not UTF-8: the CLI and library now read and write
+  these text files as UTF-8.
+- An Art. 72 post-market monitoring plan rendered by `recommend` and left
+  unedited, or with only its placeholders deleted, was read as authored text.
+  The template's own lines no longer count, so the plan now reads Unfilled at
+  low confidence instead of Present, and a line that is only a label (such as
+  `Owner:`) is not counted as content.
+- `opencomplai ai status` counts the files inside nested cache folders (it only
+  counted top-level files), shows `<1 MB` for a small cache, shows a model
+  whose size is not known as `unknown` instead of `~0 MB`, and says a model
+  that has to be downloaded is not yet downloaded when its cache folder exists
+  but is empty.
+
 ## [0.9.1] — 2026-10-08
 
 ### Added
@@ -856,6 +1068,9 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.11.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.0
+[0.10.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.10.0
+[0.9.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.2
 [0.9.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.1
 [0.9.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.0
 [0.8.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.8.0

@@ -113,7 +113,7 @@ def test_downstream_file_does_not_satisfy_model_documentation_probe(tmp_path):
 def _gated_sources():
     for article, config in load_gap_article_map().items():
         for source in config["sources"]:
-            if "when_obligation_any" in source:
+            if "when_obligation_any" in source and source["kind"] != "record":
                 yield article, source
 
 

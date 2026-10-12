@@ -39,6 +39,7 @@ prev=""
 for a in "$@"; do
   if [ "$prev" = --summary-md ] && [ "${FAKE_WRITE_SUMMARY:-1}" = 1 ]; then printf '## fake summary\\n' >"$a"; fi
   if [ "$prev" = --sarif-output ]; then printf '{}\\n' >"$a"; fi
+  if [ "$prev" = --output-dir ] && [ "${FAKE_WRITE_ARTIFACT:-1}" = 1 ]; then printf '{}\\n' >"$a/compliance-artifact.json"; fi
   prev="$a"
 done
 echo "$@" >"$FAKE_ARGV"
@@ -388,3 +389,104 @@ def test_bogus_compliance_gate_example_is_gone() -> None:
         if "compliance-action@v1" in p.read_text("utf-8", errors="ignore")
     ]
     assert not hits, hits
+
+
+def test_action_yml_declares_evidence_inputs_and_output() -> None:
+    action = _action()
+    inputs = action["inputs"]
+    assert inputs["upload-artifact"]["default"] == "true"
+    assert inputs["sign"]["default"] == "false"
+    assert inputs["with-gaps"]["default"] == "false"
+    assert "artifact-name" in inputs
+    assert "artifact-file" in action["outputs"]
+
+
+def test_action_yml_upload_step_is_sha_pinned_and_gated() -> None:
+    text = (ACTION / "action.yml").read_text("utf-8")
+    steps = [
+        s
+        for s in _action()["runs"]["steps"]
+        if str(s.get("uses", "")).startswith("actions/upload-artifact@")
+    ]
+    assert len(steps) == 1
+    (step,) = steps
+    assert re.fullmatch(r"actions/upload-artifact@[0-9a-f]{40}", step["uses"])
+    assert re.search(r"actions/upload-artifact@[0-9a-f]{40} # v\d", text)
+    assert "inputs.upload-artifact" in step["if"]
+    assert "artifact-file" in step["if"]
+    assert step["with"]["path"] == "${{ steps.check.outputs.artifact-file }}"
+
+
+def test_run_sh_has_no_eval_and_maps_sign_and_with_gaps() -> None:
+    run_sh = (ACTION / "run.sh").read_text("utf-8")
+    assert "eval " not in run_sh
+    assert "--sign-if-available" in run_sh
+    assert "--with-gaps" in run_sh
+
+
+@needs_bash
+@pytest.mark.parametrize(
+    ("sign", "gaps", "expect"),
+    [
+        ("true", "true", True),
+        ("false", "false", False),
+        (None, None, False),
+        ("true; rm -rf x", "TRUE", False),
+    ],
+)
+def test_run_sh_sign_and_with_gaps_flags_follow_inputs(
+    tmp_path: Path, sign: str | None, gaps: str | None, expect: bool
+) -> None:
+    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
+    extra = {}
+    if sign is not None:
+        extra["OC_SIGN"] = sign
+    if gaps is not None:
+        extra["OC_WITH_GAPS"] = gaps
+    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"), **extra)
+    _run_sh(tmp_path, env)
+    argv = (tmp_path / "argv").read_text("utf-8")
+    assert ("--sign-if-available" in argv) is expect
+    assert ("--with-gaps" in argv) is expect
+
+
+@needs_bash
+def test_run_sh_reports_artifact_file(tmp_path: Path) -> None:
+    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
+    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"))
+    out, _ = _run_sh(tmp_path, env)
+    assert out["artifact-file"].endswith("compliance-artifact.json")
+    assert Path(out["artifact-file"]).is_file()
+
+    stale = tmp_path / "out" / "compliance-artifact.json"
+    stale.write_text("stale", encoding="utf-8")
+    env["FAKE_WRITE_ARTIFACT"] = "0"
+    out, _ = _run_sh(tmp_path, env)
+    assert out["artifact-file"] == ""
+    assert not stale.exists()
+
+
+@needs_bash
+def test_run_sh_real_gate_demo_writes_artifact_file(tmp_path: Path) -> None:
+    demo = tmp_path / "work" / "limited"
+    shutil.copytree(DEMOS / "limited", demo)
+    _shim(tmp_path / "shims", "uvx", REAL_UVX)
+    env = _env(
+        tmp_path,
+        tmp_path / "shims",
+        OC_TEST_PY=Path(sys.executable).as_posix(),
+        OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
+        OC_ARGS=f"--repo-root {demo.as_posix()}",
+    )
+    out, _ = _run_sh(tmp_path, env)
+    artifact = Path(out["artifact-file"])
+    assert artifact.name == "compliance-artifact.json"
+    assert artifact.stat().st_size > 0
+
+
+@pytest.mark.skipif(not SELFTEST.is_file(), reason="no self-test workflow in this tree")
+def test_selftest_asserts_artifact_file() -> None:
+    text = SELFTEST.read_text("utf-8")
+    assert "ARTIFACT: ${{ steps.gate.outputs.artifact-file }}" in text
+    assert 'test -s "$ARTIFACT"' in text
+    assert 'upload-artifact: "true"' in text

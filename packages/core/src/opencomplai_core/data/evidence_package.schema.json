@@ -1,0 +1,339 @@
+{
+  "$defs": {
+    "ArticleGapSource": {
+      "description": "Which subsystem produced an ArticleGapStatus row's evidence.",
+      "enum": [
+        "rule",
+        "obligation",
+        "scan",
+        "evaluator",
+        "artifact",
+        "attestation",
+        "crosswalk",
+        "manifest"
+      ],
+      "title": "ArticleGapSource",
+      "type": "string"
+    },
+    "ConfidenceLabel": {
+      "description": "Honesty label for gap / report surfaces (heuristic aid, not legal determination).",
+      "enum": [
+        "heuristic_estimate",
+        "not_assessed",
+        "measured",
+        "attested"
+      ],
+      "title": "ConfidenceLabel",
+      "type": "string"
+    },
+    "GapStatus": {
+      "description": "Per-article compliance status shown by `opencomplai gaps`.",
+      "enum": [
+        "met",
+        "partial",
+        "missing",
+        "unverified"
+      ],
+      "title": "GapStatus",
+      "type": "string"
+    },
+    "PackageArticle": {
+      "additionalProperties": false,
+      "properties": {
+        "article": {
+          "title": "Article",
+          "type": "string"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Confidence"
+        },
+        "confidence_label": {
+          "$ref": "#/$defs/ConfidenceLabel"
+        },
+        "evidence_ref": {
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ArticleGapSource"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        }
+      },
+      "required": [
+        "article",
+        "status",
+        "source",
+        "evidence_ref",
+        "confidence",
+        "confidence_label"
+      ],
+      "title": "PackageArticle",
+      "type": "object"
+    },
+    "PackageIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "commit_ref": {
+          "title": "Commit Ref",
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Manifest Sha256"
+        },
+        "system_id": {
+          "title": "System Id",
+          "type": "string"
+        },
+        "timestamp": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Timestamp"
+        },
+        "tree_dirty": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tree Dirty"
+        },
+        "tree_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Tree Sha256"
+        }
+      },
+      "required": [
+        "system_id",
+        "commit_ref",
+        "manifest_sha256",
+        "tree_sha256",
+        "tree_dirty",
+        "timestamp"
+      ],
+      "title": "PackageIdentity",
+      "type": "object"
+    },
+    "PackageProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "cli_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Cli Version"
+        },
+        "policy_bundle_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Policy Bundle Version"
+        },
+        "rule_set_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Rule Set Version"
+        },
+        "schema_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Schema Version"
+        }
+      },
+      "required": [
+        "cli_version",
+        "rule_set_version",
+        "schema_version",
+        "policy_bundle_version"
+      ],
+      "title": "PackageProvenance",
+      "type": "object"
+    },
+    "PackageVerdict": {
+      "additionalProperties": false,
+      "properties": {
+        "failed_controls": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failed Controls",
+          "type": "array"
+        },
+        "pending_verifications_count": {
+          "title": "Pending Verifications Count",
+          "type": "integer"
+        },
+        "result": {
+          "$ref": "#/$defs/ScanResult"
+        }
+      },
+      "required": [
+        "result",
+        "failed_controls",
+        "pending_verifications_count"
+      ],
+      "title": "PackageVerdict",
+      "type": "object"
+    },
+    "PackageVerification": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_pointer": {
+          "const": "/artifact",
+          "default": "/artifact",
+          "title": "Artifact Pointer",
+          "type": "string"
+        },
+        "command": {
+          "const": "opencomplai verify <artifact.json> --kind artifact --pub-key <signer-public-key.pem>",
+          "default": "opencomplai verify <artifact.json> --kind artifact --pub-key <signer-public-key.pem>",
+          "title": "Command",
+          "type": "string"
+        },
+        "note": {
+          "const": "The public key must come from the signer, never from this package. The package itself is not signed; only the embedded artifact is.",
+          "default": "The public key must come from the signer, never from this package. The package itself is not signed; only the embedded artifact is.",
+          "title": "Note",
+          "type": "string"
+        },
+        "signature_domain": {
+          "const": "scan-status-artifact",
+          "default": "scan-status-artifact",
+          "title": "Signature Domain",
+          "type": "string"
+        },
+        "signed": {
+          "title": "Signed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "signed"
+      ],
+      "title": "PackageVerification",
+      "type": "object"
+    },
+    "ScanResult": {
+      "description": "Terminal states for a compliance scan.",
+      "enum": [
+        "pass",
+        "control_fail",
+        "validation_fail",
+        "policy_block",
+        "trap_detected",
+        "degraded_complete"
+      ],
+      "title": "ScanResult",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.opencomplai.dev/evidence_package/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "articles": {
+      "items": {
+        "$ref": "#/$defs/PackageArticle"
+      },
+      "title": "Articles",
+      "type": "array"
+    },
+    "artifact": {
+      "additionalProperties": true,
+      "title": "Artifact",
+      "type": "object"
+    },
+    "evidence_hashes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Hashes",
+      "type": "array"
+    },
+    "identity": {
+      "$ref": "#/$defs/PackageIdentity"
+    },
+    "package_version": {
+      "const": "1",
+      "title": "Package Version",
+      "type": "string"
+    },
+    "provenance": {
+      "$ref": "#/$defs/PackageProvenance"
+    },
+    "verdict": {
+      "$ref": "#/$defs/PackageVerdict"
+    },
+    "verification": {
+      "$ref": "#/$defs/PackageVerification"
+    }
+  },
+  "required": [
+    "package_version",
+    "identity",
+    "provenance",
+    "verdict",
+    "articles",
+    "evidence_hashes",
+    "verification",
+    "artifact"
+  ],
+  "schema_version": "1",
+  "title": "EvidencePackage",
+  "type": "object"
+}

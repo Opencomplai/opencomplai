@@ -50,6 +50,7 @@ from opencomplai_core.deployer_pack import with_pack_summary
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
 from opencomplai_core.evaluators.seed_corpus import seed_sample_set
+from opencomplai_core.exemption_gap import apply_exemption_gate
 from opencomplai_core.frameworks import (
     EU_AI_ACT,
     evaluate_targets,
@@ -184,6 +185,7 @@ from opencomplai_cli.commands.deployer_pack import (  # noqa: E402
     app as deployer_pack_app,
 )
 from opencomplai_cli.commands.diff import diff_cmd  # noqa: E402
+from opencomplai_cli.commands.export import export_cmd  # noqa: E402
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
 from opencomplai_cli.commands.incident import app as incident_app  # noqa: E402
 from opencomplai_cli.commands.instructions import app as instructions_app  # noqa: E402
@@ -231,6 +233,7 @@ app.command("resume")(resume_cmd)
 app.command("accept")(accept_cmd)
 app.command("diff")(diff_cmd)
 app.command("verify")(verify_cmd)
+app.command("export")(export_cmd)
 
 console = Console()
 err_console = Console(stderr=True)
@@ -2939,8 +2942,25 @@ def scan_cmd(
             "emit ledger events. Prints detected categories and a suggested `init` command."
         ),
     ),
+    propose: bool = typer.Option(
+        False,
+        "--propose",
+        help=(
+            "Write classification-proposal.json: a suggested classification from "
+            "your code that `opencomplai accept --proposal` can confirm"
+        ),
+    ),
 ) -> None:
     """Cross-check declared purpose against AI capability signals in the repo."""
+    if propose:
+        if quick or ai_legacy:
+            err_console.print(
+                "[red]Error:[/red] --propose needs a manifest and the default "
+                "intent analysis (not --quick or --ai-legacy)."
+            )
+            sys.exit(2)
+        _require_ai_plugin()
+        ai_intent = True  # the proposal is built from the intent findings
     if quick:
         fail_on = FailOnLevel.none
         emit_evidence = False
@@ -3048,6 +3068,15 @@ def scan_cmd(
         ai_legacy=ai_legacy,
     )
 
+    if propose and report.eu_ai_scan is None:
+        # "none" would otherwise read as "analysed, nothing found".
+        err_console.print(
+            "[red]Error:[/red] --propose needs the intent analysis, which did "
+            "not run (model not loaded, plugin missing or analysis failed); "
+            "no proposal written."
+        )
+        sys.exit(2)
+
     if output == OutputFormat.json:
         envelope = wrap_scan_output(
             json.loads(report.model_dump_json()),
@@ -3103,6 +3132,15 @@ def scan_cmd(
             json.dumps(report_to_sarif(report), indent=2), encoding="utf-8"
         )
         console.print(f"[dim]SARIF written to {sarif_output}[/dim]")
+
+    if propose:
+        from opencomplai_cli.commands.proposal import write_scan_proposal
+
+        (err_console if output == OutputFormat.json else console).print(
+            f"Proposal written: {write_scan_proposal(report, manifest, repo_root)}",
+            soft_wrap=True,
+            markup=False,
+        )
 
     if enqueue_review and report.severity in (
         DiscrepancySeverity.MAJOR,
@@ -3270,6 +3308,14 @@ def check_cmd(
             "Replaces opencomplai.yaml's gate.fail_on."
         ),
     ),
+    require_exemption_record: bool = typer.Option(
+        False,
+        "--require-exemption-record",
+        help=(
+            "Opt-in: fail (exit 1) when the checker session relies on the "
+            "Art. 6(3) derogation and no valid signed exemption record exists."
+        ),
+    ),
     output_dir: Path = typer.Option(
         Path("."),
         "--output-dir",
@@ -3421,8 +3467,17 @@ def check_cmd(
             scan_config=scan_config,
         )
         scan_summary = scan_summary_from_report(scan_report)
+        from opencomplai_cli import proposal_gate
+
+        # Summary and fail-on gate only; scan_report (sidecar, gaps) is untouched.
+        scan_summary, gate_report = proposal_gate.apply_confirmed_proposal(
+            scan_summary,
+            scan_report,
+            proposal_gate.confirmed_proposal_area(manifest, repo_root),
+            baseline_categories,
+        )
         eval_hashes = list(dict.fromkeys((eval_hashes or []) + scan_hashes))
-        scan_failed = _scan_should_fail(scan_report, scan_fail_on, baseline_categories)
+        scan_failed = _scan_should_fail(gate_report, scan_fail_on, baseline_categories)
 
     if api_available:
         artifact, risk_high = _run_service_check(
@@ -3469,6 +3524,9 @@ def check_cmd(
         scan_mode=scan_mode,
         corroboration_report=scan_report,
         sample_set=sample_set,
+    )
+    artifact = apply_exemption_gate(
+        artifact, manifest, repo_root=repo_root, require=require_exemption_record
     )
 
     # HALT-WIRE / E-12(a): halt trigger — trap always halts; an unresolved
@@ -3573,6 +3631,7 @@ def check_cmd(
         artifact,
         now=datetime.now(UTC),
         manifest_bytes=manifest_file.read_bytes() if manifest_file.is_file() else None,
+        repo_root=repo_root,
     )
     # Before signing, so the signature covers the packs and other summaries.
     artifact = with_pack_summary(artifact, repo_root / "deployer-pack")
@@ -5039,9 +5098,11 @@ def ai_configure_cmd(
     else:
         import questionary
 
+        from opencomplai_cli.ai_status import spec_size_label
+
         choices = []
         for mid, spec in MODEL_CATALOG.items():
-            label = f"{mid:<28} [{spec.size_mb} MB,  {spec.license},  {spec.runtime}]"
+            label = f"{mid:<28} [{spec_size_label(spec.size_mb)},  {spec.license},  {spec.runtime}]"
             if mid == "qwen2.5-coder-1.5b":
                 label += "  ← recommended"
             if mid == "codebert-onnx":
@@ -5079,6 +5140,12 @@ def ai_status_cmd() -> None:
     from opencomplai_ai.config import get_active_model, get_cache_dir
     from opencomplai_ai.models import MODEL_CATALOG
 
+    from opencomplai_cli.ai_status import (
+        cache_files,
+        format_cache_size,
+        spec_size_label,
+    )
+
     active = get_active_model()
     spec = MODEL_CATALOG.get(active)
     cache_dir = get_cache_dir()
@@ -5087,7 +5154,7 @@ def ai_status_cmd() -> None:
     console.print(f"  active model  : {active}")
     if spec:
         console.print(f"  display name  : {spec.display_name}")
-        console.print(f"  size          : ~{spec.size_mb} MB")
+        console.print(f"  size          : {spec_size_label(spec.size_mb)}")
         console.print(f"  runtime       : {spec.runtime}")
         console.print(f"  license       : {spec.license}")
         deep_status = (
@@ -5099,17 +5166,21 @@ def ai_status_cmd() -> None:
             console.print(f"  llama-cpp     : {deep_status}")
     console.print(f"  cache dir     : {cache_dir}")
 
-    if cache_dir.exists():
-        total = sum(f.stat().st_size for f in cache_dir.iterdir() if f.is_file())
-        console.print(f"  cache size    : {total // (1024 * 1024)} MB")
-        cached = [f.name for f in cache_dir.iterdir() if f.is_file()]
-        if cached:
-            console.print(f"  cached files  : {', '.join(cached)}")
+    files = cache_files(cache_dir)
+    if files:
+        from rich.markup import escape
+
+        console.print(
+            f"  cache size    : {format_cache_size(sum(n for _, n in files))}"
+        )
+        console.print(f"  cached files  : {', '.join(escape(p) for p, _ in files)}")
     elif spec is None or spec.needs_preload:
         # codebert-onnx (deterministic matcher) and saas (cloud client) have no
         # local artifact, so an empty cache is not a missing download. Models
         # downloaded earlier are still listed above when the cache exists.
         console.print("  cache dir     : (empty — model not yet downloaded)")
+    elif cache_dir.exists():
+        console.print("  cache size    : 0 MB")
     console.print()
 
 

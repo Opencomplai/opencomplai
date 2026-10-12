@@ -5,7 +5,7 @@ verify_ledger.py — OpenComplAI evidence ledger integrity verifier.
 Performs two independent checks:
 
   1. Chain integrity  — calls /v1/evidence/verify-chain and confirms the
-     Merkle-linked ledger is intact (no event has been modified in place).
+     hash-chained ledger is intact (no event has been modified in place).
 
   2. Dossier anchor   — when --dossier is supplied, walks the chain history
      (a page at a time) via /v1/evidence/ledger-history-tips and confirms the

@@ -20,6 +20,7 @@ from pathlib import Path
 
 import typer
 from opencomplai_core.acceptance import (
+    ART_6_3_EXEMPTION,
     CLASSIFICATION_ACCEPTANCE,
     TRAP_APPROVAL,
     build_record,
@@ -30,7 +31,12 @@ from opencomplai_core.acceptance import (
 )
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.engine import assess
-from opencomplai_core.models import AssessmentInput, ModelMetadata, RiskLevel
+from opencomplai_core.models import (
+    ART_6_3_GROUND_IDS,
+    AssessmentInput,
+    ModelMetadata,
+    RiskLevel,
+)
 from opencomplai_core.signing import SigningKeyError, resolve_key
 
 from opencomplai_cli.commands.halt import OutputFormat
@@ -73,8 +79,10 @@ def accept_cmd(
     accepted_by: str = typer.Option(
         ..., "--accepted-by", help="Who is accepting (name or email)"
     ),
-    statement: str = typer.Option(
-        ..., "--statement", help="Free-text statement, in your own words"
+    statement: str | None = typer.Option(
+        None,
+        "--statement",
+        help="Free-text statement, in your own words (required unless --proposal)",
     ),
     repo_root: Path = typer.Option(
         Path("."), "--repo-root", help="Repository root the record is written under"
@@ -88,6 +96,31 @@ def accept_cmd(
     change_context: str | None = typer.Option(
         None, "--change-context", help="The change being approved (trap approval only)"
     ),
+    exemption: bool = typer.Option(
+        False,
+        "--exemption",
+        help="Record a declaration that an Annex III system relies on the Art. 6(3) "
+        "exceptions (a declaration, not a legal finding; needs legal review)",
+    ),
+    ground: list[str] | None = typer.Option(
+        None,
+        "--ground",
+        help="Art. 6(3) ground relied on, repeatable (exemption only): hr3_art_6_3, "
+        "hr4_narrow_task, hr5_no_significant_risk or hr6_accessory. Default: the "
+        "manifest's checker_session.derogation_grounds",
+    ),
+    proposal: Path | None = typer.Option(
+        None,
+        "--proposal",
+        help="Confirm a classification-proposal.json written by 'scan --propose' "
+        "(a suggestion from your code; you confirm it)",
+    ),
+    yes: bool = typer.Option(
+        False,
+        "--yes",
+        "-y",
+        help="Confirm without the prompt (only with --proposal)",
+    ),
     key: Path | None = typer.Option(
         None,
         "--key",
@@ -99,13 +132,38 @@ def accept_cmd(
     """Write a signed acceptance record bound to the manifest, then commit it.
 
     Exit 0 on success, 2 on invalid input, a missing signing key, or a
-    prohibited (Art. 5) system; nothing is written on exit 2.
+    prohibited (Art. 5) system; nothing is written on exit 2. With
+    ``--proposal``, exit 1 when the person does not confirm; nothing is written.
     """
     main_mod = _main_module()
-    record_type = TRAP_APPROVAL if trap_approval else CLASSIFICATION_ACCEPTANCE
+    if trap_approval:
+        record_type = TRAP_APPROVAL
+    elif exemption:
+        record_type = ART_6_3_EXEMPTION
+    else:
+        record_type = CLASSIFICATION_ACCEPTANCE
 
-    if not accepted_by.strip() or not statement.strip():
+    if proposal is None and yes:
+        _fail("--yes only applies with --proposal.")
+    if proposal is not None and (trap_approval or exemption or change_context):
+        _fail(
+            "--proposal cannot be combined with --trap-approval, --exemption "
+            "or --change-context."
+        )
+    if not accepted_by.strip() or (
+        proposal is None and not (statement and statement.strip())
+    ):
         _fail("--accepted-by and --statement must not be empty.")
+    if exemption and trap_approval:
+        _fail("--exemption and --trap-approval cannot be combined.")
+    if ground and not exemption:
+        _fail("--ground only applies with --exemption.")
+    unknown = [g for g in ground or [] if g not in ART_6_3_GROUND_IDS]
+    if unknown:
+        _fail(
+            f"unknown --ground {', '.join(unknown)}; "
+            f"use one of: {', '.join(ART_6_3_GROUND_IDS)}."
+        )
     if trap_approval and not (change_context and change_context.strip()):
         _fail("--trap-approval needs --change-context.")
     if change_context is not None and not trap_approval:
@@ -120,6 +178,21 @@ def accept_cmd(
     except Exception as exc:
         _fail(f"manifest validation error: {exc}")
 
+    if proposal is not None:
+        from opencomplai_cli.commands.proposal import confirm_and_record
+
+        confirm_and_record(
+            proposal_file=proposal,
+            manifest=manifest,
+            accepted_by=accepted_by,
+            statement=statement,
+            repo_root=repo_root,
+            key=key,
+            yes=yes,
+            output=output,
+        )
+        return
+
     key_path = key if key is not None else main_mod._SIGNING_KEY
     try:
         public_pem = public_key_pem_from_private(resolve_key(key_path))
@@ -132,6 +205,17 @@ def accept_cmd(
             "an acceptance cannot apply to it."
         )
 
+    grounds: list[str] | None = None
+    if exemption:
+        cs = manifest.checker_session
+        grounds = list(ground) if ground else list(cs.derogation_grounds if cs else [])
+        if not grounds:
+            _fail(
+                "an exemption needs --ground (one or more of: "
+                f"{', '.join(ART_6_3_GROUND_IDS)}); the manifest's checker session "
+                "has no derogation_grounds to default from."
+            )
+
     fingerprint = fingerprint_manifest(manifest)
     record = sign_record(
         build_record(
@@ -139,10 +223,11 @@ def accept_cmd(
             system_id=manifest.system_id,
             manifest_fingerprint=fingerprint,
             accepted_by=accepted_by.strip(),
-            statement=statement.strip(),
+            statement=(statement or "").strip(),
             accepted_at=datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
             public_key_pem=public_pem,
             change_context=change_context.strip() if trap_approval else None,
+            grounds=grounds,
         ),
         key_path,
     )
@@ -155,20 +240,26 @@ def accept_cmd(
     )
 
     if output == OutputFormat.json:
-        main_mod.console.print_json(
-            json.dumps(
-                {
-                    "path": str(path),
-                    "record_type": record_type,
-                    "key_id": key_id_for(public_pem),
-                    "manifest_fingerprint": fingerprint,
-                }
-            )
-        )
+        payload = {
+            "path": str(path),
+            "record_type": record_type,
+            "key_id": key_id_for(public_pem),
+            "manifest_fingerprint": fingerprint,
+        }
+        if grounds is not None:
+            payload["grounds"] = record["grounds"]
+        main_mod.console.print_json(json.dumps(payload))
     else:
         main_mod.console.print(
             f"Wrote {record_type} record: {path}", soft_wrap=True, markup=False
         )
+        if grounds is not None:
+            main_mod.console.print(
+                "This record is a declaration by a person, not a legal finding; "
+                "it needs legal review.",
+                soft_wrap=True,
+                markup=False,
+            )
         main_mod.console.print(
             "Commit this file so `opencomplai check` finds it in the repository.",
             soft_wrap=True,

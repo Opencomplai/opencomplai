@@ -10,10 +10,17 @@ import pytest
 from opencomplai_cli import main
 from opencomplai_cli.main import app
 from opencomplai_core.acceptance import (
+    ART_6_3_EXEMPTION,
     CLASSIFICATION_ACCEPTANCE,
+    PROPOSAL_CONFIRMATION,
     TRAP_APPROVAL,
     evaluate_record,
     record_path,
+)
+from opencomplai_core.classification_proposal import (
+    PROPOSAL_FILENAME,
+    build_proposal_document,
+    confirmation_status,
 )
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.models import CheckerSessionRef, SystemManifest
@@ -43,7 +50,10 @@ def env(tmp_path: Path, monkeypatch) -> Path:
 
 
 def _manifest(
-    tmp_path: Path, purpose: str = HIGH_RISK, verdict: str | None = None
+    tmp_path: Path,
+    purpose: str = HIGH_RISK,
+    verdict: str | None = None,
+    grounds: list[str] | None = None,
 ) -> Path:
     session = (
         CheckerSessionRef(
@@ -51,8 +61,9 @@ def _manifest(
             session_id="s",
             completed_at="2026-01-01T00:00:00Z",
             verdict=verdict,
+            derogation_grounds=grounds or [],
         )
-        if verdict
+        if verdict or grounds
         else None
     )
     path = tmp_path / "system-manifest.json"
@@ -216,3 +227,248 @@ def test_accept_overwrites_same_type_record(tmp_path: Path, env: Path) -> None:
     _, path, status = _status(tmp_path, env)
     assert status.record["accepted_by"] == "cto@example.test"
     assert len(list(path.parent.glob("*.json"))) == 1
+
+
+def test_accept_exemption_writes_record(tmp_path: Path, env: Path) -> None:
+    key = str(_key(tmp_path))
+    result = _accept(
+        "--exemption",
+        "--ground",
+        "hr6_accessory",
+        "--ground",
+        "hr3_art_6_3",
+        "--key",
+        key,
+        "-o",
+        "json",
+    )
+    assert result.exit_code == 0, result.output
+    manifest, path, status = _status(tmp_path, env, ART_6_3_EXEMPTION)
+    assert path.name.endswith(".art_6_3_exemption.json")
+    assert status.state == "valid"
+    assert status.record["grounds"] == ["hr3_art_6_3", "hr6_accessory"]
+    assert status.record["needs_legal_review"] is True
+    assert status.record["manifest_fingerprint"] == fingerprint_manifest(manifest)
+    out = json.loads(result.stdout)
+    assert out["record_type"] == ART_6_3_EXEMPTION
+    assert out["grounds"] == ["hr3_art_6_3", "hr6_accessory"]
+    assert _status(tmp_path, env)[2].state == "absent"
+
+    human = _accept("--exemption", "--ground", "hr4_narrow_task", "--key", key)
+    assert human.exit_code == 0, human.output
+    assert "legal review" in human.stdout
+
+
+def test_accept_exemption_defaults_grounds_from_checker_session(
+    tmp_path: Path, env: Path
+) -> None:
+    manifest = _manifest(
+        tmp_path, HIGH_RISK, "in_scope_ai_system", ["hr5_no_significant_risk"]
+    )
+    result = _accept("-m", str(manifest), "--exemption", "--key", str(_key(tmp_path)))
+    assert result.exit_code == 0, result.output
+    status = _status(tmp_path, manifest, ART_6_3_EXEMPTION)[2]
+    assert status.state == "valid"
+    assert status.record["grounds"] == ["hr5_no_significant_risk"]
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        [
+            "--exemption",
+            "--trap-approval",
+            "--change-context",
+            "c",
+            "--ground",
+            "hr3_art_6_3",
+        ],
+        ["--ground", "hr3_art_6_3"],
+        ["--exemption", "--ground", "hr9_made_up"],
+        ["--exemption"],
+    ],
+    ids=["both-flags", "ground-without-exemption", "unknown-ground", "no-grounds"],
+)
+def test_accept_exemption_input_errors_exit_2(
+    tmp_path: Path, env: Path, extra: list[str]
+) -> None:
+    result = _accept(*extra, "--key", str(_key(tmp_path)))
+    assert result.exit_code == 2, result.output
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_exemption_refuses_prohibited_practice(
+    tmp_path: Path, env: Path
+) -> None:
+    manifest = _manifest(
+        tmp_path, "Summarises internal documents", "prohibited_practice"
+    )
+    result = _accept(
+        "-m", str(manifest), "--exemption", "--ground", "hr3_art_6_3",
+        "--key", str(_key(tmp_path)),
+    )  # fmt: skip
+    assert result.exit_code == 2, result.output
+    assert "Art. 5" in result.stderr
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+# --- accept --proposal: a person confirms a classification suggested from code ---
+
+
+def _proposal(tmp_path: Path, manifest_path: Path, area: str = "employment") -> Path:
+    manifest = SystemManifest.model_validate_json(
+        manifest_path.read_text(encoding="utf-8")
+    )
+    doc = build_proposal_document(
+        system_id=manifest.system_id,
+        commit_ref="HEAD",
+        scanner_version="0.0.0",
+        scan_input_digest="sha256:" + "ab" * 32,
+        scan_report_hash="sha256:" + "cd" * 32,
+        manifest_fingerprint=fingerprint_manifest(manifest),
+        declared_purpose=manifest.intended_purpose,
+        area=area,
+        confidence="medium",
+        evidence=[{"location": "src/a.py:5", "file": "src/a.py", "line": 5}],
+        minority_evidence=[],
+        prohibited_signals=[],
+        proposal={"proposed_annex_iii_area": 4, "proposed_area_name": area},
+    )
+    path = tmp_path / PROPOSAL_FILENAME
+    path.write_text(json.dumps(doc, indent=2, sort_keys=True), encoding="utf-8")
+    return path
+
+
+def _accept_proposal(proposal: Path, *extra: str, input: str | None = None):
+    return runner.invoke(
+        app,
+        [
+            "accept",
+            "--accepted-by",
+            "dpo@example.test",
+            "--proposal",
+            str(proposal),
+            *extra,
+        ],
+        input=input,
+    )
+
+
+def _edit_area(proposal: Path, area: str) -> None:
+    doc = json.loads(proposal.read_text(encoding="utf-8"))
+    doc["area"] = area
+    proposal.write_text(json.dumps(doc, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def test_accept_proposal_yes_writes_verifiable_record(
+    tmp_path: Path, env: Path
+) -> None:
+    proposal = _proposal(tmp_path, env)
+    key = str(_key(tmp_path))
+    result = _accept_proposal(proposal, "--yes", "--key", key, "-o", "json")
+    assert result.exit_code == 0, result.output
+    manifest, path, status = _status(tmp_path, env, PROPOSAL_CONFIRMATION)
+    assert path.name.endswith(".classification_proposal_confirmation.json")
+    assert status.state == "valid"
+    doc = json.loads(proposal.read_text(encoding="utf-8"))
+    assert status.record["proposal_sha256"] == doc["proposal_sha256"]
+    assert status.record["confirmed_area"] == "employment"
+    assert status.record["statement"] == (
+        "Confirmed the proposed classification: employment"
+    )
+    out = json.loads(result.stdout)
+    assert out["record_type"] == PROPOSAL_CONFIRMATION
+    assert out["proposal_sha256"] == doc["proposal_sha256"]
+    assert out["confirmed_area"] == "employment"
+    assert Path(out["path"]) == path
+    assert confirmation_status(proposal, path, manifest).state == "valid"
+    # The classification acceptance the `check` gate reads is not written.
+    assert _status(tmp_path, env)[2].state == "absent"
+
+
+def test_accept_proposal_interactive_yes(tmp_path: Path, env: Path) -> None:
+    proposal = _proposal(tmp_path, env)
+    result = _accept_proposal(proposal, "--key", str(_key(tmp_path)), input="y\n")
+    assert result.exit_code == 0, result.output
+    assert "employment" in result.stdout
+    assert "src/a.py:5" in result.stdout
+    assert "Not a legal determination" in result.stdout
+    assert _status(tmp_path, env, PROPOSAL_CONFIRMATION)[2].state == "valid"
+
+
+def test_accept_proposal_declined_writes_nothing(tmp_path: Path, env: Path) -> None:
+    proposal = _proposal(tmp_path, env)
+    result = _accept_proposal(proposal, "--key", str(_key(tmp_path)), input="n\n")
+    assert result.exit_code == 1, result.output
+    assert "nothing written" in result.stderr
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_proposal_no_tty_without_yes_writes_nothing(
+    tmp_path: Path, env: Path
+) -> None:
+    proposal = _proposal(tmp_path, env)
+    result = _accept_proposal(proposal, "--key", str(_key(tmp_path)))
+    assert result.exit_code == 1, result.output
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_proposal_tampered_before_confirmation_exit_2(
+    tmp_path: Path, env: Path
+) -> None:
+    proposal = _proposal(tmp_path, env)
+    _edit_area(proposal, "biometrics")
+    result = _accept_proposal(proposal, "--yes", "--key", str(_key(tmp_path)))
+    assert result.exit_code == 2, result.output
+    assert "edited" in result.stderr
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_proposal_tampered_after_confirmation_detected(
+    tmp_path: Path, env: Path
+) -> None:
+    proposal = _proposal(tmp_path, env)
+    result = _accept_proposal(proposal, "--yes", "--key", str(_key(tmp_path)))
+    assert result.exit_code == 0, result.output
+    manifest, path, _ = _status(tmp_path, env, PROPOSAL_CONFIRMATION)
+    assert confirmation_status(proposal, path, manifest).state == "valid"
+    _edit_area(proposal, "biometrics")
+    assert confirmation_status(proposal, path, manifest).state == "proposal_changed"
+
+
+def test_accept_proposal_stale_manifest_exit_2(tmp_path: Path, env: Path) -> None:
+    proposal = _proposal(tmp_path, env)
+    _manifest(tmp_path, "Summarises internal documents")
+    result = _accept_proposal(proposal, "--yes", "--key", str(_key(tmp_path)))
+    assert result.exit_code == 2, result.output
+    assert "manifest changed since the proposal" in result.stderr
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_proposal_rejects_trap_approval_combination(
+    tmp_path: Path, env: Path
+) -> None:
+    proposal = _proposal(tmp_path, env)
+    result = _accept_proposal(
+        proposal,
+        "--trap-approval",
+        "--change-context",
+        "model_retrain",
+        "--yes",
+        "--key",
+        str(_key(tmp_path)),
+    )
+    assert result.exit_code == 2, result.output
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_without_proposal_still_requires_statement(
+    tmp_path: Path, env: Path
+) -> None:
+    key = str(_key(tmp_path))
+    missing = runner.invoke(app, ["accept", "--accepted-by", "a", "--key", key])
+    assert missing.exit_code == 2, missing.output
+    assert "--statement" in missing.stderr
+    stray_yes = _accept("--yes", "--key", key)
+    assert stray_yes.exit_code == 2, stray_yes.output
+    assert not (tmp_path / ".opencomplai").exists()

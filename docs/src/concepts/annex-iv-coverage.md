@@ -25,7 +25,7 @@ below).
 | # | Annex IV point | Category | What's covered today |
 |---|---|---|---|
 | 1 | General description (Section 1) | Automated + CLI input | `system_name`, `system_version`, `intended_purpose`, `compliance_target`, `risk_class` come from the manifest and the risk engine's classification. `provider_name` is a CLI flag (`--provider-name`) copied verbatim — not derived, not attested via the manifest. `deployment_context` is currently a fixed string (`"production"`), not derived from any real deployment signal. |
-| 2 | Elements & development process (Section 2) | Automated (manifest) | `training_data_description` and `model_architecture` come from the manifest; `performance_metrics` merges manifest values with `eval_<category>_score` entries from a loaded eval sidecar. When the manifest leaves either required field blank, the dossier falls back to the literal stub `"Not specified in this release."` — not the `PROVIDER_SUPPLIED_PLACEHOLDER` marker used elsewhere — and `section2_complete` is set to `false` for HIGH-risk systems. **`section2_complete` is informational only: `validate_dossier_schema` (the CI release gate) does not check it.** |
+| 2 | Elements & development process (Section 2) | Automated (manifest) | `training_data_description` and `model_architecture` come from the manifest; `performance_metrics` merges manifest values with `eval_<category>_score` entries from a loaded eval sidecar. When the manifest leaves either required field blank, the dossier falls back to the literal stub `"Not specified in this release."` — not the `PROVIDER_SUPPLIED_PLACEHOLDER` marker used elsewhere — and `section2_complete` is set to `false` for HIGH-risk systems. **`section2_complete` is informational only: `validate_dossier_schema` (the gate behind `opencomplai docs generate`) does not check it.** |
 | 3 | Monitoring, functioning and control (Section 3) | Provider attestation | `human_oversight_measures`, `monitoring_approach`, `incident_response_procedure` — all three manifest fields. `provider_supplied` is `true` only when **all three** are non-empty; a partially-filled section still counts as a placeholder for HIGH-risk gating (DOSS-HONEST: no more fabricated boilerplate here). |
 | 4 | Appropriateness of performance metrics (Section 4) | Wired evidence + provider attestation | `metrics_reported` is the same manifest+eval-merged dict as Section 2 (wired evidence when `eval-report.json` is present). `appropriateness_rationale` is the manifest field `metrics_appropriateness_rationale` — a provider attestation, placeholder when absent. |
 | 5 | Risk management system (Section 5) | Automated + wired evidence | `risk_assessment_id`, `risk_level`, `rules_evaluated/passed/failed`, `failed_rule_ids`, `rationale_hash` are automated output of the deterministic rule engine. `eval_set_version`, `eval_overall_outcome`, `eval_evidence_hashes` are wired evidence, populated only when `eval-report.json` is loaded. `scanner_version`, `corroboration_detected_categories`, `corroboration_discrepancies`, `corroboration_severity`, `corroboration_baseline_ref`, `corroboration_report_hash` are wired evidence, populated only when `scan-report.json` is loaded. `corroboration_review_status` is always `null` in this generator — no code path sets it yet. |
@@ -33,7 +33,7 @@ below).
 | 7 | Harmonised standards / alternative solutions (Section 7) | Provider attestation | `harmonised_standards` (list) and/or `alternative_solutions` — manifest fields. Placeholder when both are empty. |
 | 8 | EU declaration of conformity (Section 8) | Provider attestation | `eu_declaration_of_conformity_ref` — a **reference** to the declaration, not a copy of it (Annex IV point 8 technically asks for the document itself; this engine records a pointer). `eu_declaration_of_conformity_sha256` — the SHA-256 of that signed document as uploaded to the evidence vault, letting a verifier check the referenced file without the file being embedded in the dossier JSON (see below). Both placeholder when the reference is absent. |
 | 9 | Post-market monitoring plan (Section 9) | Provider attestation | `post_market_monitoring_plan_ref` and/or `post_market_monitoring_summary` — manifest fields. Placeholder when both are empty. |
-| 10 | Article 12 record-keeping | Provider declaration | `logging_enabled`, `evidence_vault_enabled` and `log_retention_days` are copied from the manifest's `record_keeping` block and nothing else. A manifest without the block gives `false`, `false` and no `log_retention_days` key, with `provider_supplied: false`; a manifest that declares it gives `provider_supplied: true`. The tool does not check a declaration against your system, and `LOG_RETENTION_DAYS` is no longer read. `ledger_root_hash` is measured, not declared: it reflects the real evidence-vault Merkle root in service-backed mode, or `null` otherwise. |
+| 10 | Article 12 record-keeping | Provider declaration | `logging_enabled`, `evidence_vault_enabled` and `log_retention_days` are copied from the manifest's `record_keeping` block and nothing else. A manifest without the block gives `false`, `false` and no `log_retention_days` key, with `provider_supplied: false`; a manifest that declares it gives `provider_supplied: true`. The tool does not check a declaration against your system, and `LOG_RETENTION_DAYS` is no longer read. `ledger_root_hash` is measured, not declared: it reflects the real evidence-vault chain tip in service-backed mode, or `null` otherwise. |
 
 Sections 6–9 plus Section 3's `monitoring_approach`/`incident_response_procedure`
 plus Section 4's `appropriateness_rationale` are the eight manifest fields a
@@ -53,16 +53,20 @@ provider has to fill in by hand for a dossier to stop showing placeholders:
 factor in `section2_complete` — Section 2 stub content is flagged separately
 and is not part of this gate.
 
-`validate_dossier_schema` — the function the CI release gate calls — enforces,
-for a HIGH-risk system only:
+`validate_dossier_schema` — the function `opencomplai docs generate` and the
+doc-generator service call — enforces, for a HIGH-risk system only:
 
 - Sections 6–9 are all `provider_supplied`
 - `annex_iv_complete` is `true`
 - Section 4 is `provider_supplied`
 - Section 3 is `provider_supplied`
 
-A HIGH-risk dossier that still carries any placeholder in those sections
-**fails the release gate**. A non-HIGH-risk dossier passes with placeholders
+A HIGH-risk dossier that still carries any placeholder in those sections is
+refused by `opencomplai docs generate`, which exits 2 (`VALIDATION_FAIL`)
+unless `--allow-incomplete` is passed; the doc-generator service returns 422
+(see [Fail-closed dossier gate](../cli/docs-generate.md)). `opencomplai check`
+does not validate the dossier, so a CI job gates on this only if it runs
+`docs generate`. A non-HIGH-risk dossier passes with placeholders
 present — the gate is deliberately scoped to where the regulation's stakes are
 highest, not to every dossier ever generated.
 

@@ -1,13 +1,13 @@
 """
 data/annex_iv_dossier.schema.json is generated from
-`AnnexIVDossier.model_json_schema()` (scripts/generate_dossier_schema.py) so
+`json_schemas.build_dossier_schema()` (scripts/generate_dossier_schema.py) so
 external consumers (the doc-generator service, dashboard-saas, auditors) have
 a machine-readable JSON Schema for the dossier without hand-maintaining one
 that can silently fall out of sync with the pydantic model.
 
 This test fails loud — mirroring control_catalog.get_catalog()'s fail-loud
 convention — if the committed file ever disagrees with a fresh
-model_json_schema() call: regenerate with `python scripts/generate_dossier_schema.py`
+builder call: regenerate with `python scripts/generate_dossier_schema.py`
 after any AnnexIVDossier/AnnexIVSection* model change, and commit the result.
 """
 
@@ -18,6 +18,11 @@ from pathlib import Path
 
 import jsonschema
 from opencomplai_core.dossier import AnnexIVDossier
+from opencomplai_core.json_schemas import (
+    DOSSIER_SCHEMA_ID,
+    SCHEMA_VERSION,
+    build_dossier_schema,
+)
 
 _SCHEMA_PATH = (
     Path(__file__).resolve().parents[1]
@@ -36,13 +41,28 @@ def _committed_schema() -> dict:
 
 
 def test_schema_file_matches_model() -> None:
-    fresh = AnnexIVDossier.model_json_schema()
+    fresh = build_dossier_schema()
     committed = _committed_schema()
     assert committed == fresh, (
         "data/annex_iv_dossier.schema.json has drifted from "
-        "AnnexIVDossier.model_json_schema() — run "
+        "build_dossier_schema() — run "
         "`python scripts/generate_dossier_schema.py` and commit the result."
     )
+
+
+def test_schema_declares_stable_id() -> None:
+    committed = _committed_schema()
+    assert committed["$id"] == DOSSIER_SCHEMA_ID
+    assert DOSSIER_SCHEMA_ID == "https://schemas.opencomplai.dev/annex_iv_dossier/v1"
+    assert committed["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+    assert committed["schema_version"] == SCHEMA_VERSION == "1"
+
+
+def test_builder_matches_raw_model_apart_from_metadata() -> None:
+    built = build_dossier_schema()
+    for key in ("$id", "$schema", "schema_version"):
+        built.pop(key)
+    assert built == AnnexIVDossier.model_json_schema()
 
 
 def test_schema_validates_a_sample_dossier() -> None:

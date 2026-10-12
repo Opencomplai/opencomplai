@@ -216,7 +216,7 @@ def run_connector(
     # JUnit XML artifact.
     xml_content = _build_junit_xml(artifact_result, stdout)
     try:
-        with open(junit_path, "w") as fh:
+        with open(junit_path, "w", encoding="utf-8") as fh:
             fh.write(xml_content)
     except OSError:
         pass
@@ -307,7 +307,7 @@ def _write_dotenv(path: str, artifact: dict) -> None:
         f"OPENCOMPLAI_CONTENT_HASH={artifact.get('content_hash', '')}",
     ]
     try:
-        with open(path, "w") as fh:
+        with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
     except OSError:
         pass

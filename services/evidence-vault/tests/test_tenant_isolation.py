@@ -62,7 +62,7 @@ def _headers(tenant_id: str) -> dict[str, str]:
 
 
 # ---------------------------------------------------------------------------
-# Ledger: each tenant has its own independent Merkle chain
+# Ledger: each tenant has its own independent hash chain
 # ---------------------------------------------------------------------------
 
 

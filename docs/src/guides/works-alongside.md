@@ -34,7 +34,69 @@ No bridge or importer to Promptfoo or any GRC platform is built; you move files 
 
 A preview log import exists for that toolkit: run `opencomplai agents import-log` (and `opencomplai agents dispute-report` for a per-agent window report). It reads files written by the Agent Governance Toolkit file audit sink, offline, as a preview. Imported evidence is capped at Partial and labelled "format-valid, not verified". The exit codes of `opencomplai check` and `opencomplai gaps` are unchanged, and nothing is pushed to or pulled from that toolkit. See [AGT log preview](../concepts/agt-import.md).
 
-The export paths that exist are `opencomplai scan --sarif-output`, the `opencomplai check` JSON artifact, and `opencomplai push` to the OpenComplAI dashboard.
+The files you can hand over are listed in [Feed your governance platform](#feed-your-governance-platform). `opencomplai push` uploads to the OpenComplAI dashboard only when you run it.
+
+## Feed your governance platform
+
+These are files you hand over; nothing is sent to a platform by this tool, no connector exists and no platform is a partner of OpenComplAI.
+
+**What to hand over**
+
+| Output | File or flag | How to produce it | Use it for |
+|---|---|---|---|
+| Signed artifact | `compliance-artifact.json` | `opencomplai check --sign` (or `--sign-if-available`) | The verdict, checkable offline with the public key |
+| Gap report JSON | `opencomplai gaps --output json`, or `gap_report` inside the artifact | `opencomplai gaps --output json`; or `opencomplai check --with-gaps` to embed it as `gap_report` in the artifact | Per-article status for a reviewer |
+| SARIF 2.1.0 | `--sarif-output` | `opencomplai check --sarif-output check.sarif` (verdict); `opencomplai scan --sarif-output` (scan evidence) | Reading the verdict or the scan evidence as SARIF |
+| JUnit XML | `--report-junit` | `opencomplai check --report-junit report.xml` | A CI test report; a failure for `control_fail`, `trap_detected`, `policy_block` or `validation_fail` |
+| Annex IV dossier | `dossier_<id>.json` | `opencomplai docs generate`, then `opencomplai verify dossier_<id>.json --kind dossier` | The technical documentation draft, with honest placeholders |
+| Neutral evidence package | `evidence-package.json` | `opencomplai export <artifact> --out evidence-package.json`; add `--format csv` for a flat CSV; `--artifact-out` writes the embedded artifact for `opencomplai verify` | One versioned file a tool can read without knowing our model |
+
+### Verify the signature offline
+
+The recipient needs only the artifact and the public key (`signing.pub`), never the private key. Verification runs offline:
+
+```bash
+opencomplai verify compliance-artifact.json
+opencomplai verify compliance-artifact.json --pub-key ./signing.pub
+```
+
+| Exit code | Result |
+|---|---|
+| `0` | Verified: the signature matches the artifact. |
+| `1` | Unsigned or invalid. |
+| `2` | Bad input: the file or the key cannot be used. |
+
+An unsigned artifact reports `unsigned` and proves nothing. See [verify](../cli/verify.md) and [key management](../security/key-management.md).
+
+### What the fields mean
+
+Artifact fields:
+
+| Field | Meaning |
+|---|---|
+| `result` | The verdict: `pass`, `control_fail`, `validation_fail`, `policy_block`, `trap_detected` or `degraded_complete`. |
+| `failed_controls` | The controls that failed in this run. |
+| `evidence_hashes` | SHA-256 hashes of the evidence objects. |
+| `rationale_hash` | SHA-256 of the assessment rationale. |
+| `signature` | Base64 signature; `null` when the artifact is unsigned. |
+| `gap_report` | The per-article gap status; present only with `--with-gaps`. |
+| `manifest_sha256`, `timestamp`, `rule_set_version`, `cli_version`, `schema_version` | Provenance stamps written by the check. |
+
+Gap row fields (one row per article in `articles[]`):
+
+| Field | Meaning |
+|---|---|
+| `article` | The EU AI Act article reference, for example `Art. 6`. |
+| `status` | `met`, `partial`, `missing` or `unverified`. |
+| `source` | Where the status comes from. |
+| `evidence_ref` | The rule id, obligation id, evaluator id or scan finding the row points to. |
+| `rationale` | The reason recorded for the status. |
+| `confidence` | A heuristic confidence from 0 to 1; `null` when not assessed. |
+| `confidence_label` | The label that marks the confidence as a heuristic estimate. |
+
+The gap report envelope printed by `opencomplai gaps --output json` is not signed. A `met` or `partial` row is an automated heuristic, not a legal finding. See [published schemas](../concepts/published-schemas.md) and [gaps](../cli/gaps.md).
+
+`opencomplai export --format csv` writes a flat system-by-article CSV; see [export](../cli/export.md).
 
 ## When an accepted high-risk system exits 0
 

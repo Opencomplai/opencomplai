@@ -9,12 +9,14 @@ from opencomplai_core.gap_probes import (
     _PROBE_PATTERNS,
     QMS_17_1_CLAUSES,
     SCAFFOLD_PLACEHOLDER,
+    _body_text,
     artifact_gap_status,
     qms_clause_results,
 )
 from opencomplai_core.gap_report import build_gap_report, load_gap_article_map
 from opencomplai_core.models import GapStatus
 from opencomplai_core.qms_document import build_qms_document
+from opencomplai_core.recommend_engine import render_recommendations
 
 _FILLED = (
     "This procedure documents regulatory compliance, design control, quality "
@@ -179,3 +181,73 @@ def test_clause_entry_carries_confidence(tmp_path: Path):
     assert by_letter["c"].status_label == "Unfilled"
     assert by_letter["a"].confidence == 0.4
     assert all(c.confidence is None for c in build_qms_document(None).clauses)
+
+
+def _render_pmm(tmp_path: Path) -> str:
+    empty = tmp_path / "render-src"
+    empty.mkdir()
+    report = build_gap_report("s", "HEAD", repo_root=empty)
+    written = {p.name: p for p in render_recommendations(report, tmp_path / "out")}
+    return written["art72-post_market_monitoring_plan.md"].read_text(encoding="utf-8")
+
+
+def _art72_for(tmp_path: Path, text: str):
+    root = tmp_path / "repo"
+    (root / "docs").mkdir(parents=True)
+    (root / "docs" / "post-market-monitoring-plan.md").write_text(
+        text, encoding="utf-8"
+    )
+    report = build_gap_report("s", "HEAD", repo_root=root)
+    return root, next(r for r in report.articles if r.article == "Art. 72")
+
+
+def test_pmm_template_with_only_markers_deleted_is_unfilled(tmp_path: Path):
+    text = _render_pmm(tmp_path)
+    root, row = _art72_for(tmp_path, text.replace(SCAFFOLD_PLACEHOLDER, ""))
+    assert row.status == GapStatus.PARTIAL
+    assert row.confidence == 0.35
+    assert "lacks" in row.rationale
+    assert _label(root, "h") == "Unfilled"
+
+    root2 = tmp_path / "raw"
+    root2.mkdir()
+    root2, row2 = _art72_for(root2, text)
+    assert row2.confidence == 0.35
+    assert "unfilled scaffold placeholder" in row2.rationale
+    assert _label(root2, "h") == "Unfilled"
+
+
+def test_pmm_template_with_real_content_is_present(tmp_path: Path):
+    text = _render_pmm(tmp_path)
+    n = text.count(SCAFFOLD_PLACEHOLDER)
+    for i in range(n):
+        text = text.replace(
+            SCAFFOLD_PLACEHOLDER,
+            f"entry number {i} describes how the team handles it in practice, with monitoring",
+            1,
+        )
+    # the intro paragraph also quotes the placeholder; it is replaced like any other cell
+    root, row = _art72_for(tmp_path, text)
+    assert row.confidence == 0.6
+    assert row.status != GapStatus.MET
+    assert _label(root, "h") == "Present"
+
+
+def test_pmm_rationale_variable_line_is_matched_for_any_rationale(tmp_path: Path):
+    lines = _render_pmm(tmp_path).replace(SCAFFOLD_PLACEHOLDER, "").splitlines()
+    lines = [
+        "**Why this was generated:** a long different sentence about monitoring every release"
+        if ln.startswith("**Why this was generated:**")
+        else ln
+        for ln in lines
+    ]
+    root, row = _art72_for(tmp_path, "\n".join(lines))
+    assert row.confidence == 0.35
+    assert _label(root, "h") == "Unfilled"
+
+
+def test_label_only_colon_lines_are_not_body_text():
+    body = _body_text(
+        "- Owner:\n**Scope:**\n1. Cadence:\n- Owner: Platform team lead reviews monthly\n"
+    )
+    assert body == "- Owner: Platform team lead reviews monthly"

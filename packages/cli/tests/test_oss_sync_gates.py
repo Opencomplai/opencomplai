@@ -159,3 +159,66 @@ def test_unrated_security_pages_stay_private(tmp_path):
     r = _verify(out)
     assert r.returncode != 0
     assert "private file found in output: docs/security/risk-register.md" in r.stderr
+
+
+def _private(p: str) -> int:
+    return subprocess.run(
+        [BASH, "-c", f'source "{CONFIG.as_posix()}"; oss_is_private "{p}"'],
+        capture_output=True,
+        text=True,
+    ).returncode
+
+
+def test_oss_is_private_allowlisted_github_is_public():
+    for p in (
+        ".github/CODEOWNERS",
+        ".github/ISSUE_TEMPLATE/bug-report.yml",
+        ".github/pull_request_template.md",
+        ".github/workflows/dco.yml",
+    ):
+        assert _private(p) == 1, p
+
+
+def test_oss_is_private_unlisted_github_stays_private():
+    assert _private(".github/workflows/internal-only.yml") == 0
+    assert _private(".github/dependabot.yml") == 0
+
+
+def test_oss_is_private_overlay_maps_to_dot_github():
+    assert _private("oss-public/.github/workflows/actionlint.yml") == 1
+    assert _private("oss-public/README.md") == 0
+
+
+def test_oss_is_private_dashboard_saas_stays_private():
+    assert _private("dashboard-saas/x") == 0
+
+
+def test_oss_is_private_held_back_workflows_stay_private():
+    for p in (
+        ".github/workflows/ci.yml",
+        "oss-public/.github/workflows/ci.yml",
+        ".github/workflows/dashboard-saas-ci.yml",
+    ):
+        assert _private(p) == 0, p
+
+
+@pytest.mark.parametrize("manifest", ["pnpm-lock.yaml", "package-lock.json"])
+def test_private_path_in_build_manifest_fails(tmp_path, manifest):
+    # The stderr assertions are the proof: on a host without a secret scanner
+    # verify-oss.sh fails for that reason too, so returncode alone is vacuous.
+    private = "dashboard" + "-saas/"  # runtime-built so this file passes its own gate
+    bad = tmp_path / "bad"
+    bad.mkdir()
+    out = _tree(bad)
+    (out / manifest).write_text(f"link: {private}app\n")
+    r = _verify(out)
+    assert r.returncode != 0
+    assert "referenced in build manifest" in r.stderr
+    assert manifest in r.stderr
+
+    good = tmp_path / "good"
+    good.mkdir()
+    out = _tree(good)
+    (out / manifest).write_text("link: packages/cli\n")
+    r = _verify(out)
+    assert "referenced in build manifest" not in r.stderr

@@ -40,15 +40,43 @@ does not clear anything.
 | `--manifest` / `-m` | `system-manifest.json` | Path to the system manifest JSON file. Repeat it for several systems, or pass a glob; see [Several manifests](#several-manifests). |
 | `--commit-ref` | `HEAD` | Git commit reference for the assessment. `HEAD` or a value under 7 characters is replaced by the CI commit variable (`GITHUB_SHA`, `CI_COMMIT_SHA`), else `git rev-parse HEAD` in `--repo-root`, else `unresolved`. The resolved value is used everywhere, including the artifact and `gap_report`. |
 | `--scan-mode` | `local` | `ci`, `local`, or `airgap`. Recorded in the artifact and used as the assessment's `deployment_context`. `ci` makes a degraded-complete scan exit `1`; `local` and `airgap` exit `0`. `airgap` does not block network access. |
-| `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON to run the safety / bias / data-leakage evaluators. Its `system_id` must match the manifest. |
+| `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON to run the safety / bias / data-leakage evaluators. Its `system_id` must match the manifest. With several manifests the CLI rewrites `system_id` in a per-system copy; see [Several manifests](#several-manifests). |
 | `--sign` / `--no-sign` | `--no-sign` | Sign the status artifact with the key in `~/.opencomplai/signing.key` or, when set, `SIGNING_KEY_PRIVATE` (base64 PEM). Exits `2` before doing anything if there is no key. |
 | `--sign-if-available` | off | Sign when a key is available; otherwise print a warning and write an unsigned artifact. `--sign` wins when both are given. |
+| `--scan` | off | Run the opt-in code corroboration scan under `--repo-root` and add its summary to the artifact. See [scan](scan.md). |
+| `--fail-on` | `none` | With `--scan`: fail the check on scan discrepancy severity. One of `none`, `new-major`, `major`, `critical`; the levels are the ones in [scan](scan.md). A detector or scan error fails the check at any level. |
+| `--baseline` | *(none)* | With `--scan`: JSON file with `accepted_categories`, the categories `--fail-on new-major` treats as already accepted (see [scan](scan.md)). A file that cannot be read exits `2`. |
+| `--emit-evidence` / `--no-emit-evidence` | `--emit-evidence` | With `--scan`: append the `code_corroboration` event to the evidence ledger, or not. |
+| `--strict` | off | Exit `2` on unknown top-level keys in the manifest instead of warning and ignoring them. |
 | `--with-gaps` | off | Attach a per-article `gap_report` to the artifact (additive, informational only). Artifact-backed articles are probed under `--repo-root`, as in [`gaps`](gaps.md). |
 | `--repo-root` | `.` | Repo root for the `--scan` code scan and the `--with-gaps` artifact path probes (Arts. 9/13/14/16/24/43). |
+| `--change-context` | *(none)* | Declared reason for this deployment's change, such as `model_retrain`, `purpose_change` or `capability_extension`. A recognised value trips the Article 25 substantial-modification trap (exit `4`) and freezes deployment pending review. See [Exit codes](exit-codes.md). |
 | `--target` | manifest | Framework `--with-gaps` and `--gate` assess; repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. `NIST_AI_RMF` attaches `nist_rmf_report`. Any set other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF` also attaches `framework_reports`, one report per target. |
 | `--gate` | `opencomplai.yaml` | Target framework other than the EU AI Act whose failing rows fail the check; repeat for several. Replaces `gate.frameworks` from `opencomplai.yaml`. See [Gating other frameworks](#gating-other-frameworks). |
 | `--gate-fail-on` | `missing` | `missing` or `partial`: which rows of a gated framework fail. Replaces `gate.fail_on` from `opencomplai.yaml`. |
+| `--require-exemption-record` | off | Opt-in. When the manifest's checker session relies on the Art. 6(3) derogation (it lists `provider_art_6_4_registration`) and the repository holds no valid signed `art_6_3_exemption` record, `check` fails with `EU_AIA_ART6_3_EXEMPTION_RECORD` (exit `1`). A record that is absent, unsigned, tampered, untrusted or stale (the manifest or its grounds changed after signing) counts as missing. Without the flag the exit code is unchanged and the `--with-gaps` Art. 49 row only reports the record. Write the record with [`accept --exemption`](accept.md). The record is the provider's own declaration of the grounds; the check does not assess whether the exemption is valid. Wording is product design, flagged `needs_founder_review`. |
+| `--oversight-log` | state directory | Oversight log to summarise into the artifact. Default: the oversight log in the OpenComplAI state directory. |
+| `--agent-log` | `agent-log.jsonl` | Agent decision log to summarise into the artifact. |
+| `--incident-register` | `incident-register.json` | Incident register to summarise into the artifact. |
+| `--output-dir` | `.` | Directory where `compliance-artifact.json` and the scan and eval sidecars are written. With several manifests it holds one directory per system; see [Several manifests](#several-manifests). |
+| `--report-junit` | *(none)* | Also write a JUnit XML report of the verdict to this path. With several `--manifest` values each system gets its own file; see [Several manifests](#several-manifests). |
+| `--sarif-output` | *(none)* | Also write the check verdict as SARIF 2.1.0 to this path. It is the verdict, not scan evidence. With several `--manifest` values each system gets its own file; see [Several manifests](#several-manifests). |
+| `--summary-md` | *(none)* | Also write the Markdown job summary to this path. With several `--manifest` values each system gets its own file; see [Several manifests](#several-manifests). |
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
+
+The three log options feed the `summaries` block of the artifact. The summaries are built
+before signing, so a signed artifact covers them. A missing file is not an error, and a
+summary that cannot be built is left out with a warning.
+
+With `--scan`, a classification proposal that you confirmed (written by
+[`scan --propose`](scan.md#suggesting-a-classification-propose), confirmed by
+[`accept --proposal`](accept.md#confirming-a-classification-proposal)) and that names an
+Annex III area your declared purpose does not cover adds a `confirmed_proposal:<area>`
+row to the scan summary, for example `confirmed_proposal:employment`. The row counts as
+`major` under `--fail-on`, so `--fail-on major` and `--fail-on new-major` fail the check
+and `--fail-on critical` and `none` do not. A missing, unconfirmed, edited or stale
+proposal changes nothing, and the declared purpose stays the source of the
+classification.
 
 ## Several manifests
 
@@ -64,14 +92,29 @@ opencomplai check -m a.json -m b.json --output-dir out
 ```text
 out/
   alpha/compliance-artifact.json     # one directory per system_id
+  alpha/sample-set.json              # only with --sample-set
   beta/compliance-artifact.json
   portfolio-summary.json
 ```
+
+One shared `--sample-set` serves every system. For each system the CLI writes
+`<output-dir>/<system_id>/sample-set.json`, the same set with `system_id` set to that
+system's id, and that copy is what the child run reads. The file you passed is never
+modified. An unreadable or invalid set is reported per system exactly as in a single run.
 
 One manifest describes exactly one system. A manifest with a top-level `systems` key,
 or one that is a JSON array, is rejected with exit `2` and nothing is written. Two
 manifests with the same `system_id` also exit `2` before anything runs. Directory names
 are the `system_id` with every character outside `A-Za-z0-9._-` replaced by `_`.
+
+With `--report-junit`, `--sarif-output` or `--summary-md`, each system gets its own file
+named `<stem>.<system_id><ext>` beside the path you gave. The `system_id` goes through the
+same character rule as the directory names. A single-manifest run writes the exact path given.
+
+```text
+opencomplai check -m a.json -m b.json --report-junit r.xml
+# writes r.alpha.xml and r.beta.xml
+```
 
 `portfolio-summary.json` is **unsigned and informational**. It has no timestamp:
 
@@ -107,6 +150,7 @@ still takes one artifact at a time.
 | Variable | Description |
 |---|---|
 | `OPENCOMPLAI_API_URL` | When set, `check` orchestrates all services via the gateway API at this URL (service-backed mode). When unset, runs locally. Example: `http://localhost:8080` |
+| `OPENCOMPLAI_CHECK_ARGS` | Read by `opencomplai-gha-connector` and `opencomplai-gitlab-connector`, not by `check` itself. Extra `check` flags, shell-style, followed by the connector's own flags and then the command-line flags; malformed text exits `2`. The [GitHub Action](../guides/github-action.md) does not read it; it has an `args` input. |
 
 ## Examples
 
@@ -234,6 +278,25 @@ actually ran — these are what `opencomplai docs generate` picks up
 automatically to populate the Annex IV dossier's wired-evidence fields. See
 [Annex IV coverage ledger](../concepts/annex-iv-coverage.md).
 
+### Reports for CI
+
+Three options write a report of the verdict next to the artifact, after it has been written:
+`--report-junit` (JUnit XML, for a test-results view), `--sarif-output` (SARIF 2.1.0, for code
+scanning; it carries the verdict, not scan evidence, so `scan --sarif-output` is the one for
+scan findings) and `--summary-md` (Markdown, for a pull request comment or job summary). Each
+is optional and independent. With several `--manifest` values, see
+[Several manifests](#several-manifests).
+
+=== "macOS / Linux"
+    ```bash
+    opencomplai check --output-dir out --report-junit out/check.xml --sarif-output out/check.sarif --summary-md out/summary.md
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    opencomplai check --output-dir out --report-junit out/check.xml --sarif-output out/check.sarif --summary-md out/summary.md
+    ```
+
 ## Gating other frameworks
 
 Only the EU AI Act gates `check` by default. To make another target framework
@@ -285,7 +348,7 @@ gate), persists the system as `HALTED_PENDING_REVIEW`. While halted,
 `opencomplai docs generate` for that `system_id` refuses outright (exit `4`,
 no dossier written, no `--force`). Resume with `opencomplai approve` /
 `opencomplai resume` — see
-[Halt / resume gate](exit-codes.md#halt--resume-gate-opencomplai-check-opencomplai-docs-generate).
+[Halt / resume gate](exit-codes.md#halt-resume-gate-opencomplai-check-opencomplai-docs-generate).
 
 ## Exit codes
 

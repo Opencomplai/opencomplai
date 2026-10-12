@@ -143,6 +143,33 @@ the assessment and updating the manifest with the new conformity evidence.
 
 ---
 
+### `EU_AIA_ART6_3_EXEMPTION_RECORD`
+
+| Field | Value |
+|---|---|
+| **Full name** | Art. 6(3) Exemption Record Missing or Stale |
+| **Regulatory reference** | EU AI Act, Article 6(3), Article 6(4) and Article 49(2) |
+| **Exit code** | `1` (CONTROL_FAIL); not zero-tolerance |
+| **Source** | `packages/core/src/opencomplai_core/exemption_gap.py` — `apply_exemption_gate` |
+
+**What triggers it**
+
+Only with `opencomplai check --require-exemption-record`. The manifest's checker
+session relies on the Art. 6(3) derogation (it lists `provider_art_6_4_registration`)
+and no valid signed `art_6_3_exemption` record is committed under `.opencomplai/acceptances/`.
+A record that is absent, unsigned, tampered, untrusted or stale counts as missing.
+Changing an Art. 6(3) ground, or any watched manifest field, makes the record stale.
+
+**How to remediate**
+
+Review the grounds, then write and commit a fresh record with
+`opencomplai accept --exemption`. The record is the provider's own declaration of the
+grounds it relied on; this control does not assess whether the exemption is valid.
+Without the flag the same state only appears as the `record` source of the Art. 49 row
+in `--with-gaps` output. The wording is product design and needs founder review.
+
+---
+
 ## Pipeline evaluator codes
 
 These codes come from the eval engine (`opencomplai check --sample-set` or
@@ -164,11 +191,11 @@ is promoted to `failed_controls`.
 
 **What it checks**
 
-Scans every output and prompt in the sample set against three deterministic signature
+Scores every output; counts attack markers in prompts as coverage. Text is matched against three deterministic signature
 lists:
 
 - **Toxic lexicon** — words associated with harmful, hateful, or abusive content.
-- **Injection patterns** — substrings that indicate prompt-injection attempts
+- **Injection patterns** — phrases matched as whole words after normalisation that indicate prompt-injection attempts
   (e.g. `ignore previous instructions`).
 - **Jailbreak markers** — strings that indicate attempts to bypass safety constraints
   (e.g. `you are now DAN`).
@@ -341,6 +368,7 @@ Annex III conformity obligations — a documentation and process gap, not a safe
 | `EU_AIA_ART5_UNACCEPTABLE` | Risk rule | 3 | Yes |
 | `EU_AIA_ART6_PROFILING` | Risk rule | 1 | No |
 | `EU_AIA_ART25_MODIFICATION_TRAP` | Risk rule | 4 | Yes |
+| `EU_AIA_ART6_3_EXEMPTION_RECORD` | Opt-in gate | 1 | No |
 | `EVAL_SAFETY_LEXICAL_V1` | Evaluator | 1 | No (threshold-based) |
 | `EVAL_DATA_LEAKAGE_V1` | Evaluator | 1 | Yes (SSN / secret / card) |
 | `EVAL_BIAS_FAIRNESS_V1` | Evaluator | 1 | No (threshold-based) |

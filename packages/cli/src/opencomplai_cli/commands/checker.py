@@ -22,6 +22,7 @@ from opencomplai_core.compliance_checker import (
     render_markdown,
     render_pdf,
 )
+from opencomplai_core.compliance_checker.bridge import derogation_grounds
 from opencomplai_core.compliance_checker.catalog import load_help_content
 from opencomplai_core.compliance_checker.merge import (
     MergedCheckerResult,
@@ -462,4 +463,7 @@ def build_checker_session_ref(
         ref["obligation_ids"] = list(obligation_ids)
     if rationale:
         ref["rationale"] = list(rationale)
+    grounds = derogation_grounds(result)
+    if grounds:
+        ref["derogation_grounds"] = grounds
     return ref

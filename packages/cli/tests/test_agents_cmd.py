@@ -17,7 +17,9 @@ runner = CliRunner()
 FIXTURES = Path(__file__).parent / "fixtures" / "agents"
 MANIFEST = str(FIXTURES / "sample-manifest.json")
 SCAN = str(FIXTURES / "sample-scan-report.json")
-_MET = re.compile(r"\bMet\b")
+_MET = re.compile(
+    r'\bMet\b|\bMET\b|(?i:"(?:status|verdict|result)"\s*:\s*"met"|\|\s*met\s*\||\bstatus\s*[:=]\s*met\b)'
+)
 
 
 @pytest.fixture(autouse=True)
@@ -128,6 +130,41 @@ def test_check_never_emits_met(tmp_path):
             out = _run("check", "-m", MANIFEST, *extra, "-o", fmt).output
             assert not _MET.search(out), out
             assert "not a compliance verdict" in out
+
+
+@pytest.mark.parametrize(
+    "text",
+    ['{"status": "met"}', '"status": "MET"', "| Met |", "Met"],
+)
+def test_met_guard_matches_every_spelling(text):
+    assert _MET.search(text)
+
+
+@pytest.mark.parametrize(
+    "text",
+    ['"status": "partial"', "evidence only; not a compliance verdict"],
+)
+def test_met_guard_ignores_other_values(text):
+    assert not _MET.search(text)
+
+
+def _strings(node):
+    if isinstance(node, dict):
+        for key, value in node.items():
+            yield from _strings(key)
+            yield from _strings(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _strings(item)
+    elif isinstance(node, str):
+        yield node
+
+
+def test_check_json_has_no_met_value(tmp_path):
+    for scan in (None, SCAN, _clean_scan(tmp_path)):
+        extra = ["--scan-report", scan] if scan else []
+        data = json.loads(_run("check", "-m", MANIFEST, *extra, "-o", "json").output)
+        assert all(s.lower() != "met" for s in _strings(data))
 
 
 def test_report_lists_responsibilities_with_review_flag():

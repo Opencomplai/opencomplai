@@ -11,7 +11,7 @@ inputs:
     default: system-manifest.json
   version:
     description: Exact opencomplai release to install through uvx (pinned with ==).
-    default: "0.9.1"
+    default: "0.11.0"
   install-from:
     description: Path or package spec that replaces the pinned release (for testing a checkout).
     default: ""
@@ -26,6 +26,18 @@ inputs:
     default: "true"
   upload-sarif:
     description: Upload the SARIF verdict to GitHub code scanning.
+    default: "false"
+  upload-artifact:
+    description: Upload compliance-artifact.json as a workflow artifact (kept 90 days).
+    default: "true"
+  artifact-name:
+    description: Name of the uploaded workflow artifact (must be unique within a workflow run).
+    default: compliance-artifact-${{ github.sha }}
+  sign:
+    description: Sign the artifact when a signing key is in the environment (warns and writes it unsigned otherwise).
+    default: "false"
+  with-gaps:
+    description: Add the per-article gap report to the artifact.
     default: "false"
   fail-on-error:
     description: Fail the job when opencomplai check exits non-zero.
@@ -44,6 +56,9 @@ outputs:
   sarif-file:
     description: SARIF file path, empty when none was written.
     value: ${{ steps.check.outputs.sarif-file }}
+  artifact-file:
+    description: Path of compliance-artifact.json, empty when none was written.
+    value: ${{ steps.check.outputs.artifact-file }}
 
 runs:
   using: composite
@@ -59,6 +74,8 @@ runs:
         OC_WITH: ${{ inputs.with }}
         OC_MANIFEST: ${{ inputs.manifest }}
         OC_ARGS: ${{ inputs.args }}
+        OC_SIGN: ${{ inputs.sign }}
+        OC_WITH_GAPS: ${{ inputs.with-gaps }}
         OC_OUT_DIR: ${{ runner.temp }}/opencomplai
       run: bash "$ACTION_PATH/run.sh"
 
@@ -78,6 +95,13 @@ runs:
       uses: github/codeql-action/upload-sarif@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4
       with:
         sarif_file: ${{ steps.check.outputs.sarif-file }}
+
+    - if: inputs.upload-artifact == 'true' && steps.check.outputs.artifact-file != ''
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.check.outputs.artifact-file }}
+        retention-days: 90
 
     - if: inputs.fail-on-error == 'true' && steps.check.outputs.exit-code != '0'
       shell: bash

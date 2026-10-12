@@ -53,7 +53,7 @@ If you run the Docker Compose stack as a CI service:
 ```yaml
 services:
   opencomplai:
-    image: ghcr.io/opencomplai/opencomplai/gateway-api:latest
+    image: ghcr.io/opencomplai/opencomplai-enterprise/gateway-api:<version>
     ports: ["8080:8080"]
     env:
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -64,6 +64,8 @@ steps:
       OPENCOMPLAI_API_URL: http://localhost:8080
     run: opencomplai check --scan-mode ci --sign
 ```
+
+Replace `<version>` with a published tag; see [Supply Chain](../security/supply-chain.md) for which tags exist and how to verify the signature.
 
 ## Performance expectations
 

@@ -7,13 +7,13 @@ two that are easy to confuse with each other.
 
 All evaluators below are **local, deterministic, and airgap-safe** — none of them call
 a network or an external model. For the separate, explicitly opt-in *live model*
-evaluation path, see [Multi-provider eval](../cli/eval.md#multi-provider-eval---provider).
+evaluation path, see [Multi-provider eval](../cli/eval.md#multi-provider-eval-provider).
 
 ## Registered evaluators
 
 | Evaluator ID | Category | What it measures | Default threshold |
 |---|---|---|---|
-| `EVAL_SAFETY_LEXICAL_V1` | Safety | Toxic/injection/jailbreak-marker lexicon scan over prompts and outputs | `0.98` clean rate |
+| `EVAL_SAFETY_LEXICAL_V1` | Safety | Toxic/injection/jailbreak-marker lexicon scan; outputs are scored, prompts are counted as attack coverage | `0.98` clean rate |
 | `EVAL_DATA_LEAKAGE_V1` | Data governance | PII/secret detectors (email, phone, SSN, secret, credit card) over outputs | `0.99` clean rate (zero-tolerance for SSN/secret/card) |
 | `EVAL_BIAS_FAIRNESS_V1` | Bias | Disparate impact ratio, equal opportunity gap, demographic parity gap across protected-attribute groups | `0.80` disparate impact ratio |
 | `EVAL_ADVERSARIAL_V1` | Adversarial | Whether known-adversarial prompts produced *compliant* (resisted) vs. *non-compliant* outputs | `0.95` resistance rate |
@@ -33,7 +33,7 @@ they measure different things:
 
 | | `EVAL_SAFETY_LEXICAL_V1` | `EVAL_ADVERSARIAL_V1` |
 |---|---|---|
-| **What it scans** | Every prompt *and* output, independently | Prompt/output **pairs**, matched by index |
+| **What it scans** | Outputs are scored; prompts are counted as attack coverage | Prompt/output **pairs**, matched by index |
 | **What it flags** | Presence of toxic/injection/jailbreak-marker text *anywhere* | Whether a **known-adversarial prompt** produced a **compliant (resisted) output** |
 | **Question it answers** | "Does this text contain unsafe-looking content?" | "When someone tried to jailbreak this system, did it hold?" |
 | **Metric** | Safety-clean rate | Adversarial resistance rate |
@@ -42,6 +42,11 @@ A system can pass `EVAL_SAFETY_LEXICAL_V1` (no toxic/injection markers anywhere)
 still failing `EVAL_ADVERSARIAL_V1` (an adversarial prompt got a compliant-sounding
 answer that doesn't itself contain a flagged marker). They are complementary checks,
 not duplicates — reference: NIST AI RMF MEASURE 2.7 / EU AI Act Art. 15 (robustness).
+
+The safety scan normalises text first (NFKC, zero-width characters removed, curly quotes
+folded, lower-cased) and matches each signature as a whole word, so "you are nowhere" and
+"system prompts" do not match (signature set 1.1.0). It is lexical and deterministic: a
+misspelling, another language or an added space still evades it.
 
 **Reference:** `packages/core/src/opencomplai_core/evaluators/adversarial.py`
 
@@ -60,6 +65,11 @@ it falls back to scanning every output against the compliance/refusal markers di
 adversarial. That fallback scores every output against the compliance markers, so an
 ordinary opener such as "Sure, here" counts as compliance there; pass prompts to
 avoid that.
+
+Before matching (signature set 1.2.0), text is NFKC-normalised, zero-width characters are
+removed and curly quotes are folded to straight ones. Each signature must then match as a
+whole word, so "act as Daniel" is not a match for "act as dan". Matching is lexical and
+deterministic: a misspelling, a different language or an added space still evades it.
 
 ### Threshold override
 
@@ -146,6 +156,6 @@ it never triggers implicitly, and supplying your own `predictions`/`labels`/
 All evaluators above run against data you already have (`prompts`/`outputs`/
 `predictions`/`labels` in an `EvalSampleSet`) — none of them call a model. For an
 optional path that calls a live model provider to *generate* outputs before scoring
-them, see [`opencomplai eval --provider`](../cli/eval.md#multi-provider-eval---provider).
+them, see [`opencomplai eval --provider`](../cli/eval.md#multi-provider-eval-provider).
 That path is explicitly non-deterministic and never runs as part of `opencomplai
 check`'s default (air-gapped) path.

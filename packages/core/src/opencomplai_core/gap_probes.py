@@ -338,6 +338,14 @@ QMS_SCAFFOLD_TEMPLATE = (
     / "clause_scaffold.md"
 )
 
+# Public: the Art. 72 plan template `recommend` renders; its own lines are scaffold too.
+PMM_PLAN_TEMPLATE = (
+    Path(__file__).resolve().parent
+    / "templates"
+    / "recommend"
+    / "post_market_monitoring_plan.md"
+)
+
 _MIN_BODY_WORDS = 8
 
 
@@ -542,14 +550,50 @@ def _norm_line(line: str) -> str:
 # The scaffold's own review-flag comment, intro and prompt lines: never author
 # content. Ceiling: only the current template wording is known; if it changes,
 # keep the retired prompt lines in this set so older scaffolds still read Unfilled.
+def _strip_marker(line: str) -> str:
+    return _norm_line(line.replace(SCAFFOLD_PLACEHOLDER, ""))
+
+
+def _template_lines(path: Path) -> list[str]:
+    return [
+        ln
+        for ln in path.read_text(encoding="utf-8").splitlines()
+        if ln.strip() and not ln.lstrip().startswith("#")
+    ]
+
+
 @functools.cache
 def _scaffold_lines() -> frozenset[str]:
     return frozenset(
-        _norm_line(ln)
-        for ln in QMS_SCAFFOLD_TEMPLATE.read_text(encoding="utf-8").splitlines()
-        if ln.strip()
-        and not ln.lstrip().startswith("#")
-        and ln.strip() != SCAFFOLD_PLACEHOLDER
+        _strip_marker(ln)
+        for ln in _template_lines(QMS_SCAFFOLD_TEMPLATE)
+        if ln.strip() != SCAFFOLD_PLACEHOLDER
+    )
+
+
+# Plan-template lines carry {{variables}}; each becomes a fullmatch pattern over
+# its literal pieces. Lines with under 8 literal characters are too generic to match.
+@functools.cache
+def _scaffold_line_regexes() -> tuple[re.Pattern[str], ...]:
+    out = []
+    for ln in _template_lines(PMM_PLAN_TEMPLATE):
+        pieces = re.split(r"\{\{[^}]*\}\}", _strip_marker(ln))
+        if sum(len(p) for p in pieces) >= 8:
+            out.append(re.compile(".*".join(re.escape(p) for p in pieces)))
+    return tuple(out)
+
+
+def _is_label_only(line: str) -> bool:
+    s = re.sub(r"^(?:[-*+>]|\d+[.)])\s*", "", line.strip()).rstrip("*_` ")
+    return s.endswith(":")
+
+
+def _is_scaffold_line(line: str) -> bool:
+    norm = _strip_marker(line)
+    return (
+        norm in _scaffold_lines()
+        or any(r.fullmatch(norm) for r in _scaffold_line_regexes())
+        or _is_label_only(norm)
     )
 
 
@@ -557,9 +601,7 @@ def _body_text(text: str) -> str:
     return "\n".join(
         ln
         for ln in text.splitlines()
-        if ln.strip()
-        and not ln.lstrip().startswith("#")
-        and _norm_line(ln) not in _scaffold_lines()
+        if ln.strip() and not ln.lstrip().startswith("#") and not _is_scaffold_line(ln)
     )
 
 

@@ -74,6 +74,55 @@ jobs:
           # Set in this repository's (or organization's) Actions secrets —
           # never commit the key itself.
           OPENCOMPLAI_API_KEY: ${{ secrets.OPENCOMPLAI_API_KEY }}
+#
+# Optional scheduled re-run. To use it, remove the leading "# " from each line below
+# and save the result as .github/workflows/opencomplai-rerun.yml.
+# name: OpenComplAI re-run
+#
+# on:
+#   schedule:
+#     - cron: "0 6 * * 1,4"
+#   workflow_dispatch:
+#
+# permissions:
+#   contents: read
+#
+# jobs:
+#   opencomplai-rerun:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v6
+#
+#       - name: Set up Python
+#         uses: actions/setup-python@v6
+#         with:
+#           python-version: "3.11"
+#
+#       - name: Install OpenComplAI CLI
+#         run: pip install --upgrade opencomplai
+#
+#       - name: Restore the last baseline
+#         uses: actions/cache@v4
+#         with:
+#           path: baseline
+#           key: opencomplai-baseline-${{ github.run_id }}
+#           restore-keys: opencomplai-baseline-
+#
+#       - name: Check, diff against the baseline, keep the new baseline
+#         run: |
+#           CHECK_EXIT=0
+#           opencomplai check --with-gaps || CHECK_EXIT=$?
+#           DIFF_EXIT=0
+#           if [ -f baseline/compliance-artifact.json ] && [ -f compliance-artifact.json ]; then
+#             opencomplai diff baseline/compliance-artifact.json compliance-artifact.json --fail-on-regression || DIFF_EXIT=$?
+#           fi
+#           if [ -f compliance-artifact.json ]; then
+#             mkdir -p baseline
+#             cp compliance-artifact.json baseline/compliance-artifact.json
+#           fi
+#           if [ "$DIFF_EXIT" -ne 0 ]; then exit "$DIFF_EXIT"; fi
+#           exit "$CHECK_EXIT"
 ```
 
 ## GitLab CI
@@ -175,7 +224,9 @@ GitHub Actions pass `check.sarif` to `github/codeql-action/upload-sarif` as `sar
 
 The exit code is the same with or without these flags. A report that cannot be written prints a
 `WARN` on stderr and the run carries on. The files hold no dates. With several `--manifest` values
-every system writes the same path, so use one manifest per report.
+each system writes its own file, named `<stem>.<system_id><ext>` beside the path you gave
+(`--report-junit report.xml` writes `report.alpha.xml` and `report.beta.xml`), so point
+artifact globs at `report.*.xml`. A single-manifest run writes the exact path given.
 
 ## Scope
 

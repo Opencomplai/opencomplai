@@ -153,6 +153,7 @@ nav:
     - Supply-Chain Security: security/supply-chain.md
     - Key Management: security/key-management.md
     - CI Integration: guides/ci-integration.md
+    - GitHub Action: guides/github-action.md
     - CI for GitLab and Azure: guides/ci-gitlab-azure.md
     - CI Recipes (other systems): guides/ci-recipes.md
     - Pre-commit Integration: guides/pre-commit.md
@@ -181,6 +182,7 @@ nav:
     - risk classify: cli/risk-classify.md
     - verify-output: cli/verify-output.md
     - verify: cli/verify.md
+    - export: cli/export.md
     - docs generate: cli/docs-generate.md
     - instructions generate: cli/instructions-generate.md
     - sync metadata: cli/sync-metadata.md
@@ -215,6 +217,7 @@ nav:
     - Evidence: concepts/evidence.md
     - Evaluators: concepts/evaluators.md
     - Scan workflow: concepts/scan-workflow.md
+    - Annex III detection benchmark: concepts/annex-iii-benchmark.md
     - Rule-set versioning: concepts/rule-set-versioning.md
     - Roles and applicability: concepts/roles-and-applicability.md
     - Backlog order: concepts/backlog.md
@@ -269,6 +272,10 @@ nav:
   - Support & Community: community/support.md
 
   - License: license.md
+
+# A link to a heading that does not exist fails the strict build.
+validation:
+  anchors: warn
 
 # Inject brand CSS (loaded from theme/overrides/assets/ → /assets/ in built site)
 extra_css:

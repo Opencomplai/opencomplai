@@ -192,25 +192,95 @@ def test_portfolio_accepts_file_path_options(tmp_path, monkeypatch):
     assert (out / "portfolio-summary.json").is_file()
 
 
-def test_portfolio_sample_set_is_converted(tmp_path, monkeypatch):
-    # One shared sample set can match only one system_id (existing rule), so
-    # the other child exits 2 with the mismatch message, not a TypeError.
-    monkeypatch.chdir(tmp_path)
-    a = _init(tmp_path / "a.json", "alpha")
-    b = _init(tmp_path / "b.json", "beta")
+def _alpha_set(tmp_path: Path) -> Path:
     sample = tmp_path / "set.json"
     sample.write_text(
-        json.dumps({"eval_set_id": "s1", "system_id": "alpha", "prompts": ["hello"]})
+        json.dumps({"eval_set_id": "s1", "system_id": "alpha", "prompts": ["hello"]}),
+        encoding="utf-8",
     )
+    return sample
+
+
+def _two_systems(tmp_path: Path) -> tuple[Path, Path]:
+    return _init(tmp_path / "a.json", "alpha"), _init(tmp_path / "b.json", "beta")
+
+
+def test_portfolio_sample_set_is_converted(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    a, b = _two_systems(tmp_path)
+    sample = _alpha_set(tmp_path)
     result = runner.invoke(
         app,
         ["check", "-m", str(a), "-m", str(b), "--sample-set", str(sample),
          "--output-dir", "out"],
     )  # fmt: skip
-    assert "must match manifest system_id 'beta'" in result.output
+    assert "must match manifest system_id" not in result.output
     assert "AttributeError" not in result.output
-    assert (tmp_path / "out" / "alpha" / "compliance-artifact.json").is_file()
-    assert (tmp_path / "out" / "portfolio-summary.json").is_file()
+    out = tmp_path / "out"
+    for sid in ("alpha", "beta"):
+        report = json.loads(
+            (out / sid / "eval-report.json").read_text(encoding="utf-8")
+        )
+        assert report["system_id"] == sid
+    copy = json.loads((out / "beta" / "sample-set.json").read_text(encoding="utf-8"))
+    assert copy["system_id"] == "beta"
+    assert all(e["exit_code"] != 2 for e in _summary(out)["systems"])
+
+
+def test_portfolio_sample_set_original_untouched(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    a, b = _two_systems(tmp_path)
+    sample = _alpha_set(tmp_path)
+    before = sample.read_bytes()
+    runner.invoke(
+        app,
+        ["check", "-m", str(a), "-m", str(b), "--sample-set", str(sample),
+         "--output-dir", "out"],
+    )  # fmt: skip
+    assert sample.read_bytes() == before
+
+
+def test_single_manifest_sample_set_mismatch_still_exits_2(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    b = _init(tmp_path / "b.json", "beta")
+    sample = _alpha_set(tmp_path)
+    result = runner.invoke(
+        app, ["check", "-m", str(b), "--sample-set", str(sample), "--output-dir", "out"]
+    )
+    assert result.exit_code == 2
+    assert "must match manifest system_id 'beta'" in result.output
+
+
+def test_portfolio_sample_set_invalid_passes_through(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    a, b = _two_systems(tmp_path)
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not json", encoding="utf-8")
+    cases = (
+        ("out", bad, "not valid JSON"),
+        ("out2", tmp_path / "gone.json", "sample set not found"),
+    )
+    for out_name, path, message in cases:
+        result = runner.invoke(
+            app,
+            ["check", "-m", str(a), "-m", str(b), "--sample-set", str(path),
+             "--output-dir", out_name],
+        )  # fmt: skip
+        assert message in result.output
+        out = tmp_path / out_name
+        systems = _summary(out)["systems"]
+        assert [e["exit_code"] for e in systems] == [2, 2]
+        assert not list(out.rglob("sample-set.json"))
+
+
+def test_portfolio_docs_describe_shared_sample_set():
+    docs = Path(__file__).resolve().parents[3] / "docs" / "src" / "cli"
+    check = (docs / "check.md").read_text(encoding="utf-8")
+    portfolio = (docs / "portfolio.md").read_text(encoding="utf-8")
+    assert "sample-set.json" in check
+    assert "sample-set.json" in portfolio
+    assert "must match the manifest. |" not in check
+    assert "With several manifests the CLI rewrites `system_id`" in check
 
 
 def test_coerce_path_params_converts_strings():
@@ -225,3 +295,54 @@ def test_coerce_path_params_converts_strings():
     assert isinstance(got["repo_root"], Path)
     assert got["commit_ref"] == "abc"
     assert got["scan_baseline"] is None
+
+
+def test_portfolio_writes_one_report_per_system(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    a = _init(tmp_path / "a.json", "alpha")
+    b = _init(tmp_path / "b.json", "beta", FAIL_PURPOSE)
+    result = runner.invoke(
+        app,
+        ["check", "-m", str(a), "-m", str(b),
+         "--report-junit", "r.xml", "--sarif-output", "r.sarif",
+         "--summary-md", "r.md", "--output-dir", "out"],
+    )  # fmt: skip
+    assert result.exit_code == 1, result.output
+    for bare in ("r.xml", "r.sarif", "r.md"):
+        assert not (tmp_path / bare).exists()
+    for sid in ("alpha", "beta"):
+        for ext in ("xml", "sarif", "md"):
+            assert (tmp_path / f"r.{sid}.{ext}").is_file()
+    for sid in ("alpha", "beta"):
+        sarif = json.loads((tmp_path / f"r.{sid}.sarif").read_text(encoding="utf-8"))
+        assert sarif["runs"][0]["properties"]["system_id"] == sid
+        other = "beta" if sid == "alpha" else "alpha"
+        md = (tmp_path / f"r.{sid}.md").read_text(encoding="utf-8")
+        assert sid in md
+        assert other not in md
+    assert "<failure" not in (tmp_path / "r.alpha.xml").read_text(encoding="utf-8")
+    assert "<failure" in (tmp_path / "r.beta.xml").read_text(encoding="utf-8")
+
+
+def test_single_manifest_report_paths_unchanged(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    a = _init(tmp_path / "a.json", "solo")
+    result = runner.invoke(
+        app,
+        ["check", "-m", str(a), "--report-junit", "r.xml",
+         "--sarif-output", "r.sarif", "--summary-md", "r.md",
+         "--output-dir", "out"],
+    )  # fmt: skip
+    assert result.exit_code == 0, result.output
+    for bare in ("r.xml", "r.sarif", "r.md"):
+        assert (tmp_path / bare).is_file()
+    assert not list(tmp_path.glob("r.solo.*"))
+
+
+def test_portfolio_report_docs_describe_per_system_names():
+    root = Path(__file__).resolve().parents[3]
+    check = (root / "docs/src/cli/check.md").read_text(encoding="utf-8")
+    guide = (root / "docs/src/guides/ci-integration.md").read_text(encoding="utf-8")
+    assert "every system writes the same path" not in guide
+    assert "<stem>.<system_id><ext>" in check
+    assert "<stem>.<system_id><ext>" in guide

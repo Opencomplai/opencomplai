@@ -37,23 +37,36 @@ def _normalize_purpose(text: str) -> str:
     return re.sub(r"\s+", " ", text.lower().strip())
 
 
+_PURPOSE_HINTS: list[tuple[tuple[str, ...], int]] = [
+    (("credit", "loan", "lending", "creditworthiness", "insurance premium"), 5),
+    (("recruit", "hiring", "employment", "worker", "resume", "candidate"), 4),
+    (("biometric", "face", "facial", "emotion", "fingerprint"), 1),
+    (("student", "grading", "exam", "examination", "education", "proctor"), 3),
+    (("asylum", "visa", "border", "migration"), 7),
+    (("police", "criminal", "law enforcement", "recidivism"), 6),
+    (("court", "judicial", "legal outcome", "election", "voting"), 8),
+    (("infrastructure", "grid", "water supply", "scada"), 2),
+]
+# Whole words only (with a short suffix list): "interface" is not "face".
+_PURPOSE_HINT_PATTERNS: list[tuple[tuple[re.Pattern[str], ...], int]] = [
+    (
+        tuple(
+            re.compile(rf"\b{re.escape(kw)}(?:s|es|ed|ing|er|ers|ment|al)?\b")
+            for kw in keywords
+        ),
+        area,
+    )
+    for keywords, area in _PURPOSE_HINTS
+]
+
+
 def _purpose_suggests_area(declared_purpose: str) -> int | None:
     """Map manifest declared purpose to likely Annex III area."""
     purpose = _normalize_purpose(declared_purpose)
     if not purpose:
         return None
-    hints: list[tuple[tuple[str, ...], int]] = [
-        (("credit", "loan", "lending", "creditworthiness", "insurance premium"), 5),
-        (("recruit", "hiring", "employment", "worker", "resume", "candidate"), 4),
-        (("biometric", "face", "facial", "emotion", "fingerprint"), 1),
-        (("student", "grading", "exam", "education", "proctor"), 3),
-        (("asylum", "visa", "border", "migration"), 7),
-        (("police", "criminal", "law enforcement", "recidivism"), 6),
-        (("court", "judicial", "legal outcome", "election", "voting"), 8),
-        (("infrastructure", "grid", "water supply", "scada"), 2),
-    ]
-    for keywords, area in hints:
-        if any(kw in purpose for kw in keywords):
+    for patterns, area in _PURPOSE_HINT_PATTERNS:
+        if any(pat.search(purpose) for pat in patterns):
             return area
     return None
 

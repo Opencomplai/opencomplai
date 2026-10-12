@@ -8,6 +8,7 @@ persistence contract and tenant scoping.
 
 from __future__ import annotations
 
+import asyncio
 import os
 
 import pytest_asyncio
@@ -289,6 +290,51 @@ async def test_store_accepted_override_is_idempotent_first_write_wins(client):
 
     resp = await client.get("/v1/hitl/overrides/idem-1", headers=_headers("tenant-a"))
     assert resp.json()["payload_fingerprint"] == "fp-1"
+
+
+def _claim_body(key: str) -> dict:
+    return {
+        "idempotency_key": key,
+        "payload_fingerprint": "fp",
+        "response_json": {"actor_id": "bob"},
+    }
+
+
+async def test_claim_accepted_override_is_atomic_under_gather(client):
+    responses = await asyncio.gather(
+        *(
+            client.post(
+                "/v1/hitl/overrides",
+                json=_claim_body("dual-claim:t-1:ov-1"),
+                headers=_headers("tenant-a"),
+            )
+            for _ in range(5)
+        )
+    )
+    assert [r.status_code for r in responses] == [201] * 5
+    assert [r.json()["created"] for r in responses].count(True) == 1
+    got = await client.get(
+        "/v1/hitl/overrides/dual-claim:t-1:ov-1", headers=_headers("tenant-a")
+    )
+    assert got.json()["found"] is True
+
+
+async def test_release_claim_only_deletes_claim_keys(client):
+    h = _headers("tenant-a")
+    claim = "dual-claim:t-1:ov-2"
+    first = await client.post("/v1/hitl/overrides", json=_claim_body(claim), headers=h)
+    assert first.json()["created"] is True
+
+    released = await client.delete(f"/v1/hitl/overrides/{claim}", headers=h)
+    assert released.json() == {"released": True}
+    again = await client.post("/v1/hitl/overrides", json=_claim_body(claim), headers=h)
+    assert again.json()["created"] is True
+
+    await client.post("/v1/hitl/overrides", json=_claim_body("plain-key"), headers=h)
+    refused = await client.delete("/v1/hitl/overrides/plain-key", headers=h)
+    assert refused.status_code == 422
+    kept = await client.get("/v1/hitl/overrides/plain-key", headers=h)
+    assert kept.json()["found"] is True
 
 
 # ---------------------------------------------------------------------------

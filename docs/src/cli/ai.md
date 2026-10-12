@@ -2,7 +2,7 @@
 
 Choose and inspect the backend used by `opencomplai scan --ai-intent`. The
 group is part of the optional `opencomplai-ai` plugin; for what the intent pass
-does, see the [AI intent analysis](scan.md#ai-intent-analysis---ai-intent)
+does, see the [AI intent analysis](scan.md#ai-intent-analysis-ai-intent)
 section of `scan`.
 
 **What:** two subcommands, `ai configure` to save the active model and
@@ -90,9 +90,12 @@ llama.cpp is installed (for the GGUF models), the cache directory
     opencomplai ai status
     ```
 
-`ai status` has no options. For `codebert-onnx` and `saas` an empty cache is
-normal, because neither has a local file; no "not yet downloaded" line is
-printed for them.
+`ai status` has no options. The size shows `unknown` for backends with no
+download (`codebert-onnx`, `saas`). The cache size and the file list include
+files in subdirectories, listed by relative path, and sizes under 1 MB show
+`<1 MB`. For a model that needs a download, a cache directory with no files
+counts as not downloaded; `codebert-onnx` and `saas` never print the "not yet
+downloaded" line.
 
 ## Exit codes
 

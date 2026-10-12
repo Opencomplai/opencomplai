@@ -3,7 +3,7 @@
 from datetime import date
 from pathlib import Path
 
-from opencomplai_core import backlog
+from opencomplai_core import backlog, regulatory_timeline
 from opencomplai_core.backlog import (
     SortOrder,
     build_backlog,
@@ -19,12 +19,23 @@ from opencomplai_core.models import (
     SystemManifest,
 )
 from opencomplai_core.recommend_engine import render_recommendations
+from opencomplai_core.regulatory_timeline import TimelineEntry
 from opencomplai_core.report_engine import render_report
 
 _EFFORT_ARTICLES = [
     *(f"Art. {n}" for n in (4, 5, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17)),
     *(f"Art. {n}" for n in (24, 25, 26, 27, 43, 49, 50, 53, 55, 72, 73)),
 ]
+
+
+REAL_TABLE = {
+    "Art. 5": None,
+    "Art. 6": None,
+    "Art. 9": None,
+    "Art. 50": date(2026, 8, 2),
+    "Art. 53": date(2025, 8, 2),
+    "Art. 4": None,
+}
 
 
 def _row(article: str, status: GapStatus) -> ArticleGapStatus:
@@ -113,6 +124,63 @@ def test_build_backlog_shape_and_no_met_rows():
             "deadline": None,
             "effort": "L",
         },
+    ]
+
+
+def _entry(id: str, applies_from: str | None, *articles: str) -> TimelineEntry:
+    return TimelineEntry(
+        id=id,
+        title=id,
+        applies_from=applies_from,
+        articles=tuple(articles),
+        scope_note="test",
+        source="test",
+        confidence="low",
+        needs_founder_review=True,
+    )
+
+
+def _timeline(monkeypatch, *entries: TimelineEntry) -> None:
+    monkeypatch.setattr(regulatory_timeline, "load_timeline", lambda: tuple(entries))
+
+
+def test_deadline_for_none_when_dated_entries_differ(monkeypatch):
+    iii = _entry("annex_iii", "2027-12-02", "Art. 6")
+    i = _entry("annex_i", "2028-08-02", "Art. 6")
+    _timeline(monkeypatch, iii, i)
+    assert deadline_for("Art. 6") is None
+    _timeline(monkeypatch, iii, i, _entry("undated", None, "Art. 6"))
+    assert deadline_for("Art. 6") is None
+
+
+def test_deadline_for_keeps_single_date(monkeypatch):
+    want = date(2027, 12, 2)
+    _timeline(monkeypatch, _entry("a", "2027-12-02", "Art. 6"))
+    assert deadline_for("Art. 6") == want
+    _timeline(
+        monkeypatch,
+        _entry("a", "2027-12-02", "Art. 6"),
+        _entry("b", None, "Art. 6"),
+    )
+    assert deadline_for("Art. 6") == want
+    _timeline(
+        monkeypatch,
+        _entry("a", "2027-12-02", "Art. 6"),
+        _entry("b", "2027-12-02", "Art. 6"),
+    )
+    assert deadline_for("Art. 6") == want
+
+
+def test_deadline_for_real_timeline_table():
+    assert {a: deadline_for(a) for a in REAL_TABLE} == REAL_TABLE
+
+
+def test_backlog_row_has_null_deadline_for_disagreeing_entries():
+    rows = [_row("Art. 9", GapStatus.MISSING), _row("Art. 50", GapStatus.MISSING)]
+    out = build_backlog(rows)
+    assert [(r["article"], r["deadline"]) for r in out] == [
+        ("Art. 50", "2026-08-02"),
+        ("Art. 9", None),
     ]
 
 

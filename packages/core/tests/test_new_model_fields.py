@@ -96,7 +96,7 @@ _NEW_ARTIFACT = {
     "timestamp",
     "policy_bundle_version",
 }
-_NEW_CHECKER = {"obligation_ids", "rationale"}
+_NEW_CHECKER = {"obligation_ids", "rationale", "derogation_grounds"}
 _NEW_GAP = {"not_applicable"}
 
 
@@ -197,8 +197,16 @@ def test_populated_fields_round_trip():
     assert restored.record_keeping is not None
     assert restored.record_keeping.log_retention_days == 180
 
-    checker = _checker(obligation_ids=["OBL-1"], rationale=["because"])
+    checker = _checker(
+        obligation_ids=["OBL-1"],
+        rationale=["because"],
+        derogation_grounds=["hr3_art_6_3", "hr6_accessory"],
+    )
     assert CheckerSessionRef.model_validate_json(checker.model_dump_json()) == checker
+    assert checker.model_dump()["derogation_grounds"] == [
+        "hr3_art_6_3",
+        "hr6_accessory",
+    ]
 
     gap = _gap(not_applicable={"Art. 50": "not a chatbot"})
     assert GapReport.model_validate_json(gap.model_dump_json()) == gap

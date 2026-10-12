@@ -55,9 +55,20 @@ ingest-api, render-api and admin-api each verify the bearer token against the JW
 `OIDC_JWKS_URI`, which is where the web app publishes its keys (ingest-api additionally accepts
 project API keys, described below).
 
-Every Python service exposes `GET /health` (liveness) and `GET /ready` (readiness). The three
-Python services do not call the OSS backend services: render-api's open-items summary, for
-example, is a plain aggregation over `control_rows`.
+Every Python service exposes `GET /health` (liveness) and `GET /ready` (readiness). `/ready`
+probes the database and the row-level-security posture on every call, and answers 503 when
+either fails: the login role must be neither a superuser nor `BYPASSRLS`, the two application
+roles must carry the attributes the session helpers assume, and every tenant table must have
+row-level security enabled, forced and policed. Setting `OPENCOMPLAI_REQUIRE_RLS_POSTURE=1`
+additionally makes each API refuse to start when that check fails; it is off by default and does
+not change what `/ready` answers.
+
+Every API response carries an `x-request-id` header. An inbound value is kept when it is 8 to 64
+characters of letters, digits, `.`, `_` or `-`; otherwise one is minted. Error bodies repeat it as
+`request_id` next to the unchanged `detail`.
+
+The three Python services do not call the OSS backend services: render-api's open-items summary,
+for example, is a plain aggregation over `control_rows`.
 
 ## ingest-api: the allowlist and the signed envelope
 
@@ -81,13 +92,14 @@ Each request runs this pipeline in order. Any failing step stops it and nothing 
 | Step | Check | On failure |
 |---|---|---|
 | 1 | Resolve the principal from the bearer token (see [Authentication](#authentication)). | 401, or 429 for a rate-limited project API key |
-| 2 | Envelope shape: required fields present, `artifact` is an object, no client-set `tenant_id`. | 422 `VALIDATION_ERROR` |
-| 3 | **Consent gate.** An active `EgressConsent` must exist for this tenant and install. It is checked before any signature work. | 403 `EGRESS_NOT_CONSENTED` |
-| 4 | **Allowlist.** The artifact is validated against the vendored JSON Schema for its kind. The schemas set `additionalProperties: false`, so an unknown field fails the request. The dashboard rejects such a payload outright and never strips fields and accepts the remainder. | 422 `SCHEMA_VIOLATION` |
-| 5 | **Signature.** Verify the Ed25519 signature against the tenant's registered signing keys (below). | 422 `SIGNATURE_INVALID` |
-| 6 | Persist idempotently. On a first write, also record the audit event and evaluate alerts. | 201 on first write, 200 on a duplicate |
+| 2 | **Body limit.** A body larger than 2 MiB is refused, by its declared length or by what was read, before it is parsed. | 413 `VALIDATION_ERROR` |
+| 3 | Envelope shape: required fields present, `artifact` is an object, no client-set `tenant_id`. | 422 `VALIDATION_ERROR` |
+| 4 | **Consent gate.** An active `EgressConsent` must exist for this tenant and install. It is checked before any signature work. | 403 `EGRESS_NOT_CONSENTED` |
+| 5 | **Allowlist.** The artifact is validated against the vendored JSON Schema for its kind. The schemas set `additionalProperties: false`, so an unknown field fails the request. The dashboard rejects such a payload outright and never strips fields and accepts the remainder. | 422 `SCHEMA_VIOLATION` |
+| 6 | **Signature.** Verify the Ed25519 signature against the tenant's registered signing keys (below). | 422 `SIGNATURE_INVALID` |
+| 7 | Persist idempotently. On a first write, also record the audit event and evaluate alerts. | 201 on first write, 200 on a duplicate |
 
-Rejections after step 1 write an `INGEST_REJECTED` audit event; acceptance writes `INGEST_ACCEPTED`.
+Rejections after step 2 write an `INGEST_REJECTED` audit event; acceptance writes `INGEST_ACCEPTED`.
 
 **What is signed.** The signed bytes are the artifact serialised as canonical JSON (Python
 `json.dumps` with `sort_keys=True`, the `signature` field excluded) behind a fixed domain-separation
@@ -124,15 +136,58 @@ After a `scan_status` artifact is accepted, ingest also derives lineage rows and
 optional `controls` block into `control_rows`. Alert rules (`TRAP_DETECTED`, `DOSSIER_FAILURE`,
 `CONTROL_REGRESSION`) are evaluated against the stored metadata only.
 
+**Provenance and summaries.** The `scan_status` schema accepts the provenance fields the CLI
+stamps on a check (including `rule_set_version`, `cli_version`, `schema_version` and
+`manifest_sha256`) and one optional, closed `summaries` block with the keys `oversight`, `agents`,
+`qms`, `incidents` and `packs`. The block holds counts, enums, dates and hashes only, with no free
+text. After the artifact is stored, ingest projects it: `oversight`, `agents` and `qms` into
+`system_summaries` (the newest artifact timestamp wins, so a replayed older push never overwrites
+a newer one), `incidents` into an incident table, and `packs` into a pack-issuance register. A failure in the
+`system_summaries` or pack projection is logged and never fails the push, and a replay of the same
+artifact retries it. Everything shown from `summaries` is what the CLI reported; the dashboard does
+not verify it.
+
 ## render-api: read-only queries
 
 render-api has no write path. Its routes cover the system list and per-system timeline, metrics,
 dossiers, gap report, controls and data flow, plus portfolio, policy drift, pipeline health, an
-open-items summary and a tenant audit view. The artifact queries run inside `tenant_session` (see
-[Tenancy](#tenancy-row-level-security)), so row-level security fences them. They also carry an
-explicit `tenant_id` predicate, so a regression in a database policy cannot silently leak those
-rows, and a test fails CI if one of those query functions loses its `tenant_id` argument. Routes
-that return stored artifact JSON pass it through a redaction step first.
+open-items summary, a tenant audit view and a tenant data export. The artifact queries run inside
+`tenant_session` (see [Tenancy](#tenancy-row-level-security)), so row-level security fences them.
+They also carry an explicit `tenant_id` predicate, so a regression in a database policy cannot
+silently leak those rows, and a test fails CI if one of those query functions loses its
+`tenant_id` argument. Routes that return stored artifact JSON pass it through a redaction step
+first.
+
+All paths below are under `/v1`. Every route is a `GET` and is scoped to the caller's tenant.
+
+| Path | Returns |
+|---|---|
+| `/systems` | The tenant's systems, with their latest status and register metadata. |
+| `/systems/{system_id}/timeline` | Scan and dossier history for one system. |
+| `/systems/{system_id}/changes` | The controls added, removed or moved to another state between the two latest scans that report controls, as the pipeline reported them. |
+| `/systems/{system_id}/ruleset-changes` | Whether the rule set has changed since the system's newest scan. |
+| `/systems/{system_id}/metrics` | Rates computed over a window of the system's recent scans. |
+| `/systems/{system_id}/dossiers` | The system's dossier list. |
+| `/systems/{system_id}/dossiers/{bundle_checksum}` | One dossier, by bundle checksum. |
+| `/systems/{system_id}/gap-report` | The gap report for a framework the plan includes. |
+| `/systems/{system_id}/report-signoff` | The latest sign-off on the system report, the current report hash, and whether a newer scan has arrived since. |
+| `/systems/{system_id}/controls` | The system's control rows. |
+| `/systems/{system_id}/data-flow` | The data-flow graph derived from reported artifacts. |
+| `/systems/{system_id}/oversight` | Human-oversight counts reported by the CLI. |
+| `/systems/{system_id}/qms-summary` | Quality-management clause statuses reported by the CLI. |
+| `/systems/{system_id}/agents` | Agent counts and coverage reported by the CLI. |
+| `/controls/portfolio` | Controls across every system, optionally in priority order. |
+| `/portfolio` | Per-system rates over a window of recent scans. |
+| `/open-items/summary` | A count of open items. |
+| `/review-queue/summary` | A deprecated alias of the open-items summary, served with deprecation headers. |
+| `/policy-drift` | Systems whose policy bundle is behind the configured floor or stale. |
+| `/pipeline-health` | Whether each system's pipeline is reporting. |
+| `/incidents` | The incident register projected from scan summaries. |
+| `/audit` | The tenant-facing audit log, paginated and filterable, with the newest chain head. |
+| `/export` | A zip of the organisation's data. Organisation admins only; each export is audited. |
+
+The three CLI-reported routes (`oversight`, `qms-summary`, `agents`) return what the CLI said and
+mark it as not verified by the dashboard.
 
 ## admin-api: lifecycle and operations
 
@@ -140,19 +195,29 @@ admin-api is where tenant, membership and operational state is written. Its rout
 
 | Group | Purpose |
 |---|---|
-| Tenants (`/v1/admin/tenants/...`) | Create, suspend, soft-delete; add users; register and retire signing keys; grant and revoke consent. |
+| Tenants (`/v1/admin/tenants/...`) | Create, suspend, close (soft-delete); add users; register and retire signing keys; grant and revoke consent. Closing an organisation stops ingest and revokes its active API keys. |
 | Enrollment (`/v1/admin/enroll`, `/v1/admin/withdraw`) | Exchange a single-use bootstrap token for a registered signing key and an `EgressConsent`; withdraw consent. |
-| Signup and invitations | Self-serve organisation creation, member invitations and role changes. |
+| Signup and invitations | Self-serve organisation creation, member invitations (a pending one can be re-sent), role changes, and leaving an organisation (the last administrator cannot leave). |
 | Projects and API keys | Projects within a tenant and the `ock_` keys that ingest accepts. |
 | RBAC | Roles `admin`, `policy_manager`, `release_approver`, `reviewer`, `viewer`, scoped by org, project or system, with time-boxed break-glass elevation. |
-| Systems | Self-declared system metadata, risk assessments, control assignment, due dates, waivers. |
+| Systems | Self-declared system metadata, risk assessments, control assignment, due dates, waivers, evidence-noted satisfaction, and links to upstream systems or suppliers. |
+| Register | Download the AI register as CSV and bulk-import it, with a dry-run preview. An import is all-or-nothing. |
+| Report sign-off | An organisation admin signs a system report with a typed statement, bound to a scan and to a hash of the rendered report. |
+| Share links | Revocable links to one system's report, and the register of deployer packs issued. Only the SHA-256 of a link token is stored. |
 | Billing | A provider seam: a local simulator by default, with a Stripe driver that stays dormant unless `STRIPE_SECRET_KEY` is set, and a webhook whose signature is verified fail-closed. |
 | Support | Tenant support tickets and messages. |
-| Platform (`/v1/platform/...`) | Operator-only cross-tenant actions: listing, plan override, suspend and reinstate, read-only tenant view. Each requires a reason and writes an audit event. |
+| Platform (`/v1/platform/...`) | Operator-only cross-tenant actions: listing, plan override, suspend and reinstate, restoring or purging a closed organisation, read-only tenant view, audit-chain verification, operator management, user erasure and retention purge. Each write requires a reason and writes an audit event; erasure and purge are dry runs unless asked otherwise. |
 | Checker | An anonymous, rate-limited evaluate endpoint backed by the vendored checker. |
 
 Most routes need an RBAC permission on the target tenant. A caller with no role assignment there
-has no permissions and is denied.
+has no permissions and is denied. Projects, API keys, billing checkout and portal, invitations and
+member changes need the `manage_tenants` permission, which only the RBAC `admin` role holds.
+
+Writes that act on a tenant's own data are also gated by the caller's **tenant role** (`admin`,
+`member` or `viewer`, read from `tenant_users` on each request). A viewer cannot write. Satisfying,
+waiving and clearing a control, report sign-off and share links need `admin`; control assignment,
+due dates, system metadata, risk classification, support tickets and register import need
+`member`. A denial uses one uniform 403 that does not say which check failed.
 
 ## web: UI and token issuer
 
@@ -163,6 +228,14 @@ directly for the few queries that sit on the far side of the tenant fence: which
 belongs to, and the read-only organisation and platform views. Anything that changes tenant state
 goes through admin-api, which holds the RBAC engine and the audit sink.
 
+**Public, signed-out routes.** A few routes under `services/web/src/app/(public)/` need no account:
+
+| Route | What it does |
+|---|---|
+| `/s/<token>` | Opens a report share link and shows one system's report. A malformed, unknown, expired or revoked link, or one of a closed organisation, gets the same 404. The route is rate limited per IP and records each view as an audit event. The page leaves out emails, owners, signing keys and waiver text. |
+| `/verify/pack/<sha256>` | Looks up a deployer-pack hash and confirms that it was issued. It shows the pack kind and the issue date only: no tenant, system or signing key. |
+| `/verify/attestation` | Checks a signed agent attestation against the public keys registered with the dashboard. No account is needed and nothing is stored. A valid result does not identify the signer. |
+
 ## Tenancy: row-level security
 
 The database, not the application, is the tenant fence. `schema.sql` is the source of truth.
@@ -171,21 +244,30 @@ The database, not the application, is the tenant fence. `schema.sql` is the sour
   `FORCE ROW LEVEL SECURITY`, with a policy of the form
   `USING (tenant_id = current_setting('app.tenant_id', true))`. `FORCE` makes the policy apply to
   the table owner too.
-- `tenant_session(factory, tenant_id)` opens a session, runs `SET ROLE dashboard_app` (a
+- `tenant_session(factory, tenant_id)` opens a session, runs `SET LOCAL ROLE dashboard_app` (a
   `NOSUPERUSER NOLOGIN` role that RLS applies to), then
-  `SELECT set_config('app.tenant_id', :tid, true)`. The `true` makes the tenant setting local to
-  the transaction, so the tenant id does not carry over to the next request on a pooled
-  connection. An empty tenant id is refused.
-- `privileged_session(factory)` runs `SET ROLE dashboard_admin` (a `BYPASSRLS` role) with no tenant
-  set. It exists for the deliberately cross-tenant paths: creating a tenant, resolving an API key
+  `SELECT set_config('app.tenant_id', :tid, true)`. `SET LOCAL` and the `true` make the role and
+  the tenant setting local to the transaction, so neither carries over to the next request on a
+  pooled connection. As a second guard, the connection pool rolls back and runs `RESET ROLE` when
+  a connection is returned. An empty tenant id is refused.
+- `privileged_session(factory)` runs `SET LOCAL ROLE dashboard_admin` (a `BYPASSRLS` role) with no
+  tenant set. It exists for the deliberately cross-tenant paths: creating a tenant, resolving an API key
   before any tenant is known, the Stripe webhook, platform-operator actions and the audit export.
-- Tables fall into three tiers. Tenant-policy tables carry the policy above. An identity and catalog
-  plane (`dashboard_auth_users`, verification tokens, `plans`, rate-limit counters) has no RLS
-  because no tenant exists yet when it is read, or there is nothing tenant-specific to isolate.
-  An admin plane (`platform_admins`, `rbac_role_assignments`, `rbac_break_glass_elevations`,
+- Tables fall into three tiers. Tenant-policy tables, `audit_events` among them, carry the policy
+  above. An identity and catalog plane (`dashboard_auth_users`, verification tokens, `plans`,
+  rate-limit counters) has no RLS because no tenant exists yet when it is read, or there is nothing
+  tenant-specific to isolate. An admin plane (`platform_admins`, `rbac_role_assignments`, `rbac_break_glass_elevations`,
   `bootstrap_tokens`) enables and forces RLS with **no policy at all**, which denies `dashboard_app`
   everything and leaves the tables readable only through `dashboard_admin`.
-- `audit_events` is append-only, and each row carries its `tenant_id`.
+- `audit_events` has row-level security enabled and forced like the tenant tables, so tenant audit
+  reads go through the fence. It is append-only: update, delete and truncate are rejected by
+  trigger and revoked from `dashboard_app` and `dashboard_admin`. Each tenant's rows form a
+  SHA-256 **hash chain**: a database trigger numbers each new row, links it to the previous row's
+  hash and computes its own, serialised per tenant. A platform operator can ask the database to
+  walk a tenant's chain and report the first row that does not verify, and the tenant audit
+  response carries the newest chain head. Events recorded before the chain was added are kept but
+  are not chained, and verification skips them. Rows record who acted as `actor_id` and
+  `actor_kind`.
 - The unit tests run on SQLite, where the role and setting calls are skipped. The Postgres
   integration test `tests/test_rls_postgres.py` is the authoritative check of the fence.
 

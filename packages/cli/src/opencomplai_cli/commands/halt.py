@@ -235,7 +235,7 @@ def resume_cmd(
     if token_str.startswith("@"):
         token_path = Path(token_str[1:])
         try:
-            token_str = token_path.read_text().strip()
+            token_str = token_path.read_text(encoding="utf-8").strip()
         except OSError as exc:
             main_mod.err_console.print(
                 f"[red]Error:[/red] cannot read approval token file: {exc}"

@@ -38,6 +38,7 @@ Cross-check your declared `intended_purpose` against AI capability signals detec
 | `--ai-model` | configured default | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
 | `--framework-detectors` | off | Opt-in AST-level detection of orchestration-framework object construction + invocation (see below) |
 | `--quick` | off | Zero-config discovery scan — no manifest, never gates CI, never emits evidence (see below) |
+| `--propose` | off | Write `classification-proposal.json`: a classification the scan suggests from your code, for you to confirm with [`accept --proposal`](accept.md#confirming-a-classification-proposal). Turns on the intent analysis; needs the optional AI plugin (see below) |
 | `--sarif-output` | — | Write scan evidence as a SARIF 2.1.0 document, for GitHub code scanning / GHAS upload (see [SARIF integration](../guides/sarif-integration.md)) |
 
 ## Zero-config discovery (`--quick`)
@@ -75,6 +76,46 @@ Suggested next step:
 
 If nothing is detected, it prints a note that `init` is still available whenever you
 have a system to declare — `--quick` finding nothing is not itself a pass/fail signal.
+
+## Suggesting a classification (`--propose`)
+
+`opencomplai scan --propose` suggests a classification from your code; you confirm it.
+It turns on the intent analysis (as `--ai-intent` does, and `--ai-model` still
+applies), groups the call-site findings by Annex III area, and writes
+`classification-proposal.json` into the repository root. The file names the most
+supported area (or `none`), a confidence label that is a count of supporting call
+sites rather than a probability, the supporting and minority evidence with file
+and line, and any prohibited-practice signals.
+
+=== "macOS / Linux"
+    ```bash
+    pip install opencomplai-ai
+    opencomplai scan --manifest system-manifest.json --repo-root . --propose
+    opencomplai accept --accepted-by "you@example.com" --proposal classification-proposal.json
+    ```
+
+=== "Windows (PowerShell)"
+    ```powershell
+    pip install opencomplai-ai
+    opencomplai scan --manifest system-manifest.json --repo-root . --propose
+    opencomplai accept --accepted-by "you@example.com" --proposal classification-proposal.json
+    ```
+
+- **It needs the optional AI plugin.** `--propose` needs `opencomplai-ai`
+  (`pip install opencomplai-ai`); without it the command prints the install hint and
+  exits `1`. It also exits `2`, writing nothing, with `--quick` or `--ai-legacy`, or
+  when the intent analysis did not run.
+- **The declared purpose stays the source.** The proposal is a suggestion, not a legal
+  determination, and the file says so. It stays `unconfirmed` until a person confirms
+  it, and the confirmation records only that the person confirmed it as shown.
+- **It changes no verdict.** `check` does not read the proposal or the confirmation in
+  this release, so no exit code or finding moves because of them.
+- **Its exit code can differ from a plain scan.** `--propose` turns on the intent
+  analysis, so under `--fail-on` the exit code can differ from a plain scan of the
+  same repository. A scan that fails `--fail-on` still writes the file.
+- **The file is part of the tree.** A later scan of the repository sees
+  `classification-proposal.json` like any other file, so its input digest differs
+  from the one the proposal recorded; the findings do not change.
 
 ## Framework object detection (`--framework-detectors`)
 
@@ -224,7 +265,7 @@ EU AI Act Scan
 
 Each annotation also carries a `confidence` value, printed per callsite by `--ai-legacy`. It is not a similarity score or a calibrated probability: the deterministic matcher assigns fixed values by match type (`0.5` to `0.8`), and the GGUF models report a fixed `0.75`. Treat it as a label for how the callsite was matched, not as a measure of reliability.
 
-See the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) for a full walkthrough.
+See the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis-ai-intent) for a full walkthrough.
 
 ## Opt-in on other commands
 

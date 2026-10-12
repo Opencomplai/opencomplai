@@ -1,4 +1,6 @@
-"""Gap rows for Art. 12, 14, 15 and 26 from the declared agent inventory (no I/O).
+"""Gap rows for Art. 12, 14, 15 and 26 from the declared agent inventory (no I/O
+except an existence check of declared evidence paths under repo_root; the clock
+is passed in).
 
 The manifest's agent inventory is the provider's own statement, so a row built
 from it is PARTIAL at most and never MET. A scan finding is a heuristic and is
@@ -12,6 +14,8 @@ names and model names never reach a gap row (they reach the dashboard).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import UTC, date, datetime
+from pathlib import Path
 
 from opencomplai_core.models import (
     ArticleGapSource,
@@ -43,7 +47,10 @@ NEEDS_REVIEW_NOTES: dict[str, dict] = {
             "declare reads MISSING, as does an incomplete declaration. Findings "
             "in test, docs, generated or vendor scope are ignored, and provider "
             "names are matched by case-insensitive containment. All of this is "
-            "heuristic and needs approval."
+            "heuristic and needs approval. An expired mandate (UTC calendar-date "
+            "comparison) or an absent or out-of-repo guardrail evidence file also "
+            "reads MISSING; the date rule and the path rule are heuristics needing "
+            "approval."
         ),
     }
 }
@@ -117,7 +124,40 @@ def cross_check(inventory, found: Detected) -> CrossCheck:
     return CrossCheck(undeclared, unseen)
 
 
-def _incomplete(article: str, manifest: SystemManifest, agents) -> str | None:
+def _expired(expires_at: str | None, today: date) -> bool:
+    """True when the mandate expiry date (UTC) is before today; None never expires."""
+    if expires_at is None:
+        return False
+    try:
+        dt = datetime.fromisoformat(expires_at)
+    except ValueError:
+        return True
+    dt = dt.replace(tzinfo=UTC) if dt.tzinfo is None else dt.astimezone(UTC)
+    return dt.date() < today
+
+
+def _evidence_missing(repo_root: Path, ref: str) -> bool:
+    """True when a file-path evidence ref is blank, absent or outside the repo."""
+    if "://" in ref:
+        return False
+    if not ref.strip():
+        return True
+    try:
+        root = repo_root.resolve()
+        target = (root / ref).resolve()
+        return not target.is_relative_to(root) or not target.exists()
+    except (OSError, ValueError):
+        return True
+
+
+def _incomplete(
+    article: str,
+    manifest: SystemManifest,
+    agents,
+    *,
+    today: date | None = None,
+    repo_root: Path | None = None,
+) -> str | None:
     """Why the declaration does not cover the article, or None when it does."""
     if article == "Art. 12":
         if any(not (a.logging and a.logging.decision_log_ref) for a in agents):
@@ -130,14 +170,29 @@ def _incomplete(article: str, manifest: SystemManifest, agents) -> str | None:
     elif article == "Art. 15":
         if any(not a.guardrails for a in agents):
             return "an agent declares no guardrail"
+        if repo_root is not None and any(
+            g.evidence_ref is not None and _evidence_missing(repo_root, g.evidence_ref)
+            for a in agents
+            for g in a.guardrails
+        ):
+            return "a guardrail evidence file is missing or outside the repository"
     elif article == "Art. 26":
         if any(not (a.mandate and a.mandate.permitted_actions) for a in agents):
             return "an agent declares no mandate with permitted actions"
+        if today is not None and any(
+            _expired(a.mandate.expires_at, today) for a in agents
+        ):
+            return "an agent mandate has expired"
     return None
 
 
 def agent_gap_status(
-    article: str, manifest: SystemManifest, report: CorroborationReport | None
+    article: str,
+    manifest: SystemManifest,
+    report: CorroborationReport | None,
+    *,
+    today: date | None = None,
+    repo_root: Path | None = None,
 ) -> ArticleGapStatus | None:
     """The row for one agent article, or None (other article, or no inventory)."""
     inventory = getattr(manifest, "agent_inventory", None)
@@ -148,7 +203,9 @@ def agent_gap_status(
     # Scan evidence from a supplied report only: with none, nothing is invented.
     check = cross_check(inventory, detected(report)) if report is not None else None
     undeclared = check.undeclared if check else []
-    incomplete = _incomplete(article, manifest, agents)
+    incomplete = _incomplete(
+        article, manifest, agents, today=today, repo_root=repo_root
+    )
 
     text = (
         f"Agent inventory declared in the manifest: {len(agents)} agent(s), "

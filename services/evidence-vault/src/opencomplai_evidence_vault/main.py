@@ -47,6 +47,7 @@ from opencomplai_evidence_vault.controls import (
     upsert_controls,
 )
 from opencomplai_evidence_vault.hitl import (
+    delete_accepted_override,
     get_accepted_override,
     get_completed_eval,
     get_review_context,
@@ -466,10 +467,10 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="Opencomplai Evidence Vault",
         description=(
-            "Append-only Merkle-linked event ledger and content-addressable evidence store. "
+            "Append-only hash-chained event ledger and content-addressable evidence store. "
             "Implements PRD requirements REQ-EV-001, REQ-EV-002, REQ-EV-003."
         ),
-        version="0.9.1",
+        version="0.11.0",
         lifespan=lifespan,
     )
 
@@ -592,7 +593,7 @@ def create_app() -> FastAPI:
         tenant_id: str = Depends(get_tenant_id),
     ) -> dict:
         """
-        Return the current Merkle chain tip — the hash an Annex IV dossier
+        Return the current chain tip — the hash an Annex IV dossier
         should anchor to so subsequent tampering of older events can be
         detected by comparing the dossier's recorded root against a fresh
         verify-chain run.
@@ -610,7 +611,7 @@ def create_app() -> FastAPI:
         tenant_id: str = Depends(get_tenant_id),
     ) -> dict:
         """
-        Return the rolling Merkle tip after every event in the tenant's ledger.
+        Return the rolling chain tip after every event in the tenant's ledger.
 
         Used by the verify-ledger tool to confirm that a dossier's recorded
         ledger_root_hash corresponds to a real historical point in the chain.
@@ -1104,7 +1105,7 @@ def create_app() -> FastAPI:
         session: AsyncSession = Depends(get_tenant_session),
         tenant_id: str = Depends(get_tenant_id),
     ) -> dict:
-        await store_accepted_override(
+        created = await store_accepted_override(
             session,
             request_body.idempotency_key,
             request_body.payload_fingerprint,
@@ -1112,7 +1113,25 @@ def create_app() -> FastAPI:
             tenant_id=tenant_id,
         )
         await session.commit()
-        return {"idempotency_key": request_body.idempotency_key}
+        return {"idempotency_key": request_body.idempotency_key, "created": created}
+
+    @router.delete("/v1/hitl/overrides/{idempotency_key}")
+    async def release_accepted_override_endpoint(
+        idempotency_key: str,
+        session: AsyncSession = Depends(get_tenant_session),
+        tenant_id: str = Depends(get_tenant_id),
+    ) -> dict:
+        # Only claim rows are releasable; done markers and idempotency
+        # records are permanent.
+        if not idempotency_key.startswith("dual-claim:"):
+            raise HTTPException(
+                status_code=422, detail="Only dual-claim: keys can be released"
+            )
+        released = await delete_accepted_override(
+            session, idempotency_key, tenant_id=tenant_id
+        )
+        await session.commit()
+        return {"released": released}
 
     @router.get(
         "/v1/evals/cache/{eval_run_id}", response_model=CompletedEvalLookupResponse

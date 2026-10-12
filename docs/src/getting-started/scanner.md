@@ -103,8 +103,8 @@ AI capability in the code:
 | Fixture | Declares | Scanner detects | Why |
 |---|---|---|---|
 | `under-declared-chatbot` | `customer support chatbot` | `biometric` | imports `face_recognition` |
-| `under-declared-scoring` | `rule-based scoring` | `employment`, `essential_services`, `law_enforcement` | pickled classifier + `rank_applicants()` |
-| `under-declared-analytics` | `analytics dashboard` | `employment`, `essential_services`, `law_enforcement` | `chromadb` + `sentence-transformers` + applicant-ranking imports |
+| `under-declared-scoring` | `rule-based scoring` | an Annex III area only when `--ai-intent` resolves one | pickled classifier + `rank_applicants()` |
+| `under-declared-analytics` | `analytics dashboard` | an Annex III area only when `--ai-intent` resolves one | `chromadb` + `sentence-transformers` + applicant-ranking imports |
 
 Run the chatbot fixture:
 

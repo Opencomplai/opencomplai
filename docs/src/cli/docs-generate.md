@@ -123,7 +123,7 @@ Rendering is not signed and `verify` checks the JSON file only. PDF output needs
 ## Halt / resume
 
 If the system is currently `HALTED_PENDING_REVIEW` (see
-[check](check.md#halt-on-trap--unresolved-high-risk-gap)), `generate` refuses
+[check](check.md#halt-on-trap-unresolved-high-risk-gap)), `generate` refuses
 outright and exits `4` — no dossier is written, and there is no `--force`
 bypass. Resume with `opencomplai approve` then `opencomplai resume` before
 retrying.
