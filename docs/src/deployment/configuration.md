@@ -17,6 +17,7 @@ All runtime configuration is provided through environment variables in `infra/co
 | Variable | Default | Description |
 |---|---|---|
 | `GATEWAY_PORT` | `8080` | Host port for the gateway API. Change if 8080 is in use. |
+| `PROXY_TIMEOUT_MS` | `30000` | How long the gateway waits for an internal service before it answers `503` (`DEPENDENCY_UNAVAILABLE`), in milliseconds. A value that is not a positive number falls back to the default. The gateway also stops waiting when the client closes the connection. |
 
 ### Internal service auth (required)
 

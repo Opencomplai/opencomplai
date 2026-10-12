@@ -1,6 +1,16 @@
 import { FastifyReply } from 'fastify';
 import { loadSharedSecret, mintServiceToken } from './serviceAuth';
 
+const DEFAULT_PROXY_TIMEOUT_MS = 30_000;
+// setTimeout wraps a larger delay around to 1 ms.
+const MAX_TIMER_MS = 2_147_483_647;
+
+/** Upstream timeout from PROXY_TIMEOUT_MS; anything but a positive number falls back to 30 s. */
+function proxyTimeoutMs(): number {
+  const n = Number(process.env.PROXY_TIMEOUT_MS);
+  return Number.isFinite(n) && n > 0 ? Math.min(n, MAX_TIMER_MS) : DEFAULT_PROXY_TIMEOUT_MS;
+}
+
 /**
  * The four internal Python services (risk-engine, evidence-vault,
  * doc-generator, egress-proxy) require a signed service token on every
@@ -29,6 +39,19 @@ export async function proxyToService(
   // back to its own OSS_DEFAULT_TENANT_ID.
   const tenantId = reply.request?.tenantId;
   const tenantHeaders: Record<string, string> = tenantId ? { 'X-Tenant-Id': tenantId } : {};
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), proxyTimeoutMs());
+
+  // Abort the upstream call when the client goes away before the reply is out.
+  // Listen on the reply's socket-side stream: the REQUEST stream emits 'close'
+  // as soon as its body has been read (Node 16+), which would abort every
+  // proxied call that has a body.
+  const onClientClose = (): void => {
+    if (!reply.raw.writableFinished) controller.abort();
+  };
+  reply.raw?.on('close', onClientClose);
+
   try {
     const response = await fetch(url, {
       method,
@@ -38,6 +61,7 @@ export async function proxyToService(
         ...tenantHeaders,
       },
       body: body !== undefined ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
     });
 
     const raw = await response.text();
@@ -51,13 +75,23 @@ export async function proxyToService(
     }
 
     reply.status(response.status).send(data);
-  } catch {
+  } catch (err: unknown) {
+    const isAbort = err instanceof Error && err.name === 'AbortError';
+    // The upstream URL is logged here and never sent to the client.
+    reply.request?.log?.error(
+      { err, upstream_url: url },
+      isAbort ? 'Upstream proxy aborted (timeout or client disconnect)' : 'Upstream proxy failed',
+    );
+
     reply.status(503).send({
       error_code: 'DEPENDENCY_UNAVAILABLE',
-      message: `Upstream service unavailable: ${url}`,
+      message: 'Upstream service unavailable.',
       category: 'dependency',
       retryable: true,
-      correlation_id: reply.request.id,
+      correlation_id: reply.request?.id,
     });
+  } finally {
+    clearTimeout(timeoutId);
+    reply.raw?.off('close', onClientClose);
   }
 }

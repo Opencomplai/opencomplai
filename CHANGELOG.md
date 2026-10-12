@@ -9,6 +9,26 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.11.1] — 2026-10-12
+
+### Changed
+
+- gateway-api dependencies: `@fastify/rate-limit` 11.2.1, `vite` 7.3.7 (build
+  and test only) and the optional OpenTelemetry packages 0.81 and 0.223.
+
+### Fixed
+
+- gateway-api: a 503 from the gateway no longer names the internal service it
+  could not reach. The body used to read `Upstream service unavailable:
+  http://risk-engine:8001/...`; it is now `Upstream service unavailable.` and
+  the address goes to the server log, next to the request id the response
+  already carries. Thanks to @Reh1t (#99).
+- gateway-api: calls to the internal services time out after 30 seconds
+  (`PROXY_TIMEOUT_MS` sets it, in milliseconds) and are dropped when the client
+  closes the connection, so one stuck service no longer holds gateway requests
+  open. A timeout answers with the same 503 `DEPENDENCY_UNAVAILABLE` body as
+  any other upstream failure. Thanks to @Reh1t (#99).
+
 ## [0.11.0] — 2026-10-12
 
 ### Added
@@ -1068,6 +1088,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.11.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.1
 [0.11.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.0
 [0.10.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.10.0
 [0.9.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.2
