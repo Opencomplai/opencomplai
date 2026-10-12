@@ -25,6 +25,13 @@ def build_needed_action(
             f"this practice is not deployed ({regulation_ref or 'Art. 5'})."
         )
 
+    if annotation.risk_tier == "candidate":
+        return (
+            "[Needs use-case confirmation] Please verify if this imported library is actively "
+            "used for the flagged purpose in downstream files. If it is, update the declared_purpose "
+            "to make that explicit so the scanner can escalate to high_risk."
+        )
+
     if annotation.annex_iii_area is not None:
         purpose_hint = ""
         if declared_purpose.strip():
@@ -91,6 +98,32 @@ def build_flag_rationale(
             matched_signals=signals,
             gate_reason=gate,
             regulation_ref=regulation_ref or "Art. 5",
+            knowledge_entry_title=entry_title,
+            declared_purpose_used=purpose_used,
+        )
+
+    if annotation.risk_tier == "candidate":
+        area = annotation.annex_iii_area
+        if area is not None:
+            scope_label = f"Annex III area {area}"
+        elif "Art. 5" in (annotation.regulation_ref or ""):
+            scope_label = "Art. 5 prohibited"
+        else:
+            scope_label = "Annex III"
+        signal_text = ", ".join(signals) if signals else "code signal"
+        summary = (
+            f'Potential {scope_label} use ("{signal_text}")'
+            + (f" ({entry_title})" if entry_title else "")
+            + "; library is imported but no active invocation was found in this file."
+        )
+        if gate:
+            summary += f" Gate: {gate}."
+        return FlagRationale(
+            summary=summary,
+            needed_action=needed_action,
+            matched_signals=signals,
+            gate_reason=gate,
+            regulation_ref=regulation_ref or f"{scope_label} (Candidate)",
             knowledge_entry_title=entry_title,
             declared_purpose_used=purpose_used,
         )

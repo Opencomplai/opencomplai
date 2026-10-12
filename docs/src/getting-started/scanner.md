@@ -14,8 +14,9 @@ and `ibm-watsonx-ai` — this list is pure signature data
 ## Two honesty rules
 
 !!! warning "Read these before using the scanner"
-    1. **The declaration stays authoritative.** The scanner never auto-classifies
-       risk or edits your manifest. It surfaces discrepancies for a human to reconcile.
+    1. **The declaration stays authoritative.** The scanner never unilaterally assigns risk
+       tiers without context or edits your manifest. When `--ai-intent` is enabled, findings
+       corroborate your declared purpose, isolating un-invoked imports as candidates for human confirmation.
     2. **"No local AI signals detected" is not a compliance verdict.** It means
        the scanner found nothing locally — not that the system is compliant.
 

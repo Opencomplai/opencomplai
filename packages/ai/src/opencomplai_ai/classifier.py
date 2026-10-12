@@ -240,13 +240,42 @@ class IntentClassifier:
 
         if prohibited is not None:
             autonomy = _infer_autonomy(snippet)
+            from opencomplai_ai.rationale import build_flag_rationale
+
+            if import_only:
+                ann = IntentAnnotation(
+                    annex_iii_area=None,
+                    art5_prohibited=False,
+                    art6_3_profiling=False,
+                    risk_tier="candidate",
+                    ai_usage_type=ai_usage_type,
+                    decision_autonomy=autonomy,  # type: ignore[arg-type]
+                    subject_type="natural_person",
+                    consequential="no",
+                    eu_obligation=[],
+                    matched_signals=list(prohibited.matched_signals),
+                    gate_reason=gate_reason,
+                    knowledge_entry_title=prohibited.entry_title,
+                    regulation_ref=f"{prohibited.regulation_ref} (Candidate)",
+                    model_id="codebert-onnx",
+                    confidence=0.6,
+                )
+                rationale = build_flag_rationale(
+                    ann, gate_reason=gate_reason, declared_purpose=declared_purpose
+                )
+                return ann.model_copy(
+                    update={
+                        "explanation": rationale.summary,
+                        "needed_action": rationale.needed_action,
+                    }
+                )
+
             obligations = derive_eu_obligations(
                 autonomy,  # type: ignore[arg-type]
                 "natural_person",
                 "no",
                 annex_iii_area=None,
             )
-            from opencomplai_ai.rationale import build_flag_rationale
 
             ann = IntentAnnotation(
                 annex_iii_area=None,
@@ -328,24 +357,26 @@ class IntentClassifier:
                 confidence=confidence,
             )
 
-            if risk_tier == "high_risk" and import_only and not annex.declared_purpose_used:
+            if (
+                risk_tier == "high_risk"
+                and import_only
+                and not annex.declared_purpose_used
+            ):
                 ann = ann.model_copy(
                     update={
                         "risk_tier": "candidate",
                         "eu_obligation": [],
-                        "explanation": (
-                            f'Matched "{annex.entry_title}" vocabulary but AST '
-                            "indicates it is only imported (not actively invoked). "
-                            "This finding is downgraded to candidate status."
-                        ),
-                        "needed_action": (
-                            "[Needs use-case confirmation] Please verify if this imported library is actively "
-                            "used for the flagged purpose in downstream files. If it is, update the declared_purpose "
-                            "to make that explicit so the scanner can escalate to high_risk."
-                        ),
                     }
                 )
-                return ann
+                rationale = build_flag_rationale(
+                    ann, gate_reason=gate_reason, declared_purpose=declared_purpose
+                )
+                return ann.model_copy(
+                    update={
+                        "explanation": rationale.summary,
+                        "needed_action": rationale.needed_action,
+                    }
+                )
 
             if risk_tier == "minimal":
                 ann = ann.model_copy(

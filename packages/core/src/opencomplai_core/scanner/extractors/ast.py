@@ -14,6 +14,15 @@ from opencomplai_core.scanner.feature_types import (
 from opencomplai_core.scanner.inventory import RepoInventory
 
 
+def _dotted_name(node: ast.expr) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        prefix = _dotted_name(node.value)
+        return f"{prefix}.{node.attr}" if prefix else node.attr
+    return ""
+
+
 def _parse_python(
     path: Path, rel_path: str, scope
 ) -> tuple[list[ImportRef], list[CallsiteRef]]:
@@ -25,31 +34,33 @@ def _parse_python(
     except (OSError, SyntaxError):
         return imports, callsites
 
+    raw_imports: list[tuple[str, str, int]] = []
+    called_names: set[str] = set()
+    called_receivers: set[str] = set()
+
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                imports.append(
-                    ImportRef(
-                        module=alias.name,
-                        location=f"{rel_path}:{node.lineno}",
-                        scope=scope,
-                    )
-                )
+                bound = alias.asname or alias.name
+                raw_imports.append((alias.name, bound, node.lineno))
         elif isinstance(node, ast.ImportFrom) and node.module:
-            imports.append(
-                ImportRef(
-                    module=node.module,
-                    location=f"{rel_path}:{node.lineno}",
-                    scope=scope,
-                )
-            )
+            for alias in node.names:
+                bound = alias.asname or alias.name
+                raw_imports.append((node.module, bound, node.lineno))
         elif isinstance(node, ast.Call):
             func = node.func
             name = ""
             if isinstance(func, ast.Name):
                 name = func.id
+                called_names.add(name)
             elif isinstance(func, ast.Attribute):
                 name = func.attr
+                called_names.add(name)
+                curr = func.value
+                while isinstance(curr, ast.Attribute):
+                    curr = curr.value
+                if isinstance(curr, ast.Name):
+                    called_receivers.add(curr.id)
             if name:
                 callsites.append(
                     CallsiteRef(
@@ -58,6 +69,41 @@ def _parse_python(
                         scope=scope,
                     )
                 )
+                dotted = _dotted_name(func) if isinstance(func, ast.Attribute) else ""
+                if dotted and dotted != name:
+                    callsites.append(
+                        CallsiteRef(
+                            name=dotted,
+                            location=f"{rel_path}:{node.lineno}",
+                            scope=scope,
+                        )
+                    )
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            for d in node.decorator_list:
+                curr = d.func if isinstance(d, ast.Call) else d
+                while isinstance(curr, ast.Attribute):
+                    curr = curr.value
+                if isinstance(curr, ast.Name):
+                    called_receivers.add(curr.id)
+            if isinstance(node, ast.ClassDef):
+                for b in node.bases:
+                    curr = b
+                    while isinstance(curr, ast.Attribute):
+                        curr = curr.value
+                    if isinstance(curr, ast.Name):
+                        called_receivers.add(curr.id)
+
+    for module_name, bound_name, lineno in raw_imports:
+        is_invoked = (bound_name in called_names) or (bound_name in called_receivers)
+        imports.append(
+            ImportRef(
+                module=module_name,
+                location=f"{rel_path}:{lineno}",
+                scope=scope,
+                invoked=is_invoked,
+            )
+        )
+
     return imports, callsites
 
 

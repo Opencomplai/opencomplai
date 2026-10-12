@@ -55,7 +55,7 @@ def test_detect_populates_intent_annotation(tmp_path):
 def test_detect_detector_id():
     detector = IntentDetector("codebert-onnx")
     assert detector.detector_id == "DET_INTENT_V1"
-    assert detector.detector_version == "1.1.0"
+    assert detector.detector_version == "1.2.0"
 
 
 def test_detect_empty_features(tmp_path):

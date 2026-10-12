@@ -15,8 +15,9 @@ non-AI annotations (`APIRouter`, `ASGITransport`) with generic Art.50 defaults.
 3. **Fusion policy:** Only `prohibited`, `high_risk`, and `limited_risk` enter `report.evidence` and discrepancy fusion.
 4. **Usage inventory:** Gated callsites (including `minimal`) populate `eu_ai_scan.capabilities` for CLI Section 1.
 5. **Classification snippet:** Callsite line ±2; token-first matching before snippet.
-6. **`risk_tier` enum:** `prohibited | high_risk | limited_risk | minimal`.
-7. **Backward compat:** `--ai-legacy` restores ungated behavior; `DET_INTENT` version `1.1.0`.
+6. **`risk_tier` enum:** `prohibited | high_risk | limited_risk | minimal | candidate`.
+7. **Backward compat:** `--ai-legacy` restores ungated behavior; `DET_INTENT` version `1.2.0`.
+8. **Candidate isolation:** Library imports without active invocations in the file are demoted to `candidate` tier to prevent false-positive CI gating and isolated in a dedicated "Needs use-case confirmation" section.
 
 ## JSON contract
 

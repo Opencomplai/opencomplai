@@ -37,6 +37,7 @@ class ImportRef:
     module: str
     location: str
     scope: EvidenceScope
+    invoked: bool = False
 
 
 @dataclass

@@ -27,7 +27,7 @@ class IntentDetector(BaseDetector):
 
     @property
     def detector_version(self) -> str:
-        return "1.1.0"
+        return "1.2.0"
 
     @property
     def supported_languages(self) -> frozenset[str]:
@@ -51,6 +51,7 @@ class IntentDetector(BaseDetector):
         usage_matches = usage_matches or {}
 
         from opencomplai_core.scanner.feature_types import ImportRef
+
         callsites = [*features.callsites, *features.imports]
         for i, ref in enumerate(callsites):
             token = getattr(ref, "name", None) or getattr(ref, "module", "")
@@ -61,13 +62,16 @@ class IntentDetector(BaseDetector):
             usage = usage_matches.get(ref.location)
             ai_usage_type = usage.usage_type.value if usage else None
 
+            is_import = isinstance(ref, ImportRef)
+            import_only = is_import and not getattr(ref, "invoked", False)
+
             classify_kwargs: dict = {
                 "declared_purpose": declared_purpose,
                 "location": ref.location,
                 "token": token,
                 "ai_usage_type": ai_usage_type,
                 "legacy": ai_legacy,
-                "import_only": isinstance(ref, ImportRef),
+                "import_only": import_only,
             }
             if usage:
                 classify_kwargs["gate_reason"] = usage.reason
