@@ -58,7 +58,7 @@ detection logic that produced it:
 
 | Signal category | Detector(s) | Notes |
 |---|---|---|
-| `AGENT_FRAMEWORK` | `DET_FRAMEWORK_AST_V1` | Opt-in (`--framework-detectors`). AST-level: fires on framework object *construction + invocation* (LangChain, CrewAI, AutoGen, LangGraph), not just a lexical import. See [scan reference](../cli/scan.md#framework-object-detection---framework-detectors). |
+| `AGENT_FRAMEWORK` | `DET_FRAMEWORK_AST_V1` | Opt-in (`--framework-detectors`). AST-level: fires on framework object *construction + invocation* (LangChain, CrewAI, AutoGen, LangGraph), not just a lexical import. See [scan reference](../cli/scan.md#framework-object-detection-framework-detectors). |
 
 Other signal categories (AI SDK usage, ML frameworks, vector/embedding stores, PII
 dataflow, biometric, scoring/profiling) are produced by the existing lexical detectors

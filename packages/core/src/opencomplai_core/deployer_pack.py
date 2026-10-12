@@ -27,7 +27,7 @@ from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
-from opencomplai_core.models import ScanStatusArtifact
+from opencomplai_core.models import ImportedPackEvidence, ScanStatusArtifact
 from opencomplai_core.signing import (
     SigningDomain,
     canonical_json_bytes,
@@ -181,6 +181,34 @@ def verify_pack(
     if claimed is not None and claimed != hashlib.sha256(pub_pem).hexdigest()[:16]:
         return PackVerification("invalid", "signer_key_id does not match public key")
     return PackVerification("verified", "hash and signature match")
+
+
+def upstream_evidence(
+    pack: DeployerPack, verification: str, *, source_file: str, imported_on: str
+) -> tuple[str, ImportedPackEvidence]:
+    """The manifest `imported_evidence` entry for a received provider pack.
+
+    `verification` is `verified` or `unsigned`; the signer is kept only when
+    verified. The key is the pack id: the 12 hex of its file name.
+    """
+    if verification not in ("verified", "unsigned"):
+        raise ValueError(
+            f"verification must be 'verified' or 'unsigned', got {verification!r}"
+        )
+    checked: Literal["verified", "unsigned"] = (
+        "verified" if verification == "verified" else "unsigned"
+    )
+    digest = pack.integrity.pack_sha256
+    return f"deployer_pack:{digest[:12]}", ImportedPackEvidence(
+        source="deployer_pack",
+        status="imported_pack",
+        source_file=Path(source_file.replace("\\", "/")).name,
+        pack_sha256=digest,
+        provider_system_id=pack.system_id,
+        verification=checked,
+        signer_key_id=(pack.integrity.signer_key_id if checked == "verified" else None),
+        imported_on=imported_on,
+    )
 
 
 def deployer_pack_schema() -> dict[str, Any]:

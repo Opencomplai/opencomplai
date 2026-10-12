@@ -200,3 +200,25 @@ def test_oss_is_private_held_back_workflows_stay_private():
         ".github/workflows/dashboard-saas-ci.yml",
     ):
         assert _private(p) == 0, p
+
+
+@pytest.mark.parametrize("manifest", ["pnpm-lock.yaml", "package-lock.json"])
+def test_private_path_in_build_manifest_fails(tmp_path, manifest):
+    # The stderr assertions are the proof: on a host without a secret scanner
+    # verify-oss.sh fails for that reason too, so returncode alone is vacuous.
+    private = "dashboard" + "-saas/"  # runtime-built so this file passes its own gate
+    bad = tmp_path / "bad"
+    bad.mkdir()
+    out = _tree(bad)
+    (out / manifest).write_text(f"link: {private}app\n")
+    r = _verify(out)
+    assert r.returncode != 0
+    assert "referenced in build manifest" in r.stderr
+    assert manifest in r.stderr
+
+    good = tmp_path / "good"
+    good.mkdir()
+    out = _tree(good)
+    (out / manifest).write_text("link: packages/cli\n")
+    r = _verify(out)
+    assert "referenced in build manifest" not in r.stderr

@@ -17,11 +17,9 @@ SIGNAL_TO_TAXONOMY: dict[SignalCategory, list[str]] = {
     SignalCategory.EMBEDDINGS_VECTOR: ["essential_services"],
     SignalCategory.PROMPT_AGENT: [],
     SignalCategory.BIOMETRIC: ["biometric"],
-    SignalCategory.SCORING_PROFILING: [
-        "employment",
-        "essential_services",
-        "law_enforcement",
-    ],
+    # A scoring or profiling signal has no area until the intent classifier
+    # resolves one (see signal_category_to_taxonomy).
+    SignalCategory.SCORING_PROFILING: [],
     SignalCategory.PII_DATAFLOW: ["essential_services"],
     # Detection signals with no Annex III area of their own.
     SignalCategory.AGENT_FRAMEWORK: [],

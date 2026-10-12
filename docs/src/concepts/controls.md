@@ -35,7 +35,7 @@ owner, a state, and the evidence backing it.
 |---|---|
 | `satisfied` | The mapped article read `MET` on the run that derived this control, or a human attached evidence directly. A scan detection alone never produces `MET`, so it never produces `satisfied`. |
 | `evidence_missing` | The mapped article read `PARTIAL`, `MISSING`, or `UNVERIFIED` and there is no surviving evidence to fall back on. |
-| `evidence_stale` | Evidence exists but its TTL has expired, or the manifest changed in a way that invalidates it (see [Freshness](#freshness) below). |
+| `evidence_stale` | Evidence exists but its TTL has expired, or the manifest changed in a way that invalidates it (see [Freshness](#freshness-read-time-only-no-cron) below). |
 | `pending_review` | Reserved for the review-queue integration; not set by the current derivation path. |
 | `waived` | A human explicitly waived this control. Never overwritten by an automated `gaps`/`check` run. |
 
@@ -160,7 +160,7 @@ A system that `check` has moved to `HALTED_PENDING_REVIEW` (trap detected, or
 an unresolved HIGH-risk corroboration gap) still has its controls derivable
 and listable — halting is a dossier-generation gate
 (`opencomplai docs generate` for that system exits `4`), not a control-register
-lock. See [Exit codes](../cli/exit-codes.md#halt--resume-gate-opencomplai-check-opencomplai-docs-generate)
+lock. See [Exit codes](../cli/exit-codes.md#halt-resume-gate-opencomplai-check-opencomplai-docs-generate)
 for the full halt/resume contract.
 
 ## Vault-less and engine-less mode

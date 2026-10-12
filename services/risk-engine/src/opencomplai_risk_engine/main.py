@@ -35,6 +35,7 @@ from opencomplai_risk_engine.dual_approval import (
     SecondApprovalError,
     SecondApprovalRequest,
     check_second_approval,
+    claim_key,
     done_key,
     pending_key,
     pending_record,
@@ -80,7 +81,7 @@ app = FastAPI(
         "Implements REQ-RISK-001 (Annex III), REQ-RISK-002 (profiling), "
         "REQ-RISK-003 (modification trap)."
     ),
-    version="0.9.2",
+    version="0.10.0",
 )
 
 logger = logging.getLogger(__name__)
@@ -375,6 +376,32 @@ def _store_accepted_override(
     )
 
 
+def _claim_accepted_override(
+    idempotency_key: str, payload_fingerprint: str, response_json: dict
+) -> bool | None:
+    """Atomic first-write-wins claim. True = won, False = already claimed,
+    None = vault down or an old vault without the `created` field (fail closed)."""
+    result = _vault_request(
+        "POST",
+        "/v1/hitl/overrides",
+        {
+            "idempotency_key": idempotency_key,
+            "payload_fingerprint": payload_fingerprint,
+            "response_json": response_json,
+        },
+    )
+    created = result.get("created") if result else None
+    return created if isinstance(created, bool) else None
+
+
+def _release_override_claim(idempotency_key: str) -> None:
+    # ponytail: no retry; a failed release leaves the claim and later approvals
+    # get 409 until an operator deletes the dual-claim: row.
+    path = f"/v1/hitl/overrides/{quote(idempotency_key, safe=':')}"
+    if _vault_request("DELETE", path) is None:
+        logger.error("Failed to release second-approval claim %s", idempotency_key)
+
+
 def _lookup_completed_eval(run_key: str) -> dict | None:
     result = _vault_request("GET", f"/v1/evals/cache/{run_key}")
     if result is None or not result.get("found"):
@@ -616,20 +643,49 @@ async def second_approval(
     pending_fp, pending = p
     second_hash = f"sha256:{hashlib.sha256(request.rationale.encode()).hexdigest()}"
     status = "accepted" if request.decision == "approved" else "rejected"
-    vault_event_id = await _record_hitl_event_strict(
-        event_type="override_second_approved",
-        payload={
-            "override_id": override_id,
-            "case_id": pending["case_id"],
-            "decision": request.decision,
-            "first_actor_id": pending["actor_id"],
-            "first_rationale_hash": pending["rationale_hash"],
-            "second_rationale_hash": second_hash,
-            "status": status,
-            "tenant_id": TENANT_ID,
-        },
-        actor_id=request.actor_id,
+    # Claim before the ledger write: the vault's primary key picks one winner.
+    claim = claim_key(override_id)
+    claimed = _claim_accepted_override(
+        claim, pending_fp, {"actor_id": request.actor_id}
     )
+    if claimed is None:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error_code": "AUDIT_UNAVAILABLE",
+                "message": "Evidence vault unavailable — decision not recorded",
+                "category": "server",
+                "retryable": True,
+            },
+        )
+    if not claimed:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "error_code": "ALREADY_COMPLETED",
+                "message": "Override already completed",
+                "category": "client",
+                "retryable": False,
+            },
+        )
+    try:
+        vault_event_id = await _record_hitl_event_strict(
+            event_type="override_second_approved",
+            payload={
+                "override_id": override_id,
+                "case_id": pending["case_id"],
+                "decision": request.decision,
+                "first_actor_id": pending["actor_id"],
+                "first_rationale_hash": pending["rationale_hash"],
+                "second_rationale_hash": second_hash,
+                "status": status,
+                "tenant_id": TENANT_ID,
+            },
+            actor_id=request.actor_id,
+        )
+    except Exception:
+        _release_override_claim(claim)
+        raise
     response = OverrideResponse(
         override_id=override_id,
         rationale_hash=second_hash,

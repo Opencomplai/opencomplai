@@ -9,6 +9,86 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.10.0] — 2026-10-12
+
+### Added
+
+- `opencomplai export` writes one neutral evidence package from a compliance
+  artifact written by `check --with-gaps`, as JSON or, with `--format csv`, as
+  a flat CSV with one row per article. The package holds the system identity,
+  the provenance and verdict fields, one entry per gap-report article and the
+  original artifact embedded unchanged. `--artifact-out` writes the embedded
+  artifact so `opencomplai verify` can check its signature offline. The command
+  reads one file, writes only the paths you give it, and exits 0 once the
+  package is written whatever verdict the artifact holds (2 when the input
+  cannot be read). The JSON package is described by the new published schema
+  `evidence_package.schema.json`.
+- `check` stamps two optional fields into the artifact before signing:
+  `tree_sha256`, a digest of the content of the tracked and the untracked,
+  non-ignored files, and `tree_dirty`, true when a tracked file is modified or
+  an untracked, non-ignored file exists. Both are left out outside a git
+  repository or when git is not available.
+- `opencomplai accept --exemption` writes a signed Article 6(3) exemption
+  record that lists the grounds you relied on; give them with the repeatable
+  `--ground` option, or they default to the grounds the checker kept in the
+  manifest. The record states what you declared; it does not decide whether
+  the exemption applies, and it is marked as needing legal review inside the
+  signed bytes. The manifest's `checker_session` now keeps
+  `derogation_grounds`, the Article 6(3) answers the last checker run relied
+  on.
+- `opencomplai check --require-exemption-record` is an opt-in gate. When the
+  checker session relies on the Article 6(3) derogation (it lists
+  `provider_art_6_4_registration`) and the repository holds no valid signed
+  exemption record, `check` exits 1 with `EU_AIA_ART6_3_EXEMPTION_RECORD`. A
+  record that is absent, unsigned, tampered, untrusted or stale (the manifest
+  or its grounds changed after signing) counts as missing. Without the flag
+  the exit code is unchanged.
+- `opencomplai deployer-pack import` verifies a provider's deployer pack and
+  records a reference to it (pack id, bundle hash, the provider's system id,
+  `verified` or `unsigned`, and the signer key id) under the manifest's
+  `imported_evidence` map. An invalid pack is refused before anything is
+  written, and importing the same pack again changes nothing. The record is
+  provenance only: `check` and `gaps` do not read it.
+- The Annex IV dossier schema, `annex_iv_dossier.schema.json`, now has the
+  stable `$id` `https://schemas.opencomplai.dev/annex_iv_dossier/v1`, as the
+  artifact and gap report schemas do.
+
+### Changed
+
+- Upgrade note: older consumers of the artifact JSON must accept two new
+  optional fields, `tree_sha256` and `tree_dirty`. A reader that rejects
+  unknown keys will refuse a 0.10.0 artifact until it is widened; an artifact
+  written outside a git repository does not carry them.
+- The scan input digest now covers the content of the scanned files instead of
+  the absolute path of the repository, so one tree gives one digest in two
+  directories. The digest, and the scan id derived from it, differ from 0.9.2
+  for the same tree.
+- With `check --with-gaps`, the Art. 49 row of a session that lists
+  `provider_art_6_4_registration` now also reports the state of the signed
+  exemption record. A valid record does not make the row Met; the registration
+  evidence still decides that. The manifest fingerprint now includes the
+  Article 6(3) grounds when there are any, so changing a ground makes a signed
+  exemption record stale (and a classification acceptance of that manifest
+  too). A manifest without grounds keeps its fingerprint.
+
+### Fixed
+
+- A scoring or profiling signal in the code with no resolved Annex III area no
+  longer maps to employment, essential services and law enforcement at once.
+  It maps to no area until `--ai-intent` resolves one, and a resolved area
+  still maps to exactly that one, so scan results for such code can differ
+  from 0.9.2.
+- Two simultaneous second approvals of one dual-control override could both be
+  written to the ledger. The first now claims the override and the second
+  answers 409 `ALREADY_COMPLETED`; the risk engine answers 503
+  `AUDIT_UNAVAILABLE` when the evidence vault cannot be reached, and a failed
+  ledger write releases the claim so a retry works. Upgrade the risk engine and
+  the evidence vault together: a risk engine that talks to an older vault
+  answers 503 for every second approval.
+- Thirteen documentation links whose fragment pointed at a heading that does
+  not exist now resolve, and the documentation build fails on a broken
+  fragment.
+
 ## [0.9.2] — 2026-10-11
 
 ### Added
@@ -933,6 +1013,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.10.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.10.0
 [0.9.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.2
 [0.9.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.1
 [0.9.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.0

@@ -54,6 +54,7 @@ does not clear anything.
 | `--target` | manifest | Framework `--with-gaps` and `--gate` assess; repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. `NIST_AI_RMF` attaches `nist_rmf_report`. Any set other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF` also attaches `framework_reports`, one report per target. |
 | `--gate` | `opencomplai.yaml` | Target framework other than the EU AI Act whose failing rows fail the check; repeat for several. Replaces `gate.frameworks` from `opencomplai.yaml`. See [Gating other frameworks](#gating-other-frameworks). |
 | `--gate-fail-on` | `missing` | `missing` or `partial`: which rows of a gated framework fail. Replaces `gate.fail_on` from `opencomplai.yaml`. |
+| `--require-exemption-record` | off | Opt-in. When the manifest's checker session relies on the Art. 6(3) derogation (it lists `provider_art_6_4_registration`) and the repository holds no valid signed `art_6_3_exemption` record, `check` fails with `EU_AIA_ART6_3_EXEMPTION_RECORD` (exit `1`). A record that is absent, unsigned, tampered, untrusted or stale (the manifest or its grounds changed after signing) counts as missing. Without the flag the exit code is unchanged and the `--with-gaps` Art. 49 row only reports the record. Write the record with [`accept --exemption`](accept.md). The record is the provider's own declaration of the grounds; the check does not assess whether the exemption is valid. Wording is product design, flagged `needs_founder_review`. |
 | `--oversight-log` | state directory | Oversight log to summarise into the artifact. Default: the oversight log in the OpenComplAI state directory. |
 | `--agent-log` | `agent-log.jsonl` | Agent decision log to summarise into the artifact. |
 | `--incident-register` | `incident-register.json` | Incident register to summarise into the artifact. |
@@ -337,7 +338,7 @@ gate), persists the system as `HALTED_PENDING_REVIEW`. While halted,
 `opencomplai docs generate` for that `system_id` refuses outright (exit `4`,
 no dossier written, no `--force`). Resume with `opencomplai approve` /
 `opencomplai resume` — see
-[Halt / resume gate](exit-codes.md#halt--resume-gate-opencomplai-check-opencomplai-docs-generate).
+[Halt / resume gate](exit-codes.md#halt-resume-gate-opencomplai-check-opencomplai-docs-generate).
 
 ## Exit codes
 

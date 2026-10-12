@@ -16,7 +16,8 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, DateTime, String, func, select
+from sqlalchemy import JSON, DateTime, String, delete, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -303,10 +304,14 @@ async def store_accepted_override(
     payload_fingerprint: str,
     response_json: dict,
     tenant_id: str = OSS_DEFAULT_TENANT_ID,
-) -> None:
+) -> bool:
+    """First write wins. True = created, False = the key already existed.
+
+    The primary key decides the winner of a race, not the read above it.
+    """
     existing = await session.get(AcceptedOverrideDB, idempotency_key)
     if existing is not None:
-        return
+        return False
     session.add(
         AcceptedOverrideDB(
             idempotency_key=idempotency_key,
@@ -315,7 +320,24 @@ async def store_accepted_override(
             response_json=response_json,
         )
     )
-    await session.flush()
+    try:
+        await session.flush()
+    except IntegrityError:
+        await session.rollback()
+        return False
+    return True
+
+
+async def delete_accepted_override(
+    session: AsyncSession, idempotency_key: str, tenant_id: str = OSS_DEFAULT_TENANT_ID
+) -> bool:
+    result = await session.execute(
+        delete(AcceptedOverrideDB).where(
+            AcceptedOverrideDB.idempotency_key == idempotency_key,
+            AcceptedOverrideDB.tenant_id == tenant_id,
+        )
+    )
+    return result.rowcount > 0
 
 
 async def get_completed_eval(

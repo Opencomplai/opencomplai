@@ -1463,6 +1463,32 @@
       ],
       "default": null,
       "title": "Timestamp"
+    },
+    "tree_dirty": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "True for any tracked modification or any untracked non-ignored file when `check` ran; omitted outside a git repo",
+      "title": "Tree Dirty"
+    },
+    "tree_sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "SHA-256 digest of the content of tracked plus untracked non-ignored files, stamped by `check` before signing; omitted outside a git repo",
+      "title": "Tree Sha256"
     }
   },
   "required": [

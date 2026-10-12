@@ -197,7 +197,7 @@ EU AI Act Scan
 
 A `decision_autonomy=autonomous` + `subject_type=natural_person` classification maps to `["Art.6(2)+Annex III", "Art.9 risk mgmt", "Art.13 transparency", "Art.14 human oversight", "Art.43 conformity assessment", "Art.49 EU DB registration"]` — the same HIGH_RISK tier that an Annex III keyword match in your manifest would trigger. Use the annotations as a prompt to review whether your `intended_purpose` declaration accurately captures how the model output is actually used.
 
-For the full model catalogue and a walkthrough of the under-declared example fixtures, see the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) and [scan command reference](../cli/scan.md#ai-intent-analysis---ai-intent).
+For the full model catalogue and a walkthrough of the under-declared example fixtures, see the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis-ai-intent) and [scan command reference](../cli/scan.md#ai-intent-analysis-ai-intent).
 
 ### Step 3 — run a check against the running stack
 

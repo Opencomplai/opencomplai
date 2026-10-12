@@ -87,7 +87,7 @@ preset are in the [scanner guide](scanner.md#ocignore).
 purely to answer *"does this repo look like it touches AI at all?"* before you commit to
 declaring a system. Contrast this with `opencomplai check` below: `check` is the
 command that actually gates CI and produces the compliance artifact. See the
-[scan reference](../cli/scan.md#zero-config-discovery---quick) for the full flag
+[scan reference](../cli/scan.md#zero-config-discovery-quick) for the full flag
 behavior.
 
 ## Initialise your system manifest

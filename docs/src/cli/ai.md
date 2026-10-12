@@ -2,7 +2,7 @@
 
 Choose and inspect the backend used by `opencomplai scan --ai-intent`. The
 group is part of the optional `opencomplai-ai` plugin; for what the intent pass
-does, see the [AI intent analysis](scan.md#ai-intent-analysis---ai-intent)
+does, see the [AI intent analysis](scan.md#ai-intent-analysis-ai-intent)
 section of `scan`.
 
 **What:** two subcommands, `ai configure` to save the active model and

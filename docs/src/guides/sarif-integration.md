@@ -76,7 +76,7 @@ needs. `scan --sarif-output` (above) reports AI-signal evidence instead. Neither
 ## Combining with `--framework-detectors`
 
 SARIF export picks up whatever evidence the scan produced — including
-[`--framework-detectors`](../cli/scan.md#framework-object-detection---framework-detectors)
+[`--framework-detectors`](../cli/scan.md#framework-object-detection-framework-detectors)
 findings, if enabled:
 
 === "macOS / Linux"

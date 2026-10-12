@@ -1,6 +1,7 @@
-"""data/scan_status_artifact.schema.json and data/gap_report.schema.json are
-generated from the pydantic models (scripts/generate_artifact_schemas.py).
-Regenerate after editing ScanStatusArtifact, GapReport or any model they embed.
+"""data/scan_status_artifact.schema.json, data/gap_report.schema.json and
+data/evidence_package.schema.json are generated from the pydantic models
+(scripts/generate_artifact_schemas.py). Regenerate after editing
+ScanStatusArtifact, GapReport, EvidencePackage or any model they embed.
 """
 
 from __future__ import annotations
@@ -12,9 +13,11 @@ import jsonschema
 import pytest
 from opencomplai_core.json_schemas import (
     ARTIFACT_SCHEMA_ID,
+    EVIDENCE_PACKAGE_SCHEMA_ID,
     GAP_REPORT_SCHEMA_ID,
     SCHEMA_VERSION,
     build_artifact_schema,
+    build_evidence_package_schema,
     build_gap_report_schema,
 )
 from opencomplai_core.models import (
@@ -30,6 +33,7 @@ _CORE = Path(__file__).resolve().parents[1]
 _DATA = _CORE / "src" / "opencomplai_core" / "data"
 _ARTIFACT = _DATA / "scan_status_artifact.schema.json"
 _GAP = _DATA / "gap_report.schema.json"
+_PACKAGE = _DATA / "evidence_package.schema.json"
 _DASHBOARD = _CORE.parents[1] / "dashboard-saas" / "schemas"
 _FIX = "run `python scripts/generate_artifact_schemas.py` and commit the result."
 
@@ -63,10 +67,17 @@ def test_gap_report_schema_matches_model() -> None:
     )
 
 
+def test_evidence_package_schema_matches_model() -> None:
+    assert _load(_PACKAGE) == build_evidence_package_schema(), (
+        f"evidence package schema drifted - {_FIX}"
+    )
+
+
 def test_ids_and_version() -> None:
     for path, schema_id in (
         (_ARTIFACT, ARTIFACT_SCHEMA_ID),
         (_GAP, GAP_REPORT_SCHEMA_ID),
+        (_PACKAGE, EVIDENCE_PACKAGE_SCHEMA_ID),
     ):
         doc = _load(path)
         assert doc["$id"] == schema_id
@@ -76,6 +87,10 @@ def test_ids_and_version() -> None:
         ARTIFACT_SCHEMA_ID == "https://schemas.opencomplai.dev/scan_status_artifact/v1"
     )
     assert GAP_REPORT_SCHEMA_ID == "https://schemas.opencomplai.dev/gap_report/v1"
+    assert (
+        EVIDENCE_PACKAGE_SCHEMA_ID
+        == "https://schemas.opencomplai.dev/evidence_package/v1"
+    )
 
 
 def test_sample_artifact_validates() -> None:
@@ -132,4 +147,8 @@ def test_schema_ids_unique_across_core_and_dashboard() -> None:
     dash_id = json.loads(
         (_DASHBOARD / "first_scan_status.schema.json").read_text(encoding="utf-8")
     )["$id"]
-    assert dash_id not in (ARTIFACT_SCHEMA_ID, GAP_REPORT_SCHEMA_ID)
+    assert dash_id not in (
+        ARTIFACT_SCHEMA_ID,
+        GAP_REPORT_SCHEMA_ID,
+        EVIDENCE_PACKAGE_SCHEMA_ID,
+    )

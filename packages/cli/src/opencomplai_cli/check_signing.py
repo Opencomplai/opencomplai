@@ -23,20 +23,25 @@ def stamp_artifact(
     *,
     now: datetime,
     manifest_bytes: bytes | None = None,
+    repo_root: Path | None = None,
 ) -> ScanStatusArtifact:
     """Fill the fields ``publish.prepare_scan_status_artifact`` would add at push,
-    plus the four provenance stamps, only when unset.
+    plus the four provenance stamps and the two tree stamps (``tree_sha256``,
+    ``tree_dirty``), only when unset.
 
     Stamping before signing makes ``prepared == original`` at push time, so the
     signature survives. ``manifest_sha256`` stays None without ``manifest_bytes``;
     CRLF is hashed as LF so one manifest hashes the same on Windows and Linux.
+    The tree stamps need ``repo_root`` to be a git work tree and stay None
+    otherwise.
     """
     from opencomplai_core.json_schemas import SCHEMA_VERSION
     from opencomplai_core.rules import RULE_SET_VERSION
 
+    from opencomplai_cli.provenance import tree_provenance
     from opencomplai_cli.publish import _cli_version
 
-    update: dict[str, str] = {}
+    update: dict[str, object] = {}
     if not artifact.timestamp:
         update["timestamp"] = now.isoformat().replace("+00:00", "Z")
     if not artifact.policy_bundle_version:
@@ -50,4 +55,8 @@ def stamp_artifact(
     if not artifact.manifest_sha256 and manifest_bytes is not None:
         lf_bytes = manifest_bytes.replace(b"\r\n", b"\n")
         update["manifest_sha256"] = hashlib.sha256(lf_bytes).hexdigest()
+    if repo_root is not None and not artifact.tree_sha256:
+        tree = tree_provenance(repo_root)
+        if tree is not None:
+            update["tree_sha256"], update["tree_dirty"] = tree
     return artifact.model_copy(update=update) if update else artifact

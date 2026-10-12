@@ -1,7 +1,7 @@
 """Pure helpers for completing dual-control HITL overrides (REQ-HITL-001).
 
 No I/O here: main.py owns the vault and ledger calls. State lives in the same
-durable key-value store as override idempotency, under two derived keys.
+durable key-value store as override idempotency, under three derived keys.
 """
 
 from typing import Literal
@@ -32,6 +32,11 @@ def pending_key(override_id: str) -> str:
 
 def done_key(override_id: str) -> str:
     return f"dual-done:{override_id}"
+
+
+def claim_key(override_id: str) -> str:
+    """Atomic first-write-wins claim taken before the ledger write."""
+    return f"dual-claim:{override_id}"
 
 
 def pending_record(

@@ -224,7 +224,7 @@ EU AI Act Scan
 
 Each annotation also carries a `confidence` value, printed per callsite by `--ai-legacy`. It is not a similarity score or a calibrated probability: the deterministic matcher assigns fixed values by match type (`0.5` to `0.8`), and the GGUF models report a fixed `0.75`. Treat it as a label for how the callsite was matched, not as a measure of reliability.
 
-See the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis---ai-intent) for a full walkthrough.
+See the [scanner guide](../getting-started/scanner.md#local-ai-intent-analysis-ai-intent) for a full walkthrough.
 
 ## Opt-in on other commands
 

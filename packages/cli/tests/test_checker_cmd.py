@@ -165,6 +165,63 @@ def test_checker_write_manifest_keeps_purpose_and_records_verdict(
     assert data["checker_session"]["verdict"] == "prohibited_practice"
 
 
+def _append_checker_manifest(tmp_path: Path, fixture_name: str) -> Path:
+    """Append a second run to the manifest written by `_write_checker_manifest`."""
+    fixture = json.loads((FIXTURES / fixture_name).read_text(encoding="utf-8"))
+    answers_path = tmp_path / "answers.json"
+    answers_path.write_text(json.dumps(fixture["session"]), encoding="utf-8")
+    manifest_path = tmp_path / "system-manifest.json"
+    result = runner.invoke(
+        app,
+        [
+            "checker",
+            "--answers",
+            str(answers_path),
+            "--write-manifest",
+            str(manifest_path),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    return manifest_path
+
+
+def _grounds_in(manifest_path: Path):
+    session = json.loads(manifest_path.read_text(encoding="utf-8"))["checker_session"]
+    return session.get("derogation_grounds", "<absent>")
+
+
+def test_checker_write_manifest_keeps_derogation_grounds(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = _write_checker_manifest(
+        tmp_path, "21_provider_derogation_registration.json"
+    )
+    assert _grounds_in(manifest_path) == ["hr3_art_6_3"]
+
+
+def test_checker_write_manifest_omits_grounds_when_not_derogation(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = _write_checker_manifest(tmp_path, "06_high_risk_provider.json")
+    assert _grounds_in(manifest_path) == "<absent>"
+
+
+def test_checker_append_replaces_derogation_grounds(
+    tmp_path: Path, monkeypatch
+) -> None:
+    _isolate(tmp_path, monkeypatch)
+    manifest_path = _write_checker_manifest(
+        tmp_path, "21_provider_derogation_registration.json"
+    )
+    assert _grounds_in(manifest_path) == ["hr3_art_6_3"]
+    _append_checker_manifest(tmp_path, "17_hr6_not_high_risk.json")
+    assert _grounds_in(manifest_path) == ["hr6_accessory"]
+    _append_checker_manifest(tmp_path, "06_high_risk_provider.json")
+    assert _grounds_in(manifest_path) == "<absent>"
+
+
 def test_check_blocks_prohibited_checker_verdict(tmp_path: Path, monkeypatch) -> None:
     """A purpose the rules find harmless must not PASS a system the checker
     classified prohibited."""

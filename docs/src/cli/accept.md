@@ -31,25 +31,29 @@ statement is free text that you write.
 | `--repo-root` | `.` | Repository root. The record is written under `.opencomplai/acceptances/`. |
 | `--trap-approval` | off | Write a trap-approval record instead of a classification acceptance. Needs `--change-context`. `check` honours it, alongside a valid acceptance, for that change context only. |
 | `--change-context` | *(none)* | The change being approved. Only with `--trap-approval`. |
+| `--exemption` | off | Write an `art_6_3_exemption` record: a declaration of the Art. 6(3) grounds you relied on. Cannot be combined with `--trap-approval`. |
+| `--ground` | the manifest's `checker_session.derogation_grounds` | An Art. 6(3) ground, repeatable: `hr3_art_6_3`, `hr4_narrow_task`, `hr5_no_significant_risk` or `hr6_accessory`. Only with `--exemption`; exit `2` when none is given and the manifest has none. |
 | `--key` | `~/.opencomplai/signing.key` | Private signing key. `SIGNING_KEY_PRIVATE` (base64 PEM), when set, takes precedence. |
-| `--output` / `-o` | `human` | `human` or `json`. JSON prints `path`, `record_type`, `key_id` and `manifest_fingerprint`. |
+| `--output` / `-o` | `human` | `human` or `json`. JSON prints `path`, `record_type`, `key_id` and `manifest_fingerprint`, plus `grounds` for an exemption. |
 
 ## What it writes
 
 `.opencomplai/acceptances/<system_id>.classification_acceptance.json` (or
-`.trap_approval.json`). Commit it. There is one active record per system and
+`.trap_approval.json`, or `.art_6_3_exemption.json`). Commit it. There is one active record per system and
 type; running `accept` again replaces the file and git history keeps the old
 one.
 
 | Field | Meaning |
 |---|---|
 | `schema_version` | `1`. |
-| `record_type` | `classification_acceptance` or `trap_approval`. |
+| `record_type` | `classification_acceptance`, `trap_approval` or `art_6_3_exemption`. |
 | `system_id` | The manifest's `system_id`. |
 | `manifest_fingerprint` | Fingerprint of the manifest's watched fields (intended purpose, model architecture, high-risk presumption, training data description, operator roles, human oversight). |
 | `accepted_by`, `statement` | What you typed. |
 | `accepted_at` | UTC time of the command, `YYYY-MM-DDTHH:MM:SSZ`. |
 | `change_context` | Trap approvals only. |
+| `grounds` | Exemptions only: the Art. 6(3) ground ids you declared, in a fixed order. |
+| `needs_legal_review` | Exemptions only: always `true`, inside the signed bytes. |
 | `public_key`, `key_id` | The signer's public key and its `sha256:` id. |
 | `signature` | Ed25519 signature over every other field, under its own signing domain. |
 
@@ -67,6 +71,9 @@ still fails.
 
 Editing a watched manifest field (for example the intended purpose) makes the
 record `stale`; run `accept` again after reviewing the change.
+
+An exemption record is declared by a person. It is not a legal finding that
+the exemption applies, and `check` does not read it yet.
 
 ## Who signed it
 

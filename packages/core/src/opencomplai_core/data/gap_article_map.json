@@ -128,14 +128,15 @@
   },
   "Art. 49": {
     "sources": [
+      { "kind": "record", "ref": "art_6_3_exemption_record", "when_obligation_any": ["provider_art_6_4_registration"] },
       { "kind": "artifact", "ref": "eu_database_registration_evidence" }
     ],
-    "applies_when_any": ["provider_high_risk", "deployer_high_risk"],
+    "applies_when_any": ["provider_high_risk", "deployer_high_risk", "provider_art_6_4_registration"],
     "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
     "source": "Regulation (EU) 2024/1689 Art. 49",
     "confidence": "low",
     "needs_founder_review": true,
-    "note": "Evidence probe: eu_database_registration_evidence (file-name convention); Partial at most, never Met. Applicability comes from a recorded checker session (applies_when_any), not from this row."
+    "note": "Evidence probe: eu_database_registration_evidence (file-name convention); Partial at most, never Met. Applicability comes from a recorded checker session (applies_when_any), not from this row. For a provider whose checker session relies on the Art. 6(3) derogation, the row also reads the provider's signed art_6_3_exemption record (a declaration of the grounds relied on, not an assessment that the exemption is valid); a valid record never lifts the row to Met."
   },
   "Art. 50": {
     "sources": [

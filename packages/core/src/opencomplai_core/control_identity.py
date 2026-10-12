@@ -9,7 +9,10 @@ Two pure functions, no I/O:
   watched subset of `SystemManifest` fields; when the fingerprint changes
   between runs, the manifest's compliance-relevant shape changed and the
   affected controls should be pushed back to PENDING_REVIEW / re-queued via
-  `ReviewReason.MANIFEST_CHANGE`.
+  `ReviewReason.MANIFEST_CHANGE`. The Art. 6(3) `derogation_grounds` kept on the
+  manifest's checker session are hashed in too when non-empty, so changing a
+  ground makes a signed exemption record stale (and, because acceptance records
+  share this fingerprint, a classification acceptance of such a manifest too).
 """
 
 from __future__ import annotations
@@ -96,5 +99,15 @@ def fingerprint_manifest(manifest: SystemManifest | dict[str, Any]) -> str:
         and values[field] is not None
         and not (field in _SKIP_WHEN_EMPTY and not values[field])
     }
+    # Not a watched field: the grounds live on the checker session. Bound only
+    # when present, so a manifest without grounds keeps its old fingerprint.
+    session = values.get("checker_session")
+    grounds = (
+        session.get("derogation_grounds")
+        if isinstance(session, dict)
+        else getattr(session, "derogation_grounds", None)
+    )
+    if grounds:
+        subset["derogation_grounds"] = sorted(grounds)
     canonical = json.dumps(subset, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

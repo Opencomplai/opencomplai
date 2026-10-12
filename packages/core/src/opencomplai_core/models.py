@@ -202,6 +202,24 @@ class ImportedFieldEvidence(BaseModel):
     imported_on: _NonEmptyStr = Field(..., description="ISO 8601 date")
 
 
+class ImportedPackEvidence(BaseModel):
+    """A provider's deployer pack the deployer received and checked.
+
+    Provenance only: nothing in `check` or `gaps` reads it.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    source: Literal["deployer_pack"]
+    status: Literal["imported_pack"]
+    source_file: _NonEmptyStr = Field(..., description="Basename only, never a path")
+    pack_sha256: Annotated[str, Field(pattern=r"^[0-9a-f]{64}$")]
+    provider_system_id: _NonEmptyStr
+    verification: Literal["verified", "unsigned"]
+    signer_key_id: Annotated[str, Field(pattern=r"^[0-9a-f]{16}$")] | None = None
+    imported_on: _NonEmptyStr = Field(..., description="ISO 8601 date")
+
+
 class FrameworkInputs(BaseModel):
     """Per-framework compliance declarations carried in the manifest.
 
@@ -510,9 +528,14 @@ class SystemManifest(BaseModel):
         None,
         description="How to collect, store and interpret the logs (Art. 13(3)(f)); omitted when unset.",
     )
-    imported_evidence: dict[str, ImportedFieldEvidence] = Field(
+    imported_evidence: dict[
+        str,
+        Annotated[
+            ImportedFieldEvidence | ImportedPackEvidence, Field(discriminator="status")
+        ],
+    ] = Field(
         default_factory=dict,
-        description="Manifest field -> provenance of a value imported from a model card; omitted when empty.",
+        description="Manifest field -> provenance of a value imported from a model card, or `deployer_pack:<id>` -> a received provider pack; omitted when empty.",
     )
 
     @model_serializer(mode="wrap")
@@ -524,8 +547,21 @@ class SystemManifest(BaseModel):
         return omit_by_table(self, handler(self), _MANIFEST_OMIT)
 
 
+#: Checker answer ids for the Art. 6(3)(a)-(d) exceptions, in the order the
+#: grounds are stored and signed.
+ART_6_3_GROUND_IDS = (
+    "hr3_art_6_3",
+    "hr4_narrow_task",
+    "hr5_no_significant_risk",
+    "hr6_accessory",
+)
+
 # Add a row here to omit a new optional field when it is unset.
-_CHECKER_REF_OMIT = {"obligation_ids": OMIT_EMPTY, "rationale": OMIT_EMPTY}
+_CHECKER_REF_OMIT = {
+    "obligation_ids": OMIT_EMPTY,
+    "rationale": OMIT_EMPTY,
+    "derogation_grounds": OMIT_EMPTY,
+}
 
 
 class CheckerSessionRef(BaseModel):
@@ -556,6 +592,13 @@ class CheckerSessionRef(BaseModel):
     rationale: list[str] = Field(
         default_factory=list,
         description="Why each role or obligation applies.",
+    )
+    derogation_grounds: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Art. 6(3) exception answers (hr3 to hr6) the run relied on to find an "
+            "Annex III system not high-risk; omitted when none."
+        ),
     )
 
     @model_serializer(mode="wrap")
@@ -588,6 +631,8 @@ _ARTIFACT_OMIT = {
     "manifest_sha256": OMIT_NONE,
     "timestamp": OMIT_NONE,
     "policy_bundle_version": OMIT_NONE,
+    "tree_sha256": OMIT_NONE,
+    "tree_dirty": OMIT_NONE,
     "summaries": OMIT_NONE,
 }
 
@@ -652,6 +697,21 @@ class ScanStatusArtifact(BaseModel):
     manifest_sha256: str | None = None
     timestamp: str | None = None
     policy_bundle_version: str | None = None
+    tree_sha256: str | None = Field(
+        None,
+        description=(
+            "SHA-256 digest of the content of tracked plus untracked "
+            "non-ignored files, stamped by `check` before signing; omitted "
+            "outside a git repo"
+        ),
+    )
+    tree_dirty: bool | None = Field(
+        None,
+        description=(
+            "True for any tracked modification or any untracked non-ignored "
+            "file when `check` ran; omitted outside a git repo"
+        ),
+    )
     summaries: ArtifactSummaries | None = Field(
         None, description="Closed leaf-only summaries block; omitted when None"
     )

@@ -3,14 +3,25 @@
 from __future__ import annotations
 
 import pytest
-from opencomplai_core.models import AssessmentInput, ModelMetadata, SignalCategory
+from opencomplai_core.models import (
+    AssessmentInput,
+    EvidenceItem,
+    EvidenceKind,
+    EvidenceScope,
+    ModelMetadata,
+    Reachability,
+    SignalCategory,
+)
 from opencomplai_core.rules import (
     ANNEX_III_CATEGORIES,
     UNACCEPTABLE_RISK_SIGNALS,
     AnnexIIIClassifierRule,
     match_annex_iii_categories,
 )
+from opencomplai_core.scanner.fusion import fuse_evidence
 from opencomplai_core.scanner.mapping import (
+    _AREA_TO_TAXONOMY,
+    SIGNAL_TO_TAXONOMY,
     derive_declared_categories,
     signal_category_to_taxonomy,
 )
@@ -39,11 +50,42 @@ def test_scoring_profiling_single_area_when_annex_resolved():
     assert mapped == ["essential_services"]
 
 
-def test_scoring_profiling_triple_fallback_without_area():
-    mapped = signal_category_to_taxonomy(SignalCategory.SCORING_PROFILING, "classifier")
-    assert "employment" in mapped
-    assert "essential_services" in mapped
-    assert "law_enforcement" in mapped
+def test_scoring_profiling_unresolved_maps_to_no_area():
+    assert SIGNAL_TO_TAXONOMY[SignalCategory.SCORING_PROFILING] == []
+    cat = SignalCategory.SCORING_PROFILING
+    assert signal_category_to_taxonomy(cat) == []
+    assert signal_category_to_taxonomy(cat, annex_iii_area=None) == []
+    assert signal_category_to_taxonomy(cat, annex_iii_area=99) == []
+    former = {"employment", "essential_services", "law_enforcement"}
+    assert not former <= set(signal_category_to_taxonomy(cat, "classifier"))
+
+
+@pytest.mark.parametrize(("area", "key"), sorted(_AREA_TO_TAXONOMY.items()))
+def test_scoring_profiling_resolved_area_maps_to_exactly_that_area(area, key):
+    mapped = signal_category_to_taxonomy(
+        SignalCategory.SCORING_PROFILING, "", annex_iii_area=area
+    )
+    assert mapped == [key]
+
+
+def test_unresolved_scoring_finding_has_empty_mapped_taxonomy():
+    item = EvidenceItem(
+        evidence_id="ev_score_1",
+        evidence_kind=EvidenceKind.CALLSITE,
+        category=SignalCategory.SCORING_PROFILING,
+        token_hash="sha256:test",
+        token_label="score",
+        locations=["src/score.py:10"],
+        scope=EvidenceScope.PROD,
+        reachability=Reachability.INTERNAL_CALLCHAIN,
+        detector_id="DET_TEST",
+        detector_version="1.0.0",
+        redaction_level="hash_only",
+        rationale_code="test",
+        confidence=0.9,
+    )
+    findings = fuse_evidence([item])
+    assert findings[0].mapped_taxonomy == []
 
 
 def test_derive_declared_categories_matches_annex_iii():
@@ -130,10 +172,7 @@ def test_match_annex_iii_categories_reports_gated_areas():
 
 def test_bare_label_tokens_do_not_add_areas():
     assert signal_category_to_taxonomy(SignalCategory.AI_SDK, "credit") == []
-    assert signal_category_to_taxonomy(
-        SignalCategory.SCORING_PROFILING, "classifier"
-    ) == [
-        "employment",
-        "essential_services",
-        "law_enforcement",
-    ]
+    assert (
+        signal_category_to_taxonomy(SignalCategory.SCORING_PROFILING, "classifier")
+        == []
+    )

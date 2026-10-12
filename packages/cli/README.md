@@ -43,11 +43,12 @@ meta-package instead.
 | `opencomplai accept` | Write a signed, committable record accepting a system's high-risk classification |
 | `opencomplai verify-output` | Verify an AI output claim against ground-truth sources |
 | `opencomplai verify` | Verify a signed artifact (`--kind` artifact, dossier or agent-attestation; `--expect KEY=VALUE` adds offline checks) |
+| `opencomplai export` | Write one neutral evidence package (JSON, or a flat CSV with `--format csv`) from a `compliance-artifact.json`, with the signed artifact embedded unchanged |
 | `opencomplai version` | Show the installed Opencomplai version |
 | `opencomplai info` | Show full package metadata (`pip show`-style, across the whole suite) |
 
 Also available as command groups (`opencomplai <group> --help` for their own subcommands):
-`docs` (Annex IV dossier generation), `instructions` (Art. 13 instructions-for-use), `deployer-pack` (seal instructions-for-use into a hash-named, offline-verifiable pack), `risk` (risk classification), `sync` (metadata sync),
+`docs` (Annex IV dossier generation), `instructions` (Art. 13 instructions-for-use), `deployer-pack` (seal instructions-for-use into a hash-named, offline-verifiable pack; `deployer-pack import` records a provider's pack as upstream evidence), `risk` (risk classification), `sync` (metadata sync),
 `keys` (signing-key rotation), `ai` (optional AI-intent plugin configuration), `controls`
 (control-register status), `fria` (fundamental rights impact assessment), `qms` (Art. 17 quality-management-system documents), `dashboard` (Premium Dashboard connection management),
 `incident` (incident records and deadline clocks),

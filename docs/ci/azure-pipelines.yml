@@ -32,7 +32,7 @@ steps:
     inputs:
       versionSpec: "3.11"
 
-  - script: pip install --quiet "opencomplai==0.9.2"
+  - script: pip install --quiet "opencomplai==0.10.0"
     displayName: Install OpenComplAI CLI
 
   - script: |

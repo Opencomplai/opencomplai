@@ -36,7 +36,7 @@ after editing either data file.
 |---|---|
 | Art. 12 | `artifact:event_log_evidence`, `manifest:record_keeping_declaration`, `manifest:agent_declarations` |
 | Art. 13 | `artifact:deployer_instructions`, `manifest:instructions_for_use_fields` |
-| Art. 49 | `artifact:eu_database_registration_evidence` |
+| Art. 49 | `record:art_6_3_exemption_record`, `artifact:eu_database_registration_evidence` |
 | Art. 50 | `obligation:transparency`, `artifact:transparency_notice_evidence` |
 
 ## Diversity, Non-discrimination and Fairness

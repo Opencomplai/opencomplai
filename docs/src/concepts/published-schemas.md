@@ -18,7 +18,8 @@ rules](#pin-and-re-pin-rules)).
 |---|---|---|---|---|---|
 | `scan_status_artifact.schema.json` | `https://schemas.opencomplai.dev/scan_status_artifact/v1` | Core. Generated from the `ScanStatusArtifact` model by `scripts/generate_artifact_schemas.py`. | `opencomplai check` | Anyone validating `compliance-artifact.json` | Published, v1. |
 | `gap_report.schema.json` | `https://schemas.opencomplai.dev/gap_report/v1` | Core. Generated from the `GapReport` model by the same script. | `opencomplai gaps --output json`, `check --with-gaps` | `opencomplai diff`, report tooling | Published, v1. |
-| `annex_iv_dossier.schema.json` | none yet | Core. Generated from the `AnnexIVDossier` model by `scripts/generate_dossier_schema.py`. | `opencomplai docs generate` | Auditors and CI that validate a dossier | Published, no `$id`. A drift test keeps it in step with the model. |
+| `annex_iv_dossier.schema.json` | `https://schemas.opencomplai.dev/annex_iv_dossier/v1` | Core. Generated from the `AnnexIVDossier` model through the same builder by `scripts/generate_dossier_schema.py`. | `opencomplai docs generate` | Auditors and CI that validate a dossier | Published, v1. A drift test keeps it in step with the model. |
+| `evidence_package.schema.json` | `https://schemas.opencomplai.dev/evidence_package/v1` | Core. Generated from the `EvidencePackage` model by `scripts/generate_artifact_schemas.py`. | `opencomplai export` | Governance and GRC tools that read the package | Published, v1. |
 | `deployer_pack.schema.json` | `https://schemas.opencomplai.dev/deployer_pack/v1` | Core. Generated from the `DeployerPack` model. | `opencomplai deployer-pack build` | `opencomplai verify --kind deployer-pack` | Published, v1. |
 | `agent_attestation_v1.schema.json` | none; the document fixes `schema_version` to `agent_attestation/v1` | Core. Mirrors the signed attestation record. | `opencomplai agents attest` | `opencomplai verify --kind agent-attestation` | Published, versioned by its file name and `schema_version`. |
 | `first_scan_status.schema.json` | `https://schemas.opencomplai.dev/first_scan_status/v1` | Dashboard, vendored. Source: the PRD's section on the status artifact. | `opencomplai push` (maps a scan artifact onto it) | Dashboard ingest, `POST /v1/ingest/scan-status` | Published, v1. The effective allowlist of what the dashboard may store. |
@@ -47,8 +48,7 @@ file name without `.schema.json` and `<major>` is a single integer. The artifact
 `schema_version` string that matches the major (`1`); it lives in the schema document, not on the model, so
 it never changes signed bytes. The host is an identifier, not a promise that the URL resolves.
 
-A schema without an `$id` (the dossier, the attestation) is identified by its file name until one is added.
-Adding an `$id` to the dossier schema must not reuse the dashboard's `first_scan_status` name.
+A schema without an `$id` (the attestation) is identified by its file name.
 
 ### Pin and re-pin rules
 

@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
+from opencomplai_core.compliance_checker.engine import (
+    _answer_bool,
+    _relies_on_art_6_3_derogation,
+)
 from opencomplai_core.compliance_checker.models import ComplianceCheckerResult
+from opencomplai_core.models import ART_6_3_GROUND_IDS
 
 #: Every tier label ``bridge_to_manifest_fields`` can return as
 #: ``checker_verdict``. Also lets ``check`` recognise a 0.7.0 manifest whose
@@ -48,3 +53,13 @@ def bridge_to_manifest_fields(result: ComplianceCheckerResult) -> dict[str, obje
         "checker_verdict": verdict,
         "high_risk_presumption": result.is_high_risk,
     }
+
+
+def derogation_grounds(result: ComplianceCheckerResult) -> list[str]:
+    """Art. 6(3) exception answers (hr3 to hr6) a not-high-risk Annex III run relied on.
+
+    Empty unless the run actually concluded not-high-risk through the derogation.
+    """
+    if result.is_high_risk or not _relies_on_art_6_3_derogation(result.answers):
+        return []
+    return [g for g in ART_6_3_GROUND_IDS if _answer_bool(result.answers, g)]

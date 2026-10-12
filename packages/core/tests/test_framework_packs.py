@@ -40,7 +40,7 @@ FIXTURE_PACK = FrameworkPack(
 
 ALL_PACKS = [*FRAMEWORKS.values(), FIXTURE_PACK]
 
-EU_ONLY_KINDS = {"rule", "obligation", "manifest"}
+EU_ONLY_KINDS = {"rule", "obligation", "manifest", "record"}
 NATIVE_KINDS = {"artifact", "attestation", "scan", "evaluator"}
 
 
@@ -51,6 +51,7 @@ def _known_refs() -> dict[str, set[str]]:
         "evaluator": {e.evaluator_id for e in EVALUATOR_REGISTRY},
         "rule": {r.rule_id for r in RULE_REGISTRY},
         "obligation": set(load_obligations()),
+        "record": {"art_6_3_exemption_record"},
         "manifest": set(STUB_SOURCE_REFS["manifest"])
         | MANIFEST_SOURCE_REFS
         | {AGENT_SOURCE_REF},

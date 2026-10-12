@@ -97,6 +97,7 @@ class _FakeVault:
                 }
             return {"found": True, **cached}
         if path == "/v1/hitl/overrides" and method == "POST":
+            created = body["idempotency_key"] not in self.accepted_overrides
             self.accepted_overrides.setdefault(
                 body["idempotency_key"],
                 {
@@ -104,7 +105,10 @@ class _FakeVault:
                     "response_json": body["response_json"],
                 },
             )
-            return {"idempotency_key": body["idempotency_key"]}
+            return {"idempotency_key": body["idempotency_key"], "created": created}
+        if path.startswith("/v1/hitl/overrides/") and method == "DELETE":
+            idem_key = path.rsplit("/", 1)[-1]
+            return {"released": self.accepted_overrides.pop(idem_key, None) is not None}
         if path.startswith("/v1/evals/cache/") and method == "GET":
             run_id = path.rsplit("/", 1)[-1]
             cached = self.completed_evals.get(run_id)

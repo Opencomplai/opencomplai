@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING, Any
 from opencomplai_core.agent_sources import AGENT_SOURCE_REF, agent_gap_status
 from opencomplai_core.compliance_checker.catalog import load_obligations
 from opencomplai_core.evaluators.seed_corpus import SEED_EVAL_SET_ID
+from opencomplai_core.exemption_gap import exemption_record_status
 from opencomplai_core.gap_probes import STUB_SOURCE_REFS, artifact_gap_status
 from opencomplai_core.manifest_sources import manifest_gap_status
 from opencomplai_core.models import (
@@ -335,6 +336,7 @@ def build_gap_report(
     or with none recorded, the output is unchanged. A source with
     `when_obligation_any` is skipped unless the session recorded one of those
     obligation ids (GPAI documentation probes), so sessionless output is unchanged.
+    A `record` source reads the signed Art. 6(3) exemption record under `repo_root`.
     `today` (default: the current UTC date) is the date agent mandate expiry is
     compared with.
     """
@@ -371,6 +373,8 @@ def build_gap_report(
                 candidate = _evaluator_status(ref, eval_report)
             elif kind == "artifact":
                 candidate = artifact_gap_status(ref, repo_root)
+            elif kind == "record" and manifest is not None and repo_root is not None:
+                candidate = exemption_record_status(manifest, repo_root)
             elif kind == "attestation":
                 candidate = _attestation_status(ref, attestations or {})
             elif (

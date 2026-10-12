@@ -7,7 +7,7 @@ two that are easy to confuse with each other.
 
 All evaluators below are **local, deterministic, and airgap-safe** — none of them call
 a network or an external model. For the separate, explicitly opt-in *live model*
-evaluation path, see [Multi-provider eval](../cli/eval.md#multi-provider-eval---provider).
+evaluation path, see [Multi-provider eval](../cli/eval.md#multi-provider-eval-provider).
 
 ## Registered evaluators
 
@@ -156,6 +156,6 @@ it never triggers implicitly, and supplying your own `predictions`/`labels`/
 All evaluators above run against data you already have (`prompts`/`outputs`/
 `predictions`/`labels` in an `EvalSampleSet`) — none of them call a model. For an
 optional path that calls a live model provider to *generate* outputs before scoring
-them, see [`opencomplai eval --provider`](../cli/eval.md#multi-provider-eval---provider).
+them, see [`opencomplai eval --provider`](../cli/eval.md#multi-provider-eval-provider).
 That path is explicitly non-deterministic and never runs as part of `opencomplai
 check`'s default (air-gapped) path.

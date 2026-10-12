@@ -1,5 +1,6 @@
 """
-Committed, signed acceptance records (classification acceptance, trap approval).
+Committed, signed acceptance records (classification acceptance, trap approval,
+Art. 6(3) exemption declaration).
 
 A person who accepts a high-risk (Art. 6) classification, or approves a flagged
 change, writes one signed JSON record into the repository
@@ -16,6 +17,13 @@ Pure module: no clock, no network, no CLI. The caller supplies ``accepted_at``.
 The statement is free text typed by the person; nothing here asserts legal
 effect. source: product design, no external citation; confidence: medium;
 needs_founder_review: true.
+
+The ``art_6_3_exemption`` record is a declaration of the Art. 6(3) grounds a
+person relied on, never a finding that the exemption is valid; it always carries
+``needs_legal_review: true`` inside the signed bytes. It shares the acceptance
+signing domain, and ``apply_acceptance`` and ``check`` ignore it. source:
+Regulation (EU) 2024/1689 Art. 6(3) as encoded in the checker questions
+(unverified beyond the repo text); confidence: medium; needs_founder_review: true.
 """
 
 from __future__ import annotations
@@ -24,13 +32,18 @@ import hashlib
 import json
 import re
 import tempfile
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from opencomplai_core.control_identity import fingerprint_manifest
-from opencomplai_core.models import ScanResult, ScanStatusArtifact, SystemManifest
+from opencomplai_core.models import (
+    ART_6_3_GROUND_IDS,
+    ScanResult,
+    ScanStatusArtifact,
+    SystemManifest,
+)
 from opencomplai_core.signing import (
     SigningDomain,
     sign_bundle_bytes,
@@ -39,7 +52,8 @@ from opencomplai_core.signing import (
 
 CLASSIFICATION_ACCEPTANCE = "classification_acceptance"
 TRAP_APPROVAL = "trap_approval"
-RECORD_TYPES = (CLASSIFICATION_ACCEPTANCE, TRAP_APPROVAL)
+ART_6_3_EXEMPTION = "art_6_3_exemption"
+RECORD_TYPES = (CLASSIFICATION_ACCEPTANCE, TRAP_APPROVAL, ART_6_3_EXEMPTION)
 RECORD_DIR = ".opencomplai/acceptances"
 ART6_CONTROL = "EU_AIA_ART6_HIGH_RISK"
 SCHEMA_VERSION = 1
@@ -101,12 +115,24 @@ def build_record(
     accepted_at: str,
     public_key_pem: str,
     change_context: str | None = None,
+    grounds: Sequence[str] | None = None,
 ) -> dict[str, Any]:
     """Unsigned record. ``accepted_at`` is a caller-supplied ISO 8601 UTC string."""
     if record_type not in RECORD_TYPES:
         raise ValueError(f"unknown record_type: {record_type}")
     if record_type == TRAP_APPROVAL and not change_context:
         raise ValueError("a trap approval requires change_context")
+    if record_type == ART_6_3_EXEMPTION:
+        if (
+            isinstance(grounds, str)
+            or not grounds
+            or any(g not in ART_6_3_GROUND_IDS for g in grounds)
+        ):
+            raise ValueError(
+                "an exemption requires grounds from: " + ", ".join(ART_6_3_GROUND_IDS)
+            )
+    elif grounds is not None:
+        raise ValueError("grounds only apply to an art_6_3_exemption record")
     record: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "record_type": record_type,
@@ -120,6 +146,9 @@ def build_record(
     }
     if change_context is not None:
         record["change_context"] = change_context
+    if record_type == ART_6_3_EXEMPTION:
+        record["grounds"] = [g for g in ART_6_3_GROUND_IDS if g in (grounds or ())]
+        record["needs_legal_review"] = True
     return record
 
 
@@ -215,6 +244,15 @@ def _evaluate(
         or (record_type == TRAP_APPROVAL and not record.get("change_context"))
     ):
         return AcceptanceStatus("malformed", "required fields are empty")
+    if record_type == ART_6_3_EXEMPTION:
+        grounds = record.get("grounds")
+        if (
+            not isinstance(grounds, list)
+            or not grounds
+            or any(g not in ART_6_3_GROUND_IDS for g in grounds)
+            or record.get("needs_legal_review") is not True
+        ):
+            return AcceptanceStatus("malformed", "required fields are empty")
     return AcceptanceStatus("valid", "record is valid", record)
 
 

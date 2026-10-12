@@ -1,9 +1,10 @@
-"""`opencomplai deployer-pack build` and the `deployer-pack` verify kind.
+"""`opencomplai deployer-pack build` / `import` and the `deployer-pack` verify kind.
 
 Seals the Art. 13(3) instructions-for-use JSON (written by `opencomplai
 instructions generate`) into one portable pack named after its own SHA-256. The
 pack is generated offline and never uploaded; only its hash and counts reach the
-artifact `summaries.packs` (see `opencomplai_core.deployer_pack`).
+artifact `summaries.packs` (see `opencomplai_core.deployer_pack`). `import`
+records a provider's received pack in the manifest `imported_evidence`.
 
 `console`/`err_console` and the key paths are obtained lazily from
 `opencomplai_cli.main` (it imports this module to register the sub-typer, so a
@@ -23,7 +24,10 @@ from pathlib import Path
 import typer
 from opencomplai_core import deployer_pack as core
 from opencomplai_core.instructions_for_use import IFUDocument
+from opencomplai_core.models import SystemManifest
 from opencomplai_core.signing import SigningKeyError
+from pydantic import ValidationError
+from rich.markup import escape
 
 from opencomplai_cli.commands.verify import (
     VerifyInputError,
@@ -138,6 +142,100 @@ def build_cmd(
         f"{c.items_provided} of {c.items_total} items provided",
         soft_wrap=True,
     )
+
+
+@app.command("import")
+def import_cmd(
+    pack: Path = typer.Argument(..., help="A provider's deployer_pack_<id>.json"),
+    manifest: Path = typer.Option(
+        Path("system-manifest.json"), "--manifest", "-m", help="Your system manifest"
+    ),
+    pub_key: Path | None = typer.Option(
+        None, "--pub-key", help="Provider's public key; same meaning as `verify`"
+    ),
+    output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
+) -> None:
+    """Record a provider's deployer pack in the manifest as upstream evidence.
+
+    Verifies the pack first and refuses an invalid one. The record is provenance
+    only: `check` and `gaps` do not read it, so verdicts do not change.
+    """
+    from opencomplai_cli import main as _main
+
+    try:
+        result = verify_deployer_pack(pack, pub_key)
+    except VerifyInputError as exc:
+        _fail(str(exc))
+    if result.status == "invalid":
+        _fail(
+            f"{pack} is not a valid deployer pack: {result.detail}; "
+            "nothing was imported"
+        )
+    parsed = core.DeployerPack.model_validate(json.loads(pack.read_bytes()))
+
+    try:
+        payload = json.loads(manifest.read_text(encoding="utf-8-sig"))
+        if not isinstance(payload, dict):
+            raise ValueError("not a JSON object")
+        SystemManifest.model_validate(payload)
+    except (OSError, ValueError) as exc:  # ValidationError is a ValueError
+        _fail(f"cannot use manifest {manifest}: {exc}")
+
+    key, entry = core.upstream_evidence(
+        parsed, result.status, source_file=pack.name, imported_on=_today()
+    )
+    stored = payload.get("imported_evidence")
+    stored = stored.get(key) if isinstance(stored, dict) else None
+    recorded = True
+    if isinstance(stored, dict):
+        if stored.get("pack_sha256") != entry.pack_sha256:
+            _fail(
+                f"{manifest} already holds a different pack under {key}; "
+                "nothing was imported"
+            )
+        if (stored.get("verification"), stored.get("signer_key_id")) == (
+            entry.verification,
+            entry.signer_key_id,
+        ):
+            recorded = False  # keep the first import date, write nothing
+    if recorded:
+        payload.setdefault("imported_evidence", {})[key] = entry.model_dump(mode="json")
+        try:
+            SystemManifest.model_validate(payload)
+        except ValidationError as exc:
+            _fail(f"{manifest} would be invalid, nothing was imported: {exc}")
+        manifest.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+
+    pack_id = key.split(":", 1)[1]
+    if output == OutputFormat.json:
+        print(
+            json.dumps(
+                {
+                    "pack_id": pack_id,
+                    "pack_sha256": entry.pack_sha256,
+                    "provider_system_id": entry.provider_system_id,
+                    "verification": entry.verification,
+                    "signer_key_id": entry.signer_key_id,
+                    "manifest": str(manifest),
+                    "recorded": recorded,
+                }
+            )
+        )
+        return
+    verb = "Recorded" if recorded else "Already imported"
+    _main.console.print(
+        f"[bold]{verb}[/bold] deployer pack {pack_id} from provider system "
+        f"{escape(entry.provider_system_id)} ({entry.verification}) in "
+        f"{escape(str(manifest))}",
+        soft_wrap=True,
+    )
+    if entry.verification == "unsigned":
+        _main.console.print(
+            "  unsigned: only the hash was checked, no signature was checked",
+            soft_wrap=True,
+        )
 
 
 def verify_deployer_pack(path: Path, pub_key: Path | None) -> VerifyResult:

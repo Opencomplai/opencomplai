@@ -49,6 +49,7 @@ These are files you hand over; nothing is sent to a platform by this tool, no co
 | SARIF 2.1.0 | `--sarif-output` | `opencomplai check --sarif-output check.sarif` (verdict); `opencomplai scan --sarif-output` (scan evidence) | Reading the verdict or the scan evidence as SARIF |
 | JUnit XML | `--report-junit` | `opencomplai check --report-junit report.xml` | A CI test report; a failure for `control_fail`, `trap_detected`, `policy_block` or `validation_fail` |
 | Annex IV dossier | `dossier_<id>.json` | `opencomplai docs generate`, then `opencomplai verify dossier_<id>.json --kind dossier` | The technical documentation draft, with honest placeholders |
+| Neutral evidence package | `evidence-package.json` | `opencomplai export <artifact> --out evidence-package.json`; add `--format csv` for a flat CSV; `--artifact-out` writes the embedded artifact for `opencomplai verify` | One versioned file a tool can read without knowing our model |
 
 ### Verify the signature offline
 
@@ -95,7 +96,7 @@ Gap row fields (one row per article in `articles[]`):
 
 The gap report envelope printed by `opencomplai gaps --output json` is not signed. A `met` or `partial` row is an automated heuristic, not a legal finding. See [published schemas](../concepts/published-schemas.md) and [gaps](../cli/gaps.md).
 
-A flat system-by-article CSV is not produced by the CLI in this release.
+`opencomplai export --format csv` writes a flat system-by-article CSV; see [export](../cli/export.md).
 
 ## When an accepted high-risk system exits 0
 

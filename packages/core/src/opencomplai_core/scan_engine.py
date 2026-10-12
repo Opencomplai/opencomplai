@@ -33,13 +33,16 @@ from opencomplai_core.scanner.inventory import build_repo_inventory
 from opencomplai_core.scanner.mapping import derive_declared_categories
 from opencomplai_core.scanner.ocignore import config_dict_for_hash, load_ocignore
 from opencomplai_core.scanner.registry import DETECTOR_REGISTRY
+from opencomplai_core.tree_digest import tree_digest
 
 if TYPE_CHECKING:
     from opencomplai_core.models import EuAiScanSummary
+    from opencomplai_core.scanner.inventory import RepoInventory
 
 
-def input_digest(repo_root: Path, commit_ref: str, config_hash: str) -> str:
-    raw = f"{repo_root.resolve()}|{commit_ref}|{config_hash}|{SCANNER_VERSION}"
+def input_digest(inventory: RepoInventory, commit_ref: str, config_hash: str) -> str:
+    tree = tree_digest((e.rel_path, Path(e.path)) for e in inventory.entries)
+    raw = f"{tree}|{commit_ref}|{config_hash}|{SCANNER_VERSION}"
     return f"sha256:{hashlib.sha256(raw.encode()).hexdigest()}"
 
 
@@ -605,7 +608,7 @@ def run_scan(
     scores = score_findings(findings)
     severity = classify_severity(discrepancies, findings, scores)
 
-    digest = input_digest(repo_root, commit_ref, cfg_hash)
+    digest = input_digest(inventory, commit_ref, cfg_hash)
     scan_id = (
         f"scan_{hashlib.sha256(f'{digest}|{system_id}'.encode()).hexdigest()[:16]}"
     )

@@ -10,6 +10,7 @@ import pytest
 from opencomplai_cli import main
 from opencomplai_cli.main import app
 from opencomplai_core.acceptance import (
+    ART_6_3_EXEMPTION,
     CLASSIFICATION_ACCEPTANCE,
     TRAP_APPROVAL,
     evaluate_record,
@@ -43,7 +44,10 @@ def env(tmp_path: Path, monkeypatch) -> Path:
 
 
 def _manifest(
-    tmp_path: Path, purpose: str = HIGH_RISK, verdict: str | None = None
+    tmp_path: Path,
+    purpose: str = HIGH_RISK,
+    verdict: str | None = None,
+    grounds: list[str] | None = None,
 ) -> Path:
     session = (
         CheckerSessionRef(
@@ -51,8 +55,9 @@ def _manifest(
             session_id="s",
             completed_at="2026-01-01T00:00:00Z",
             verdict=verdict,
+            derogation_grounds=grounds or [],
         )
-        if verdict
+        if verdict or grounds
         else None
     )
     path = tmp_path / "system-manifest.json"
@@ -216,3 +221,86 @@ def test_accept_overwrites_same_type_record(tmp_path: Path, env: Path) -> None:
     _, path, status = _status(tmp_path, env)
     assert status.record["accepted_by"] == "cto@example.test"
     assert len(list(path.parent.glob("*.json"))) == 1
+
+
+def test_accept_exemption_writes_record(tmp_path: Path, env: Path) -> None:
+    key = str(_key(tmp_path))
+    result = _accept(
+        "--exemption",
+        "--ground",
+        "hr6_accessory",
+        "--ground",
+        "hr3_art_6_3",
+        "--key",
+        key,
+        "-o",
+        "json",
+    )
+    assert result.exit_code == 0, result.output
+    manifest, path, status = _status(tmp_path, env, ART_6_3_EXEMPTION)
+    assert path.name.endswith(".art_6_3_exemption.json")
+    assert status.state == "valid"
+    assert status.record["grounds"] == ["hr3_art_6_3", "hr6_accessory"]
+    assert status.record["needs_legal_review"] is True
+    assert status.record["manifest_fingerprint"] == fingerprint_manifest(manifest)
+    out = json.loads(result.stdout)
+    assert out["record_type"] == ART_6_3_EXEMPTION
+    assert out["grounds"] == ["hr3_art_6_3", "hr6_accessory"]
+    assert _status(tmp_path, env)[2].state == "absent"
+
+    human = _accept("--exemption", "--ground", "hr4_narrow_task", "--key", key)
+    assert human.exit_code == 0, human.output
+    assert "legal review" in human.stdout
+
+
+def test_accept_exemption_defaults_grounds_from_checker_session(
+    tmp_path: Path, env: Path
+) -> None:
+    manifest = _manifest(
+        tmp_path, HIGH_RISK, "in_scope_ai_system", ["hr5_no_significant_risk"]
+    )
+    result = _accept("-m", str(manifest), "--exemption", "--key", str(_key(tmp_path)))
+    assert result.exit_code == 0, result.output
+    status = _status(tmp_path, manifest, ART_6_3_EXEMPTION)[2]
+    assert status.state == "valid"
+    assert status.record["grounds"] == ["hr5_no_significant_risk"]
+
+
+@pytest.mark.parametrize(
+    "extra",
+    [
+        [
+            "--exemption",
+            "--trap-approval",
+            "--change-context",
+            "c",
+            "--ground",
+            "hr3_art_6_3",
+        ],
+        ["--ground", "hr3_art_6_3"],
+        ["--exemption", "--ground", "hr9_made_up"],
+        ["--exemption"],
+    ],
+    ids=["both-flags", "ground-without-exemption", "unknown-ground", "no-grounds"],
+)
+def test_accept_exemption_input_errors_exit_2(
+    tmp_path: Path, env: Path, extra: list[str]
+) -> None:
+    result = _accept(*extra, "--key", str(_key(tmp_path)))
+    assert result.exit_code == 2, result.output
+    assert not (tmp_path / ".opencomplai").exists()
+
+
+def test_accept_exemption_refuses_prohibited_practice(
+    tmp_path: Path, env: Path
+) -> None:
+    manifest = _manifest(
+        tmp_path, "Summarises internal documents", "prohibited_practice"
+    )
+    result = _accept(
+        "-m", str(manifest), "--exemption", "--ground", "hr3_art_6_3",
+        "--key", str(_key(tmp_path)),
+    )  # fmt: skip
+    assert result.exit_code == 2, result.output
+    assert "Art. 5" in result.stderr
+    assert not (tmp_path / ".opencomplai").exists()

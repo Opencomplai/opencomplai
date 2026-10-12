@@ -9,6 +9,7 @@ import pytest
 from opencomplai_core import acceptance as acc
 from opencomplai_core.acceptance import (
     ART6_CONTROL,
+    ART_6_3_EXEMPTION,
     CLASSIFICATION_ACCEPTANCE,
     TRAP_APPROVAL,
     AcceptanceStatus,
@@ -272,3 +273,77 @@ def test_acceptance_module_never_reads_the_clock() -> None:
     source = Path(acc.__file__).read_text(encoding="utf-8")
     assert "datetime.now" not in source
     assert "time.time" not in source
+
+
+def _exemption(key: Path, grounds=("hr3_art_6_3",), **over) -> dict:
+    return _record(key, record_type=ART_6_3_EXEMPTION, grounds=grounds, **over)
+
+
+def test_exemption_record_round_trip(tmp_path: Path) -> None:
+    rec = _exemption(_key(tmp_path), grounds=["hr6_accessory", "hr3_art_6_3"])
+    assert record_path(tmp_path, "sys-1", ART_6_3_EXEMPTION).name.endswith(
+        ".art_6_3_exemption.json"
+    )
+    status = evaluate_record(_write(tmp_path, rec), _manifest(), ART_6_3_EXEMPTION)
+    assert status.state == "valid"
+    assert status.record["grounds"] == ["hr3_art_6_3", "hr6_accessory"]
+    assert status.record["needs_legal_review"] is True
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("grounds", ["hr4_narrow_task"]),
+        ("statement", "Edited after signing."),
+        ("needs_legal_review", False),
+    ],
+)
+def test_exemption_tampered_field_rejected(tmp_path: Path, field, value) -> None:
+    rec = _exemption(_key(tmp_path))
+    rec[field] = value
+    status = evaluate_record(_write(tmp_path, rec), _manifest(), ART_6_3_EXEMPTION)
+    assert status.state == "tampered"
+
+
+def test_exemption_requires_known_nonempty_grounds(tmp_path: Path) -> None:
+    pem = public_key_pem_from_private(_key(tmp_path).read_bytes())
+    base = {
+        "system_id": "sys-1",
+        "manifest_fingerprint": "f",
+        "accepted_by": "dpo@example.test",
+        "statement": "s",
+        "accepted_at": AT,
+        "public_key_pem": pem,
+    }
+    for bad in (
+        None,
+        [],
+        ["hr9_made_up"],
+        ["hr3_art_6_3", "hr9_made_up"],
+        "hr3_art_6_3",
+    ):
+        with pytest.raises(ValueError, match="requires grounds"):
+            build_record(record_type=ART_6_3_EXEMPTION, grounds=bad, **base)
+    with pytest.raises(ValueError, match="only apply"):
+        build_record(
+            record_type=CLASSIFICATION_ACCEPTANCE, grounds=["hr3_art_6_3"], **base
+        )
+
+
+def test_exemption_resigned_with_empty_grounds_is_malformed(tmp_path: Path) -> None:
+    key = _key(tmp_path)
+    rec = {k: v for k, v in _exemption(key).items() if k != "signature"}
+    rec["grounds"] = []
+    path = _write(tmp_path, sign_record(rec, key))
+    status = evaluate_record(path, _manifest(), ART_6_3_EXEMPTION)
+    assert status.state == "malformed"
+
+
+def test_exemption_is_not_an_acceptance(tmp_path: Path) -> None:
+    path = _write(tmp_path, _exemption(_key(tmp_path)))
+    as_acceptance = evaluate_record(path, _manifest(), CLASSIFICATION_ACCEPTANCE)
+    assert as_acceptance.state == "mismatch"
+    valid = evaluate_record(path, _manifest(), ART_6_3_EXEMPTION)
+    assert valid.state == "valid"
+    art = _artifact(ScanResult.CONTROL_FAIL, [ART6_CONTROL])
+    assert apply_acceptance(art, valid) is art

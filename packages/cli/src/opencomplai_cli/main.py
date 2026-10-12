@@ -50,6 +50,7 @@ from opencomplai_core.deployer_pack import with_pack_summary
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
 from opencomplai_core.evaluators.seed_corpus import seed_sample_set
+from opencomplai_core.exemption_gap import apply_exemption_gate
 from opencomplai_core.frameworks import (
     EU_AI_ACT,
     evaluate_targets,
@@ -184,6 +185,7 @@ from opencomplai_cli.commands.deployer_pack import (  # noqa: E402
     app as deployer_pack_app,
 )
 from opencomplai_cli.commands.diff import diff_cmd  # noqa: E402
+from opencomplai_cli.commands.export import export_cmd  # noqa: E402
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
 from opencomplai_cli.commands.incident import app as incident_app  # noqa: E402
 from opencomplai_cli.commands.instructions import app as instructions_app  # noqa: E402
@@ -231,6 +233,7 @@ app.command("resume")(resume_cmd)
 app.command("accept")(accept_cmd)
 app.command("diff")(diff_cmd)
 app.command("verify")(verify_cmd)
+app.command("export")(export_cmd)
 
 console = Console()
 err_console = Console(stderr=True)
@@ -3259,6 +3262,14 @@ def check_cmd(
             "Replaces opencomplai.yaml's gate.fail_on."
         ),
     ),
+    require_exemption_record: bool = typer.Option(
+        False,
+        "--require-exemption-record",
+        help=(
+            "Opt-in: fail (exit 1) when the checker session relies on the "
+            "Art. 6(3) derogation and no valid signed exemption record exists."
+        ),
+    ),
     output_dir: Path = typer.Option(
         Path("."),
         "--output-dir",
@@ -3459,6 +3470,9 @@ def check_cmd(
         corroboration_report=scan_report,
         sample_set=sample_set,
     )
+    artifact = apply_exemption_gate(
+        artifact, manifest, repo_root=repo_root, require=require_exemption_record
+    )
 
     # HALT-WIRE / E-12(a): halt trigger — trap always halts; an unresolved
     # HIGH-risk corroboration gap (--scan --fail-on ... failed) halts too,
@@ -3562,6 +3576,7 @@ def check_cmd(
         artifact,
         now=datetime.now(UTC),
         manifest_bytes=manifest_file.read_bytes() if manifest_file.is_file() else None,
+        repo_root=repo_root,
     )
     # Before signing, so the signature covers the packs and other summaries.
     artifact = with_pack_summary(artifact, repo_root / "deployer-pack")

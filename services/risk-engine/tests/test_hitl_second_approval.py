@@ -1,5 +1,6 @@
 """Second-approval completion of dual-control overrides (REQ-HITL-001)."""
 
+import asyncio
 import os
 from unittest.mock import AsyncMock, patch
 
@@ -171,3 +172,37 @@ async def test_second_rejection_decision_sets_status_rejected(record):
         r = await c.post(_url(first), json=_body(first, decision="rejected"))
     assert r.status_code == 201
     assert r.json()["status"] == "rejected"
+
+
+@pytest.mark.asyncio
+async def test_concurrent_second_approvals_write_one_event(record):
+    async with _client() as c:
+        first = await _submit(c)
+        record.reset_mock()
+
+        async def _yielding_write(*_args, **_kwargs):
+            # Hold the ledger write open so the other handler runs its checks
+            # (threadpool dependencies need more than one loop turn).
+            await asyncio.sleep(0.2)
+            return "evt_mock_vault"
+
+        record.side_effect = _yielding_write
+        r1, r2 = await asyncio.gather(
+            c.post(_url(first), json=_body(first, actor="bob")),
+            c.post(_url(first), json=_body(first, actor="dave")),
+        )
+    assert sorted([r1.status_code, r2.status_code]) == [201, 409]
+    assert record.await_count == 1
+
+
+@pytest.mark.asyncio
+async def test_ledger_503_releases_claim_and_retry_succeeds(record, fake_vault):
+    async with _client() as c:
+        first = await _submit(c)
+        record.return_value = None
+        r = await c.post(_url(first), json=_body(first))
+        assert r.status_code == 503
+        assert f"dual-claim:{first['override_id']}" not in fake_vault.accepted_overrides
+        record.return_value = "evt_ok"
+        r = await c.post(_url(first), json=_body(first))
+    assert r.status_code == 201
