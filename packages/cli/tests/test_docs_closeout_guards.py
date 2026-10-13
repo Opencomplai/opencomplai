@@ -124,7 +124,12 @@ def test_scan_page_separates_ai_intent_model_from_propose_backend():
 def test_deployer_pack_page_states_import_reads_partial_at_most():
     page = _page("cli", "deployer-pack.md")
     assert "provider-supplied, not verified by the deployer" in page
-    assert "`data_version` of the EU AI Act framework" in page
+    assert "data_version" not in page
+    flat = " ".join(page.split())
+    assert (
+        "Because the Art. 26 row can move from Missing to Partial, a CI gate on "
+        "Missing EU rows can exit differently after an import."
+    ) in flat
 
 
 def test_scope_classifier_version_is_documented():

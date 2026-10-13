@@ -119,7 +119,8 @@ with the proposal file.
   row when the proposal names an Annex III area your declared purpose does not cover
   (see [`check`](check.md)). The confirmation is not a classification acceptance: it does
   not change the Art. 6 result that `accept` writes without `--proposal`. An edited or
-  stale proposal is ignored.
+  stale proposal is ignored. For what makes a proposal stale, see
+  [Reports for CI](check.md#reports-for-ci).
 
 ## Who signed it
 

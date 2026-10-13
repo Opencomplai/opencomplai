@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai"
-version = "0.12.0"
+version = "0.13.0"
 description = "Opencomplai Python SDK for AI compliance: the EU AI Act, and NIST AI RMF derived from the same evidence"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
@@ -18,8 +18,8 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "opencomplai-core>=0.12.0",
-    "opencomplai-cli>=0.12.0",
+    "opencomplai-core>=0.13.0",
+    "opencomplai-cli>=0.13.0",
 ]
 
 [project.urls]
@@ -39,13 +39,13 @@ dev = [
     "ruff>=0.1.0",
 ]
 reports = [
-    "opencomplai-core[reports]>=0.12.0",
+    "opencomplai-core[reports]>=0.13.0",
 ]
 inspect-bridge = [
-    "opencomplai-core[inspect-bridge]>=0.12.0",
+    "opencomplai-core[inspect-bridge]>=0.13.0",
 ]
 serve = [
-    "opencomplai-cli[serve]>=0.12.0",
+    "opencomplai-cli[serve]>=0.13.0",
 ]
 
 [build-system]

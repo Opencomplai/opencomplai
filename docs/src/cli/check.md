@@ -90,7 +90,9 @@ is not part of the signed `compliance-artifact.json`.
 
 ## What the default scan covers
 
-`check --scan` is the default path that the [Annex III detection benchmark](../concepts/annex-iii-benchmark.md) measured: no intent analysis runs, and the scan maps package and import signals to an Annex III area through a fixed token dictionary. On the benchmark's labelled programs that path reads area 1 (biometrics) and reads areas 2 to 8 poorly or not at all, so a quiet `check --scan` is not evidence that no Annex III area applies. The `--ai-intent` and `--propose` options are options of [`scan`](scan.md), not of `check`: use [`scan --ai-intent`](scan.md) for the intent path, or [`scan --propose`](scan.md#suggesting-a-classification-propose) to get a proposal that a person confirms. A proposal confirmed that way is read by `check --scan` as the paragraph above describes. The declared purpose stays the source of the classification.
+`check --scan` is the default path that the [Annex III detection benchmark](../concepts/annex-iii-benchmark.md) measured: the benchmark's default path has no intent analysis, and the scan maps package and import signals to an Annex III area through a fixed token dictionary. The lead matcher described in the paragraph below is a separate, exit-neutral side channel that runs beside that path. On the benchmark's labelled programs that path reads area 1 (biometrics) and reads areas 2 to 8 poorly or not at all, so a quiet `check --scan` is not evidence that no Annex III area applies. The `--ai-intent` and `--propose` options are options of [`scan`](scan.md), not of `check`: use [`scan --ai-intent`](scan.md) for the intent path, or [`scan --propose`](scan.md#suggesting-a-classification-propose) to get a proposal that a person confirms. A proposal confirmed that way is read by `check --scan` as the paragraph above describes. The declared purpose stays the source of the classification.
+
+When the optional `opencomplai-ai` plugin is installed (`pip install opencomplai-ai`), `check --scan` also lists Annex III area leads: areas 3, 4, 6 and 8, with area 5 at the lowest confidence band and area 7 as a notice only. Without the plugin the command prints one install-hint line and nothing else changes. A lead is a pointer for a person to review, not a finding. It never changes a verdict or `compliance-artifact.json`, and it is listed under `eu_ai_scan.proposal_leads` in `scan-report.json`. The coverage notice is printed and stored under `default_scan_coverage` in the same way as on [`scan`](scan.md). The exit code follows `--fail-on` exactly as before. The rules and the switch `OPENCOMPLAI_LEADS` are described in [leads from the default scan](scan.md#leads-from-the-default-scan).
 
 ## Several manifests
 
@@ -305,12 +307,14 @@ scan findings) and `--summary-md` (Markdown, for a pull request comment or job s
 is optional and independent. With several `--manifest` values, see
 [Several manifests](#several-manifests).
 
-A report file written inside the scanned tree with `--report-junit`, `--sarif-output` or
-`--summary-md` is part of the code digest that a classification proposal records (only the
-proposal, the acceptance records, `.ocignore` and files named `scan-report.json`,
-`eval-report.json` or `compliance-artifact.json` are left out). Write it outside the scanned
-tree, or list it in `.ocignore`, or a confirmed proposal reads stale on the next run. In the
-example below, `out/` should be listed in `.ocignore` if it sits inside the scanned tree.
+The tool records each report file it writes inside the scanned tree in
+`.opencomplai/written-files.json`, with the hash of its content. While a recorded file still
+matches that hash, the code digest leaves it out, so `--output-dir out` inside the repository
+needs no `.ocignore` entry. `tree_dirty` comes from git, so to keep it false, commit the file or list it in `.gitignore`; `.ocignore` only affects the scan inventory and digest. The manifest is a freshness hint, not a security boundary: anyone
+who can edit the tree can also record a file they changed. `written-files.json` itself is left
+out of the digest. These still make a confirmed proposal read stale on the next run: a report
+file produced by another tool, a recorded report file that was edited after the tool wrote it,
+and any change to the scanned code or to the system manifest. A report file written by 0.12.0, or recorded nowhere, is counted once more on the run that overwrites it. After the first run that writes the report file (that run records it), run `scan --propose` and `accept --proposal` once.
 
 === "macOS / Linux"
     ```bash

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import subprocess
 from pathlib import Path
@@ -47,3 +48,21 @@ def tree_provenance(repo_root: Path) -> tuple[str, bool] | None:
     }
     digest = tree_digest((p, repo_root / p) for p in paths)
     return digest, bool(status.strip())
+
+
+def record_written_files(repo_root: Path, *paths: Path | None) -> None:
+    """Record report files this run wrote, so the scan digest can skip them.
+
+    Call after each file is closed. A path outside ``repo_root`` or not on disk
+    is skipped by the recorder itself.
+
+    ponytail: best effort, last writer wins. A failure is swallowed so recording
+    never changes an exit code; the file then reads as edited (stale proposal).
+    """
+    from opencomplai_core.written_files import record_written_file
+
+    for path in paths:
+        if path is None:
+            continue
+        with contextlib.suppress(Exception):  # never fail the command over a hint
+            record_written_file(repo_root, path)

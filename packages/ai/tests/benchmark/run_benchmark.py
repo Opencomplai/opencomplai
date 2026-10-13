@@ -331,6 +331,233 @@ def format_art5_and_language_lines(heldout: dict) -> str:
     return "\n".join(lines)
 
 
+def _load_leads_fixtures() -> list[dict]:
+    path = Path(__file__).resolve().parent / "fixtures_leads.py"
+    spec = importlib.util.spec_from_file_location("annex_iii_benchmark_leads", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.LEADS
+
+
+load_leads_fixtures = _load_leads_fixtures
+
+
+def measure_leads(fixtures: list[dict] | None = None) -> dict:
+    """``measure`` over the areas 3 to 8 set plus per-language and per-kind counts.
+
+    Every hard negative is exactly an ``area is None`` program, so ``none_clean``
+    and ``scan_none_clean`` from ``measure`` are the hard-negative-clean figures.
+    """
+    fixtures = _load_leads_fixtures() if fixtures is None else fixtures
+    result = measure(fixtures)
+    by_language: dict[str, dict] = {}
+    by_kind: dict[str, int] = {}
+    for fx in fixtures:
+        row = by_language.setdefault(
+            fx["language"], {"fixtures": 0, "area_tp": 0, "area_fn": 0}
+        )
+        row["fixtures"] += 1
+        by_kind[fx["kind"]] = by_kind.get(fx["kind"], 0) + 1
+        if fx["area"] is None:
+            continue
+        hit = fx["area"] in result["predictions"][fx["name"]]["intent"]
+        row["area_tp" if hit else "area_fn"] += 1
+    result["by_language"] = by_language
+    result["by_kind"] = by_kind
+    return result
+
+
+def format_leads_lines(result: dict, top1: dict) -> str:
+    """Summary lines and one table for the areas 3 to 8 set (own prefixes)."""
+    n_none = result["none_fixtures"]
+    kinds = " ".join(f"{k}={v}" for k, v in sorted(result["by_kind"].items()))
+    lines = [
+        f"leads_none_clean: {result['none_clean']} of {n_none}",
+        f"leads_scan_none_clean: {result['scan_none_clean']} of {n_none}",
+        f"leads_by_kind: {kinds}",
+    ]
+    for lang, row in sorted(result["by_language"].items()):
+        lines.append(
+            f"leads_language_{lang}: fixtures={row['fixtures']} "
+            f"detected={row['area_tp']} labelled={row['area_tp'] + row['area_fn']}"
+        )
+    lines.append(
+        f"leads_top1: n={top1['n']} correct={top1['correct']} none={top1['none']} "
+        f"tie={top1['tie']} wrong={top1['wrong']}"
+    )
+    lines.append(format_set_table("Leads set", result))
+    return "\n".join(lines)
+
+
+# Lead tier: the call sites the CLI shows as leads, measured on the three labelled
+# sets. A lead is a non-echo call site of the deterministic matcher in areas 3 to 8,
+# the same selection ``opencomplai_cli.leads`` makes (it asks the scan engine for
+# areas 3 to 8 only, and the engine skips declared-purpose echoes). Areas 1 and 2
+# never produce a lead, so they are neither scored nor counted here.
+LEAD_AREAS = tuple(range(3, 9))
+# Precision of the training intent path overall (22 of 30), as an exact fraction.
+LEADS_FLOOR = (22, 30)
+_LEAD_SET_ORDER = ("training", "held-out", "areas 3-8")
+
+
+def _floor_met(tp: int, fp: int) -> bool:
+    return tp > 0 and tp * LEADS_FLOOR[1] >= LEADS_FLOOR[0] * (tp + fp)
+
+
+def measure_lead_tier(fixtures: list[dict]) -> dict:
+    """Score the leads one scan per program yields; ``measure_leads`` stays as is."""
+    rows: list[tuple[str, int | None, list[int]]] = []
+    top1 = {"n": 0, "correct": 0, "none": 0, "tie": 0, "wrong": 0}
+    fp_programs: dict[int, list[str]] = {}
+    for fx in fixtures:
+        with _fixture_root(fx) as root:
+            with warnings.catch_warnings(record=True) as caught:
+                warnings.simplefilter("always")
+                report = run_scan(
+                    fx["name"],
+                    "HEAD",
+                    root,
+                    fx["purpose"],
+                    ai_intent=True,
+                    ai_model="codebert-onnx",
+                )
+        failed = [str(w.message) for w in caught]
+        failed = [m for m in failed if m.startswith("AI intent analysis")]
+        if failed or report.eu_ai_scan is None:
+            raise RuntimeError(
+                f"intent analysis did not run for {fx['name']}: "
+                f"{failed or 'no eu_ai_scan'}"
+            )
+        proposal = build_classification_proposal(report.eu_ai_scan)
+        areas = sorted(
+            {
+                ev.annex_iii_area
+                for ev in proposal.supporting_evidence + proposal.minority_evidence
+                if ev.annex_iii_area in LEAD_AREAS
+            }
+        )
+        rows.append((fx["name"], fx["area"], areas))
+        for area in areas:
+            if area != fx["area"]:
+                fp_programs.setdefault(area, []).append(fx["name"])
+        if fx["area"] is None:
+            continue
+        top1["n"] += 1
+        if proposal.tie_areas:
+            top1["tie"] += 1
+        elif proposal.proposed_annex_iii_area is None:
+            top1["none"] += 1
+        elif proposal.proposed_annex_iii_area == fx["area"]:
+            top1["correct"] += 1
+        else:
+            top1["wrong"] += 1
+    per_area = {a: v for a, v in _tally(rows)["per_area"].items() if a in LEAD_AREAS}
+    overall = {k: sum(per_area[a][k] for a in LEAD_AREAS) for k in ("tp", "fp", "fn")}
+    overall["fixtures"] = sum(per_area[a]["fixtures"] for a in LEAD_AREAS)
+    return {
+        "programs": len(fixtures),
+        "per_area": per_area,
+        "overall": overall,
+        "top1": top1,
+        "fp_programs": {a: sorted(n) for a, n in sorted(fp_programs.items())},
+    }
+
+
+def leads_pooled(per_set: dict[str, dict]) -> dict[int, tuple[int, int, int]]:
+    """Area -> (tp, fp, fn) summed over the sets."""
+    return {
+        a: tuple(
+            sum(r["per_area"][a][k] for r in per_set.values())
+            for k in ("tp", "fp", "fn")
+        )
+        for a in LEAD_AREAS
+    }
+
+
+def leads_area_policy(pooled: dict[int, tuple[int, int, int]]) -> dict[int, str]:
+    """``lead`` at or above the floor, else ``notice_only``; area 5 is always shown."""
+    return {
+        a: "lowest_confidence"
+        if a == 5
+        else ("lead" if _floor_met(pooled[a][0], pooled[a][1]) else "notice_only")
+        for a in LEAD_AREAS
+    }
+
+
+def leads_default_on(pooled: dict[int, tuple[int, int, int]]) -> bool:
+    """Whether the pool of the areas other than 5 meets the floor."""
+    tp = sum(pooled[a][0] for a in LEAD_AREAS if a != 5)
+    fp = sum(pooled[a][1] for a in LEAD_AREAS if a != 5)
+    return tp + fp > 0 and _floor_met(tp, fp)
+
+
+def _lead_rows(label: str, per_area: dict, programs: dict, policy: dict | None):
+    head = "| Set | Area | Name | Programs | TP | FP | FN | Precision | Recall |"
+    sep = "|---|---|---|---:|---:|---:|---:|---:|---:|"
+    if policy is not None:
+        head, sep = head + " Policy |", sep + "---|"
+    lines = [head, sep]
+    total = {"tp": 0, "fp": 0, "fn": 0}
+    for area in LEAD_AREAS:
+        c = per_area[area]
+        for k in total:
+            total[k] += c[k]
+        name = lookup_by_area(area)[0].area_name
+        cell = f" {policy[area]} |" if policy is not None else ""
+        lines.append(_row(f"{label} | {area}", name, programs[area], c) + cell)
+    cell = " - |" if policy is not None else ""
+    lines.append(
+        _row(f"{label} | Overall", "areas 3 to 8", sum(programs.values()), total) + cell
+    )
+    return lines, total
+
+
+def format_leads_tables(per_set: dict[str, dict], pooled: dict) -> list[str]:
+    """One Markdown table per element: each set, the pool, then top-1 per set."""
+    blocks: list[str] = []
+    for key in _LEAD_SET_ORDER:
+        r = per_set[key]
+        programs = {a: r["per_area"][a]["fixtures"] for a in LEAD_AREAS}
+        lines, _ = _lead_rows(f"Lead tier {key}", r["per_area"], programs, None)
+        blocks.append("\n".join(lines))
+    cells = {
+        a: dict(zip(("tp", "fp", "fn"), pooled[a], strict=True)) for a in LEAD_AREAS
+    }
+    programs = {
+        a: sum(per_set[k]["per_area"][a]["fixtures"] for k in _LEAD_SET_ORDER)
+        for a in LEAD_AREAS
+    }
+    lines, _ = _lead_rows(
+        "Lead tier pooled", cells, programs, leads_area_policy(pooled)
+    )
+    rest = [a for a in LEAD_AREAS if a != 5]
+    total = {k: sum(cells[a][k] for a in rest) for k in ("tp", "fp", "fn")}
+    state = "on by default" if leads_default_on(pooled) else "off by default"
+    lines.append(
+        _row(
+            "Lead tier pooled | Overall without 5",
+            "areas 3, 4, 6, 7, 8",
+            sum(programs[a] for a in rest),
+            total,
+        )
+        + f" {state} |"
+    )
+    blocks.append("\n".join(lines))
+    top = [
+        "| Lead tier set | n | Correct | No proposal | Tie | Wrong "
+        "| Top-1 accuracy (95% CI) |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for key in _LEAD_SET_ORDER:
+        t = per_set[key]["top1"]
+        top.append(
+            f"| Lead tier {key} | {t['n']} | {t['correct']} | {t['none']} "
+            f"| {t['tie']} | {t['wrong']} | {_interval_cell(t['correct'], t['n'])} |"
+        )
+    blocks.append("\n".join(top))
+    return blocks
+
+
 def _load_candidate_fixtures() -> list[dict]:
     path = Path(__file__).resolve().parent / "candidate_fixtures.py"
     spec = importlib.util.spec_from_file_location("annex_iii_candidate_fixtures", path)
@@ -439,6 +666,33 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Misses, held-out intent path ({len(heldout['misses'])})")
     for line in heldout["misses"]:
         print(f"  {line}")
+
+    leads = measure_leads()
+    leads_top1 = measure_top1(load_leads_fixtures())
+    print()
+    print(
+        f"Leads set ({leads['fixtures']} programs, areas 3 to 8; "
+        "separate from the training and held-out sets)"
+    )
+    print(format_leads_lines(leads, leads_top1))
+
+    lead_tier = {
+        "training": measure_lead_tier(_load_fixtures()),
+        "held-out": measure_lead_tier(_load_heldout()),
+        "areas 3-8": measure_lead_tier(load_leads_fixtures()),
+    }
+    pooled = leads_pooled(lead_tier)
+    print()
+    print("Leads (for a person; not findings)")
+    for block in format_leads_tables(lead_tier, pooled):
+        print(block)
+        print()
+    policy = leads_area_policy(pooled)
+    print("lead_tier_policy: " + " ".join(f"{a}={policy[a]}" for a in LEAD_AREAS))
+    print(f"lead_tier_default_on: {leads_default_on(pooled)}")
+    for key, result in lead_tier.items():
+        for area, names in result["fp_programs"].items():
+            print(f"lead_tier_fp_programs {key} area {area}: {', '.join(names)}")
 
     candidates = measure_candidates()
     print()

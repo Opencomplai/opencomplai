@@ -134,18 +134,22 @@ TOOL_WRITTEN_NAMES = (
 )
 
 
+# Map of report files the tool wrote and their content hashes (see written_files).
+WRITTEN_FILES_MANIFEST = ".opencomplai/written-files.json"
+
+
 def is_tool_written_path(rel: str) -> bool:
     """True for files the tool itself writes into the scanned tree.
 
-    The proposal file and ``.ocignore`` at the repo root (never a nested file of
-    that name), anything under the acceptance record directory, and the sidecar
-    files ``check`` writes (``TOOL_WRITTEN_NAMES``). The sidecars match by
-    basename at any depth because ``--output-dir`` may be a subdirectory. They
-    are left out of the code digest so writing them does not make a proposal
-    stale.
+    The proposal file, ``.ocignore`` and the written-files manifest at the repo
+    root (never a nested file of that name), anything under the acceptance
+    record directory, and the sidecar files ``check`` writes
+    (``TOOL_WRITTEN_NAMES``). The sidecars match by basename at any depth
+    because ``--output-dir`` may be a subdirectory. They are left out of the
+    code digest so writing them does not make a proposal stale.
     """
     return (
-        rel in (PROPOSAL_FILENAME, ".ocignore")
+        rel in (PROPOSAL_FILENAME, ".ocignore", WRITTEN_FILES_MANIFEST)
         or rel.startswith(RECORD_DIR + "/")
         or rel.rsplit("/", 1)[-1] in TOOL_WRITTEN_NAMES
     )

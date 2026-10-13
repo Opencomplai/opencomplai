@@ -17,6 +17,7 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     Field,
+    SerializationInfo,
     SerializerFunctionWrapHandler,
     model_serializer,
     model_validator,
@@ -1274,12 +1275,31 @@ class EuAiCandidate(BaseModel):
     )
 
 
+PROPOSAL_LEAD_REASON: Final = "deterministic_matcher"
+
+
+class EuAiProposalLead(BaseModel):
+    """A lead for a person, not a finding: the deterministic matcher saw an
+    Annex III area signal at a call site. No tier, severity or obligation field
+    on purpose; it never enters the artifact, the proposal or an exit code.
+    """
+
+    reason: Literal["deterministic_matcher"] = PROPOSAL_LEAD_REASON
+    file: str
+    line: int = Field(ge=1)
+    function: str
+    annex_iii_area: int = Field(ge=1, le=8)
+    confidence_band: Literal["low", "medium", "high"]
+    signals: list[str] = Field(default_factory=list)
+
+
 class EuAiScanSummary(BaseModel):
     """Structured EU AI Act scan output (--ai-intent).
 
-    ``candidates`` are leads, not findings: they are excluded from
-    ``regulatory_finding_count``, from ``report_hash``, from the proposal and
-    from every exit code.
+    ``candidates`` and ``proposal_leads`` are leads, not findings: they are
+    excluded from ``regulatory_finding_count``, from ``report_hash``, from the
+    proposal and from every exit code. A default scan carries a block with
+    ``proposal_leads`` alone when the deterministic matcher found any.
     """
 
     capabilities: list[EuAiUsageEntry] = Field(default_factory=list)
@@ -1289,6 +1309,18 @@ class EuAiScanSummary(BaseModel):
     gated_callsite_count: int = 0
     regulatory_finding_count: int = 0
     candidates: list[EuAiCandidate] = Field(default_factory=list)
+    proposal_leads: list[EuAiProposalLead] = Field(default_factory=list)
+
+    @model_serializer(mode="wrap")
+    def _omit_empty_leads(
+        self, handler: SerializerFunctionWrapHandler, info: SerializationInfo
+    ) -> dict[str, Any]:
+        # JSON output (reports, sidecars, goldens) stays byte-identical when
+        # there is no lead; python-mode dumps keep the field.
+        data = handler(self)
+        if info.mode == "json":
+            omit_by_table(self, data, {"proposal_leads": OMIT_EMPTY})
+        return data
 
 
 class CorroborationReport(BaseModel):
@@ -1342,11 +1374,21 @@ class CorroborationReport(BaseModel):
     # report_hash change): the commit-independent tree digest that
     # `scan --propose` stores and `check` compares.
     source_tree_sha256: str = Field(default="", exclude=True)
+    # In-process only, same as above: the 0.12.0-semantics digest (no written-
+    # files manifest applied) that the proposal gate also accepts.
+    source_tree_sha256_legacy: str = Field(default="", exclude=True)
     proposal_status: str | None = Field(
         default=None,
         description=(
             "Classification-proposal state (confirmed, unconfirmed, stale, "
             "absent) set by `check` only; omitted when None."
+        ),
+    )
+    default_scan_coverage: dict[str, Any] | None = Field(
+        default=None,
+        description=(
+            "Statement of what the default scan covers per Annex III area "
+            "(a statement about the tool, not a verdict); omitted when None."
         ),
     )
 
@@ -1355,7 +1397,11 @@ class CorroborationReport(BaseModel):
         self, handler: SerializerFunctionWrapHandler
     ) -> dict[str, Any]:
         # A report without a status serialises byte-for-byte as before.
-        return omit_by_table(self, handler(self), {"proposal_status": OMIT_NONE})
+        return omit_by_table(
+            self,
+            handler(self),
+            {"proposal_status": OMIT_NONE, "default_scan_coverage": OMIT_NONE},
+        )
 
 
 DISCLAIMER_V1 = (

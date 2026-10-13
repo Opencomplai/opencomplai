@@ -84,6 +84,39 @@ release never needs it done by hand.
 
 ---
 
+## Homebrew tap and signing secret
+
+Both operations below are founder-only. Run them by hand on the founder's machine after a release is on PyPI.
+Nothing in the release tag workflow creates a repository or a secret.
+
+**Homebrew tap** (run the steps in this order; replace `<version>` with the released version)
+
+1. Confirm the new version's sdist is on PyPI: open `https://pypi.org/project/opencomplai/<version>/#files`.
+2. Create the GitHub repository `Opencomplai/homebrew-tap`. The name is a founder choice and is unverified, as noted in `packaging/homebrew/README.md`.
+3. In a checkout of the release tag, run `bash scripts/homebrew-release.sh <version>`. It reads the sdist sha256 from the PyPI JSON, downloads the sdist and checks that its bytes match that digest, then patches the `url` and `sha256` in `packaging/homebrew/opencomplai.rb`. It refuses a placeholder or all-zero digest and a checksum mismatch, and it patches the formula once the index, digest and download checks pass; the lint step runs after the patch and a failure leaves the patched file for you to review. Exit code 0 means pass, 1 means a named step failed, 2 means bad usage.
+4. Commit the patched formula on its own, a commit that changes only `packaging/homebrew/opencomplai.rb`. Then copy that file to `Formula/opencomplai.rb` in the tap repository.
+5. In the tap checkout, run `brew update-python-resources Formula/opencomplai.rb`, then `brew install --build-from-source Opencomplai/tap/opencomplai` and `brew test Opencomplai/tap/opencomplai`.
+6. Run `brew style` and `brew audit --strict --new Opencomplai/tap/opencomplai`.
+7. Push the tap repository with `git push`.
+
+**What flips planned to live**: only after step 7 is pushed and `brew install Opencomplai/tap/opencomplai` works from a clean machine, edit the "Homebrew (planned)" block in `docs/src/getting-started/installation.md` and the matching assertion in `packages/cli/tests/test_homebrew_formula.py` in one commit. Until then the installation page stays "planned".
+
+**Signing secret** (independent of the tap, and may be done at any time)
+
+Run `gh auth login` yourself first. Then run `bash scripts/signing-secret.sh OPENCOMPLAI_SIGNING_KEY <owner>/<repo>`, where `<owner>/<repo>` is the repository that holds the release workflow. The script generates an Ed25519 key in memory and pipes it straight to `gh secret set`. The private key is never printed and never written to a file. The script prints only the public key, so publish that public key for verifiers. It refuses to replace an existing secret unless you pass `--replace`, because a replacement changes the key that every earlier signature was made with.
+
+For how the secret is used in CI, see [Attach the artifact to a release](../guides/ci-recipes.md#attach-the-artifact-to-a-release). For key handling, see [Key management](../security/key-management.md).
+
+**Order of steps**
+
+1. Release on PyPI through the tag workflow.
+2. Create the tap repository.
+3. Run `scripts/homebrew-release.sh <version>`, then push the tap.
+4. Flip the installation page to live after `brew install` works from a clean machine.
+5. Create the signing secret with `scripts/signing-secret.sh` (independent of the tap).
+
+---
+
 ## Hotfixes
 
 For critical security or correctness fixes on a released version:

@@ -47,6 +47,8 @@ inference imports, and dependencies.
 
 Without `--ai-intent` or `--propose`, the scan reads package and import signals and maps them to an Annex III area through a fixed token dictionary. On the labelled programs of the [Annex III detection benchmark](../concepts/annex-iii-benchmark.md), that path reads area 1 (biometrics) and reads areas 2 to 8 poorly or not at all; the measured counts are in the default-scan table of the benchmark page. A quiet default scan is therefore not evidence that no Annex III area applies. For the other areas, run `opencomplai scan --ai-intent`, or run `opencomplai scan --propose` to get a proposal that a person confirms (see [suggesting a classification](../cli/scan.md#suggesting-a-classification-propose)). The declared purpose stays the source of the classification.
 
+When the optional `opencomplai-ai` plugin is installed (`pip install opencomplai-ai`), the default scan also lists Annex III area leads, and so does the quick scan (`opencomplai scan --quick`). A lead is a pointer for a person to review, not a finding: it never changes a verdict, and no exit code moves because of it. The leads are listed under `eu_ai_scan.proposal_leads` in `scan-report.json`, and the [leads section](../cli/scan.md#leads-from-the-default-scan) says which areas show them. A quiet default scan is still not evidence that no Annex III area applies, with or without leads.
+
 ## `.ocignore` scan configuration {#ocignore}
 
 The scanner reads a repo-root [`.ocignore`](https://github.com/opencomplai/opencomplai/blob/main/.ocignore)

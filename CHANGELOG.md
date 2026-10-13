@@ -9,6 +9,66 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.0] — 2026-10-13
+
+### Added
+
+- The tool keeps a manifest of the report files it writes, in
+  `.opencomplai/written-files.json`. It maps each file's path to the hash of its
+  content. `scan --output-file`, `scan --sarif-output`, `check --report-junit`,
+  `check --sarif-output` and `check --summary-md` record the files they write
+  there. The manifest is created only when a report flag writes a file inside
+  the scanned tree; commit it, or list it in `.gitignore`, if you want
+  `tree_dirty` to stay false. The manifest is a freshness hint, not a security
+  boundary.
+- `scan` and `check --scan` print a coverage notice when the intent analysis did
+  not run. It says what the default scan covers and that a quiet result is not
+  evidence that no Annex III area applies. The same text is stored under
+  `default_scan_coverage` in `scan-report.json`, `scan --output json` and
+  `scan --output-file` (JSON), not in `compliance-artifact.json`. It is never a finding and never changes an exit
+  code.
+- Annex III area leads for areas 3, 4, 6 and 8, shown when the optional
+  `opencomplai-ai` plugin is installed. Area 5 is always shown at the lowest
+  confidence band. Area 7 is a notice only. Without the plugin, `scan` and
+  `check --scan` print one install-hint line and nothing else changes. A lead is
+  a pointer for a person to review. It is never a finding, never changes a
+  verdict, the classification proposal, `compliance-artifact.json` or an exit
+  code, and is listed under `eu_ai_scan.proposal_leads` in `scan-report.json`.
+  Leads are on by default; `OPENCOMPLAI_LEADS=0` (or `false` or `off`) turns
+  them off.
+- The Annex III benchmark gains a separate set of 28 synthetic programs (19
+  labelled with an area 3 to 8 and 9 hard negatives), and the leads are
+  measured on three labelled synthetic sets. A program counts as led when one of its call sites is a lead for the area. Over
+  the pooled 50 programs, per area: area 3 led 2 programs, both labelled
+  (precision 100.0%, recall 25.0%); area 4 led 2, both labelled (100.0%,
+  22.2%); area 5 led 17, 4 labelled (23.5%, 36.4%, lowest confidence); area 6
+  led 3, all labelled (100.0%, 42.9%); area 7 led none (recall 0.0%, notice
+  only); area 8 led 2, both labelled (100.0%, 28.6%). Areas 3, 4, 6, 7 and 8
+  together (without area 5): 9 programs led, all labelled (precision 100.0%,
+  recall 23.1%). On the 19 labelled programs of that set, no area 3 to 8 lead
+  matched a label. These figures are measured on synthetic programs labelled by
+  one author. They are not accuracy on real repositories.
+
+### Changed
+
+- The code digest drops a report file recorded in
+  `.opencomplai/written-files.json` while its content still matches the recorded
+  hash. Changing the file makes it count again.
+- A classification proposal recorded by 0.12.0 with the earlier digest is still
+  accepted.
+- The scanner and rule-set versions do not change.
+
+### Fixed
+
+- A confirmed classification no longer reads stale after the tool writes a
+  report file inside the scanned tree with `--report-junit`, `--sarif-output`,
+  `--summary-md` or `--output-file`.
+- A report file written by 0.12.0, or recorded nowhere, is counted once more on
+  the run that overwrites it. After the first run that writes the report file
+  (that run records it), run `scan --propose` and `accept --proposal` once.
+- The deployer-pack page no longer says the framework `data_version` changes
+  after an import.
+
 ## [0.12.0] — 2026-10-13
 
 ### Added
@@ -1223,6 +1283,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.13.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.0
 [0.12.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.12.0
 [0.11.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.1
 [0.11.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.0

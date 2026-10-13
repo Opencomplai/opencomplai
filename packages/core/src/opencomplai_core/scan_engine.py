@@ -13,6 +13,8 @@ from opencomplai_core.models import (
     CorroborationReport,
     DetectionFinding,
     DiscrepancySeverity,
+    EuAiProposalLead,
+    EuAiScanSummary,
     EvidenceItem,
     EvidenceScope,
     Reachability,
@@ -34,18 +36,36 @@ from opencomplai_core.scanner.import_candidates import find_import_candidates
 from opencomplai_core.scanner.inventory import build_repo_inventory
 from opencomplai_core.scanner.mapping import derive_declared_categories
 from opencomplai_core.scanner.ocignore import config_dict_for_hash, load_ocignore
+from opencomplai_core.scanner.proposal_leads import leads_from_evidence
 from opencomplai_core.scanner.registry import DETECTOR_REGISTRY
 from opencomplai_core.tree_digest import tree_digest
+from opencomplai_core.written_files import unchanged_written_paths
 
 if TYPE_CHECKING:
-    from opencomplai_core.models import EuAiScanSummary
     from opencomplai_core.scanner.inventory import RepoInventory
 
 
-def _tree_sha256(inventory: RepoInventory) -> str:
-    """Digest of the scanned code, without the files the tool writes itself."""
+def _tree_digests(inventory: RepoInventory) -> tuple[str, str]:
+    """``(aware, legacy)`` digests of the scanned code.
+
+    ``legacy`` leaves out only the fixed tool-written paths (the 0.12.0 value).
+    ``aware`` also leaves out recorded report files whose content still equals
+    the recorded hash. With no manifest the two are equal.
+    """
     kept = [e for e in inventory.entries if not is_tool_written_path(e.rel_path)]
-    return tree_digest((e.rel_path, Path(e.path)) for e in kept)
+    legacy = tree_digest((e.rel_path, Path(e.path)) for e in kept)
+    listed = unchanged_written_paths(inventory.repo_root)
+    if not listed:
+        return legacy, legacy
+    aware = tree_digest(
+        (e.rel_path, Path(e.path)) for e in kept if e.rel_path not in listed
+    )
+    return aware, legacy
+
+
+def _tree_sha256(inventory: RepoInventory) -> str:
+    """Manifest-aware digest of the scanned code."""
+    return _tree_digests(inventory)[0]
 
 
 def _digest(tree: str, commit_ref: str, config_hash: str) -> str:
@@ -203,6 +223,50 @@ def _load_intent_plugin(model_id: str | None = None, repo_root: Path | None = No
         return IntentDetector(resolved_model, repo_root=repo_root)
     except ImportError:
         return None
+
+
+def _collect_proposal_leads(
+    features: FeatureStore,
+    evidence: list[EvidenceItem],
+    repo_root: Path,
+    declared_purpose: str,
+    areas: frozenset[int],
+) -> list[EuAiProposalLead]:
+    """Leads from the deterministic matcher (backend ``codebert-onnx``).
+
+    Runs the same prefilter, gate and file-context steps as the default-depth
+    intent block, but only reads the result: ``evidence`` is untouched. Never
+    adds to ``warnings``, ``scan_errors`` or ``detector_errors``; a failure is
+    one ``warnings.warn`` and no leads. Plugin absent: no leads, silently.
+    """
+    try:
+        detector = _load_intent_plugin("codebert-onnx", repo_root)
+        if detector is None:
+            return []
+        from opencomplai_core.scanner.ai_usage_gate import gate_features_for_intent
+        from opencomplai_core.scanner.file_ai_context import build_file_ai_context_map
+        from opencomplai_core.scanner.snippet_cache import SnippetCache
+
+        gated = gate_features_for_intent(
+            _filter_features_to_detected_files(features, evidence),
+            build_file_ai_context_map(features, evidence),
+            snippet_cache=SnippetCache(root=repo_root),
+        )
+        found = detector.detect(
+            gated.features,
+            declared_purpose=declared_purpose,
+            usage_matches=gated.usage_matches,
+        )
+        return leads_from_evidence(found, areas)
+    except Exception as exc:
+        import warnings
+
+        warnings.warn(
+            f"Annex III area leads skipped ({type(exc).__name__}: {exc}). "
+            "Scan results are unaffected.",
+            stacklevel=2,
+        )
+        return []
 
 
 def _filter_features_to_detected_files(
@@ -487,6 +551,9 @@ def run_scan(
     ai_model: str | None = None,
     ai_deep: bool = False,
     ai_legacy: bool = False,
+    #: Annex III areas (3..8) to report as leads for a person from the
+    #: deterministic matcher; empty means off. Ignored when ``ai_intent`` is set.
+    lead_areas: frozenset[int] = frozenset(),
 ) -> CorroborationReport:
     _start = time.monotonic()
     config = config or ScanConfig()
@@ -628,6 +695,15 @@ def run_scan(
                     stacklevel=2,
                 )
 
+    if lead_areas and not ai_intent:
+        # Side channel: evidence, findings and every hash below stay as the
+        # default scan made them. A scan with no lead keeps eu_ai_scan None.
+        leads = _collect_proposal_leads(
+            features, evidence, repo_root, declared_purpose, lead_areas
+        )
+        if leads:
+            eu_ai_scan = EuAiScanSummary(proposal_leads=leads)
+
     findings = fuse_evidence(evidence)
     declared = derive_declared_categories(declared_purpose)
     relevant_findings = [
@@ -638,7 +714,7 @@ def run_scan(
     scores = score_findings(findings)
     severity = classify_severity(discrepancies, findings, scores)
 
-    tree = _tree_sha256(inventory)
+    tree, tree_legacy = _tree_digests(inventory)
     digest = _digest(tree, commit_ref, cfg_hash)
     scan_id = (
         f"scan_{hashlib.sha256(f'{digest}|{system_id}'.encode()).hexdigest()[:16]}"
@@ -690,6 +766,7 @@ def run_scan(
         report_hash="",
         eu_ai_scan=eu_ai_scan,
         source_tree_sha256=tree,
+        source_tree_sha256_legacy=tree_legacy,
     )
     report.report_hash = compute_report_hash(report)
     if progress_cb:

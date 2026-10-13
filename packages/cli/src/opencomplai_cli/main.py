@@ -154,6 +154,7 @@ keys_app = typer.Typer(
     help="Signing key management (ISO 27001 A.8.24 / FedRAMP SC-12)."
 )
 
+from opencomplai_cli import coverage_notice, leads  # noqa: E402
 from opencomplai_cli._encoding import install_ascii_fallback  # noqa: E402
 from opencomplai_cli.acceptance_gate import apply_acceptance_gate  # noqa: E402
 from opencomplai_cli.agent_inventory_payload import (  # noqa: E402
@@ -2456,6 +2457,7 @@ def _run_scan_corroboration(
     ai_model: str | None = None,
     ai_deep: bool = False,
     ai_legacy: bool = False,
+    lead_areas: frozenset[int] = frozenset(),
 ) -> tuple[ScanSummary, CorroborationReport, list[str]]:
     """Returns (scan_summary, full_report, extra_evidence_hashes)."""
     report = run_scan(
@@ -2471,6 +2473,11 @@ def _run_scan_corroboration(
         ai_model=ai_model,
         ai_deep=ai_deep,
         ai_legacy=ai_legacy,
+        lead_areas=lead_areas,
+    )
+    # Before the summary, any dump or digest, so the sidecar and its hash agree.
+    report.default_scan_coverage = coverage_notice.default_scan_coverage(
+        intent_analysis_ran=ai_intent and (ai_legacy or report.eu_ai_scan is not None)
     )
     summary = scan_summary_from_report(report)
     extra_hashes: list[str] = [report.report_hash, *summary.evidence_hashes]
@@ -2831,6 +2838,11 @@ def _print_scan_human(
                 )
         else:
             _render_eu_ai_scan(report, verbose=ai_verbose)
+    else:
+        leads.render_leads(console, report, _INTENT_AREA_LABELS)
+
+    for line in coverage_notice.notice_lines(report):
+        console.print(line, soft_wrap=True)
 
     console.print(
         "\n  [dim]Declaration is authoritative; confirm or update intended_purpose.[/dim]"
@@ -2976,8 +2988,17 @@ def scan_cmd(
         baseline_categories = baseline_data.get("accepted_categories", [])
         baseline_ref = baseline_data.get("baseline_ref")
 
+    intent_requested = ai_intent
     if ai_intent:
         ai_intent = _preload_ai_model(ai_model)
+    # After the preload, so a failed preload does not suppress the leads.
+    area_leads = leads.lead_areas(ai_intent, ai_legacy, propose)
+    # The hint follows the flags as passed: a skipped intent analysis is not a leads request.
+    if (
+        leads.want_leads(intent_requested, ai_legacy, propose)
+        and not leads.plugin_installed()
+    ):
+        err_console.print(f"[dim]{leads.INSTALL_HINT}[/dim]", soft_wrap=True)
 
     requested_repo_root = repo_root
     try:
@@ -3055,6 +3076,7 @@ def scan_cmd(
         ai_model=ai_model,
         ai_deep=ai_deep,
         ai_legacy=ai_legacy,
+        lead_areas=area_leads,
     )
 
     if propose and report.eu_ai_scan is None:
@@ -3122,6 +3144,10 @@ def scan_cmd(
             json.dumps(report_to_sarif(report), indent=2), encoding="utf-8"
         )
         console.print(f"[dim]SARIF written to {sarif_output}[/dim]")
+
+    from opencomplai_cli.provenance import record_written_files
+
+    record_written_files(repo_root, output_file, sarif_output)
 
     if propose:
         from opencomplai_ai.models import MODEL_CATALOG
@@ -3467,14 +3493,20 @@ def check_cmd(
             emit_evidence=emit_scan_evidence,
             baseline_categories=baseline_categories,
             scan_config=scan_config,
+            lead_areas=leads.lead_areas(False, False, False),
         )
+        if leads.want_leads(False, False, False) and not leads.plugin_installed():
+            err_console.print(f"[dim]{leads.INSTALL_HINT}[/dim]", soft_wrap=True)
         scan_summary = scan_summary_from_report(scan_report)
         from opencomplai_cli import proposal_gate
 
         # Summary and fail-on gate only; the report keeps no gate row. Its
         # proposal_status is the one addition (sidecar only, never the artifact).
         tree = scan_report.source_tree_sha256 or None
-        proposal_status = proposal_gate.proposal_status(manifest, repo_root, tree)
+        legacy_tree = scan_report.source_tree_sha256_legacy or None
+        proposal_status = proposal_gate.proposal_status(
+            manifest, repo_root, tree, legacy_tree_sha256=legacy_tree
+        )
         scan_report.proposal_status = proposal_status
         if proposal_status == "stale":
             err_console.print(
@@ -3496,7 +3528,9 @@ def check_cmd(
         scan_summary, gate_report = proposal_gate.apply_confirmed_proposal(
             scan_summary,
             scan_report,
-            proposal_gate.confirmed_proposal_area(manifest, repo_root, tree),
+            proposal_gate.confirmed_proposal_area(
+                manifest, repo_root, tree, legacy_tree_sha256=legacy_tree
+            ),
             baseline_categories,
         )
         eval_hashes = list(dict.fromkeys((eval_hashes or []) + scan_hashes))
@@ -3716,10 +3750,27 @@ def check_cmd(
             warn=lambda m: err_console.print(f"[yellow]WARN:[/yellow] {escape(m)}"),
         )
 
+    # After every report file is closed: the next scan digest then skips them.
+    from opencomplai_cli.provenance import record_written_files
+
+    record_written_files(
+        repo_root,
+        artifact_path,
+        output_dir / "scan-report.json",
+        output_dir / "eval-report.json",
+        report_junit,
+        sarif_output,
+        summary_md,
+    )
+
     if output == OutputFormat.json:
         console.print_json(artifact.model_dump_json(indent=2))
     else:
         _print_artifact_human(artifact, str(artifact_path))
+        if scan_report is not None:
+            leads.render_leads(console, scan_report, _INTENT_AREA_LABELS)
+            for line in coverage_notice.notice_lines(scan_report):
+                console.print(line, soft_wrap=True)
 
     sys.exit(_exit_code(artifact.result, scan_mode))
 

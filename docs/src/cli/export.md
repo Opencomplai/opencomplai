@@ -117,6 +117,16 @@ The key must come from the signer, never from the package. An unsigned artifact 
 | `agents check --output json` | `expired_mandates` |
 | `scan --output json` | `eu_ai_scan.candidates` (with `--ai-intent`) |
 
+## Upgrading to 0.13
+
+0.13 adds fields to existing JSON output. They are additive and optional; nothing is renamed or removed, but a reader that rejects unknown keys must accept them:
+
+| Where | New field |
+|---|---|
+| `scan-report.json`, `scan --output json`, `scan --output-file` (JSON) | `default_scan_coverage` |
+| `scan-report.json` (from `scan` and `check --scan`), `scan --output json` | `eu_ai_scan.proposal_leads` (with the `opencomplai-ai` plugin installed) |
+| `scan-report.json` (from `scan` and `check --scan`), `scan --output json` | the `eu_ai_scan` block on a default scan: non-null only when the plugin is installed and at least one lead was found, otherwise `null` as before |
+
 ## Exit codes
 
 | Code | Meaning |

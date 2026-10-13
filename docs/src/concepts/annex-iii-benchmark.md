@@ -594,6 +594,128 @@ and `needs_founder_review: true`. They show that the rule reports what it was
 written to report. They say nothing about how often a real repository imports
 such a library, or whether a person would call it a classification.
 
+## Leads on the three sets
+
+A lead is a pointer for a person to review. It is not a finding: it has no
+severity, it never changes an exit code, and it is not part of the signed
+artifact or of the classification proposal. When the optional plugin is
+installed, `scan`, `scan --quick` and `check --scan` print leads for Annex III
+areas 3, 4, 5, 6 and 8; area 7 is notice only. Each lead is one call site that the deterministic matcher put in
+an area; a call site whose area comes only from the declared purpose is the
+manifest talking back, and is not a lead.
+
+This section measures those leads on three labelled sets: the training set and
+the held-out set above, and a separate set of programs for areas 3 to 8 that was
+recorded before any lead tier existed and is never tuned against. All three sets
+are synthetic and were labelled by a single author, with confidence low and
+`needs_founder_review: true`. A program counts as led for an area when at least
+one of its call sites is a lead for that area. TP, FP and FN read as above, over
+areas 3 to 8 only: areas 1 and 2 never produce a lead and are not scored. The
+`Programs` column counts the programs labelled with the area.
+
+Training set:
+
+| Set | Area | Name | Programs | TP | FP | FN | Precision | Recall |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Lead tier training | 3 | education | 4 | 2 | 0 | 2 | 100.0% | 50.0% |
+| Lead tier training | 4 | employment | 4 | 2 | 0 | 2 | 100.0% | 50.0% |
+| Lead tier training | 5 | essential_services | 5 | 4 | 8 | 1 | 33.3% | 80.0% |
+| Lead tier training | 6 | law_enforcement | 3 | 2 | 0 | 1 | 100.0% | 66.7% |
+| Lead tier training | 7 | migration | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier training | 8 | justice_democracy | 3 | 2 | 0 | 1 | 100.0% | 66.7% |
+| Lead tier training | Overall | areas 3 to 8 | 22 | 12 | 8 | 10 | 60.0% | 54.5% |
+
+Held-out set:
+
+| Set | Area | Name | Programs | TP | FP | FN | Precision | Recall |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Lead tier held-out | 3 | education | 1 | 0 | 0 | 1 | n/a | 0.0% |
+| Lead tier held-out | 4 | employment | 2 | 0 | 0 | 2 | n/a | 0.0% |
+| Lead tier held-out | 5 | essential_services | 2 | 0 | 3 | 2 | 0.0% | 0.0% |
+| Lead tier held-out | 6 | law_enforcement | 1 | 1 | 0 | 0 | 100.0% | 100.0% |
+| Lead tier held-out | 7 | migration | 2 | 0 | 0 | 2 | n/a | 0.0% |
+| Lead tier held-out | 8 | justice_democracy | 1 | 0 | 0 | 1 | n/a | 0.0% |
+| Lead tier held-out | Overall | areas 3 to 8 | 9 | 1 | 3 | 8 | 25.0% | 11.1% |
+
+Areas 3 to 8 set:
+
+| Set | Area | Name | Programs | TP | FP | FN | Precision | Recall |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Lead tier areas 3-8 | 3 | education | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier areas 3-8 | 4 | employment | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier areas 3-8 | 5 | essential_services | 4 | 0 | 2 | 4 | 0.0% | 0.0% |
+| Lead tier areas 3-8 | 6 | law_enforcement | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier areas 3-8 | 7 | migration | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier areas 3-8 | 8 | justice_democracy | 3 | 0 | 0 | 3 | n/a | 0.0% |
+| Lead tier areas 3-8 | Overall | areas 3 to 8 | 19 | 0 | 2 | 19 | 0.0% | 0.0% |
+
+### The floor and the policy
+
+The floor is the precision of the intent path overall on the training set: the
+intent-path table above has 22 true positives among 30 predictions (TP and FP
+together). A lead needs precision at or above it, checked as the exact
+fraction `TP * 30 >= 22 * (TP + FP)`. The decision on the leads floor leaves
+four points open; this page takes the conservative reading of each, and each is
+`needs_founder_review: true`:
+
+- The figure of an area is pooled over the three sets, because each set alone
+  has few programs per area.
+- An area with no true positive on the pool has no evidence of precision and
+  shows notice only.
+- Area 5 is shown regardless of the floor, always at the lowest confidence, and
+  is left out of the decision for the whole feature. Its figures are still
+  printed.
+- Leads are on by default only when the pool of the areas other than 5 meets
+  the floor.
+
+`lead` means leads are shown for the area. `notice_only` means no lead is shown
+and the scan prints the default-scan coverage notice only. `lowest_confidence`
+means leads are shown, always at the lowest confidence band.
+
+| Set | Area | Name | Programs | TP | FP | FN | Precision | Recall | Policy |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|
+| Lead tier pooled | 3 | education | 8 | 2 | 0 | 6 | 100.0% | 25.0% | lead |
+| Lead tier pooled | 4 | employment | 9 | 2 | 0 | 7 | 100.0% | 22.2% | lead |
+| Lead tier pooled | 5 | essential_services | 11 | 4 | 13 | 7 | 23.5% | 36.4% | lowest_confidence |
+| Lead tier pooled | 6 | law_enforcement | 7 | 3 | 0 | 4 | 100.0% | 42.9% | lead |
+| Lead tier pooled | 7 | migration | 8 | 0 | 0 | 8 | n/a | 0.0% | notice_only |
+| Lead tier pooled | 8 | justice_democracy | 7 | 2 | 0 | 5 | 100.0% | 28.6% | lead |
+| Lead tier pooled | Overall | areas 3 to 8 | 50 | 13 | 13 | 37 | 50.0% | 26.0% | - |
+| Lead tier pooled | Overall without 5 | areas 3, 4, 6, 7, 8 | 39 | 9 | 0 | 30 | 100.0% | 23.1% | on by default |
+
+The policy that follows from the pooled table:
+
+| Area | Policy | Source | Confidence | needs_founder_review |
+|---|---|---|---|---|
+| 3 | `lead` | round decision on the leads floor, heuristic | low | yes |
+| 4 | `lead` | round decision on the leads floor, heuristic | low | yes |
+| 5 | `lowest_confidence` | round decision on the leads floor, heuristic | low | yes |
+| 6 | `lead` | round decision on the leads floor, heuristic | low | yes |
+| 7 | `notice_only` | round decision on the leads floor, heuristic | low | yes |
+| 8 | `lead` | round decision on the leads floor, heuristic | low | yes |
+
+The pool of the areas other than 5 meets the floor, so leads are on by default.
+`OPENCOMPLAI_LEADS=0` (or `false`, `off`) turns them off; `OPENCOMPLAI_LEADS=1`
+(or `true`, `on`) turns them on.
+
+Top-1 is the area the classification proposal picks for each program labelled
+with an area, scored as in the held-out section above. It is the same
+measurement as the proposal top-1 tables, listed here per set.
+
+| Lead tier set | n | Correct | No proposal | Tie | Wrong | Top-1 accuracy (95% CI) |
+|---|---:|---:|---:|---:|---:|---:|
+| Lead tier training | 29 | 13 | 9 | 2 | 5 | 44.8% (n=29, 95% CI 28.4-62.5%) |
+| Lead tier held-out | 12 | 1 | 9 | 1 | 1 | 8.3% (n=12, 95% CI 1.5-35.4%) |
+| Lead tier areas 3-8 | 19 | 0 | 17 | 0 | 2 | 0.0% (n=19, 95% CI 0.0-16.8%) |
+
+Read these numbers with the floor in mind. The pooled precision of the areas
+other than 5 is carried by the training set, the set the signal dictionary was
+tightened against (see the signal-change sections above). On the areas 3 to 8
+set alone, no lead matched a label, and the leads that did appear were for
+area 5. The figures say how the leads behave on synthetic programs written by
+one author; they say nothing about how often a real repository gets a useful
+lead.
+
 ## Labels
 
 Source: Annex III as encoded in the Annex III knowledge pack (area names and
@@ -610,6 +732,7 @@ python packages/ai/tests/benchmark/run_benchmark.py
 
 The script runs offline: the matcher is deterministic and downloads no model. It
 prints both tables, the counts of clean programs, and the misses and spurious
-predictions of each path. It also prints the held-out and top-1 tables, and ends
-with the candidates section, which holds counts per library and no precision or
-recall.
+predictions of each path. It also prints the held-out and top-1 tables, then the
+leads section (a table per set, the pooled table with the policy per area, and
+the top-1 table), and ends with the candidates section, which holds counts per
+library and no precision or recall.

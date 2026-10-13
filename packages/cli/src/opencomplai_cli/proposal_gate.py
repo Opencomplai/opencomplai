@@ -6,7 +6,8 @@ confirmed with a signed ``classification_proposal_confirmation`` record (see
 does not cover becomes one ``confirmed_proposal:<area>`` discrepancy row and
 counts as at least MAJOR for ``--fail-on``. An absent, unconfirmed, edited or
 stale proposal changes nothing, and the declared purpose stays the source of
-the classification.
+the classification. A proposal's recorded code digest is current when it equals
+the scan's manifest-aware digest or its legacy (0.12.0) digest.
 
 The returned report copy is meant only as the argument of the fail-on gate:
 the real ``CorroborationReport``, the ``scan-report.json`` sidecar and the gap
@@ -47,7 +48,10 @@ _AT_LEAST_MAJOR = (DiscrepancySeverity.MAJOR, DiscrepancySeverity.CRITICAL)
 
 
 def _evaluate(
-    manifest: SystemManifest, repo_root: Path, current_tree_sha256: str | None
+    manifest: SystemManifest,
+    repo_root: Path,
+    current_tree_sha256: str | None,
+    legacy_tree_sha256: str | None = None,
 ) -> tuple[str, dict | None]:
     """(status, proposal document when confirmed). Never raises."""
     try:
@@ -69,7 +73,10 @@ def _evaluate(
         recorded = proposal_tree_sha256(doc)
         # A proposal from an older release has no digest: not comparable, so
         # it stays confirmed and behaves as before.
-        if recorded is not None and recorded != (current_tree_sha256 or None):
+        # A proposal recorded by 0.12.0 holds the legacy digest, so either
+        # value is current.
+        current = {current_tree_sha256 or None, legacy_tree_sha256 or None}
+        if recorded is not None and recorded not in current:
             return "stale", None
         return "confirmed", doc
     except Exception:
@@ -77,10 +84,13 @@ def _evaluate(
 
 
 def proposal_status(
-    manifest: SystemManifest, repo_root: Path, current_tree_sha256: str | None
+    manifest: SystemManifest,
+    repo_root: Path,
+    current_tree_sha256: str | None,
+    legacy_tree_sha256: str | None = None,
 ) -> str:
     """One of absent, unconfirmed, stale, confirmed. Pure read; never raises."""
-    return _evaluate(manifest, repo_root, current_tree_sha256)[0]
+    return _evaluate(manifest, repo_root, current_tree_sha256, legacy_tree_sha256)[0]
 
 
 def proposal_lacks_tree_digest(repo_root: Path) -> bool:
@@ -96,13 +106,14 @@ def confirmed_proposal_area(
     manifest: SystemManifest,
     repo_root: Path,
     current_tree_sha256: str | None = None,
+    legacy_tree_sha256: str | None = None,
 ) -> int | None:
     """Annex III area (1-8) of a valid, confirmed, current proposal; else None.
 
     Never raises. A proposal written for other code (digest differs) is stale
     and returns None.
     """
-    state, doc = _evaluate(manifest, repo_root, current_tree_sha256)
+    state, doc = _evaluate(manifest, repo_root, current_tree_sha256, legacy_tree_sha256)
     if state != "confirmed" or doc is None:
         return None
     area = doc["proposal"].get("proposed_annex_iii_area")

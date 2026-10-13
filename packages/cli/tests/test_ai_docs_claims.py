@@ -14,11 +14,19 @@ actually false are forbidden.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
 
 _ROOT = Path(__file__).resolve().parents[3]
+_LEADS_HEADING = "## Leads from the default scan"
+_FINDING_CLAIM = re.compile(
+    r"\bleads?\s+(?:are|is)\s+(?:a\s+)?findings?\b", re.IGNORECASE
+)
+_AUTO_CLASSIFICATION = re.compile(
+    r"auto-?classif|automatic(?:ally)?\s+classif", re.IGNORECASE
+)
 _PAGES = [
     "docs/src/cli/scan.md",
     "docs/src/cli/ai.md",
@@ -80,3 +88,49 @@ def test_cli_ai_page_describes_codebert_onnx_as_the_deterministic_matcher():
         spec.license.lower(),
     ]:
         assert phrase in text, f"docs/src/cli/ai.md no longer says {phrase!r}"
+
+
+def _leads_section(text: str) -> str:
+    start = text.find(_LEADS_HEADING)
+    if start < 0:
+        raise AssertionError(f"scan.md has no '{_LEADS_HEADING}' section")
+    end = text.find("\n## ", start + len(_LEADS_HEADING))
+    return text[start:] if end < 0 else text[start:end]
+
+
+def _bad_lead_sentences(section: str) -> list[str]:
+    sentences = re.split(r"(?<=[.!?])\s+", section)
+    return [
+        s
+        for s in sentences
+        if _FINDING_CLAIM.search(s) or _AUTO_CLASSIFICATION.search(s)
+    ]
+
+
+def test_scan_page_leads_section_does_not_call_leads_findings():
+    path = _ROOT / "docs/src/cli/scan.md"
+    if not path.exists():
+        pytest.skip(f"{path} not present in this checkout")
+    pytest.importorskip("opencomplai_ai")
+    from opencomplai_ai.models import MODEL_CATALOG
+
+    spec = MODEL_CATALOG["codebert-onnx"]
+    assert spec.runtime == "deterministic"
+    section = _leads_section(path.read_text(encoding="utf-8"))
+    assert "codebert-onnx" in section, "leads section does not name the matcher"
+    bad = _bad_lead_sentences(section)
+    assert not bad, f"leads section calls leads findings or auto-classification: {bad}"
+
+
+def test_leads_sentence_check_is_not_vacuous():
+    bad_finding = "A lead is a finding for the reviewer."
+    bad_auto = "The scan does auto-classification."
+    # scan.md is hard-wrapped: the same sentences split across lines must match too.
+    bad_finding_wrapped = "- **A lead is\n  a finding for the team.**"
+    bad_auto_wrapped = "The scan\nautomatically\n classifies the file."
+    good = "A lead is not a finding."
+    assert _bad_lead_sentences(bad_finding) == [bad_finding]
+    assert _bad_lead_sentences(bad_auto) == [bad_auto]
+    assert _bad_lead_sentences(bad_finding_wrapped) == [bad_finding_wrapped]
+    assert _bad_lead_sentences(bad_auto_wrapped) == [bad_auto_wrapped]
+    assert _bad_lead_sentences(good) == []

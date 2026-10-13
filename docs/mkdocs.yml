@@ -246,6 +246,7 @@ nav:
     - System Design: architecture/system-design.md
     - Data Model: architecture/data-model.md
     - "ADR: Local serve vs SaaS": architecture/adr-local-serve-vs-saas.md
+    - "ADR: Proposal leads tier": architecture/adr-proposal-leads.md
     - Hosted dashboard: architecture/dashboard-saas.md
 
   - Examples:

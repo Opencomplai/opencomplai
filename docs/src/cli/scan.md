@@ -137,16 +137,54 @@ and ignores it. Run `scan --propose`, then `accept --proposal`, to refresh it.
   the confirmation record under `.opencomplai/acceptances/` and `.ocignore`, and any
   file named `scan-report.json`, `eval-report.json` or `compliance-artifact.json` at any
   depth) are left out of the digest, so writing them does not change it. A report file
-  you write inside the scanned tree with `--sarif-output` or `--output-file` is part of
-  the digest. Write it outside the repository or list it in `.ocignore`, or a confirmed
-  proposal reads stale on the next run. The proposal also records a
-  digest of the scanned code (`scan_tree_sha256`). When the code or the manifest changes
-  after that, `check` treats the proposal as stale and ignores it; run `scan --propose`
-  and `accept --proposal` again to refresh it.
+  you write inside the scanned tree with `--sarif-output` or `--output-file` is recorded
+  in `.opencomplai/written-files.json` and left out of the digest while its content still
+  matches the recorded hash, so it needs no `.ocignore` entry. It counts again when another
+  tool produced it or when it was edited after the tool wrote it, and then a confirmed
+  proposal goes stale. The manifest is a freshness hint, not a security
+  boundary. The proposal also records a digest of the scanned code (`scan_tree_sha256`).
+  When the code or the system manifest changes after that, `check` treats the proposal as
+  stale and ignores it; run `scan --propose` and `accept --proposal` again to refresh it.
+  A proposal written by 0.12.0 is still accepted. A report file that existed before upgrading counts
+  once more on the run that overwrites it. After the first run that writes the report file (that
+  run records it), run `scan --propose` and `accept --proposal` once. `tree_dirty` comes from
+  git, so to keep it false, commit the file or list it in `.gitignore`.
 
 Intent snippets are read relative to `--repo-root`, not the working directory. A snippet that
 cannot be read adds a `snippet_unreadable` warning to the scan report (shown with
 `--output json`) instead of being skipped silently.
+
+## Leads from the default scan
+
+A lead is a call site that the deterministic `codebert-onnx` matcher proposes for an Annex III area. Each lead names the
+call site (file, line and function), the area and a confidence band (the schema allows `low`, `medium` and `high`; this release produces `low` and `medium` only). The leads are listed
+under `eu_ai_scan.proposal_leads` in `scan-report.json` and in a terminal block headed "Annex III area leads (for a person
+to review, not findings)".
+
+- **A lead is a pointer for a person to review, not a finding.** It has no severity and it is not a classification: the
+  declared purpose stays authoritative.
+- **It moves nothing.** A lead never changes a verdict, a count, the classification proposal, `compliance-artifact.json`
+  or any exit code. With `check --scan` the exit code follows `--fail-on` exactly as before. `scan --quick` lists the
+  same leads and still always exits `0`.
+- **It needs the optional plugin.** Leads appear only when `opencomplai-ai` is installed (`pip install opencomplai-ai`).
+  Without it, `scan` and `check --scan` print one install-hint line and the base install behaves as before.
+- **Which areas.** Leads are shown for areas 3 (education), 4 (employment), 6 (law enforcement) and 8 (justice and
+  democratic processes). Area 5 (essential services) is always shown at the lowest confidence band. Area 7 (migration) is
+  notice only: no leads are shown for it.
+- **Switch.** Leads are on by default. `OPENCOMPLAI_LEADS=0` (or `false` or `off`) turns them off; `1`, `true` or `on`
+  keeps them on.
+- **Coverage notice.** When the intent analysis did not run, `scan` and `check --scan` print what the default scan covers
+  and say that a quiet result is not evidence that no Annex III area applies. The same statement is stored under
+  `default_scan_coverage` in `scan-report.json`, in `scan --output json` and in a `scan --output-file` that
+  is JSON. It is not in `compliance-artifact.json`, it is not a finding and it has
+  no effect on any exit code.
+
+The measured figures for these leads, on three labelled synthetic sets, are in the
+[Annex III detection benchmark](../concepts/annex-iii-benchmark.md), in its
+[leads section](../concepts/annex-iii-benchmark.md#leads-on-the-three-sets). Leads sit apart from the
+[candidates](#candidates-leads-for-a-person). The leads are described in
+[Annex III area leads](../architecture/adr-proposal-leads.md) and the candidates in the
+[candidate tier](../concepts/candidate-tier.md) page.
 
 ## Candidates (leads for a person)
 

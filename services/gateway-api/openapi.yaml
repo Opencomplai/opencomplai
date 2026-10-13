@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
   title: Opencomplai Gateway API
-  version: 0.12.0
+  version: 0.13.0
   description: |
     REST API gateway for the Opencomplai compliance platform.
     All routes proxy to the appropriate Python service.
@@ -2147,6 +2147,41 @@ components:
           type: string
           enum: [imported_not_classified]
 
+    EuAiProposalLead:
+      type: object
+      additionalProperties: false
+      description: |
+        A lead for a person, not a finding. The deterministic matcher saw an
+        Annex III area 3 to 8 signal at this call site. It carries no tier,
+        severity or obligation, never enters the signed artifact, the
+        classification proposal or the report hash, and never changes an exit
+        code.
+      required: [reason, file, line, function, annex_iii_area, confidence_band, signals]
+      properties:
+        reason:
+          type: string
+          enum: [deterministic_matcher]
+        file:
+          type: string
+        line:
+          type: integer
+          minimum: 1
+          description: 1-based line of the call site
+        function:
+          type: string
+          description: Call-site token the signal was found on
+        annex_iii_area:
+          type: integer
+          minimum: 1
+          maximum: 8
+        confidence_band:
+          type: string
+          enum: [low, medium, high]
+        signals:
+          type: array
+          items:
+            type: string
+
     EuAiRegulatoryFinding:
       type: object
       required: [location, function, risk_tier]
@@ -2174,6 +2209,8 @@ components:
       description: |
         Structured EU AI Act scan output when --ai-intent is enabled.
         Present on CorroborationReport; evidence is filtered to regulatory findings only.
+        In a default scan the block can hold proposal_leads alone (all other
+        fields at their defaults).
       properties:
         capabilities:
           type: array
@@ -2204,6 +2241,15 @@ components:
             regulatory_finding_count.
           items:
             $ref: "#/components/schemas/EuAiCandidate"
+        proposal_leads:
+          type: array
+          description: |
+            Leads from the deterministic matcher for Annex III areas 3 to 8,
+            for a person to review. Omitted when empty. Never counted as a
+            finding, and excluded from regulatory_finding_count, the report
+            hash, the proposal and every exit code.
+          items:
+            $ref: "#/components/schemas/EuAiProposalLead"
 
     CorroborationReport:
       type: object
@@ -2241,6 +2287,14 @@ components:
             Classification-proposal state written by check --scan. Omitted
             when no proposal was compared.
           enum: [confirmed, unconfirmed, stale, absent]
+        default_scan_coverage:
+          type: object
+          additionalProperties: true
+          description: |
+            What the default scan covered. Set on every scan; present in
+            scan-report.json and the scan JSON output; never in
+            compliance-artifact.json. Optional; readers that reject unknown keys
+            must accept it.
         evidence:
           type: array
           items:
