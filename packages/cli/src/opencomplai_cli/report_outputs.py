@@ -26,19 +26,36 @@ def write_check_reports(
     location_uri: str,
     tool_version: str,
     warn: Callable[[str], None],
+    signer_key_id: str = "",
 ) -> None:
     outputs = (
-        (junit, lambda: artifact_to_junit(artifact, "see compliance-artifact.json")),
+        (
+            junit,
+            lambda: artifact_to_junit(
+                artifact, "see compliance-artifact.json", signer_key_id=signer_key_id
+            ),
+        ),
         (
             sarif,
             lambda: (
                 json.dumps(
-                    artifact_to_sarif(artifact, location_uri, tool_version), indent=2
+                    artifact_to_sarif(
+                        artifact,
+                        location_uri,
+                        tool_version,
+                        signer_key_id=signer_key_id,
+                    ),
+                    indent=2,
                 )
                 + "\n"
             ),
         ),
-        (summary_md, lambda: artifact_to_summary_md(artifact) + "\n"),
+        (
+            summary_md,
+            lambda: (
+                artifact_to_summary_md(artifact, signer_key_id=signer_key_id) + "\n"
+            ),
+        ),
     )
     for path, render in outputs:
         if path is None:

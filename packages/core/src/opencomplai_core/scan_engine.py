@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from opencomplai_core.classification_proposal import is_tool_written_path
 from opencomplai_core.models import (
     CorroborationReport,
     DetectionFinding,
@@ -29,6 +30,7 @@ from opencomplai_core.scanner.exclusion_audit import audit_exclusions
 from opencomplai_core.scanner.feature_types import FeatureStore, ScanProgressCallback
 from opencomplai_core.scanner.features import ScanConfig, extract_features
 from opencomplai_core.scanner.fusion import fuse_evidence
+from opencomplai_core.scanner.import_candidates import find_import_candidates
 from opencomplai_core.scanner.inventory import build_repo_inventory
 from opencomplai_core.scanner.mapping import derive_declared_categories
 from opencomplai_core.scanner.ocignore import config_dict_for_hash, load_ocignore
@@ -40,10 +42,19 @@ if TYPE_CHECKING:
     from opencomplai_core.scanner.inventory import RepoInventory
 
 
-def input_digest(inventory: RepoInventory, commit_ref: str, config_hash: str) -> str:
-    tree = tree_digest((e.rel_path, Path(e.path)) for e in inventory.entries)
+def _tree_sha256(inventory: RepoInventory) -> str:
+    """Digest of the scanned code, without the files the tool writes itself."""
+    kept = [e for e in inventory.entries if not is_tool_written_path(e.rel_path)]
+    return tree_digest((e.rel_path, Path(e.path)) for e in kept)
+
+
+def _digest(tree: str, commit_ref: str, config_hash: str) -> str:
     raw = f"{tree}|{commit_ref}|{config_hash}|{SCANNER_VERSION}"
     return f"sha256:{hashlib.sha256(raw.encode()).hexdigest()}"
+
+
+def input_digest(inventory: RepoInventory, commit_ref: str, config_hash: str) -> str:
+    return _digest(_tree_sha256(inventory), commit_ref, config_hash)
 
 
 def _scope_weight(scope: EvidenceScope) -> float:
@@ -183,13 +194,13 @@ def run_detectors(
     return evidence, detector_errors
 
 
-def _load_intent_plugin(model_id: str | None = None):
+def _load_intent_plugin(model_id: str | None = None, repo_root: Path | None = None):
     try:
         from opencomplai_ai.config import get_active_model
         from opencomplai_ai.detector import IntentDetector
 
         resolved_model = model_id or get_active_model()
-        return IntentDetector(resolved_model)
+        return IntentDetector(resolved_model, repo_root=repo_root)
     except ImportError:
         return None
 
@@ -310,6 +321,7 @@ def _build_eu_ai_scan_summary(
     regulatory_evidence: list[EvidenceItem],
     *,
     declared_purpose: str = "",
+    candidates: list | None = None,
 ) -> EuAiScanSummary:
     from opencomplai_core.models import (
         EuAiRegulatoryFinding,
@@ -380,6 +392,7 @@ def _build_eu_ai_scan_summary(
         limited_risk=limited,
         gated_callsite_count=len(usage_matches),
         regulatory_finding_count=len(regulatory_evidence),
+        candidates=candidates or [],
     )
 
 
@@ -519,7 +532,7 @@ def run_scan(
     eu_ai_scan = None
 
     if ai_intent:
-        intent_detector = _load_intent_plugin(ai_model)
+        intent_detector = _load_intent_plugin(ai_model, repo_root)
         if intent_detector is None:
             import warnings
 
@@ -538,7 +551,7 @@ def run_scan(
                 )
                 from opencomplai_core.scanner.snippet_cache import SnippetCache
 
-                snippet_cache = SnippetCache()
+                snippet_cache = SnippetCache(root=repo_root)
                 file_contexts = build_file_ai_context_map(features, evidence)
 
                 if ai_legacy:
@@ -569,15 +582,32 @@ def run_scan(
                     usage_matches=usage_matches if not ai_legacy else None,
                     ai_legacy=ai_legacy,
                 )
+                missed = snippet_cache.unreadable | getattr(
+                    intent_detector, "unreadable_snippets", frozenset()
+                )
+                if missed:
+                    inventory.warnings.append(
+                        f"snippet_unreadable: {len(missed)} call-site snippet(s) "
+                        "could not be read; the intent classifier saw no code for "
+                        f"them (first: {', '.join(sorted(missed)[:5])})"
+                    )
                 intent_evidence = _upgrade_intent_evidence(
                     intent_evidence, ai_legacy=ai_legacy
                 )
 
                 if not ai_legacy:
+                    # Leads only: built from the full import list, kept
+                    # out of evidence, counts, proposal and hashes.
+                    finding_locations = {
+                        loc for e in intent_evidence for loc in e.locations
+                    }
                     eu_ai_scan = _build_eu_ai_scan_summary(
                         usage_matches,
                         intent_evidence,
                         declared_purpose=declared_purpose,
+                        candidates=find_import_candidates(
+                            features.imports, finding_locations
+                        ),
                     )
                     # EU AI Act mode: evidence contains regulatory intent findings only
                     evidence = sorted(
@@ -608,7 +638,8 @@ def run_scan(
     scores = score_findings(findings)
     severity = classify_severity(discrepancies, findings, scores)
 
-    digest = input_digest(inventory, commit_ref, cfg_hash)
+    tree = _tree_sha256(inventory)
+    digest = _digest(tree, commit_ref, cfg_hash)
     scan_id = (
         f"scan_{hashlib.sha256(f'{digest}|{system_id}'.encode()).hexdigest()[:16]}"
     )
@@ -658,6 +689,7 @@ def run_scan(
         generated_at=datetime.now(UTC).isoformat(),
         report_hash="",
         eu_ai_scan=eu_ai_scan,
+        source_tree_sha256=tree,
     )
     report.report_hash = compute_report_hash(report)
     if progress_cb:

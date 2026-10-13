@@ -32,9 +32,33 @@ def summarize_failed_controls(ids: list[str], limit: int | None = None) -> str:
     )
 
 
-def artifact_to_junit(artifact: dict | None, detail: str = "") -> str:
+def signed_state(artifact: dict | None, signer_key_id: str = "") -> str:
+    """Whether the artifact carries a signature (presence only, never verified)."""
+    if artifact is None:
+        return "n/a (no artifact)"
+    if not artifact.get("signature"):
+        return "no (unsigned artifact)"
+    return f"yes (key {signer_key_id})" if signer_key_id else "yes"
+
+
+def artifact_to_junit(
+    artifact: dict | None, detail: str = "", *, signer_key_id: str = ""
+) -> str:
     """One testsuite, one testcase; a <failure> for every CI-failing result."""
     suite = ET.Element("testsuite", name="opencomplai", tests="1")
+    if artifact:
+        props = ET.SubElement(suite, "properties")
+        signed = bool(artifact.get("signature"))
+        ET.SubElement(
+            props, "property", name="opencomplai.signed", value=str(signed).lower()
+        )
+        if signed and signer_key_id:
+            ET.SubElement(
+                props,
+                "property",
+                name="opencomplai.signer_key_id",
+                value=signer_key_id,
+            )
     case = ET.SubElement(
         suite, "testcase", name="compliance-scan", classname="opencomplai"
     )
@@ -63,7 +87,7 @@ def artifact_to_junit(artifact: dict | None, detail: str = "") -> str:
     return ET.tostring(suite, encoding="unicode", xml_declaration=False)
 
 
-def artifact_to_summary_md(artifact: dict | None) -> str:
+def artifact_to_summary_md(artifact: dict | None, *, signer_key_id: str = "") -> str:
     """Markdown job summary table (what the GitHub connector shows)."""
     result = artifact.get("result", "unknown") if artifact else "unknown"
     system_id = artifact.get("system_id", "unknown") if artifact else "unknown"
@@ -76,6 +100,7 @@ def artifact_to_summary_md(artifact: dict | None) -> str:
         f"| Result | `{result}` |",
         f"| System | `{system_id}` |",
         f"| Commit | `{commit_ref}` |",
+        f"| Signed | `{signed_state(artifact, signer_key_id)}` |",
     ]
     if artifact and artifact.get("failed_controls"):
         failed = summarize_failed_controls(artifact["failed_controls"], limit=5)
@@ -94,6 +119,8 @@ def artifact_to_sarif(
     artifact: dict,
     location_uri: str = "system-manifest.json",
     tool_version: str = "",
+    *,
+    signer_key_id: str = "",
 ) -> dict:
     """SARIF 2.1.0 of the check verdict (failed controls + non-met gap rows)."""
     location = [
@@ -152,6 +179,15 @@ def artifact_to_sarif(
     }
     if tool_version:
         driver["version"] = tool_version
+    signed = bool(artifact.get("signature"))
+    props: dict = {
+        "opencomplai_result": artifact.get("result"),
+        "system_id": artifact.get("system_id"),
+        "commit_ref": artifact.get("commit_ref"),
+        "signed": signed,
+    }
+    if signed and signer_key_id:
+        props["signer_key_id"] = signer_key_id
     return {
         "$schema": SARIF_SCHEMA_URI,
         "version": SARIF_VERSION,
@@ -159,11 +195,7 @@ def artifact_to_sarif(
             {
                 "tool": {"driver": driver},
                 "results": results,
-                "properties": {
-                    "opencomplai_result": artifact.get("result"),
-                    "system_id": artifact.get("system_id"),
-                    "commit_ref": artifact.get("commit_ref"),
-                },
+                "properties": props,
             }
         ],
     }

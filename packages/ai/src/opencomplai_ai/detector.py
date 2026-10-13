@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from opencomplai_core.models import EvidenceItem, EvidenceKind, Reachability
@@ -17,9 +18,13 @@ if TYPE_CHECKING:
 
 
 class IntentDetector(BaseDetector):
-    def __init__(self, model_id: str) -> None:
+    def __init__(self, model_id: str, repo_root: Path | None = None) -> None:
         self._model_id = model_id
-        self._snippet_cache = SnippetCache()
+        self._snippet_cache = SnippetCache(root=repo_root)
+
+    @property
+    def unreadable_snippets(self) -> frozenset[str]:
+        return frozenset(self._snippet_cache.unreadable)
 
     @property
     def detector_id(self) -> str:

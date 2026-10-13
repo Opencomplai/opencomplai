@@ -9,6 +9,141 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.12.0] — 2026-10-13
+
+### Added
+
+- `scan --ai-intent` lists candidates: an AI library that production code
+  imports but that gives no Annex III signal (`retinaface`, `cv2`, `dlib`,
+  `mtcnn`, `facenet_pytorch`, `mediapipe` and the names the biometrics signal
+  list already holds). They sit apart from the findings, under
+  `eu_ai_scan.candidates` in the JSON and in their own block of the terminal
+  report, with the library, the file and the line of the import. A candidate is
+  a lead for a person: it is never counted as a finding and never changes the
+  exit code, the classification proposal, the report hash or the benchmark
+  numbers.
+  Thanks to @Reh1t (#100) for the idea and the report.
+- The code-signal matcher treats a run of `-`, `_` and `.` as one separator, so
+  the distribution name `face-recognition`, the module `face_recognition` and
+  `Face.Recognition` are one signal. Only whole names match
+  (`interface-recognition` does not), and no earlier match is removed.
+- The Annex III benchmark gains a held-out set of 24 synthetic programs (12
+  Annex III positives over all eight areas, 4 Article 5 positives and 8 with
+  no area; 8 of the 24 are JavaScript, TypeScript, Java or Go), a top-1 measure
+  of the area `scan --propose` picks, and a 95% Wilson interval beside each
+  rate. Held-out, intent path: 50.0% precision (n=8) and 33.3% recall (n=12);
+  default scan path: 25.0% and 8.3%. The proposal picked the labelled area for
+  1 of 12 held-out programs and 13 of 29 training programs. The labels come
+  from one author, so the page is a baseline for tuning the signals, not
+  accuracy on real repositories.
+- A local `check` lists in `evidence_hashes` the SHA-256 digests (`sha256:`
+  prefix) of the manifest and, with `--scan` or `--sample-set`, of the
+  `scan-report.json` or `eval-report.json` sidecar it read or wrote. Only
+  hashes are stored, never file content. `export` also accepts an artifact
+  written without `--with-gaps` (it exited 2 before) and marks the package
+  `gaps_included: false`.
+- `opencomplai export --sign` signs the whole JSON package under its own
+  signing domain, and `opencomplai verify --kind evidence-package` checks it
+  offline. The package gains an optional `package_signature`, left out when
+  unsigned so an unsigned export keeps its bytes. The CSV gains the columns
+  `tree_sha256`, `tree_dirty`, `signed` and `verdict`; `--sign` is refused with
+  `--format csv`.
+- The GitHub Action has a `strict` input. `strict: "true"` adds
+  `--with-gaps --scan --fail-on major --require-exemption-record
+  --sign-if-available`, each once; a flag you set through `args`, `sign` or
+  `with-gaps` wins. Exit codes and the CLI defaults are unchanged, and the
+  GitLab, Azure and recipe guides show the same flag set for the CLI.
+- The Markdown summary, the JUnit properties and the SARIF run properties
+  state whether the artifact is signed, with the signer key id when the run
+  signed. "yes" means a signature is present, not that it was verified.
+- `opencomplai diff` prints a "Tool changed" block when the two artifacts
+  differ in `cli_version`, `rule_set_version` or the scanner version, and notes
+  that a worse verdict may come from the upgrade. The JSON output gains an
+  additive `tool_changes` field; the exit code is unchanged.
+
+### Changed
+
+- `scan --propose` uses the deterministic `codebert-onnx` backend unless
+  `--ai-model` is given, ignoring the configured default model, so a base
+  install exits 0. The proposal records `ai_backend` and `ai_model_id`
+  (optional; an older proposal still loads and confirms).
+- `check --scan` ignores a stale classification proposal. A proposal now
+  records a digest of the scanned code; when the code or the manifest changes
+  after it was written, `check` prints one warning that names
+  `scan --propose`, adds no row, and reports `proposal_status` (`confirmed`,
+  `unconfirmed`, `stale` or `absent`) in `scan-report.json`. The signed
+  artifact is unchanged, and a proposal from an older release is used as
+  before. The check sidecars `scan-report.json`, `eval-report.json` and
+  `compliance-artifact.json` are left out of the digest by file name at any
+  depth; a report file written inside the scanned tree with `--report-junit`,
+  `--sarif-output`, `--summary-md` or `--output-file` is not, so write it
+  outside the tree or list it in `.ocignore`.
+- The Article 12 agent row now checks that `logging.decision_log_ref` names a
+  regular file inside the repository; a reference that names no file reads
+  Missing. An optional `#anchor` is matched literally or by heading slug, and a
+  missing anchor keeps the row Partial with a note.
+- An imported provider deployer pack (`deployer-pack import`) is read in the
+  Article 26 row for a deployer with a recorded high-risk deployer session. The
+  row reads Partial at most, with the reason "provider-supplied, not verified by
+  the deployer", and never Met. A gate on Missing EU rows can therefore exit
+  differently after an import, and the `data_version` of the EU AI Act framework
+  report changes. `agents check` lists expired agent mandates after its
+  findings and in the `expired_mandates` key of the JSON output; its exit code
+  is unchanged.
+- The scanner's token dictionary (`ai_signals.json`) moves from 1.3.0 to 1.6.0,
+  so scan results for the same input can differ from 0.11.1. Version 1.4.0
+  moved the vector-store SDKs `pinecone`, `weaviate`, `qdrant`, `chromadb`,
+  `milvus` and `lancedb`, and 1.6.0 moved the generic names `voyageai`, `jina`,
+  `embedding`, `rerank` and `similarity_search`, from the group that maps to
+  essential services to the one that counts as AI usage and maps to no area.
+  Version 1.5.0 added one default-path token, `write_register` (a Modbus
+  client method, critical infrastructure). On the benchmark's default scan path
+  overall precision moves from 44.4% to 54.5% and recall from 13.8% to 20.7%,
+  measured on synthetic programs; the intent-path numbers do not move. The
+  documentation page lists each token with its source and confidence.
+- 274 candidate forms for Annex III areas 5 to 8 were measured against the
+  benchmark programs for the default scan path, and none met the admission
+  rule, so no token was added there. The default scan path still predicts none
+  of the area 3 to 8 programs. Run `scan --ai-intent` or `scan --propose` for
+  those areas.
+- A push rejected as an artifact schema violation (`SCHEMA_VIOLATION`) now
+  prints a generic hint from `push`, `docs generate --push` and the CI
+  connectors: upgrade the receiving service, or pin the CLI to the version the
+  service was released with. Exit codes are unchanged.
+- The `opencomplai-ai` package description and the SDK and project READMEs no
+  longer call the intent analysis AI-powered: its `codebert-onnx` matcher is
+  deterministic and needs no model download (`scan --propose` uses it unless
+  `--ai-model` is given; `scan --ai-intent` still uses the configured model,
+  which needs the `[deep]` extra by default). The evidence vault is described as
+  a hash-chained, tamper-evident ledger, and the control-codes page tells a
+  reader to correct a declaration that is wrong rather than reword it.
+- Documentation: the scan and check pages state what the default scan
+  measures and that a quiet default scan is not evidence that no Annex III area
+  applies; the 19 CLI options that no page named are described with their
+  real defaults; the CI snippets use `actions/checkout@v7`.
+- Upgrade note: a reader of the artifact or export JSON that rejects unknown
+  keys must accept the additive fields of this release: `evidence_hashes`
+  entries in a local artifact, `package_signature` and `gaps_included` in the
+  export package, `proposal_status` in `scan-report.json`, `tool_changes` in
+  the `diff` JSON, and `ai_backend` and `ai_model_id` in a proposal.
+
+### Fixed
+
+- The provenance stamp no longer marks a clean checkout as dirty when
+  `check --scan` creates `.ocignore`: tree provenance is sampled before the
+  file is written.
+- A file's scope is decided by whole path tokens (split on `_`, `-` and `.`),
+  so paths such as `devices/`, `documents/`, `inspection/` and `latest/` no
+  longer lose severity as test code. The scope classifier version moves to
+  1.1.0, so findings for the same input can differ.
+- The scan reads intent snippets and the terminal report reads display
+  snippets relative to `--repo-root`, not the working directory. When a
+  snippet cannot be read the scan now records a `snippet_unreadable` warning
+  in the scan report (shown with `--output json`) instead of analysing
+  nothing silently.
+- A plain retrieval chatbot that imports a vector-store SDK is no longer read
+  as an essential-services system. The SDK still counts as AI present.
+
 ## [0.11.1] — 2026-10-12
 
 ### Changed
@@ -1088,6 +1223,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.12.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.12.0
 [0.11.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.1
 [0.11.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.0
 [0.10.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.10.0

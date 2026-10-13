@@ -35,6 +35,7 @@ from opencomplai_cli.publish import (
     prepare_scan_status_artifact,
     publish_dossier_envelope,
     publish_scan_status,
+    schema_violation_hint,
 )
 
 console = Console()
@@ -149,6 +150,8 @@ def run_push(artifact_file: Path, *, env: dict[str, str] | None = None) -> int:
     # `data` is server-controlled (a JSON error body echoed back to the
     # terminal) -- escaped so it can never inject rich markup.
     err_console.print(f"[red]Push failed ({status}):[/red] {escape(str(data))}")
+    if hint := schema_violation_hint(data):
+        err_console.print(hint, soft_wrap=True)
     return EXIT_PUBLISH_FAILED
 
 
@@ -245,6 +248,8 @@ def run_push_dossier(dossier_file: Path, *, env: dict[str, str] | None = None) -
         return EXIT_OK
 
     err_console.print(f"[red]Push failed ({status}):[/red] {escape(str(data))}")
+    if hint := schema_violation_hint(data):
+        err_console.print(hint, soft_wrap=True)
     return EXIT_PUBLISH_FAILED
 
 

@@ -8,7 +8,9 @@ states only that a person confirmed the proposal as shown; it never asserts a
 legal classification and no verdict reads it in this module.
 
 The proposal carries its own digest, so an edit after it was written (or after it
-was confirmed) is detectable. Pure module: no clock, no network, no CLI.
+was confirmed) is detectable. ``ai_backend`` and ``ai_model_id`` are optional
+additive provenance (absent in older proposals, which still load and confirm).
+Pure module: no clock, no network, no CLI.
 source: product design, no external citation; confidence: medium;
 needs_founder_review: true.
 """
@@ -23,6 +25,7 @@ from typing import Any
 
 from opencomplai_core.acceptance import (
     PROPOSAL_CONFIRMATION,
+    RECORD_DIR,
     AcceptanceStatus,
     evaluate_record,
 )
@@ -79,8 +82,15 @@ def build_proposal_document(
     minority_evidence: Sequence[Any],
     prohibited_signals: Sequence[Any],
     proposal: Mapping[str, Any],
+    ai_backend: str | None = None,
+    ai_model_id: str | None = None,
+    scan_tree_sha256: str | None = None,
 ) -> dict[str, Any]:
-    """The unconfirmed proposal document, ``proposal_sha256`` last."""
+    """The unconfirmed proposal document, ``proposal_sha256`` last.
+
+    ``scan_tree_sha256`` (commit-independent code digest) is written only when
+    given, so a document without it stays byte-identical to older releases.
+    """
     doc: dict[str, Any] = {
         "schema_version": PROPOSAL_SCHEMA_VERSION,
         "document_type": PROPOSAL_DOCUMENT_TYPE,
@@ -100,8 +110,45 @@ def build_proposal_document(
         "prohibited_signals": list(prohibited_signals),
         "proposal": dict(proposal),
     }
+    if ai_backend is not None:
+        doc["ai_backend"] = ai_backend
+    if ai_model_id is not None:
+        doc["ai_model_id"] = ai_model_id
+    if scan_tree_sha256 is not None:
+        doc["scan_tree_sha256"] = scan_tree_sha256
     doc["proposal_sha256"] = proposal_digest(doc)
     return doc
+
+
+def proposal_tree_sha256(doc: Mapping[str, Any]) -> str | None:
+    """The code digest the proposal was written for; None for older proposals."""
+    value = doc.get("scan_tree_sha256")
+    return value if isinstance(value, str) and value else None
+
+
+# Files `check` writes into --output-dir (default: the current directory, usually the repo root).
+TOOL_WRITTEN_NAMES = (
+    "scan-report.json",
+    "eval-report.json",
+    "compliance-artifact.json",
+)
+
+
+def is_tool_written_path(rel: str) -> bool:
+    """True for files the tool itself writes into the scanned tree.
+
+    The proposal file and ``.ocignore`` at the repo root (never a nested file of
+    that name), anything under the acceptance record directory, and the sidecar
+    files ``check`` writes (``TOOL_WRITTEN_NAMES``). The sidecars match by
+    basename at any depth because ``--output-dir`` may be a subdirectory. They
+    are left out of the code digest so writing them does not make a proposal
+    stale.
+    """
+    return (
+        rel in (PROPOSAL_FILENAME, ".ocignore")
+        or rel.startswith(RECORD_DIR + "/")
+        or rel.rsplit("/", 1)[-1] in TOOL_WRITTEN_NAMES
+    )
 
 
 def load_proposal(path: Path) -> dict[str, Any]:

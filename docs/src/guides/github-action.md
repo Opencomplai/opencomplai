@@ -52,6 +52,7 @@ Until the Action is listed on the Marketplace, reference it by path in this repo
 | `artifact-name` | `compliance-artifact-<commit sha>` | Name of the uploaded artifact. Must be unique within a workflow run. |
 | `sign` | `false` | Sign the artifact when a signing key is in the environment (`--sign-if-available`). |
 | `with-gaps` | `false` | Add the per-article gap report to the artifact (`--with-gaps`). |
+| `strict` | `false` | Apply the [strict preset](#strict-preset): `--with-gaps --scan --fail-on major --require-exemption-record --sign-if-available`. |
 | `fail-on-error` | `true` | Fail the job when `check` exits non-zero. |
 | `github-token` | `github.token` | Token used to post the comment. |
 
@@ -80,6 +81,34 @@ the full table is in [Exit codes](../cli/exit-codes.md).
 | `2` | Validation failed: a bad manifest or a missing input. |
 | `3` | Policy block: a prohibited practice. |
 | `4` | Modification trap: halted for human review. |
+
+## Strict preset
+
+`strict: "true"` turns on the strict reading of a high-risk system with one input. It adds these
+[`check` flags](../cli/check.md#options), each once:
+
+```text
+--with-gaps --scan --fail-on major --require-exemption-record --sign-if-available
+```
+
+```yaml
+      - uses: Opencomplai/opencomplai/integrations/github-action@<40-hex commit SHA> # vN
+        with:
+          strict: "true"
+```
+
+- A flag you set through `args`, `sign` or `with-gaps` wins and is never passed twice. For
+  example `args: --fail-on critical` replaces `--fail-on major`, and `args: --no-sign` skips
+  `--sign-if-available`.
+- `--scan` and `--require-exemption-record` have no negation flag, so `args` cannot turn them
+  off. Set `strict: "false"` (the default) to drop the preset.
+- `--scan` bootstraps an `.ocignore` file in the repository root.
+- `--require-exemption-record` only takes effect when the manifest relies on the Art. 6(3)
+  derogation: it then exits 1 unless a valid signed exemption record exists.
+- Signing stays optional. `--sign-if-available` writes the artifact unsigned with a warning
+  when no signing key is present; add `args: --sign` for strict signing.
+- The preset adds gates and never relaxes one. Exit codes and the CLI defaults are unchanged.
+- `OPENCOMPLAI_CHECK_ARGS` is not read by this Action, so the override route is `args`.
 
 ## Passing extra check flags
 

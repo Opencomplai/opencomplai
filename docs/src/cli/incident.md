@@ -71,6 +71,8 @@ Classes: `unclassified`, `death`, `health_harm`, `critical_infrastructure`,
 `--kind` is `authority`, `deployer`, `importer` or `distributor`; `--sent-at` defaults to
 now. The first `authority` notification decides whether the deadline was met.
 
+`--ref` is an optional free-text reference for the notification, for example a case number from the recipient. It is stored with the notification, shown in the Markdown export and written to the log.
+
 ## `incident close`
 
 === "macOS / Linux"
@@ -82,6 +84,8 @@ now. The first `authority` notification decides whether the deadline was met.
     ```powershell
     opencomplai incident close --id INC-0001 --note "Root cause fixed and verified"
     ```
+
+`--note` is required. `--closed-at` (ISO 8601, default now) must not be before the declaration time, or the command exits `2`.
 
 ## `incident status`
 
@@ -170,3 +174,5 @@ for a deployer, importer or distributor (`--kind downstream`, which needs `--par
 come from the stored incident; anything missing reads `_not provided_`. Both templates are
 drafts: low confidence, flagged `needs_founder_review`, and **not legally reviewed**. Confirm
 the required content and the recipient with counsel before sending.
+
+`--party-kind` (`deployer`, `importer` or `distributor`) is used with `--kind downstream`; `authority` exits `2`, and when it is omitted the notice shows `_not provided_`.

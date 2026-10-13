@@ -4,7 +4,9 @@
   "commit_ref": "unresolved",
   "result": "pass",
   "failed_controls": [],
-  "evidence_hashes": [],
+  "evidence_hashes": [
+    "sha256:8a17bfc01ee6b2feffeca295204de49791010ec1b1d6ef70e9dc6abf656300f5"
+  ],
   "rationale_hash": "sha256:990fa9a8524f9a4f82e7d440c2b2298138e5f5026311571b08c4a1cfb7b27b6a",
   "duration_ms": <DURATION>,
   "pending_verifications_count": 0,

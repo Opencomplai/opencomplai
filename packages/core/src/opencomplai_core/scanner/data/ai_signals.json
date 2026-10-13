@@ -1,11 +1,12 @@
 {
-  "version": "1.3.0",
+  "version": "1.6.0",
   "ai_sdks": ["openai", "anthropic", "google-genai", "google-generativeai", "litellm", "azure-ai-inference", "cohere", "mistralai", "groq", "together", "replicate", "huggingface_hub", "transformers", "sentence-transformers", "fireworks-ai", "perplexityai", "ai21", "stability-sdk", "elevenlabs", "deepgram", "assemblyai", "google-cloud-aiplatform", "ibm-watsonx-ai", "vertexai"],
   "agent_frameworks": ["langgraph", "openai-agents", "pydantic-ai", "pydantic_ai", "smolagents", "google-adk", "google.adk", "@mastra/core", "crewai", "autogen"],
-  "ml_frameworks": ["torch", "tensorflow", "keras", "sklearn", "xgboost", "lightgbm", "catboost", "onnxruntime", "llama-cpp-python", "vllm", "ollama", "mlflow", "bentoml", "sagemaker", "wandb", "databricks-sdk", "databricks.sdk", "whisper", "speechbrain", "pyannote", "mediapipe", "faiss", "pgvector"],
+  "ml_frameworks": ["torch", "tensorflow", "keras", "sklearn", "xgboost", "lightgbm", "catboost", "onnxruntime", "llama-cpp-python", "vllm", "ollama", "mlflow", "bentoml", "sagemaker", "wandb", "databricks-sdk", "databricks.sdk", "whisper", "speechbrain", "pyannote", "mediapipe", "faiss", "pgvector", "pinecone", "weaviate", "qdrant", "chromadb", "milvus", "lancedb", "voyageai", "jina", "embedding", "rerank", "similarity_search"],
   "orchestration": ["langchain", "llama-index", "llama_index", "semantic-kernel", "autogen", "crewai", "haystack", "dspy", "instructor", "guidance", "guardrails", "ragas", "langfuse"],
-  "vector_embedding": ["pinecone", "weaviate", "qdrant", "chromadb", "milvus", "lancedb", "voyageai", "jina", "embedding", "rerank", "similarity_search"],
+  "vector_embedding": [],
   "biometric": ["opencv", "face_recognition", "deepface", "insightface", "retinaface", "fer", "gait", "emotion_recognition", "emotion_detection", "detect_emotion", "speaker_recognition", "speaker_identification", "speaker_verification", "voiceprint", "gait_recognition"],
-  "scoring": ["score", "scoring", "rank", "ranking", "eligibility", "recommend", "recommendation", "fraud", "risk_score", "credit", "profiling", "decision", "classifier"],
-  "pii_hints": ["email", "ssn", "passport", "patient_id", "phi", "pii", "biometric_id"]
+  "scoring": ["write_register", "score", "scoring", "rank", "ranking", "eligibility", "recommend", "recommendation", "fraud", "risk_score", "credit", "profiling", "decision", "classifier"],
+  "pii_hints": ["email", "ssn", "passport", "patient_id", "phi", "pii", "biometric_id"],
+  "area_signals": {"critical_infrastructure": ["write_register"], "education": [], "employment": []}
 }

@@ -1,4 +1,4 @@
-"""CL-A1: tree_digest hashes file content under relative paths, nothing else."""
+"""tree_digest hashes file content under relative paths, nothing else."""
 
 from __future__ import annotations
 

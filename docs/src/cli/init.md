@@ -33,6 +33,8 @@ Create a system manifest and set up the local signing keypair.
 | `--section-extras-file` | *(none)* | Path to a JSON file with structured Section 2/3 inputs (`performance_metrics`, `known_limitations`, `human_oversight_measures`) merged into the manifest. |
 | `--from-model-card` | *(none)* | Path to a Hugging Face model card (`README.md`). Offline import of its front matter; values are recorded as attested, not verified. See [Import a Hugging Face model card](#import-a-hugging-face-model-card). |
 | `--output` / `-o` | `system-manifest.json` | Output path for the manifest file. |
+| `--scan` | `False` | After the manifest is written, run the code corroboration scan on `--repo-root` and print its human report, with a note to confirm `--intended-purpose` when discrepancies are found. Writes no ledger event, runs no AI intent analysis and does not change the exit code. Ignored with `--interactive`. See [scan](scan.md) |
+| `--repo-root` | `.` | Repository root that `--scan` reads; the first scan creates a default `.ocignore` there when none exists. No effect without `--scan` |
 
 ## Import a Hugging Face model card
 

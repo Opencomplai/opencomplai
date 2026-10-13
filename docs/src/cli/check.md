@@ -78,6 +78,20 @@ and `--fail-on critical` and `none` do not. A missing, unconfirmed, edited or st
 proposal changes nothing, and the declared purpose stays the source of the
 classification.
 
+A proposal is stale when the scanned code or the manifest changed after it was written
+and confirmed. `check` then ignores it for the gate (no row, the exit code is the one
+you would get without a proposal) and prints one warning on stderr that names
+`opencomplai scan --propose`. A proposal written by an older release has no code digest,
+so it cannot be compared: it is still used, and `check` prints a one-line hint to run
+`scan --propose` again. The state is reported as `proposal_status` in
+`scan-report.json`, with one of four values: `confirmed`, `unconfirmed` (the file is
+there but no valid confirmation matches it), `stale` and `absent` (no proposal file). It
+is not part of the signed `compliance-artifact.json`.
+
+## What the default scan covers
+
+`check --scan` is the default path that the [Annex III detection benchmark](../concepts/annex-iii-benchmark.md) measured: no intent analysis runs, and the scan maps package and import signals to an Annex III area through a fixed token dictionary. On the benchmark's labelled programs that path reads area 1 (biometrics) and reads areas 2 to 8 poorly or not at all, so a quiet `check --scan` is not evidence that no Annex III area applies. The `--ai-intent` and `--propose` options are options of [`scan`](scan.md), not of `check`: use [`scan --ai-intent`](scan.md) for the intent path, or [`scan --propose`](scan.md#suggesting-a-classification-propose) to get a proposal that a person confirms. A proposal confirmed that way is read by `check --scan` as the paragraph above describes. The declared purpose stays the source of the classification.
+
 ## Several manifests
 
 Pass `-m` more than once (or a glob such as `-m "systems/*.json"`; the CLI expands
@@ -208,7 +222,7 @@ Evals: no eval sample set supplied (skipped)
 
 Opencomplai Compliance Check
   system_id:    my-model
-  commit_ref:   HEAD
+  commit_ref:   abc1234
   result:       PASS
   duration_ms:  0
   signed:       no (OSS unsigned)
@@ -216,13 +230,15 @@ Opencomplai Compliance Check
   Artifact written to compliance-artifact.json
 ```
 
+The `commit_ref` is resolved, never the literal `HEAD`: from the CI commit variable, then `git rev-parse HEAD`, then `unresolved`.
+
 When a control fails, a `failed_controls:` line is added, e.g. for a high-risk
 use case:
 
 ```text
 Opencomplai Compliance Check
   system_id:    hiring
-  commit_ref:   HEAD
+  commit_ref:   abc1234
   result:       CONTROL_FAIL
   duration_ms:  0
   signed:       no (OSS unsigned)
@@ -240,10 +256,10 @@ With `--sample-set`, the `Evals: ...skipped` line is replaced by an
 {
   "install_id": "a1b2c3d4-...",
   "system_id": "my-model",
-  "commit_ref": "HEAD",
+  "commit_ref": "abc1234",
   "result": "pass",
   "failed_controls": [],
-  "evidence_hashes": [],
+  "evidence_hashes": ["sha256:..."],
   "rationale_hash": "sha256:...",
   "duration_ms": 0,
   "pending_verifications_count": 0,
@@ -251,6 +267,8 @@ With `--sample-set`, the `Evals: ...skipped` line is replaced by an
   "eval_summary": null
 }
 ```
+
+In local mode `evidence_hashes` lists the SHA-256 digest of the manifest; with `--scan`, the canonical scan report hash and the digest of `scan-report.json`; with `--sample-set`, the digest of `eval-report.json`; service mode lists ledger event ids; see [Evidence](../concepts/evidence.md). The sidecar digests are computed over the file contents with CRLF folded to LF, so on Windows `sha256sum` of the file itself can differ.
 
 `eval_summary` is populated only when `--sample-set` is supplied; `signature` is
 populated only when `--sign` (or `--sign-if-available` with a key) is supplied.
@@ -286,6 +304,13 @@ scanning; it carries the verdict, not scan evidence, so `scan --sarif-output` is
 scan findings) and `--summary-md` (Markdown, for a pull request comment or job summary). Each
 is optional and independent. With several `--manifest` values, see
 [Several manifests](#several-manifests).
+
+A report file written inside the scanned tree with `--report-junit`, `--sarif-output` or
+`--summary-md` is part of the code digest that a classification proposal records (only the
+proposal, the acceptance records, `.ocignore` and files named `scan-report.json`,
+`eval-report.json` or `compliance-artifact.json` are left out). Write it outside the scanned
+tree, or list it in `.ocignore`, or a confirmed proposal reads stale on the next run. In the
+example below, `out/` should be listed in `.ocignore` if it sits inside the scanned tree.
 
 === "macOS / Linux"
     ```bash

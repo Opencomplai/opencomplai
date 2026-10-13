@@ -32,6 +32,7 @@ than the EU AI Act.
 | `--artifact` | `compliance-artifact.json` | Path to a `ScanStatusArtifact` (from `opencomplai check`) — optional; supplies rule results and, if present, embedded `gap_report`/`eval_summary`/`scan_summary`/`framework_reports` |
 | `--gap-report` | *(none)* | Path to the output of `opencomplai gaps --output json` (or a bare `GapReport` JSON); UTF-8, UTF-16 or the system code page, so a `>` redirect from any Windows shell works — overrides any `gap_report` embedded in `--artifact`. A multi-framework file (with a `frameworks` block) adds one section per framework other than the EU AI Act, as does an artifact carrying `framework_reports`. Each of `gap_report` and `framework_reports` falls back to the artifact separately, so a file holding only a `gap_report` renders next to the artifact's framework sections, which may come from a different run |
 | `--output` / `-o` | `report.html` | Output path — format is inferred from the file extension |
+| `--sort` | `article` | `article` or `priority`, the order of [`gaps --sort`](gaps.md), applied to the gap table, the framework tables and the PDF rows |
 
 ## HTML vs. PDF
 

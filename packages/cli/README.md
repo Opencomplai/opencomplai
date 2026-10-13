@@ -42,8 +42,8 @@ meta-package instead.
 | `opencomplai resume` | Resume a `HALTED_PENDING_REVIEW` system with a signed approval token |
 | `opencomplai accept` | Write a signed, committable record accepting a system's high-risk classification |
 | `opencomplai verify-output` | Verify an AI output claim against ground-truth sources |
-| `opencomplai verify` | Verify a signed artifact (`--kind` artifact, dossier or agent-attestation; `--expect KEY=VALUE` adds offline checks) |
-| `opencomplai export` | Write one neutral evidence package (JSON, or a flat CSV with `--format csv`) from a `compliance-artifact.json`, with the signed artifact embedded unchanged |
+| `opencomplai verify` | Verify a signed artifact (`--kind` artifact, dossier, oversight-log, incident-log, agent-log, agent-attestation, deployer-pack or evidence-package; `--expect KEY=VALUE` adds offline checks) |
+| `opencomplai export` | Write one neutral evidence package (JSON, or a flat CSV with `--format csv`) from a `compliance-artifact.json`, with the signed artifact embedded unchanged; `--sign` signs the package |
 | `opencomplai version` | Show the installed Opencomplai version |
 | `opencomplai info` | Show full package metadata (`pip show`-style, across the whole suite) |
 

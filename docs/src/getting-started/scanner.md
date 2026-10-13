@@ -43,6 +43,10 @@ inference imports, and dependencies.
     before relying on the results. See [`.ocignore` scan configuration](#ocignore)
     below.
 
+## What the default scan covers
+
+Without `--ai-intent` or `--propose`, the scan reads package and import signals and maps them to an Annex III area through a fixed token dictionary. On the labelled programs of the [Annex III detection benchmark](../concepts/annex-iii-benchmark.md), that path reads area 1 (biometrics) and reads areas 2 to 8 poorly or not at all; the measured counts are in the default-scan table of the benchmark page. A quiet default scan is therefore not evidence that no Annex III area applies. For the other areas, run `opencomplai scan --ai-intent`, or run `opencomplai scan --propose` to get a proposal that a person confirms (see [suggesting a classification](../cli/scan.md#suggesting-a-classification-propose)). The declared purpose stays the source of the classification.
+
 ## `.ocignore` scan configuration {#ocignore}
 
 The scanner reads a repo-root [`.ocignore`](https://github.com/opencomplai/opencomplai/blob/main/.ocignore)
@@ -167,6 +171,12 @@ Framework glue (`APIRouter`, `ASGITransport`, `Depends`, `TestClient`) and other
 
 For production assessments, point `--repo-root` at your deployed service (for example `dashboard-saas/`) rather than the entire monorepo. Add demo paths such as `examples/` to [`.ocignore`](#ocignore) so sample fixtures do not affect your system's results. Set `intended_purpose` in `system-manifest.json` to describe **your** system — not a sample credit-scoring manifest.
 
+A file's scope is decided by whole tokens of its path, split on `/`, `_`, `-` and `.`. A path
+with a token such as `tests`, `test`, `docs`, `dev`, `vendor` or `generated` is non-production, so
+`tests/test_scan.py` and `docs/guide.md` are non-production, and so is `dev/x.py`. A path such as
+`src/devices/` or `documents/` is production, because `devices` and `documents` are not whole tokens
+that match those words. Non-production scope lowers a finding's confidence.
+
 ### Flags
 
 | Flag | Effect |
@@ -187,12 +197,15 @@ With `--output json`, the report includes an `eu_ai_scan` block:
     "prohibited": [],
     "high_risk": [{"location": "src/score.py:42", "function": "predict_proba", "risk_tier": "high_risk", "rationale": {"summary": "Matched Annex III area 5...", "matched_signals": ["predict_proba"], "regulation_ref": "Art. 6(2), Annex III pt.5(b)"}}],
     "limited_risk": [],
+    "candidates": [],
     "gated_callsite_count": 3,
     "regulatory_finding_count": 0
   },
   "evidence": []
 }
 ```
+
+`candidates` are leads for a person, not findings, and appear only with `--ai-intent`.
 
 In `--ai-intent` mode (without `--ai-legacy`), `evidence` contains **regulatory intent findings only** — not lexical framework noise. Minimal-tier AI usage appears in `eu_ai_scan.capabilities` but not in `evidence`.
 

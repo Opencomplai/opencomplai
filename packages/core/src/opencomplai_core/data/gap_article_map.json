@@ -102,14 +102,15 @@
   "Art. 26": {
     "sources": [
       { "kind": "artifact", "ref": "deployer_use_records" },
-      { "kind": "manifest", "ref": "agent_declarations" }
+      { "kind": "manifest", "ref": "agent_declarations" },
+      { "kind": "manifest", "ref": "imported_provider_pack", "when_obligation_any": ["deployer_high_risk"] }
     ],
     "applies_when_any": ["deployer_high_risk"],
     "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
     "source": "Regulation (EU) 2024/1689 Art. 26; obligations.json deployer_high_risk",
     "confidence": "low",
     "needs_founder_review": true,
-    "note": "Evidence probes: deployer_use_records (file-name convention) and the manifest agent inventory; Partial at most, never Met. Applicability comes from a recorded checker session (applies_when_any), not from this row."
+    "note": "Evidence probes: deployer_use_records (file-name convention) and the manifest agent inventory; Partial at most, never Met. A provider deployer pack received with deployer-pack import is the manifest source imported_provider_pack (Partial at most, provider-supplied, not verified by the deployer). Applicability comes from a recorded checker session (applies_when_any), not from this row."
   },
   "Art. 27": {
     "sources": [

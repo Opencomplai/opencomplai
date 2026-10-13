@@ -91,8 +91,9 @@ The `intended_purpose` contains a signal for a prohibited practice:
 **How to remediate**
 
 If the classification is accurate, the system cannot be deployed under EU AI Act.
-If it is a false positive, revise the `intended_purpose` wording so it no longer
-matches a prohibited signal, then re-run `opencomplai check`.
+If you believe it is a false positive, fix the underlying declaration: correct
+`intended_purpose` so it states what the system actually does, then re-run `opencomplai check`.
+Do not reword it only to avoid the signal.
 
 ---
 

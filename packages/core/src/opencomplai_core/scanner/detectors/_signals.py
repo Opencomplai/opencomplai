@@ -57,7 +57,44 @@ def tokenize_identifier(text: str) -> set[str]:
     return segments
 
 
+_SEPARATOR_RUN = re.compile(r"[-_.]+")
+_NAME_CHUNK_SPLIT = re.compile(r"[^a-z0-9_.\-]+")
+
+
+@lru_cache(maxsize=4096)
+def normalize_package_name(text: str) -> str:
+    """Lower-case a package or module name; every run of ``-``, ``_``, ``.`` is one ``_``."""
+    return _SEPARATOR_RUN.sub("_", text.lower()).strip("_")
+
+
+def _match_normalised(identifier: str, signal: str) -> bool:
+    """Whole-name equality after normalising separators; never a substring test."""
+    sig_lower = signal.lower()
+    if "_" not in sig_lower and "." not in sig_lower and len(sig_lower) < 4:
+        return False
+    wanted = normalize_package_name(sig_lower)
+    if not wanted:
+        return False
+    for chunk in _NAME_CHUNK_SPLIT.split(identifier.lower()):
+        if normalize_package_name(chunk) == wanted:
+            return True
+        if "." in chunk and any(
+            normalize_package_name(part) == wanted for part in chunk.split(".")
+        ):
+            return True
+    return False
+
+
 def match_code_signal(identifier: str, signal: str) -> bool:
+    """Match a code signal, then fall back to the separator-insensitive name match.
+
+    The fallback runs only when the exact logic found nothing, so it can add
+    matches (``face-recognition`` for ``face_recognition``) and never remove one.
+    """
+    return _match_existing(identifier, signal) or _match_normalised(identifier, signal)
+
+
+def _match_existing(identifier: str, signal: str) -> bool:
     """Match Annex III / Art. 5 code signals without short-substring false positives."""
     if not identifier or not signal:
         return False

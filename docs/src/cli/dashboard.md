@@ -111,6 +111,7 @@ Revokes dashboard enrollment for this install. Emits a `consent_revoked` ledger 
 |---|---|---|
 | `--tenant` | *(required)* | Tenant ID to withdraw from. |
 | `--dashboard-url` | *(unset)* | Dashboard base URL. Used to notify the dashboard of withdrawal (best-effort; failure is non-fatal). |
+| `--local-only` | off | Clear local state only: never send the remote withdraw request, even when a token is available. The `consent_revoked` ledger event and the allowlist removal still run, and the remote consent must then be revoked from the dashboard |
 
 ### Example
 

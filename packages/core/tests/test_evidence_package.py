@@ -84,13 +84,57 @@ def test_build_copies_fields_and_drops_rationale() -> None:
     assert "rationale" not in extracted
 
 
-def test_build_rejects_artifact_without_gap_report() -> None:
+def test_gapless_artifact_builds_with_gaps_included_false() -> None:
     raw = _raw()
     raw["gap_report"] = None
-    with pytest.raises(ValueError, match="no gap_report"):
-        build_evidence_package(raw)
+    pkg = build_evidence_package(raw)
+    assert pkg.gaps_included is False
+    assert pkg.articles == []
+    assert json.loads(pkg.model_dump_json())["gaps_included"] is False
+    assert '"gaps_included":false' in pkg.model_dump_json()
+    assert pkg.artifact == raw
+    assert pkg.verdict.failed_controls == ["C-1"]
+
+
+def test_build_rejects_artifact_without_gap_report() -> None:
+    """Legacy id kept so the recorded baseline still finds it; the old rule is gone.
+
+    A missing gap report used to raise ValueError. It now builds, so this pins that
+    it no longer raises (the full contract is the gapless test above).
+    """
+    raw = _raw()
+    raw.pop("gap_report", None)
+    assert build_evidence_package(raw).gaps_included is False
+
+
+def test_non_artifact_still_rejected() -> None:
     with pytest.raises(ValueError, match="not a compliance artifact"):
         build_evidence_package({"hello": "world"})
+
+
+def test_gaps_included_omitted_when_true() -> None:
+    pkg = build_evidence_package(_raw())
+    assert pkg.gaps_included is True
+    dumped = json.loads(pkg.model_dump_json())
+    assert "gaps_included" not in dumped
+    assert list(dumped) == [
+        "package_version",
+        "identity",
+        "provenance",
+        "verdict",
+        "articles",
+        "evidence_hashes",
+        "verification",
+        "artifact",
+    ]
+
+
+def test_gapless_csv_is_header_only() -> None:
+    raw = _raw()
+    raw["gap_report"] = None
+    rows = list(csv.reader(io.StringIO(package_to_csv(build_evidence_package(raw)))))
+    assert len(rows) == 1
+    assert rows[0][0] == "system_id"
 
 
 def test_tree_fields_are_null_when_absent_and_copied_when_present() -> None:

@@ -31,6 +31,7 @@ from opencomplai_core.classification_proposal import (
     PROPOSAL_FILENAME,
     confirmation_status,
     load_proposal,
+    proposal_tree_sha256,
 )
 from opencomplai_core.models import (
     CorroborationReport,
@@ -45,24 +46,68 @@ ROW_PREFIX = "confirmed_proposal:"
 _AT_LEAST_MAJOR = (DiscrepancySeverity.MAJOR, DiscrepancySeverity.CRITICAL)
 
 
-def confirmed_proposal_area(manifest: SystemManifest, repo_root: Path) -> int | None:
-    """Annex III area (1-8) of a valid, confirmed proposal; else None. Never raises."""
+def _evaluate(
+    manifest: SystemManifest, repo_root: Path, current_tree_sha256: str | None
+) -> tuple[str, dict | None]:
+    """(status, proposal document when confirmed). Never raises."""
     try:
         root = repo_root.resolve()
         proposal_path = root / PROPOSAL_FILENAME
+        if not proposal_path.is_file():
+            return "absent", None
         status = confirmation_status(
             proposal_path,
             record_path(root, manifest.system_id, PROPOSAL_CONFIRMATION),
             manifest,
             trusted_key_ids=trusted_key_ids_from_env(os.environ),
         )
+        if status.state == "stale":
+            return "stale", None
         if status.state != "valid":
-            return None
-        area = load_proposal(proposal_path)["proposal"].get("proposed_annex_iii_area")
-        if isinstance(area, int) and not isinstance(area, bool) and 1 <= area <= 8:
-            return area
+            return "unconfirmed", None
+        doc = load_proposal(proposal_path)
+        recorded = proposal_tree_sha256(doc)
+        # A proposal from an older release has no digest: not comparable, so
+        # it stays confirmed and behaves as before.
+        if recorded is not None and recorded != (current_tree_sha256 or None):
+            return "stale", None
+        return "confirmed", doc
     except Exception:
+        return "unconfirmed", None
+
+
+def proposal_status(
+    manifest: SystemManifest, repo_root: Path, current_tree_sha256: str | None
+) -> str:
+    """One of absent, unconfirmed, stale, confirmed. Pure read; never raises."""
+    return _evaluate(manifest, repo_root, current_tree_sha256)[0]
+
+
+def proposal_lacks_tree_digest(repo_root: Path) -> bool:
+    """True when the proposal file on disk carries no code digest to compare."""
+    try:
+        doc = load_proposal(repo_root.resolve() / PROPOSAL_FILENAME)
+    except ValueError:
+        return False
+    return proposal_tree_sha256(doc) is None
+
+
+def confirmed_proposal_area(
+    manifest: SystemManifest,
+    repo_root: Path,
+    current_tree_sha256: str | None = None,
+) -> int | None:
+    """Annex III area (1-8) of a valid, confirmed, current proposal; else None.
+
+    Never raises. A proposal written for other code (digest differs) is stale
+    and returns None.
+    """
+    state, doc = _evaluate(manifest, repo_root, current_tree_sha256)
+    if state != "confirmed" or doc is None:
         return None
+    area = doc["proposal"].get("proposed_annex_iii_area")
+    if isinstance(area, int) and not isinstance(area, bool) and 1 <= area <= 8:
+        return area
     return None
 
 

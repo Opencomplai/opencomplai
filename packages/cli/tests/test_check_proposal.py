@@ -8,6 +8,7 @@ Everything is offline and runs under tmp_path.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from opencomplai_cli.main import app
 from opencomplai_cli.proposal_gate import (
     apply_confirmed_proposal,
     confirmed_proposal_area,
+    proposal_status,
 )
 from opencomplai_core import rules
 from opencomplai_core.classification_proposal import (
@@ -32,6 +34,7 @@ from opencomplai_core.models import (
     ScanSummary,
     SignalCategory,
 )
+from opencomplai_core.scan_engine import run_scan
 from opencomplai_core.scanner.mapping import signal_category_to_taxonomy
 from opencomplai_core.signing import generate_keypair
 from typer.testing import CliRunner
@@ -91,7 +94,14 @@ def _repo(tmp_path: Path) -> Path:
     return repo
 
 
-def _write_proposal(repo: Path, manifest_path: Path, area: int = 4) -> Path:
+def _tree(repo: Path) -> str:
+    """The code digest `scan --propose` would store for this tree."""
+    return run_scan("prop-sys", "HEAD", repo, PURPOSE).source_tree_sha256
+
+
+def _write_proposal(
+    repo: Path, manifest_path: Path, area: int = 4, tree: str | None = None
+) -> Path:
     manifest = load_manifest(manifest_path)
     doc = build_proposal_document(
         system_id=manifest.system_id,
@@ -107,6 +117,7 @@ def _write_proposal(repo: Path, manifest_path: Path, area: int = 4) -> Path:
         minority_evidence=[],
         prohibited_signals=[],
         proposal={"proposed_annex_iii_area": area, "proposed_area_name": "employment"},
+        scan_tree_sha256=tree,
     )
     path = repo / PROPOSAL_FILENAME
     path.write_text(json.dumps(doc, indent=2, sort_keys=True), encoding="utf-8")
@@ -136,17 +147,22 @@ def _confirm(tmp_path: Path, repo: Path, manifest_path: Path, proposal: Path) ->
     assert result.exit_code == 0, result.output
 
 
-def _confirmed(tmp_path: Path, repo: Path, manifest_path: Path, area: int = 4) -> Path:
-    proposal = _write_proposal(repo, manifest_path, area)
+def _confirmed(
+    tmp_path: Path,
+    repo: Path,
+    manifest_path: Path,
+    area: int = 4,
+    tree: str | None = None,
+) -> Path:
+    proposal = _write_proposal(repo, manifest_path, area, tree)
     _confirm(tmp_path, repo, manifest_path, proposal)
     return proposal
 
 
-def _check(
+def _invoke_check(
     tmp_path: Path, manifest_path: Path, repo: Path, *extra: str, out: str = "out"
-) -> tuple[int, dict, Path]:
-    out_dir = tmp_path / out
-    result = runner.invoke(
+):
+    return runner.invoke(
         app,
         [
             "check",
@@ -155,10 +171,17 @@ def _check(
             "--repo-root",
             str(repo),
             "--output-dir",
-            str(out_dir),
+            str(tmp_path / out),
             *extra,
         ],
     )
+
+
+def _check(
+    tmp_path: Path, manifest_path: Path, repo: Path, *extra: str, out: str = "out"
+) -> tuple[int, dict, Path]:
+    out_dir = tmp_path / out
+    result = _invoke_check(tmp_path, manifest_path, repo, *extra, out=out)
     assert result.exit_code in (0, 1), result.output
     artifact = json.loads(
         (out_dir / "compliance-artifact.json").read_text(encoding="utf-8")
@@ -369,3 +392,198 @@ def test_apply_confirmed_proposal_pure() -> None:
         summary,
         report,
     )
+
+
+# --- staleness ---
+
+
+def _status(out_dir: Path) -> str | None:
+    sidecar = json.loads((out_dir / "scan-report.json").read_text(encoding="utf-8"))
+    return sidecar.get("proposal_status")
+
+
+def _has_key(node, key: str) -> bool:
+    if isinstance(node, dict):
+        return key in node or any(_has_key(v, key) for v in node.values())
+    if isinstance(node, list):
+        return any(_has_key(v, key) for v in node)
+    return False
+
+
+def _edit_code(repo: Path) -> None:
+    (repo / "app.py").write_text("print('edited')\n", encoding="utf-8")
+
+
+def test_check_confirmed_unchanged_code_is_used(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest, tree=_tree(repo))
+    code, artifact, out = _check(
+        tmp_path, manifest, repo, "--scan", "--fail-on", "major"
+    )
+    assert code == 1
+    assert "confirmed_proposal:employment" in artifact["scan_summary"]["discrepancies"]
+    assert _status(out) == "confirmed"
+
+
+def test_confirmed_proposal_survives_a_second_run_with_sidecars_in_the_tree(
+    tmp_path: Path,
+) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest, tree=_tree(repo))
+    args = ("--scan", "--fail-on", "major")
+    codes = []
+    for out in (str(repo), str(repo), "elsewhere"):
+        result = _invoke_check(tmp_path, manifest, repo, *args, out=out)
+        out_dir = Path(out) if Path(out).is_absolute() else tmp_path / out
+        artifact = json.loads(
+            (out_dir / "compliance-artifact.json").read_text(encoding="utf-8")
+        )
+        row = "confirmed_proposal:employment"
+        assert row in artifact["scan_summary"]["discrepancies"]
+        assert _status(out_dir) == "confirmed"
+        codes.append(result.exit_code)
+    assert codes == [1, 1, 1]
+    assert (repo / "scan-report.json").exists()
+
+
+def test_check_stale_proposal_ignored_and_warned(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    args = ("--scan", "--fail-on", "major")
+    proposal = _confirmed(tmp_path, repo, manifest, tree=_tree(repo))
+    _edit_code(repo)
+    result = _invoke_check(tmp_path, manifest, repo, *args, out="a")
+    stale = json.loads(
+        (tmp_path / "a" / "compliance-artifact.json").read_text(encoding="utf-8")
+    )
+    assert "scan --propose" in result.stderr
+    assert result.stderr.count("no longer matches") == 1
+    assert _status(tmp_path / "a") == "stale"
+
+    proposal.unlink()  # the same tree with no proposal at all
+    code, plain, _ = _check(tmp_path, manifest, repo, *args, out="b")
+    assert result.exit_code == code == 0
+    assert stale["scan_summary"]["discrepancies"] == []
+    assert stale["failed_controls"] == plain["failed_controls"]
+    assert stale["result"] == plain["result"]
+
+
+def test_stale_proposal_never_fails_check(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest, tree=_tree(repo))
+    code, _, _ = _check(tmp_path, manifest, repo, "--scan", "--fail-on", "major")
+    assert code == 1  # sanity: current and confirmed
+    _edit_code(repo)
+    code, artifact, out = _check(
+        tmp_path, manifest, repo, "--scan", "--fail-on", "major", out="s"
+    )
+    assert code == 0
+    assert artifact["scan_summary"]["severity"] == "none"
+    assert _status(out) == "stale"
+
+
+def test_proposal_status_absent_and_unconfirmed(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    args = ("--scan", "--fail-on", "major")
+    _, _, out = _check(tmp_path, manifest, repo, *args, out="a")
+    assert _status(out) == "absent"
+
+    proposal = _write_proposal(repo, manifest, tree=_tree(repo))
+    _, _, out = _check(tmp_path, manifest, repo, *args, out="b")
+    assert _status(out) == "unconfirmed"  # file present, no record
+
+    _confirm(tmp_path, repo, manifest, proposal)
+    doc = json.loads(proposal.read_text(encoding="utf-8"))
+    doc["area"] = "biometrics"  # edited after it was confirmed
+    proposal.write_text(json.dumps(doc, indent=2, sort_keys=True), encoding="utf-8")
+    _, _, out = _check(tmp_path, manifest, repo, *args, out="c")
+    assert _status(out) == "unconfirmed"
+
+
+def test_proposal_status_in_sidecar_only(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    args = ("--scan", "--fail-on", "major")
+    seen: list[str | None] = []
+
+    def run(out: str) -> None:
+        _, artifact, out_dir = _check(tmp_path, manifest, repo, *args, out=out)
+        seen.append(_status(out_dir))
+        assert not _has_key(artifact, "proposal_status")
+        text = (out_dir / "compliance-artifact.json").read_text(encoding="utf-8")
+        assert "proposal_status" not in text
+
+    run("absent")
+    proposal = _write_proposal(repo, manifest, tree=_tree(repo))
+    run("unconfirmed")
+    _confirm(tmp_path, repo, manifest, proposal)
+    run("confirmed")
+    _edit_code(repo)
+    run("stale")
+    assert seen == ["absent", "unconfirmed", "confirmed", "stale"]
+
+
+def test_stale_manifest_is_reported_stale(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest, tree=_tree(repo))
+    manifest.write_text(
+        manifest.read_text(encoding="utf-8").replace(PURPOSE, "internal notes"),
+        encoding="utf-8",
+    )
+    code, _, out = _check(tmp_path, manifest, repo, "--scan", "--fail-on", "major")
+    assert code == 0
+    assert _status(out) == "stale"
+
+
+def test_legacy_proposal_without_tree_digest_still_confirmed(tmp_path: Path) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest)  # no scan_tree_sha256: older release
+    _edit_code(repo)
+    result = _invoke_check(
+        tmp_path, manifest, repo, "--scan", "--fail-on", "major", out="l"
+    )
+    assert result.exit_code == 1, result.output  # behaves exactly as before
+    assert _status(tmp_path / "l") == "confirmed"
+    assert "no longer matches" not in result.stderr
+    assert result.stderr.count("scan --propose") == 1  # one dim hint
+
+
+def test_proposal_status_is_pure_and_never_raises(tmp_path: Path) -> None:
+    manifest_path, repo = _manifest(tmp_path), _repo(tmp_path)
+    manifest = load_manifest(manifest_path)
+    tree = _tree(repo)
+
+    def snapshot() -> dict[str, bytes]:
+        return {
+            str(p.relative_to(repo)): p.read_bytes()
+            for p in repo.rglob("*")
+            if p.is_file()
+        }
+
+    assert proposal_status(manifest, repo, tree) == "absent"
+    proposal = _write_proposal(repo, manifest_path, tree=tree)
+    assert proposal_status(manifest, repo, tree) == "unconfirmed"
+    _confirm(tmp_path, repo, manifest_path, proposal)
+    before = snapshot()
+    assert proposal_status(manifest, repo, tree) == "confirmed"
+    assert proposal_status(manifest, repo, "0" * 64) == "stale"
+    assert proposal_status(manifest, repo, None) == "stale"
+    assert snapshot() == before
+    proposal.write_text("not json", encoding="utf-8")
+    assert proposal_status(manifest, repo, tree) == "unconfirmed"
+    assert proposal_status(manifest, tmp_path / "missing", tree) == "absent"
+
+
+def test_sidecar_digest_in_evidence_hashes_matches_file_with_status(
+    tmp_path: Path, monkeypatch
+) -> None:
+    manifest, repo = _manifest(tmp_path), _repo(tmp_path)
+    _confirmed(tmp_path, repo, manifest, tree=_tree(repo))  # makes the key pair
+    monkeypatch.setattr(main, "_SIGNING_KEY", tmp_path / "keys" / "signing.key")
+    code, artifact, out = _check(
+        tmp_path, manifest, repo, "--scan", "--sign", "--fail-on", "major"
+    )
+    assert code == 1
+    assert artifact.get("signature")
+    raw = (out / "scan-report.json").read_bytes()
+    assert b'"proposal_status": "confirmed"' in raw
+    digest = "sha256:" + hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
+    assert digest in artifact["evidence_hashes"]

@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -92,7 +92,7 @@ jobs:
 #     runs-on: ubuntu-latest
 #     steps:
 #       - name: Checkout repository
-#         uses: actions/checkout@v6
+#         uses: actions/checkout@v7
 #
 #       - name: Set up Python
 #         uses: actions/setup-python@v6
@@ -221,6 +221,10 @@ opencomplai check --with-gaps --report-junit report.xml --sarif-output check.sar
 
 Hand them to your platform: in GitLab CI list `report.xml` under `artifacts: reports: junit:`; in
 GitHub Actions pass `check.sarif` to `github/codeql-action/upload-sarif` as `sarif_file`.
+
+Each report states the signed state: the `Signed` row of the summary, the JUnit property
+`opencomplai.signed` and the SARIF run property `signed`, plus the signer key id (`sha256:` and 16 hex
+characters) when the run signed. "yes" means a signature is present, not that it was verified.
 
 The exit code is the same with or without these flags. A report that cannot be written prints a
 `WARN` on stderr and the run carries on. The files hold no dates. With several `--manifest` values

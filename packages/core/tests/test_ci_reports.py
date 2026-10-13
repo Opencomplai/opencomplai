@@ -127,11 +127,60 @@ def test_sarif_pass_has_no_results():
     assert ci_reports.artifact_to_sarif({})["runs"][0]["results"] == []
 
 
+KID = "sha256:0123456789abcdef"
+SIGNED = {**ART, "signature": "c2ln"}
+
+
+def test_summary_md_signed_row():
+    assert "| Signed | `no (unsigned artifact)` |" in ci_reports.artifact_to_summary_md(
+        ART, signer_key_id=KID
+    )
+    assert "| Signed | `yes` |" in ci_reports.artifact_to_summary_md(SIGNED)
+    assert f"| Signed | `yes (key {KID})` |" in ci_reports.artifact_to_summary_md(
+        SIGNED, signer_key_id=KID
+    )
+    assert ci_reports.signed_state(None) == "n/a (no artifact)"
+
+
+def _props(xml: str) -> dict:
+    suite = ET.fromstring(xml)
+    assert suite[0].tag == "properties"
+    return {p.get("name"): p.get("value") for p in suite[0]}
+
+
+def test_junit_signed_properties():
+    assert _props(ci_reports.artifact_to_junit(ART, signer_key_id=KID)) == {
+        "opencomplai.signed": "false"
+    }
+    assert _props(ci_reports.artifact_to_junit(SIGNED)) == {
+        "opencomplai.signed": "true"
+    }
+    assert _props(ci_reports.artifact_to_junit(SIGNED, signer_key_id=KID)) == {
+        "opencomplai.signed": "true",
+        "opencomplai.signer_key_id": KID,
+    }
+    assert ET.fromstring(ci_reports.artifact_to_junit(None)).find("properties") is None
+
+
+def test_sarif_signed_properties():
+    def props(art, **kw):
+        return ci_reports.artifact_to_sarif(art, **kw)["runs"][0]["properties"]
+
+    assert props(ART, signer_key_id=KID)["signed"] is False
+    assert "signer_key_id" not in props(ART, signer_key_id=KID)
+    assert props(SIGNED)["signed"] is True
+    assert "signer_key_id" not in props(SIGNED)
+    assert props(SIGNED, signer_key_id=KID)["signer_key_id"] == KID
+
+
 def test_no_dates_in_outputs():
     outs = [
         ci_reports.artifact_to_junit(ART, "x"),
         ci_reports.artifact_to_summary_md(ART),
         json.dumps(ci_reports.artifact_to_sarif(ART)),
+        ci_reports.artifact_to_junit(SIGNED, "x", signer_key_id=KID),
+        ci_reports.artifact_to_summary_md(SIGNED, signer_key_id=KID),
+        json.dumps(ci_reports.artifact_to_sarif(SIGNED, signer_key_id=KID)),
     ]
     for out in outs:
         assert "generated_at" not in out

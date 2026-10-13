@@ -56,7 +56,7 @@ EVIDENCE_VAULT_URL = os.environ.get("EVIDENCE_VAULT_URL", "http://evidence-vault
 app = FastAPI(
     title="Opencomplai Documentation Generator",
     description="Annex IV technical documentation dossier generator (REQ-DOC-001).",
-    version="0.11.1",
+    version="0.12.0",
 )
 
 logger = logging.getLogger(__name__)

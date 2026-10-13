@@ -194,6 +194,7 @@ from opencomplai_cli.commands.push import run_push, run_push_dossier  # noqa: E4
 from opencomplai_cli.commands.qms import app as qms_app  # noqa: E402
 from opencomplai_cli.commands.rules import app as rules_app  # noqa: E402
 from opencomplai_cli.commands.serve import run_serve  # noqa: E402
+from opencomplai_cli.commands.snippet import read_display_snippet  # noqa: E402
 from opencomplai_cli.commands.verify import verify_cmd  # noqa: E402
 from opencomplai_cli.mapped_view import (  # noqa: E402
     add_mapped_columns,
@@ -1159,7 +1160,7 @@ def init_cmd(
             emit_evidence=False,
             scan_config=scan_config,
         )
-        _print_scan_human(report)
+        _print_scan_human(report, repo_root=repo_root.resolve())
         if report.discrepancies:
             console.print(
                 "\n[yellow]Confirm or update --intended-purpose before committing.[/yellow]"
@@ -2480,25 +2481,6 @@ def _run_scan_corroboration(
     return summary, report, extra_hashes
 
 
-def _read_snippet(location: str) -> str | None:
-    if ":" not in location:
-        return None
-    file_path, _, line_str = location.rpartition(":")
-    try:
-        line_number = int(line_str)
-    except ValueError:
-        return None
-    try:
-        lines = (
-            Path(file_path).read_text(encoding="utf-8", errors="replace").splitlines()
-        )
-        if line_number < 1 or line_number > len(lines):
-            return None
-        return lines[line_number - 1][:80].strip()
-    except OSError:
-        return None
-
-
 def _render_scan_md(report: CorroborationReport) -> str:
     lines = [
         f"# Code Corroboration Scan — {report.scan_id}",
@@ -2560,6 +2542,8 @@ _INTENT_TIER_ORDER = {
 }
 
 _INTENT_DETAIL_LIMIT = 10
+# `scan --propose` backend when --ai-model is absent: the deterministic one.
+_PROPOSE_DEFAULT_MODEL = "codebert-onnx"
 
 
 def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) -> None:
@@ -2687,6 +2671,19 @@ def _render_eu_ai_scan(report: CorroborationReport, *, verbose: bool = False) ->
                 f"\n     [dim]... and {hidden} more (use --ai-verbose to show all)[/dim]"
             )
 
+    _render_candidates(summary)
+
+
+def _render_candidates(summary) -> None:
+    """List import candidates apart from the findings: leads, never counted."""
+    if not summary.candidates:
+        return
+    console.print("\n  [bold]Candidates (leads for a person, not findings)[/bold]")
+    for c in summary.candidates:
+        console.print(
+            f"     {escape(c.library)}  {escape(c.file)}:{c.line}  {c.reason}"
+        )
+
 
 def _intent_risk_tier(ann) -> str:
     if getattr(ann, "art5_prohibited", False):
@@ -2778,6 +2775,7 @@ def _print_scan_human(
     ai_intent: bool = False,
     ai_verbose: bool = False,
     ai_legacy: bool = False,
+    repo_root: Path | None = None,
 ) -> None:
     console.print("\n[bold]Code Corroboration Scan[/bold]")
     console.print(f"  severity:     {report.severity.value}")
@@ -2812,7 +2810,7 @@ def _print_scan_human(
                         f"[dim]category:[/dim] {ev.category.value}  "
                         f"[dim]confidence:[/dim] {ev.confidence:.2f}"
                     )
-                    snippet = _read_snippet(loc)
+                    snippet = read_display_snippet(loc, repo_root)
                     if snippet:
                         console.print(f"      [italic dim]{snippet}[/italic dim]")
         else:
@@ -2949,6 +2947,8 @@ def scan_cmd(
             )
             sys.exit(2)
         _require_ai_plugin()
+        if ai_model is None:  # deterministic by default; ignores ai-config.yaml
+            ai_model = _PROPOSE_DEFAULT_MODEL
         ai_intent = True  # the proposal is built from the intent findings
     if quick:
         fail_on = FailOnLevel.none
@@ -3079,6 +3079,7 @@ def scan_cmd(
             ai_intent=ai_intent,
             ai_verbose=ai_verbose,
             ai_legacy=ai_legacy,
+            repo_root=repo_root,
         )
 
     if quick:
@@ -3123,12 +3124,19 @@ def scan_cmd(
         console.print(f"[dim]SARIF written to {sarif_output}[/dim]")
 
     if propose:
+        from opencomplai_ai.models import MODEL_CATALOG
+
         from opencomplai_cli.commands.proposal import write_scan_proposal
 
-        (err_console if output == OutputFormat.json else console).print(
-            f"Proposal written: {write_scan_proposal(report, manifest, repo_root)}",
-            soft_wrap=True,
-            markup=False,
+        spec = MODEL_CATALOG.get(ai_model)
+        backend = spec.runtime if spec is not None else "unknown"
+        printer = err_console if output == OutputFormat.json else console
+        written = write_scan_proposal(
+            report, manifest, repo_root, ai_backend=backend, ai_model_id=ai_model
+        )
+        printer.print(f"Proposal written: {written}", soft_wrap=True, markup=False)
+        printer.print(
+            f"Intent backend: {ai_model} ({backend})", soft_wrap=True, markup=False
         )
 
     if enqueue_review and report.severity in (
@@ -3439,8 +3447,13 @@ def check_cmd(
     scan_summary: ScanSummary | None = None
     scan_report: CorroborationReport | None = None
     scan_failed = False
+    pre_scan_tree: tuple[str, bool] | None = None
 
     if run_code_scan:
+        # Sample before the bootstrap writes .ocignore, so it is not stamped dirty.
+        from opencomplai_cli.provenance import tree_provenance
+
+        pre_scan_tree = tree_provenance(repo_root)
         scan_config = _bootstrap_ocignore(
             repo_root,
             ocignore_path=None,
@@ -3458,11 +3471,32 @@ def check_cmd(
         scan_summary = scan_summary_from_report(scan_report)
         from opencomplai_cli import proposal_gate
 
-        # Summary and fail-on gate only; scan_report (sidecar, gaps) is untouched.
+        # Summary and fail-on gate only; the report keeps no gate row. Its
+        # proposal_status is the one addition (sidecar only, never the artifact).
+        tree = scan_report.source_tree_sha256 or None
+        proposal_status = proposal_gate.proposal_status(manifest, repo_root, tree)
+        scan_report.proposal_status = proposal_status
+        if proposal_status == "stale":
+            err_console.print(
+                "[yellow]Warning:[/yellow] the classification proposal no longer "
+                "matches the code or manifest and is ignored for the gate. Run "
+                "`opencomplai scan --propose`, then `opencomplai accept "
+                "--proposal` to refresh it.",
+                soft_wrap=True,
+            )
+        elif proposal_status == "confirmed" and (
+            proposal_gate.proposal_lacks_tree_digest(repo_root)
+        ):
+            err_console.print(
+                "[dim]The confirmed proposal has no code digest, so it cannot be "
+                "checked for staleness. Run `opencomplai scan --propose` to "
+                "write one.[/dim]",
+                soft_wrap=True,
+            )
         scan_summary, gate_report = proposal_gate.apply_confirmed_proposal(
             scan_summary,
             scan_report,
-            proposal_gate.confirmed_proposal_area(manifest, repo_root),
+            proposal_gate.confirmed_proposal_area(manifest, repo_root, tree),
             baseline_categories,
         )
         eval_hashes = list(dict.fromkeys((eval_hashes or []) + scan_hashes))
@@ -3614,14 +3648,24 @@ def check_cmd(
 
     # Sign only now: the scan override, checker verdict, gate and --with-gaps
     # blocks above all change the bytes the signature has to cover.
-    from opencomplai_cli.check_signing import stamp_artifact
+    from opencomplai_cli.check_signing import stamp_artifact, with_input_hashes
 
+    manifest_bytes = manifest_file.read_bytes() if manifest_file.is_file() else None
     artifact = stamp_artifact(
         artifact,
         now=datetime.now(UTC),
-        manifest_bytes=manifest_file.read_bytes() if manifest_file.is_file() else None,
+        manifest_bytes=manifest_bytes,
         repo_root=repo_root,
+        tree=pre_scan_tree,
     )
+    if not api_available:
+        # Local mode: tie the verdict to the files this run read or wrote.
+        artifact = with_input_hashes(
+            artifact,
+            manifest_bytes=manifest_bytes,
+            scan_report=scan_report,
+            eval_report=eval_report,
+        )
     # Before signing, so the signature covers the packs and other summaries.
     artifact = with_pack_summary(artifact, repo_root / "deployer-pack")
     artifact = with_summaries(
@@ -3659,9 +3703,11 @@ def check_cmd(
 
     if report_junit or sarif_output or summary_md:
         from opencomplai_cli.report_outputs import write_check_reports
+        from opencomplai_cli.signing_identity import signer_key_id
 
         write_check_reports(
             json.loads(artifact.model_dump_json()),
+            signer_key_id=signer_key_id(_SIGNING_KEY) if artifact.signature else "",
             junit=report_junit,
             sarif=sarif_output,
             summary_md=summary_md,
@@ -4846,6 +4892,7 @@ def _push_dossier_envelope(dossier: AnnexIVDossier, *, repo_dir: Path) -> bool:
     from opencomplai_cli.publish import (
         prepare_dossier_envelope,
         publish_dossier_envelope,
+        schema_violation_hint,
     )
 
     api_key = os.environ.get("OPENCOMPLAI_API_KEY", "")
@@ -4885,6 +4932,8 @@ def _push_dossier_envelope(dossier: AnnexIVDossier, *, repo_dir: Path) -> bool:
         return True
 
     err_console.print(f"[red]Dossier push failed ({status}):[/red] {data}")
+    if hint := schema_violation_hint(data):
+        err_console.print(hint, soft_wrap=True)
     return False
 
 

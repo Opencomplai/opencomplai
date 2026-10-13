@@ -48,7 +48,7 @@ Expected output on a valid chain:
 
 ## In local (non-service) mode
 
-When `OPENCOMPLAI_API_URL` is not set, `compliance-artifact.json` is the sole evidence output. `evidence_hashes` will be empty in local mode.
+When `OPENCOMPLAI_API_URL` is not set, `compliance-artifact.json` is the sole evidence output. In local mode `evidence_hashes` lists the SHA-256 digests (prefix `sha256:`) of the files the run read or wrote: the manifest, and with `--scan` or `--sample-set` the `scan-report.json` or `eval-report.json` sidecar, plus the canonical scan `report_hash`. Digests are taken over the file text with CRLF folded to LF, so one file hashes the same on Windows and Linux. Only hashes are stored, never file content. In service mode the list holds ledger event ids, as before.
 
 ## Scanner signal categories and detectors
 

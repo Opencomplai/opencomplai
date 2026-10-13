@@ -353,6 +353,7 @@ def build_gap_report(
         sources = config.get("sources", [])
         row: ArticleGapStatus | None = None
         manifest_row: ArticleGapStatus | None = None
+        agent_missing = False
 
         for source in sources:
             kind = source["kind"]
@@ -389,6 +390,9 @@ def build_gap_report(
                     today=effective_today,
                     repo_root=repo_root,
                 )
+                agent_missing = (
+                    candidate is not None and candidate.status == GapStatus.MISSING
+                )
             elif kind == "manifest" and manifest is not None:
                 candidate = manifest_gap_status(ref, manifest)
                 if candidate is not None and manifest_row is None:
@@ -407,6 +411,13 @@ def build_gap_report(
         # row, UNVERIFIED) and supersedes an artifact probe that found no file
         # (MISSING); against any other row normal worst-wins applies, so it
         # never masks an equal or worse verdict (ties keep the existing row).
+        # A received provider pack must never hide an expired mandate: when the
+        # agent source is MISSING, the pack row does not replace an artifact MISSING.
+        pack_hides_agent = (
+            manifest_row is not None
+            and manifest_row.evidence_ref == "manifest:imported_provider_pack"
+            and agent_missing
+        )
         if manifest_row is not None:
             if (
                 row is None
@@ -414,6 +425,7 @@ def build_gap_report(
                 or (
                     row.source == ArticleGapSource.ARTIFACT
                     and row.status == GapStatus.MISSING
+                    and not pack_hides_agent
                 )
                 or STATUS_SEVERITY[manifest_row.status] > STATUS_SEVERITY[row.status]
             ):

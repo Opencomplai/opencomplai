@@ -204,6 +204,44 @@
       "title": "PackageProvenance",
       "type": "object"
     },
+    "PackageSignature": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "ed25519",
+          "title": "Algorithm",
+          "type": "string"
+        },
+        "command": {
+          "const": "opencomplai verify <evidence-package.json> --kind evidence-package --pub-key <signer-public-key.pem>",
+          "default": "opencomplai verify <evidence-package.json> --kind evidence-package --pub-key <signer-public-key.pem>",
+          "title": "Command",
+          "type": "string"
+        },
+        "domain": {
+          "const": "evidence-package",
+          "title": "Domain",
+          "type": "string"
+        },
+        "signature": {
+          "title": "Signature",
+          "type": "string"
+        },
+        "signer_key_id": {
+          "pattern": "^sha256:[0-9a-f]{16}$",
+          "title": "Signer Key Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "algorithm",
+        "domain",
+        "signer_key_id",
+        "signature"
+      ],
+      "title": "PackageSignature",
+      "type": "object"
+    },
     "PackageVerdict": {
       "additionalProperties": false,
       "properties": {
@@ -246,8 +284,11 @@
           "type": "string"
         },
         "note": {
-          "const": "The public key must come from the signer, never from this package. The package itself is not signed; only the embedded artifact is.",
           "default": "The public key must come from the signer, never from this package. The package itself is not signed; only the embedded artifact is.",
+          "enum": [
+            "The public key must come from the signer, never from this package. The package itself is not signed; only the embedded artifact is.",
+            "The public key must come from the signer, never from this package. The package is signed in package_signature; the embedded artifact carries its own signature."
+          ],
           "title": "Note",
           "type": "string"
         },
@@ -305,8 +346,24 @@
       "title": "Evidence Hashes",
       "type": "array"
     },
+    "gaps_included": {
+      "default": true,
+      "title": "Gaps Included",
+      "type": "boolean"
+    },
     "identity": {
       "$ref": "#/$defs/PackageIdentity"
+    },
+    "package_signature": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PackageSignature"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "package_version": {
       "const": "1",

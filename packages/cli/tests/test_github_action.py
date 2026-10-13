@@ -7,6 +7,8 @@ real-fixture test's shim runs this checkout's CLI, never real uvx) and a fake
 
 from __future__ import annotations
 
+import base64
+import json
 import os
 import re
 import shutil
@@ -358,7 +360,7 @@ def test_selftest_matrix_covers_all_five_demos() -> None:
     assert re.search(r"^permissions:", text, re.M)
     wf = yaml.safe_load(text)
     assert wf["permissions"] == {"contents": "read"}
-    (job,) = wf["jobs"].values()
+    job = wf["jobs"]["gate-demo"]
     cells = {c["name"]: c for c in job["strategy"]["matrix"]["include"]}
     # accepted exits 1: the acceptance clears Art. 6 and the other EU obligations stay Missing
     assert {n: c["expect"] for n, c in cells.items()} == {
@@ -450,6 +452,107 @@ def test_run_sh_sign_and_with_gaps_flags_follow_inputs(
     assert ("--with-gaps" in argv) is expect
 
 
+PRESET = [
+    "--with-gaps",
+    "--scan",
+    "--fail-on",
+    "--require-exemption-record",
+    "--sign-if-available",
+]
+
+
+def _strict_tokens(tmp_path: Path, **extra: str) -> list[str]:
+    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
+    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"), **extra)
+    _run_sh(tmp_path, env)
+    return (tmp_path / "argv").read_text("utf-8").split()
+
+
+@needs_bash
+def test_run_sh_strict_true_adds_the_preset_flags(tmp_path: Path) -> None:
+    tokens = _strict_tokens(
+        tmp_path, OC_STRICT="true", OC_ARGS="--change-context model_retrain"
+    )
+    for flag in PRESET:
+        assert tokens.count(flag) == 1, (flag, tokens)
+    i = tokens.index("--fail-on")
+    assert tokens[i + 1] == "major"
+    assert tokens[-2:] == ["--change-context", "model_retrain"]
+
+
+@needs_bash
+@pytest.mark.parametrize("value", [None, "false", "", "TRUE", "true; rm -rf x"])
+def test_run_sh_strict_off_adds_no_preset_flags(
+    tmp_path: Path, value: str | None
+) -> None:
+    extra = {} if value is None else {"OC_STRICT": value}
+    tokens = _strict_tokens(tmp_path, **extra)
+    for flag in PRESET:
+        assert flag not in tokens, (flag, tokens)
+
+
+@needs_bash
+def test_run_sh_strict_explicit_flags_win(tmp_path: Path) -> None:
+    (tmp_path / "a").mkdir()
+    tokens = _strict_tokens(
+        tmp_path / "a", OC_STRICT="true", OC_ARGS="--fail-on critical --no-sign"
+    )
+    assert tokens.count("--fail-on") == 1
+    assert tokens[tokens.index("--fail-on") + 1] == "critical"
+    assert "--sign-if-available" not in tokens
+    (tmp_path / "b").mkdir()
+    tokens = _strict_tokens(tmp_path / "b", OC_STRICT="true", OC_ARGS="--fail-on=none")
+    assert "--fail-on" not in tokens
+    assert tokens.count("--fail-on=none") == 1
+    (tmp_path / "c").mkdir()
+    tokens = _strict_tokens(tmp_path / "c", OC_STRICT="true", OC_SIGN="true")
+    assert tokens.count("--sign-if-available") == 1
+    (tmp_path / "d").mkdir()
+    tokens = _strict_tokens(tmp_path / "d", OC_STRICT="true", OC_WITH_GAPS="true")
+    assert tokens.count("--with-gaps") == 1
+
+
+def test_action_yml_declares_strict_input_and_docs_name_it() -> None:
+    action = _action()
+    assert action["inputs"]["strict"]["default"] == "false"
+    (check,) = [s for s in action["runs"]["steps"] if s.get("id") == "check"]
+    assert "OC_STRICT" in check["env"]
+    for page in (
+        ACTION / "README.md",
+        ROOT / "docs" / "src" / "guides" / "github-action.md",
+    ):
+        assert re.search(r"^\| `strict` ", page.read_text("utf-8"), re.M), page
+
+
+@needs_bash
+@pytest.mark.parametrize(
+    ("name", "strict_code"), [("high-risk", "1"), ("limited", "0")]
+)
+def test_run_sh_strict_real_gate_demo_exit_codes(
+    tmp_path: Path, name: str, strict_code: str
+) -> None:
+    codes = {}
+    for strict in ("false", "true"):
+        work = tmp_path / strict
+        work.mkdir()
+        demo = work / name
+        shutil.copytree(DEMOS / name, demo)
+        shims = work / "shims"
+        _shim(shims, "uvx", REAL_UVX)
+        env = _env(
+            work,
+            shims,
+            OC_TEST_PY=Path(sys.executable).as_posix(),
+            OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
+            OC_ARGS=f"--repo-root {demo.as_posix()}",
+            OC_STRICT=strict,
+        )
+        out, _ = _run_sh(work, env)
+        codes[strict] = out["exit-code"]
+    assert codes["false"] == strict_code  # defaults unchanged: 1 and 0
+    assert codes["true"] == strict_code
+
+
 @needs_bash
 def test_run_sh_reports_artifact_file(tmp_path: Path) -> None:
     _shim(tmp_path / "shims", "uvx", FAKE_UVX)
@@ -490,3 +593,43 @@ def test_selftest_asserts_artifact_file() -> None:
     assert "ARTIFACT: ${{ steps.gate.outputs.artifact-file }}" in text
     assert 'test -s "$ARTIFACT"' in text
     assert 'upload-artifact: "true"' in text
+
+
+@needs_bash
+def test_run_sh_real_gate_demo_signed_with_gaps_summary(tmp_path: Path) -> None:
+    demo = tmp_path / "work" / "limited"
+    shutil.copytree(DEMOS / "limited", demo)
+    _shim(tmp_path / "shims", "uvx", REAL_UVX)
+    generate_keypair(tmp_path / "keys")
+    key = base64.b64encode((tmp_path / "keys" / "signing.key").read_bytes()).decode()
+    env = _env(
+        tmp_path,
+        tmp_path / "shims",
+        OC_TEST_PY=Path(sys.executable).as_posix(),
+        OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
+        OC_ARGS=f"--repo-root {demo.as_posix()}",
+        OC_SIGN="true",
+        OC_WITH_GAPS="true",
+        SIGNING_KEY_PRIVATE=key,
+    )
+    out, summary = _run_sh(tmp_path, env)
+    assert out["exit-code"] == "0"
+    assert "Signed | `yes (key sha256:" in summary.read_text("utf-8")
+    artifact = json.loads(Path(out["artifact-file"]).read_text("utf-8"))
+    assert artifact["signature"]
+
+
+@pytest.mark.skipif(not SELFTEST.is_file(), reason="no self-test workflow in this tree")
+def test_selftest_covers_sign_and_with_gaps() -> None:
+    text = SELFTEST.read_text("utf-8")
+    job = yaml.safe_load(text)["jobs"]["signed-with-gaps"]
+    (step,) = [
+        s for s in job["steps"] if s.get("uses") == "./integrations/github-action"
+    ]
+    assert step["with"]["sign"] == "true"
+    assert step["with"]["with-gaps"] == "true"
+    # The workflow writes the backticks escaped inside double quotes so that
+    # shellcheck stays quiet; normalise before matching.
+    shell_text = text.replace("\\`", "`")
+    assert "Signed | `no (unsigned artifact)`" in shell_text
+    assert "Signed | `yes (key sha256:" in shell_text

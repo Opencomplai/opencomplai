@@ -129,7 +129,7 @@ services:
       - /tmp
 
   # -------------------------------------------------------------------------
-  # evidence-vault — append-only Merkle ledger + CAS (Python/FastAPI)
+  # evidence-vault — append-only hash-chained ledger + CAS (Python/FastAPI)
   # -------------------------------------------------------------------------
   evidence-vault:
     build:

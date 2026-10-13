@@ -4,7 +4,8 @@ Seals the Art. 13(3) instructions-for-use JSON (written by `opencomplai
 instructions generate`) into one portable pack named after its own SHA-256. The
 pack is generated offline and never uploaded; only its hash and counts reach the
 artifact `summaries.packs` (see `opencomplai_core.deployer_pack`). `import`
-records a provider's received pack in the manifest `imported_evidence`.
+records a provider's received pack in the manifest `imported_evidence`, which
+`gaps` and `check` read as a Partial-capped Art. 26 source for a deployer.
 
 `console`/`err_console` and the key paths are obtained lazily from
 `opencomplai_cli.main` (it imports this module to register the sub-typer, so a
@@ -157,8 +158,8 @@ def import_cmd(
 ) -> None:
     """Record a provider's deployer pack in the manifest as upstream evidence.
 
-    Verifies the pack first and refuses an invalid one. The record is provenance
-    only: `check` and `gaps` do not read it, so verdicts do not change.
+    Verifies the pack first and refuses an invalid one. `gaps` and `check` read
+    the record as a Partial-capped Art. 26 source for a deployer (never Met).
     """
     from opencomplai_cli import main as _main
 

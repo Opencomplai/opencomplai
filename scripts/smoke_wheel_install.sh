@@ -21,6 +21,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 
+# shellcheck source=smoke_lib.sh
+. "$REPO_ROOT/scripts/smoke_lib.sh"
+
 cd "$REPO_ROOT"
 # The CLI wheel force-includes this file. It is committed, so node is only
 # needed when it has been deleted locally.
@@ -45,8 +48,11 @@ export HOME="$TMP/home" USERPROFILE="$TMP/home"
 mkdir -p "$HOME" work
 cd work
 
-venv_version="$(opencomplai --version)"
-[ -n "$venv_version" ] || { echo "empty --version from venv" >&2; exit 1; }
+META_NAME="$(basename "$(ls "$TMP"/dist/opencomplai-[0-9]*.whl | head -n 1)")"
+EXPECTED_VERSION="${META_NAME#opencomplai-}"
+EXPECTED_VERSION="${EXPECTED_VERSION%%-*}"
+venv_version="$(opencomplai --version)" || smoke_fail version "opencomplai --version failed"
+smoke_assert_eq version "$venv_version" "opencomplai $EXPECTED_VERSION"
 # typer 0.27+ vendors click, so click is expected to be absent there.
 python -c 'import importlib.metadata as m
 def v(n):
@@ -54,7 +60,8 @@ def v(n):
         return m.version(n)
     except m.PackageNotFoundError:
         return "absent"
-print("typer=" + v("typer"), "click=" + v("click"))'
+print("typer=" + v("typer"), "click=" + v("click"))
+assert v("typer") != "absent", "typer is a declared dependency"' || smoke_fail typer "typer missing from the venv"
 
 # uv tool and pipx expose only scripts the named package declares itself, so
 # install the meta package the way users do, with PATH cleared of the venv bin
@@ -90,12 +97,17 @@ PATH="$CLEAN_PATH" PIPX_HOME="$TMP/pipx-home" PIPX_BIN_DIR="$TMP/pipx-bin"   "$P
 check_tool_version "pipx" "$TMP/pipx-bin"
 
 echo '{"compliance_targets": ["EU_AI_ACT", "NIST_AI_RMF"]}' >targets.json
-opencomplai init \
+smoke_step init opencomplai init \
   --system-id smoke-system \
   --intended-purpose "customer support chatbot" \
   --section-extras-file targets.json \
   --output system-manifest.json
-opencomplai check --manifest system-manifest.json --with-gaps
+smoke_expect check 0 opencomplai check --manifest system-manifest.json --sign --with-gaps
+out="$(opencomplai verify compliance-artifact.json)" || smoke_fail verify "verify exited non-zero: $out"
+case "$out" in
+  verified:*) echo "SMOKE OK step=verify" ;;
+  *) smoke_fail verify "expected 'verified:', got '$out'" ;;
+esac
 # Two targets: one framework report each, and the legacy blocks as before.
 python - <<'EOF'
 import json

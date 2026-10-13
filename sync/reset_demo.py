@@ -150,7 +150,7 @@ def reset_dossiers(vault: str, *, dry_run: bool) -> None:
 
 def reset_ledger_events(vault: str, *, dry_run: bool) -> None:
     """
-    The evidence-vault ledger is append-only (Merkle-linked), so individual
+    The evidence-vault ledger is append-only (hash-chained), so individual
     events cannot be deleted — that would break chain integrity. Instead, we
     append a DEMO_RESET tombstone event so the audit trail shows that the
     demo data was intentionally cleared. Downstream renders should filter

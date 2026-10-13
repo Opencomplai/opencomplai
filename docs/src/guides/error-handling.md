@@ -63,7 +63,7 @@ All gateway API errors return the standard envelope:
 If `OPENCOMPLAI_API_URL` is set but the service is unreachable, the CLI prints:
 
 ```text
-Service call failed: <error>
+Service error: Service call failed: <error>
 ```
 
 and exits with code 3. Check:
@@ -73,3 +73,12 @@ and exits with code 3. Check:
 3. Firewall / network rules are not blocking the port.
 
 See [Common Issues](../troubleshooting/common-issues.md) for remediation steps.
+
+## A push rejected for its artifact schema
+
+When `opencomplai push`, `docs generate --push` or a CI connector gets HTTP 422 with
+`error_code` `SCHEMA_VIOLATION`, the CLI prints the response and a line starting
+`hint:`. The receiving service validates against a closed schema, so a service older
+than the CLI can reject a newer artifact. Fix it by upgrading the receiving service first,
+then the CLIs that push to it, or by using the CLI version the service was released with.
+Exit codes are unchanged.

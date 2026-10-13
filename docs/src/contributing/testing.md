@@ -172,18 +172,27 @@ Tests run automatically on every pull request via `.github/workflows/ci-python.y
 |---|---|---|
 | `ci-python.yml` | All Python packages | `uv run pytest`, `ruff check`, `ruff format --check` |
 | `ci-node.yml` | `services/gateway-api` | `pnpm test`, `pnpm lint` |
+| `ci-docker.yml` | Docker Compose build and health check; Trivy scan of the five service images on pull requests and weekly | `docker compose build`, `up -d`, health wait, Trivy |
 
-Both must be green before a PR can merge. There is no `ci-docker.yml` workflow yet — the
-Docker Compose stack is not currently built or smoke-tested in CI.
+Both must be green before a PR can merge. The Docker Compose stack is built and
+health-checked in `ci-docker.yml`.
 
 The test suites import from source, so they cannot see a module, dependency or data file
 the published wheels fail to ship. `bash scripts/smoke_wheel_install.sh` covers that: it
 builds the core, CLI and SDK wheels, installs only those into a clean venv and runs
-`--version`, `init`, `check --with-gaps` (EU AI Act and NIST AI RMF targets, checking
-`framework_reports`, `gap_report` and `nist_rmf_report`), an offline `docs generate` and a
-`check --gate NIST_AI_RMF` that must fail, from outside the repo. It needs `uv` and network access (it resolves the newest `typer` from PyPI) and runs
+`--version` (which must equal the wheel's own version), `init`, a signed
+`check --with-gaps` (EU AI Act and NIST AI RMF targets, checking
+`framework_reports`, `gap_report` and `nist_rmf_report`), `verify` on that artifact, an offline `docs generate` and a
+`check --gate NIST_AI_RMF` that must fail, from outside the repo. A failing step prints
+`SMOKE FAIL step=<name>`. It needs `uv` and network access (it resolves the newest `typer` from PyPI) and runs
 on Linux and Git Bash on Windows. It also runs `--version` from a `uv tool` install and a
 `pipx` install of the same wheels, so the meta-package's own executable is covered.
+
+`bash scripts/smoke_pypi_release.sh <version>` is the post-publish check. It installs
+`opencomplai` and `opencomplai-ai` at that version from the index, then runs the first-run
+path, a classification proposal and its acceptance, a scan-backed `check`, and the `export`
+and `verify` steps (including a tampered file and a signed package). It needs network access
+to the index; `SMOKE_PIP_ARGS` takes extra pip arguments, such as paths of locally built wheels.
 A base-image digest bump also needs the Trivy record refreshed; see [supply chain](../security/supply-chain.md).
 
 ---

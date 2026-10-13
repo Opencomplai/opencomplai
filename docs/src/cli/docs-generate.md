@@ -26,6 +26,8 @@ Generate an EU AI Act Annex IV technical documentation dossier (REQ-DOC-001).
 | `--output` / `-o` | `human` | Output format: `human` or `json`. |
 | `--allow-incomplete` | off | Exit `0` even when the generated dossier fails Annex IV schema validation. Off by default — see [Fail-closed dossier gate](#fail-closed-dossier-gate) below. |
 | `--render` | *(none)* | Also write the dossier as `md` (Markdown) and/or `pdf`; repeatable. Local mode only. See [Rendered output](#rendered-output). |
+| `--manifest` / `-m` | *(none)* | System manifest written by `init`. Its Annex IV fields (Section 2/3 inputs, metrics, limitations, oversight, agent inventory) reach the generator so the dossier reflects the real system. A missing or invalid file exits `2` |
+| `--push` / `--no-push` | `--no-push` | Publish the dossier's envelope after it is written. Needs `OPENCOMPLAI_API_KEY` and `OPENCOMPLAI_DASHBOARD_URL`, as for [push](push.md). Local mode only: with `OPENCOMPLAI_API_URL` set it prints a warning and publishes nothing |
 
 ## Modes
 
@@ -135,5 +137,5 @@ retrying.
 | 0 | Dossier generated successfully (or generated-but-invalid with `--allow-incomplete`). |
 | 1 | Dossier generation failed (local mode error). |
 | 2 | Validation error (invalid options **or** the generated dossier failed Annex IV schema validation without `--allow-incomplete` — see [Fail-closed dossier gate](#fail-closed-dossier-gate)). |
-| 3 | Service unreachable or policy blocked (service-backed mode only). |
+| 3 | Service unreachable or policy blocked (service-backed mode only), or, in local mode, `--push` failed to publish (checked before the validation gate's exit `2`). |
 | 4 | The system is `HALTED_PENDING_REVIEW` — dossier generation refused until resumed. |

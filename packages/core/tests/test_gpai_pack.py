@@ -113,7 +113,10 @@ def test_downstream_file_does_not_satisfy_model_documentation_probe(tmp_path):
 def _gated_sources():
     for article, config in load_gap_article_map().items():
         for source in config["sources"]:
-            if "when_obligation_any" in source and source["kind"] != "record":
+            if "when_obligation_any" in source and source["kind"] not in (
+                "record",
+                "manifest",
+            ):
                 yield article, source
 
 
@@ -124,6 +127,19 @@ def test_gated_sources_reference_known_probes_and_obligations():
     for _, source in gated:
         assert source["kind"] == "artifact"
         assert source["ref"] in _PROBE_PATTERNS
+        assert set(source["when_obligation_any"]) <= known
+
+
+def test_gated_manifest_sources_are_only_the_imported_pack():
+    sources = [
+        source
+        for config in load_gap_article_map().values()
+        for source in config["sources"]
+        if source["kind"] == "manifest" and "when_obligation_any" in source
+    ]
+    assert {source["ref"] for source in sources} == {"imported_provider_pack"}
+    known = set(load_obligations())
+    for source in sources:
         assert set(source["when_obligation_any"]) <= known
 
 

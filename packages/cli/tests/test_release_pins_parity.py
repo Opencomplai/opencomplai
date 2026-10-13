@@ -19,6 +19,7 @@ _COMPONENT = "templates/opencomplai.yml"
 _AZURE = "docs/ci/azure-pipelines.yml"
 _FORMULA = "packaging/homebrew/opencomplai.rb"
 _GUIDE = "docs/src/guides/ci-gitlab-azure.md"
+_RECIPES = "docs/src/guides/ci-recipes.md"
 _VERSION_RE = r"(\d+\.\d+\.\d+)"
 
 
@@ -50,6 +51,9 @@ def _pins() -> dict[str, str]:
         ),
         f"{_GUIDE} (opencomplai== line)": _search(
             rf"opencomplai=={_VERSION_RE}", _GUIDE
+        ),
+        f"{_RECIPES} (release recipe)": _search(
+            rf"opencomplai=={_VERSION_RE}", _RECIPES
         ),
     }
 

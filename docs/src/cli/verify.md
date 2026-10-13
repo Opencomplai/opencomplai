@@ -39,6 +39,9 @@ are listed in the [Kinds](#kinds) table. The default is `artifact` (the
 | `agent-log` | Agent decision log (`agent-log.jsonl` by default); `agents verify-log` checks the same file. |
 | `agent-attestation` | Agent mandate attestation (`agent-attestation-<agent_id>.json`), written by `agents attest`. |
 | `deployer-pack` | Deployer pack (`deployer_pack_<hash>.json`), written by `deployer-pack build`. |
+| `evidence-package` | Neutral evidence package, written by `export --sign`. |
+
+An `evidence-package` check covers the whole package except its `package_signature`; the embedded artifact is verified separately with `--kind artifact`. A package exported without `--sign` is reported as `unsigned`. See [export](export.md#signed-package).
 
 ## Expect keys
 

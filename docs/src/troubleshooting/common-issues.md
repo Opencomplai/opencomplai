@@ -88,7 +88,7 @@ Then restart the stack and update `OPENCOMPLAI_API_URL` accordingly:
     opencomplai check
     ```
 
-Confirm service-backed mode is active by looking for gateway service calls in the output, or by checking `compliance-artifact.json` for non-empty `evidence_hashes`.
+Confirm service-backed mode is active by looking for gateway service calls in the output, or by checking `compliance-artifact.json`: service mode lists ledger event ids in `evidence_hashes`, and local mode lists `sha256:` digests (see [Evidence](../concepts/evidence.md)).
 
 ---
 

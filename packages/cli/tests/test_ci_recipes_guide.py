@@ -180,3 +180,23 @@ def test_commented_job_mirrors_scheduled_recipe() -> None:
     assert _DASHBOARD_MIRROR.read_text(encoding="utf-8") == _MIRROR.read_text(
         encoding="utf-8"
     )
+
+
+def test_release_recipe_signs_with_secret_and_pins_install() -> None:
+    sec = _section(_RECIPES, "Attach the artifact to a release")
+    assert "SIGNING_KEY_PRIVATE: ${{ secrets." in sec
+    assert re.search(r'pip install "opencomplai==\d+\.\d+\.\d+"', sec)
+    assert "--sign " in sec
+    assert "--sign-if-available" not in sec
+    assert not re.search(r"pip install opencomplai", sec)
+
+
+def test_reports_section_names_signed_state() -> None:
+    sec = _section(_GUIDE, "Reports from check")
+    for word in (
+        "opencomplai.signed",
+        "`Signed`",
+        "`signed`",
+        "not that it was verified",
+    ):
+        assert word in sec

@@ -324,6 +324,7 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
         envelope_signature,
         prepare_scan_status_artifact,
         publish_scan_status,
+        schema_violation_hint,
     )
 
     # G-4: the raw artifact never validated against ingest's schema
@@ -353,7 +354,8 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
         status, data = publish_scan_status(base_url, api_key, envelope)
         if status not in (200, 201):
             print(
-                f"WARNING: dashboard publish failed: HTTP {status} {data}",
+                f"WARNING: dashboard publish failed: HTTP {status} {data}"
+                + (f" {hint}" if (hint := schema_violation_hint(data)) else ""),
                 file=sys.stderr,
             )
         return
@@ -395,7 +397,8 @@ def _publish_to_dashboard(artifact: dict | None, env: dict[str, str]) -> None:
     status, data = publish_scan_status(base_url, token, envelope)
     if status not in (200, 201):
         print(
-            f"WARNING: dashboard publish failed: HTTP {status} {data}",
+            f"WARNING: dashboard publish failed: HTTP {status} {data}"
+            + (f" {hint}" if (hint := schema_violation_hint(data)) else ""),
             file=sys.stderr,
         )
 

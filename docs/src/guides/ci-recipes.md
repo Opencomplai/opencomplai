@@ -20,6 +20,23 @@ are covered in [CI Integration](ci-integration.md).
 These recipes use plain `check`. To sign the artifact, add `--sign` and provide `SIGNING_KEY_PRIVATE`
 as described in [CI Integration](ci-integration.md#any-other-ci-platform).
 
+## Strict reading
+
+By default `opencomplai check` has no severity gate and does not require an exemption record. The strict
+reading turns on five opt-in flags; it changes no default and no exit code of the CLI itself.
+
+```bash
+STRICT_FLAGS="--with-gaps --scan --fail-on major --require-exemption-record --sign-if-available"
+```
+
+Replace the check line of any recipe below with:
+
+```bash
+opencomplai check $STRICT_FLAGS --commit-ref "$CI_SHA"
+```
+
+The per-flag table is in [Strict reading](ci-gitlab-azure.md#strict-reading) on the GitLab and Azure page.
+
 ## Jenkins
 
 A declarative `Jenkinsfile`. Create a "Secret text" credential with the id `opencomplai-api-key`.
@@ -187,7 +204,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -232,9 +249,11 @@ and no API key. See [diff](../cli/diff.md) and [exit codes](../cli/exit-codes.md
 ## Attach the artifact to a release
 
 This workflow runs when a release is published or a `v*` tag is pushed. It attaches the artifact to
-the release. The artifact is unsigned unless `SIGNING_KEY_PRIVATE` is set, as described in
-[any other CI platform](ci-integration.md#any-other-ci-platform). On other platforms, attach the same
-file with the platform's own release or package upload.
+the release. The check signs the artifact with `--sign`, using the key in the
+`OPENCOMPLAI_SIGNING_KEY` repository secret, which holds the base64 PEM described in
+[any other CI platform](ci-integration.md#any-other-ci-platform). A missing or broken key fails the
+job with exit 2 before any upload. The `Signed` row of the summary shows the state. On other
+platforms, attach the same file with the platform's own release or package upload.
 
 ```yaml
 name: OpenComplAI release artifact
@@ -253,7 +272,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -261,14 +280,15 @@ jobs:
           python-version: "3.11"
 
       - name: Install OpenComplAI CLI
-        run: pip install opencomplai
+        run: pip install "opencomplai==0.12.0"
 
       - name: Check and attach the artifact
         env:
           GH_TOKEN: ${{ github.token }}
+          SIGNING_KEY_PRIVATE: ${{ secrets.OPENCOMPLAI_SIGNING_KEY }}
         run: |
           CHECK_EXIT=0
-          opencomplai check --with-gaps --sign-if-available --commit-ref "$GITHUB_SHA" || CHECK_EXIT=$?
+          opencomplai check --with-gaps --sign --summary-md "$GITHUB_STEP_SUMMARY" --commit-ref "$GITHUB_SHA" || CHECK_EXIT=$?
           if [ -f compliance-artifact.json ] && gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" compliance-artifact.json --clobber
           fi

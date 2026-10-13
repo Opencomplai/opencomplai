@@ -10,7 +10,8 @@ Key loading order (``resolve_key``, used by the runtime signing functions):
   Neither present: ``SigningKeyError`` (never a silent unsigned result).
 
 Signing domains cover scan-status artifacts, dossier bundles, badges, approval
-tokens and the shared signed logs, attestations and deployer packs.
+tokens and the shared signed logs, attestations, deployer packs and export
+packages.
 """
 
 from __future__ import annotations
@@ -60,6 +61,8 @@ class SigningDomain(StrEnum):
     DEPLOYER_PACK = "deployer-pack"
     # Committed classification-acceptance and trap-approval records.
     CLASSIFICATION_ACCEPTANCE = "classification-acceptance"
+    # The whole neutral export package (`opencomplai export --sign`).
+    EVIDENCE_PACKAGE = "evidence-package"
 
 
 def domain_separated(domain: SigningDomain, payload: bytes) -> bytes:

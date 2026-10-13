@@ -123,12 +123,17 @@ different verification outcome (for example unsigned, then verified with a key)
 replaces the record.
 
 - **The record is provenance, not a verdict.** It says you received a pack and
-  what the check found at that time.
+  what the check found at that time. It never makes an article Met.
 - **`verified`** means the hash and signature match the public key you supplied.
   It says nothing about who holds that key.
 - **`unsigned`** means only the hash was checked. No signature was checked.
-- **`check` and `gaps` do not read the record**, so verdicts and exit codes do
-  not change. The record stays in your local manifest and is not pushed.
+- **`gaps` and `check` read the record for Art. 26 only**, and only when a
+  recorded checker session makes Art. 26 apply to you as a deployer of a
+  high-risk system. A missing Art. 26 row then reads Partial at most, with the
+  reason "provider-supplied, not verified by the deployer". It is never Met, and
+  `verified` and `unsigned` read the same. The pack is the provider's statement,
+  not evidence about your deployment. An expired agent mandate still reads
+  Missing. The record stays in your local manifest and is not pushed.
 
 `--output json` prints one object with `pack_id`, `pack_sha256`,
 `provider_system_id`, `verification`, `signer_key_id`, `manifest` and `recorded`

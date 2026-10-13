@@ -82,11 +82,44 @@ def test_moved_audio_models_stay_ai_present(text: str):
 
 
 def test_signals_version_is_bumped():
-    assert load_signals()["version"] == "1.3.0"
+    assert load_signals()["version"] == "1.6.0"
 
 
-@pytest.mark.parametrize("text", ["faiss", "pgvector"])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "faiss",
+        "pgvector",
+        "pinecone",
+        "weaviate",
+        "qdrant",
+        "chromadb",
+        "milvus",
+        "lancedb",
+    ],
+)
 def test_vector_index_libraries_stay_ai_present_without_an_area(text: str):
     assert match_token_identifier(text, "ml_frameworks") is not None
     assert match_token_identifier(text, "vector_embedding") is None
     assert match_token_identifier(text, "biometric") is None
+
+
+_GENERIC_MOVED = ["voyageai", "jina", "embedding", "rerank", "similarity_search"]
+
+
+@pytest.mark.parametrize("text", _GENERIC_MOVED)
+def test_generic_embedding_tokens_follow_recorded_decision(text: str):
+    assert match_token_identifier(text, "ml_frameworks") is not None
+    assert match_token_identifier(text, "vector_embedding") is None
+
+
+def test_no_generic_embedding_tokens_kept_in_vector_embedding():
+    assert load_signals()["vector_embedding"] == []
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["email", "ssn", "passport", "patient_id", "phi", "pii", "biometric_id"],
+)
+def test_pii_hint_tokens_stay_out_of_ml_frameworks(text: str):
+    assert match_token_identifier(text, "ml_frameworks") is None

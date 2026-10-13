@@ -115,9 +115,11 @@ with the proposal file.
   the command exits `2`; run `scan --propose` again.
 - **It states only that a person confirmed the proposal as shown.** The record is
   not a legal classification, and your declared purpose stays the source.
-- **`check` does not read it in this release.** Neither the proposal nor the
-  confirmation changes a verdict, and the classification acceptance above is not
-  written.
+- **`check --scan` reads a confirmed proposal.** It adds a `confirmed_proposal:<area>`
+  row when the proposal names an Annex III area your declared purpose does not cover
+  (see [`check`](check.md)). The confirmation is not a classification acceptance: it does
+  not change the Art. 6 result that `accept` writes without `--proposal`. An edited or
+  stale proposal is ignored.
 
 ## Who signed it
 

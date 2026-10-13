@@ -58,6 +58,7 @@ Reuse a gap report you already generated (avoids re-running the rule engine/scan
 | `--sample-set` | *(none)* | Path to an `EvalSampleSet` JSON — only used when `--gap-report` is not supplied |
 | `--repo-root` | `.` | Repo root for artifact path probes (Arts. 9/13/14/16/17/24/43), including the Art. 17 per-clause QMS breakdown |
 | `--output` / `-o` | `./fixes` | Directory to write remediation templates to |
+| `--sort` | `article` | `article` or `priority`, the order of [`gaps --sort`](gaps.md). Changes only the order in which rows are processed and the written paths are listed; the same files are written |
 
 ## What gets written
 

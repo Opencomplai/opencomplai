@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import fnmatch
 import os
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,6 +20,16 @@ SCOPE_PATTERNS: list[tuple[str, EvidenceScope]] = [
     ("generated", EvidenceScope.GENERATED),
     ("vendor", EvidenceScope.VENDOR),
     ("dev", EvidenceScope.DEV),
+    # whole-token aliases (formerly caught only by substring)
+    ("specs", EvidenceScope.TEST),
+    ("testing", EvidenceScope.TEST),
+    ("conftest", EvidenceScope.TEST),
+    ("documentation", EvidenceScope.DOCS),
+    ("development", EvidenceScope.DEV),
+    ("unittest", EvidenceScope.TEST),
+    ("unittests", EvidenceScope.TEST),
+    ("testdata", EvidenceScope.TEST),
+    ("testutils", EvidenceScope.TEST),
 ]
 
 LANGUAGE_BY_EXT: dict[str, str] = {
@@ -121,12 +132,14 @@ def _is_ignored(rel: str, patterns: list[str]) -> bool:
     return False
 
 
+# Matching is by whole token on purpose: a substring test read `devices/`,
+# `documents/`, `latest/` as dev/docs/test and silently dropped severity.
 def _classify_scope(rel_path: str) -> EvidenceScope:
     lower = rel_path.lower().replace("\\", "/")
-    parts = lower.split("/")
-    for part in parts:
+    for part in lower.split("/"):
+        tokens = set(re.split(r"[_\-.]", part))
         for key, scope in SCOPE_PATTERNS:
-            if key in part:
+            if key in tokens:
                 return scope
     return EvidenceScope.PROD
 

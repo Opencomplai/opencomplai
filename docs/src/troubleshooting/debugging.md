@@ -49,7 +49,7 @@ Key fields to inspect:
 |---|---|
 | `result` | The terminal state (`pass`, `control_fail`, etc.) |
 | `failed_controls` | IDs of failing controls — look these up in `rules.py` |
-| `evidence_hashes` | Empty in local mode; populated in service-backed mode |
+| `evidence_hashes` | Local mode: `sha256:` digests (LF-normalised) of the manifest and, with `--scan` or `--sample-set`, of `scan-report.json` / `eval-report.json`, plus the scan `report_hash`; hashes only, no content. Service-backed mode: ledger event ids |
 | `pending_verifications_count` | > 0 means the service stack has pending ground-truth tasks |
 | `signature` | `null` when unsigned, including `--sign-if-available` without a key (a warning is printed); base64 string when signed |
 

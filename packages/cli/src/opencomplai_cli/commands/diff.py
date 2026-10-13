@@ -29,8 +29,12 @@ class DiffFormat(StrEnum):
 
 def _load_side(
     path: Path,
-) -> tuple[GapReport, dict[str, FrameworkReport], str | None]:
-    """(gap report, framework reports, rule_set_version or None). Raises ValueError."""
+) -> tuple[GapReport, dict[str, FrameworkReport], str | None, dict[str, str]]:
+    """(gap report, framework reports, rule_set_version or None, tool stamps).
+
+    Raises ValueError. Stamps hold only non-empty string values; bare gap
+    reports and envelopes carry none.
+    """
     raw = read_json_file(path)
     if isinstance(raw, dict) and "gap_report" in raw:
         if raw["gap_report"] is None:
@@ -39,15 +43,38 @@ def _load_side(
             )
         rsv = raw.get("rule_set_version")
         frameworks = raw.get("frameworks") or {}
+        summary = raw.get("scan_summary")
+        found = {
+            "cli_version": raw.get("cli_version"),
+            "rule_set_version": rsv,
+            "scanner_version": (
+                summary.get("scanner_version") if isinstance(summary, dict) else None
+            ),
+        }
         return (
             GapReport.model_validate(raw["gap_report"]),
             {k: FrameworkReport.model_validate(v) for k, v in frameworks.items()},
             rsv if isinstance(rsv, str) else None,
+            {k: v for k, v in found.items() if isinstance(v, str) and v},
         )
     from opencomplai_cli import main as _main
 
     report, frameworks = _main._read_gap_report(path)
-    return report, frameworks, None
+    return report, frameworks, None, {}
+
+
+_TOOL_FIELDS = ("cli_version", "rule_set_version", "scanner_version")
+_TOOL_NOTE = (
+    "The tool changed between these runs; a worse verdict may come from the "
+    "upgrade, not from your code."
+)
+
+
+def _tool_changes(ta: dict[str, str], tb: dict[str, str]) -> dict:
+    """Fields compared only when both sides carry them; None = nothing comparable."""
+    both = [f for f in _TOOL_FIELDS if f in ta and f in tb]
+    fields = [{"field": f, "from": ta[f], "to": tb[f]} for f in both if ta[f] != tb[f]]
+    return {"changed": bool(fields) if both else None, "fields": fields}
 
 
 def _rule_set_line(rs: dict) -> str:
@@ -58,11 +85,17 @@ def _rule_set_line(rs: dict) -> str:
     return f"{rs['from']} -> {rs['to']}: rules changed"
 
 
-def _markdown(d: dict) -> str:
+def _markdown(d: dict, tc: dict) -> str:
     out = ["# Gap report diff", "", f"Rule set: {_rule_set_line(d['rule_set'])}", ""]
     for entry in d["rule_set"]["changes"]:
         out.append(f"- {entry['version']}: {entry['summary']}")
     if d["rule_set"]["changes"]:
+        out.append("")
+    if tc["changed"]:
+        out += ["## Tool changed", ""]
+        out += [f"- {f['field']}: {f['from']} -> {f['to']}" for f in tc["fields"]]
+        if d["regression"]:
+            out += ["", _TOOL_NOTE]
         out.append("")
     out += ["## Changed", ""]
     if d["changed"]:
@@ -84,10 +117,18 @@ def _markdown(d: dict) -> str:
     return "\n".join(out)
 
 
-def _human(console, d: dict) -> None:
+def _human(console, d: dict, tc: dict) -> None:
     console.print(f"Rule set: {escape(_rule_set_line(d['rule_set']))}")
     for entry in d["rule_set"]["changes"]:
         console.print(f"  {escape(entry['version'])}: {escape(entry['summary'])}")
+    if tc["changed"]:
+        console.print("Tool changed:")
+        for f in tc["fields"]:
+            console.print(
+                f"  {escape(f['field'])}: {escape(f['from'])} -> {escape(f['to'])}"
+            )
+        if d["regression"]:
+            console.print(_TOOL_NOTE)
     if d["changed"]:
         table = Table(title="Changed verdicts")
         for col in ("Article", "From", "To", "Direction"):
@@ -119,12 +160,13 @@ def diff_cmd(
     from opencomplai_cli import main as _main
 
     try:
-        ra, fa, va = _load_side(file_a)
-        rb, fb, vb = _load_side(file_b)
+        ra, fa, va, ta = _load_side(file_a)
+        rb, fb, vb, tb = _load_side(file_b)
     except (OSError, ValueError) as e:  # pydantic.ValidationError is a ValueError
         _main.err_console.print(f"[red]Error:[/red] {escape(str(e))}")
         sys.exit(2)
     d = diff_gap_reports(ra, rb, a_rule_set=va, b_rule_set=vb, extra_a=fa, extra_b=fb)
+    tc = _tool_changes(ta, tb)
     if output == DiffFormat.json:
 
         def side(p: Path, r: GapReport) -> dict:
@@ -135,11 +177,14 @@ def diff_cmd(
             }
 
         typer.echo(
-            json.dumps({"a": side(file_a, ra), "b": side(file_b, rb), **d}, indent=2)
+            json.dumps(
+                {"a": side(file_a, ra), "b": side(file_b, rb), **d, "tool_changes": tc},
+                indent=2,
+            )
         )
     elif output == DiffFormat.markdown:
-        typer.echo(_markdown(d))
+        typer.echo(_markdown(d, tc))
     else:
-        _human(_main.console, d)
+        _human(_main.console, d, tc)
     if fail_on_regression and d["regression"]:
         sys.exit(1)

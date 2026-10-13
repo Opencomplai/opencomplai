@@ -50,7 +50,10 @@ NEEDS_REVIEW_NOTES: dict[str, dict] = {
             "heuristic and needs approval. An expired mandate (UTC calendar-date "
             "comparison) or an absent or out-of-repo guardrail evidence file also "
             "reads MISSING; the date rule and the path rule are heuristics needing "
-            "approval."
+            "approval. A decision log reference that is not a file inside the "
+            "repository also reads MISSING; an optional #anchor matched literally "
+            "or by heading slug within the first 1 MiB of the file, and the "
+            "in-repo file rule, are heuristics needing approval."
         ),
     }
 }
@@ -136,8 +139,24 @@ def _expired(expires_at: str | None, today: date) -> bool:
     return dt.date() < today
 
 
-def _evidence_missing(repo_root: Path, ref: str) -> bool:
-    """True when a file-path evidence ref is blank, absent or outside the repo."""
+def expired_mandates(manifest: SystemManifest, today: date) -> list[tuple[str, str]]:
+    """(agent id, expires_at) of each expired mandate, in inventory order."""
+    inventory = manifest.agent_inventory
+    if inventory is None:
+        return []
+    return [
+        (a.id, a.mandate.expires_at)
+        for a in inventory.agents
+        if a.mandate is not None
+        and a.mandate.expires_at is not None
+        and _expired(a.mandate.expires_at, today)
+    ]
+
+
+def _evidence_missing(repo_root: Path, ref: str, *, file_only: bool = False) -> bool:
+    """True when a file-path evidence ref is blank, absent or outside the repo.
+
+    file_only: the target must be a regular file, not just exist."""
     if "://" in ref:
         return False
     if not ref.strip():
@@ -145,9 +164,44 @@ def _evidence_missing(repo_root: Path, ref: str) -> bool:
     try:
         root = repo_root.resolve()
         target = (root / ref).resolve()
-        return not target.is_relative_to(root) or not target.exists()
+        found = target.is_file() if file_only else target.exists()
+        return not target.is_relative_to(root) or not found
     except (OSError, ValueError):
         return True
+
+
+def _anchor_found(repo_root: Path, path: str, anchor: str) -> bool:
+    """True when anchor is in an in-repo file: literal text or a heading slug."""
+    try:
+        root = repo_root.resolve()
+        target = (root / path).resolve()
+        if not target.is_relative_to(root) or not target.is_file():
+            return False
+        # ponytail: first 1 MiB, literal or heading-slug match; a richer anchor grammar if a user asks
+        with target.open("rb") as fh:
+            text = fh.read(1 << 20).decode("utf-8", errors="replace").casefold()
+    except (OSError, ValueError):
+        return False
+    want = anchor.casefold()
+    if want in text:
+        return True
+    for line in text.splitlines():
+        if line.startswith("#"):
+            head = line.lstrip("# ").strip()
+            kept = "".join(c for c in head if c.isalnum() or c in " -_")
+            if kept.replace(" ", "-") == want:
+                return True
+    return False
+
+
+def _decision_log_problem(repo_root: Path, ref: str) -> str | None:
+    """Return missing (no file in the repo), anchor (anchor absent) or None."""
+    path, _, anchor = ref.partition("#")
+    if _evidence_missing(repo_root, path, file_only=True):
+        return "missing"
+    if anchor and "://" not in path and not _anchor_found(repo_root, path, anchor):
+        return "anchor"
+    return None
 
 
 def _incomplete(
@@ -162,6 +216,11 @@ def _incomplete(
     if article == "Art. 12":
         if any(not (a.logging and a.logging.decision_log_ref) for a in agents):
             return "an agent declares no decision log reference"
+        if repo_root is not None and any(
+            _decision_log_problem(repo_root, a.logging.decision_log_ref) == "missing"
+            for a in agents
+        ):
+            return "a decision log file is missing or outside the repository"
     elif article == "Art. 14":
         oversight = getattr(manifest, "human_oversight", None)
         can = oversight is not None and any(r.can_intervene for r in oversight.roles)
@@ -221,6 +280,16 @@ def agent_gap_status(
         )
     if incomplete:
         text += f" Declaration incomplete for {article}: {incomplete}."
+    if (
+        article == "Art. 12"
+        and not incomplete
+        and repo_root is not None
+        and any(
+            _decision_log_problem(repo_root, a.logging.decision_log_ref) == "anchor"
+            for a in agents
+        )
+    ):
+        text += " A decision log anchor was not found in its file."
     text += " A declaration only; not verified against the system."
 
     heuristic = any(u in (_AGENT_FRAMEWORK, _MCP_SERVER) for u in undeclared)

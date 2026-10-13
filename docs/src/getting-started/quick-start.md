@@ -147,7 +147,7 @@ Evals: no eval sample set supplied (skipped)
 
 Opencomplai Compliance Check
   system_id:    my-model
-  commit_ref:   HEAD
+  commit_ref:   abc1234
   result:       PASS
   duration_ms:  0
   signed:       no (OSS unsigned)
@@ -196,7 +196,7 @@ Example — the high-risk case:
 ```text
 Opencomplai Compliance Check
   system_id:    hiring
-  commit_ref:   HEAD
+  commit_ref:   abc1234
   result:       CONTROL_FAIL
   duration_ms:  0
   signed:       no (OSS unsigned)
@@ -246,7 +246,7 @@ Create `eval-set.json`:
 ```text
 Opencomplai Compliance Check
   system_id:    my-model
-  commit_ref:   HEAD
+  commit_ref:   abc1234
   result:       PASS
   duration_ms:  0
   signed:       no (OSS unsigned)
@@ -277,10 +277,10 @@ The `--output json` flag prints the full `ScanStatusArtifact` to stdout:
 {
   "install_id": "a1b2c3d4-...",
   "system_id": "my-model",
-  "commit_ref": "HEAD",
+  "commit_ref": "abc1234",
   "result": "pass",
   "failed_controls": [],
-  "evidence_hashes": [],
+  "evidence_hashes": ["sha256:..."],
   "rationale_hash": "sha256:...",
   "duration_ms": 0,
   "pending_verifications_count": 0,

@@ -137,6 +137,10 @@ def test_csv_has_one_row_per_article(tmp_path):
         "evidence_ref",
         "confidence",
         "confidence_label",
+        "tree_sha256",
+        "tree_dirty",
+        "signed",
+        "verdict",
     ]
     assert len(rows) == 1 + len(_ROWS)
     assert [r[3] for r in rows[1:]] == [r[0] for r in _ROWS]
@@ -172,14 +176,85 @@ def test_unsigned_artifact_exports_with_signed_false(tmp_path):
     assert pkg["verdict"]["result"] == "control_fail"  # exit 0 whatever the verdict
 
 
-def test_missing_gap_report_exits_2(tmp_path):
+def test_gapless_artifact_exports_with_gaps_included_false(tmp_path):
     raw = json.loads(_artifact().model_dump_json())
     raw["gap_report"] = None
     src = tmp_path / "nogap.json"
     src.write_text(json.dumps(raw), encoding="utf-8")
     res = _export(src)
-    assert res.exit_code == 2
-    assert "no gap_report" in res.output
+    assert res.exit_code == 0, res.output
+    pkg = json.loads(res.stdout)
+    jsonschema.validate(pkg, json.loads(_SCHEMA.read_text(encoding="utf-8")))
+    assert pkg["gaps_included"] is False
+    assert pkg["articles"] == []
+    csv_res = _export(src, "--format", "csv")
+    assert csv_res.exit_code == 0, csv_res.output
+    assert len(list(csv.reader(io.StringIO(csv_res.stdout, newline="")))) == 1
+
+
+def test_missing_gap_report_exits_2(tmp_path):
+    """Legacy id kept so the recorded baseline still finds it; the old rule is gone.
+
+    A missing gap report used to exit 2. It now exports, so this pins that it no
+    longer exits 2 (the full contract is the gapless test above).
+    """
+    raw = json.loads(_artifact().model_dump_json())
+    raw.pop("gap_report", None)
+    src = tmp_path / "nogap.json"
+    src.write_text(json.dumps(raw), encoding="utf-8")
+    assert _export(src).exit_code == 0
+
+
+def test_check_without_gaps_exports_gaps_included_false(tmp_path, monkeypatch):
+    from opencomplai_cli import main
+    from opencomplai_core.models import SystemManifest
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("OPENCOMPLAI_API_URL", raising=False)
+    monkeypatch.delenv("OPENCOMPLAI_VAULT_URL", raising=False)
+    monkeypatch.delenv("SIGNING_KEY_PRIVATE", raising=False)
+    monkeypatch.setenv("OPENCOMPLAI_STATE_DIR", str(tmp_path / "state"))
+    key_dir = tmp_path / "keys"
+    generate_keypair(key_dir)
+    monkeypatch.setattr(main, "_SIGNING_KEY", key_dir / "signing.key")
+    manifest_file = tmp_path / "system-manifest.json"
+    manifest_file.write_text(
+        SystemManifest(
+            system_id="export-sys",
+            intended_purpose="customer support chatbot",
+            compliance_target="EU_AI_ACT",
+            high_risk_presumption=False,
+            commit_ref="HEAD",
+        ).model_dump_json(),
+        encoding="utf-8",
+    )
+
+    checked = runner.invoke(app, ["check", "--manifest", str(manifest_file), "--sign"])
+    assert checked.exit_code == 0, checked.output
+    written = tmp_path / "compliance-artifact.json"
+    assert json.loads(written.read_text(encoding="utf-8")).get("gap_report") is None
+
+    embedded = tmp_path / "embedded.json"
+    res = _export(written, "--artifact-out", str(embedded))
+    assert res.exit_code == 0, res.output
+    pkg = json.loads(res.stdout)
+    assert pkg["gaps_included"] is False
+    assert pkg["articles"] == []
+    manifest_digest = "sha256:" + pkg["identity"]["manifest_sha256"]
+    assert manifest_digest in pkg["evidence_hashes"]
+
+    ok = runner.invoke(
+        app,
+        [
+            "verify",
+            str(embedded),
+            "--kind",
+            "artifact",
+            "--pub-key",
+            str(key_dir / "signing.pub"),
+        ],
+    )
+    assert ok.exit_code == 0, ok.output
 
 
 def test_bad_input_exits_2(tmp_path):

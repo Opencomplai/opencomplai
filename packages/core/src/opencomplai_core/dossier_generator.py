@@ -448,7 +448,7 @@ def generate_dossier(
             even when `risk_result.risk_level` came back lower.
         risk_result: The risk assessment result from the risk engine.
         evidence_hashes: SHA-256 hashes of evidence objects in the vault.
-        ledger_root_hash: Current Merkle root of the evidence ledger.
+        ledger_root_hash: Current head hash of the evidence ledger's hash chain.
         provider_name: Name of the AI system provider.
 
     Returns:

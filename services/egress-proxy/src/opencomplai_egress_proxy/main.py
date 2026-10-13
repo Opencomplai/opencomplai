@@ -46,7 +46,7 @@ app = FastAPI(
         "Allowlisted outbound traffic enforcer. No other service in the Docker Compose "
         "deployment has outbound network access. Implements REQ-ARC-001."
     ),
-    version="0.11.1",
+    version="0.12.0",
 )
 
 logger = logging.getLogger(__name__)

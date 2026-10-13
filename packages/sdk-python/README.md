@@ -56,7 +56,8 @@ and, for assessing several frameworks side by side, `evaluate_targets`, `resolve
 
 ## Optional: AI intent plugin
 
-For AI-powered intent classification of code callsites, also install
+For optional intent analysis of code callsites (it includes a deterministic matcher that needs no download; local GGUF
+models need the `[deep]` extra), also install
 [`opencomplai-ai`](https://pypi.org/project/opencomplai-ai/):
 
 ```bash
@@ -64,7 +65,8 @@ pip install opencomplai-ai
 opencomplai scan --ai-intent --ai-model codebert-onnx   # deterministic matcher, no download
 ```
 
-The default model is a local GGUF LLM and needs `pip install 'opencomplai-ai[deep]'`.
+`scan --propose` uses the deterministic matcher unless you pass `--ai-model`. The
+default model of `scan --ai-intent` is a local GGUF LLM and needs `pip install 'opencomplai-ai[deep]'`.
 
 ## Documentation
 

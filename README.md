@@ -141,7 +141,7 @@ opencomplai/
 ├── services/
 │   ├── gateway-api/       # REST API — Node.js + TypeScript + Fastify (OpenAPI-first)
 │   ├── risk-engine/       # Risk classification service — Python + FastAPI
-│   ├── evidence-vault/    # Immutable ledger + CAS — Python + FastAPI + PostgreSQL
+│   ├── evidence-vault/    # Tamper-evident, hash-chained ledger + CAS — Python + FastAPI + PostgreSQL
 │   ├── doc-generator/     # Annex IV dossier generator — Python + FastAPI
 │   └── egress-proxy/      # Allowlisted egress enforcer — Python + FastAPI
 ├── tools/

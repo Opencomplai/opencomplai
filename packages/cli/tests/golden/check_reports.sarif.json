@@ -146,7 +146,8 @@
       "properties": {
         "opencomplai_result": "control_fail",
         "system_id": "fixture-sys",
-        "commit_ref": "<COMMIT>"
+        "commit_ref": "<COMMIT>",
+        "signed": false
       }
     }
   ]

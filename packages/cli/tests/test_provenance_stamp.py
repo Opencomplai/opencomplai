@@ -1,4 +1,4 @@
-"""SU-10b: `check` stamps the four provenance fields before signing."""
+"""`check` stamps the four provenance fields before signing."""
 
 from __future__ import annotations
 
@@ -116,7 +116,7 @@ def test_manifest_sha256_is_line_ending_independent():
     assert stamp_artifact(base, now=now).manifest_sha256 is None
 
 
-# --- CL-A1: tree_sha256 / tree_dirty / content-based input_digest -------------
+# --- tree_sha256 / tree_dirty / content-based input_digest ---
 
 needs_git = pytest.mark.skipif(shutil.which("git") is None, reason="git not on PATH")
 _FILES = {"a.py": "print('a')\n", "pkg/b.py": "B = 1\n", ".gitignore": "ignored.txt\n"}
@@ -291,6 +291,82 @@ def test_check_in_git_repo_stamps_and_signs(tmp_path, monkeypatch):
     artifact = ScanStatusArtifact.model_validate(raw)
     assert verify_artifact(artifact, key_dir / "signing.pub") is True
     assert prepare_scan_status_artifact(raw, repo_dir=repo) == raw
+
+
+def _check_scan(tmp_path, monkeypatch, repo: Path) -> tuple[dict, ScanStatusArtifact]:
+    """Run `check --scan --sign` on repo; manifest and output stay outside it."""
+    out = tmp_path / "out"
+    out.mkdir()
+    monkeypatch.chdir(out)
+    for var in ("OPENCOMPLAI_API_URL", "OPENCOMPLAI_VAULT_URL", "SIGNING_KEY_PRIVATE"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("OPENCOMPLAI_STATE_DIR", str(tmp_path / "state"))
+    key_dir = tmp_path / "keys"
+    generate_keypair(key_dir)
+    monkeypatch.setattr(main, "_SIGNING_KEY", key_dir / "signing.key")
+    manifest = tmp_path / "system-manifest.json"
+    manifest.write_text(
+        SystemManifest(
+            system_id="prov-sys",
+            intended_purpose="customer support chatbot",
+            compliance_target="EU_AI_ACT",
+            high_risk_presumption=False,
+            commit_ref="HEAD",
+        ).model_dump_json(),
+        encoding="utf-8",
+    )
+    result = runner.invoke(
+        app,
+        [
+            "check", "--manifest", str(manifest), "--sign", "--scan",
+            "--repo-root", str(repo), "--output-dir", str(out),
+        ],
+    )  # fmt: skip
+    assert result.exit_code == 0, result.output
+    raw = json.loads((out / "compliance-artifact.json").read_text("utf-8"))
+    artifact = ScanStatusArtifact.model_validate(raw)
+    assert verify_artifact(artifact, key_dir / "signing.pub") is True
+    return raw, artifact
+
+
+@needs_git
+def test_check_scan_bootstrap_does_not_dirty_clean_tree(tmp_path, monkeypatch):
+    repo = _git_repo(tmp_path / "repo")
+    expected = _stamp(repo)
+    raw, _ = _check_scan(tmp_path, monkeypatch, repo)
+    assert (repo / ".ocignore").exists()
+    assert raw["tree_dirty"] is False
+    assert raw["tree_sha256"] == expected.tree_sha256
+
+
+@needs_git
+def test_check_scan_modified_tracked_file_stays_dirty(tmp_path, monkeypatch):
+    repo = _git_repo(tmp_path / "repo")
+    (repo / "a.py").write_bytes(b"print('changed')\n")
+    expected = _stamp(repo)
+    raw, _ = _check_scan(tmp_path, monkeypatch, repo)
+    assert raw["tree_dirty"] is True
+    assert raw["tree_sha256"] == expected.tree_sha256
+
+
+@needs_git
+def test_check_scan_committed_ocignore_stays_clean(tmp_path, monkeypatch):
+    repo = _git_repo(tmp_path / "repo", {**_FILES, ".ocignore": "# committed\n"})
+    expected = _stamp(repo)
+    raw, _ = _check_scan(tmp_path, monkeypatch, repo)
+    assert raw["tree_dirty"] is False
+    assert raw["tree_sha256"] == expected.tree_sha256
+
+
+@needs_git
+def test_stamp_artifact_prefers_supplied_tree(tmp_path):
+    repo = _git_repo(tmp_path / "repo")
+    supplied = ("e" * 64, False)
+    got = stamp_artifact(_bare_artifact(), now=_NOW, repo_root=repo, tree=supplied)
+    assert (got.tree_sha256, got.tree_dirty) == supplied
+    old = stamp_artifact(_bare_artifact(), now=_NOW, repo_root=repo, tree=None)
+    assert old.tree_sha256 == _stamp(repo).tree_sha256
+    assert old.tree_sha256 != supplied[0]
 
 
 def _scan_tree(root: Path, extra: str = "") -> Path:

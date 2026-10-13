@@ -5,8 +5,9 @@ confirmed by a person.
 ``write_scan_proposal`` turns the scan's call-site findings into
 ``classification-proposal.json``. ``confirm_and_record`` shows that proposal to a
 person and, only on a yes, writes a signed
-``classification_proposal_confirmation`` record. Nothing here changes a verdict:
-`check` does not read either file in this release.
+``classification_proposal_confirmation`` record. ``check --scan`` reads the confirmed
+proposal through ``proposal_gate``; an unconfirmed, edited or stale proposal
+changes nothing.
 
 Helpers from `commands/accept.py` and `main` are reached lazily: accept.py
 imports this module, so a top-level import would be circular.
@@ -41,7 +42,14 @@ from opencomplai_core.signing import SigningKeyError, resolve_key
 from opencomplai_cli.commands.halt import OutputFormat
 
 
-def write_scan_proposal(report: Any, manifest: Any, repo_root: Path) -> Path:
+def write_scan_proposal(
+    report: Any,
+    manifest: Any,
+    repo_root: Path,
+    *,
+    ai_backend: str | None = None,
+    ai_model_id: str | None = None,
+) -> Path:
     """Write ``repo_root/classification-proposal.json`` for a finished scan."""
     result = build_classification_proposal(report.eu_ai_scan)
     plain = result.model_dump(mode="json")
@@ -53,6 +61,7 @@ def write_scan_proposal(report: Any, manifest: Any, repo_root: Path) -> Path:
         commit_ref=report.commit_ref,
         scanner_version=report.scanner_version,
         scan_input_digest=report.input_digest,
+        scan_tree_sha256=report.source_tree_sha256 or None,
         scan_report_hash=report.report_hash,
         manifest_fingerprint=fingerprint_manifest(manifest),
         declared_purpose=manifest.intended_purpose,
@@ -62,6 +71,8 @@ def write_scan_proposal(report: Any, manifest: Any, repo_root: Path) -> Path:
         minority_evidence=plain["minority_evidence"],
         prohibited_signals=plain["prohibited_signals"],
         proposal=plain,
+        ai_backend=ai_backend,
+        ai_model_id=ai_model_id,
     )
     path = repo_root / PROPOSAL_FILENAME
     path.write_text(

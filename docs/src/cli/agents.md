@@ -90,6 +90,11 @@ Each finding is labelled `declared` or `detected`.
 | `1` | Declared-versus-detected findings from the cross-check |
 | `2` | Missing or invalid manifest, or an invalid inventory (the offending agent id is printed) |
 
+Expired agent mandates are listed after the findings (and in the `expired_mandates`
+key of `-o json`) with the agent id and the `expires_at` value. The rule is the
+one `gaps` uses: the UTC calendar date, so the expiry day itself is not expired.
+Expired mandates are not counted as findings and do not change the exit code.
+
 The scan side is heuristic: a finding in test, docs, generated or vendor code
 is ignored, and provider names are matched by containment. Treat a finding as
 a prompt to look, not as a result.

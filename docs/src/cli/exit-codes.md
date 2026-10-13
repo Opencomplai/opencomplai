@@ -7,7 +7,7 @@ Opencomplai uses fixed, contractual exit codes so CI pipelines can reliably gate
 | `0` | `PASS` | All critical controls passed. |
 | `1` | `CONTROL_FAIL` | One or more critical controls failed (e.g. an Annex III high-risk use case, or a failed pipeline evaluator), or a gated framework has a failing row (see [Gating other frameworks](check.md#gating-other-frameworks)). |
 | `2` | `VALIDATION_FAIL` | Input or manifest validation failed (e.g., missing or invalid `system-manifest.json`, or a bad `gate` setting), or `check --sign` was given and no signing key exists (no key file and no `SIGNING_KEY_PRIVATE`). |
-| `3` | `POLICY_BLOCK` | A prohibited (Article 5) practice was detected in the declared purpose, e.g. `social scoring`, or the manifest's checker verdict is `prohibited_practice`. |
+| `3` | `POLICY_BLOCK` | A prohibited (Article 5) practice was detected in the declared purpose, e.g. `social scoring`, or the manifest's checker verdict is `prohibited_practice`. Also returned by `check` in service-backed mode (`OPENCOMPLAI_API_URL` set) when the service cannot be reached. |
 | `4` | `TRAP_DETECTED` | Article 25 substantial-modification trap: the change makes you a provider. Raised locally by `--change-context model_retrain`, `purpose_change` or `capability_extension`, and by the risk engine in service-backed mode. |
 
 ## Which frameworks gate
@@ -53,6 +53,7 @@ halt are unchanged. An approval alone is not honoured.
 | `1` | Review failed rules in the human output. Fix the compliance gap, then re-run. |
 | `2` | Run `opencomplai init` first, or check that `system-manifest.json` is valid. For `check --sign`, create a key with `opencomplai init`, set `SIGNING_KEY_PRIVATE`, or use `--sign-if-available` to write an unsigned artifact. |
 | `3` | The system as declared is a prohibited practice under Article 5. Review the intended purpose with your compliance team; it cannot be placed on the EU market as described. |
+| `3` (service) | The service could not be reached in service-backed mode. Check that the service is running and that `OPENCOMPLAI_API_URL` points at it; see [service connectivity errors](../guides/error-handling.md#service-connectivity-errors). |
 | `4` | The system is halted pending review (see below). Complete the provider obligations for the modified system, then `approve` and `resume`. |
 
 ## Control register (`opencomplai controls`)

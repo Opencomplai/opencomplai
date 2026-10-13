@@ -195,6 +195,21 @@ def test_internal_floors_equal_current_version() -> None:
     assert not bad, "\n".join(bad)
 
 
+def test_uv_lockfile_members_match_core_version() -> None:
+    """The lock file stamps each workspace member; a release must move all 8."""
+    core = _pyproject_version(_ROOT / "packages/core/pyproject.toml")
+    lock = tomllib.loads((_ROOT / "uv.lock").read_text(encoding="utf-8"))
+    members = {}
+    for pkg in lock["package"]:
+        src = pkg.get("source", {})
+        path = src.get("editable") or src.get("virtual") or ""
+        if path.startswith(("packages/", "services/")):
+            members[pkg["name"]] = pkg["version"]
+    assert len(members) == 8, sorted(members)
+    bad = [f"{n} is {v!r}, core is {core!r}" for n, v in members.items() if v != core]
+    assert not bad, "\n".join(bad)
+
+
 def test_detects_disagreement(tmp_path: Path) -> None:
     files = [
         *_PYPROJECTS,

@@ -4,6 +4,7 @@ return, and each corrected fact must stay stated. Pure file reads."""
 from __future__ import annotations
 
 import re
+import tomllib
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[3]
@@ -32,6 +33,13 @@ RETIRED: list[tuple[str, str]] = [
         "docs/src/deployment/airgap.md",
         "docker compose -f infra/compose/docker-compose.yml pull",
     ),
+    ("README.md", "Immutable ledger"),
+    (
+        "docs/src/concepts/control-codes.md",
+        "wording so it no longer\nmatches a prohibited signal",
+    ),
+    ("packages/sdk-python/README.md", "AI-powered"),
+    ("packages/ai/src/opencomplai_ai/__init__.py", "AI-powered"),
 ]
 
 CORRECTED: list[tuple[str, str]] = [
@@ -48,6 +56,16 @@ CORRECTED: list[tuple[str, str]] = [
         "docker compose -f infra/compose/docker-compose.yml build",
     ),
     ("docs/src/guides/ci-integration.md", "needs no key"),
+    ("README.md", "Tamper-evident, hash-chained ledger"),
+    ("docs/src/concepts/control-codes.md", "fix the underlying declaration"),
+    (
+        "packages/sdk-python/README.md",
+        "optional intent analysis of code callsites",
+    ),
+    (
+        "packages/ai/src/opencomplai_ai/__init__.py",
+        "optional EU AI Act intent analysis",
+    ),
 ]
 
 
@@ -175,3 +193,25 @@ def test_iso_and_regime_wording_is_not_overclaimed() -> None:
         if m.search(_read(rel))
     ]
     assert not found, "over-claimed wording: " + "; ".join(found)
+
+
+def test_ai_package_description_is_not_overstated() -> None:
+    with (_ROOT / "packages/ai/pyproject.toml").open("rb") as fh:
+        description = tomllib.load(fh)["project"]["description"]
+    assert "AI-powered" not in description
+    assert "deterministic" in description
+
+
+def test_intent_default_is_not_called_deterministic() -> None:
+    phrase = "the default matcher is deterministic"
+    found = [
+        rel
+        for rel in (
+            "packages/ai/pyproject.toml",
+            "packages/ai/src/opencomplai_ai/__init__.py",
+            "packages/sdk-python/README.md",
+            "CHANGELOG.md",
+        )
+        if phrase in " ".join(_read(rel).lower().split())
+    ]
+    assert not found, "intent default misdescribed in: " + "; ".join(found)

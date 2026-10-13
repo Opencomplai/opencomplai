@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
   title: Opencomplai Gateway API
-  version: 0.11.1
+  version: 0.12.0
   description: |
     REST API gateway for the Opencomplai compliance platform.
     All routes proxy to the appropriate Python service.
@@ -2125,6 +2125,28 @@ components:
         file:
           type: string
 
+    EuAiCandidate:
+      type: object
+      description: |
+        A lead for a person, not a finding. An AI library is imported but yields
+        no classification signal. It carries no tier, area, severity or
+        confidence, and it never enters the proposal, the report hash or any
+        exit code.
+      required: [library, file, line, reason]
+      properties:
+        library:
+          type: string
+          description: Imported AI library name
+        file:
+          type: string
+        line:
+          type: integer
+          minimum: 1
+          description: 1-based line of the import
+        reason:
+          type: string
+          enum: [imported_not_classified]
+
     EuAiRegulatoryFinding:
       type: object
       required: [location, function, risk_tier]
@@ -2173,6 +2195,15 @@ components:
           type: integer
         regulatory_finding_count:
           type: integer
+        candidates:
+          type: array
+          description: |
+            Leads the intent-path scan may add: an imported AI library that
+            yields no classification signal. Empty when nothing qualifies.
+            Never counted as a finding, and excluded from
+            regulatory_finding_count.
+          items:
+            $ref: "#/components/schemas/EuAiCandidate"
 
     CorroborationReport:
       type: object
@@ -2204,6 +2235,12 @@ components:
         eu_ai_scan:
           $ref: "#/components/schemas/EuAiScanSummary"
           nullable: true
+        proposal_status:
+          type: string
+          description: |
+            Classification-proposal state written by check --scan. Omitted
+            when no proposal was compared.
+          enum: [confirmed, unconfirmed, stale, absent]
         evidence:
           type: array
           items:

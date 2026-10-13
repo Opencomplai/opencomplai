@@ -295,7 +295,7 @@ def test_untagged_legacy_signatures_do_not_verify(tmp_path):
 
 def test_new_domain_values_are_ascii_and_unique():
     values = [d.value for d in SigningDomain]
-    assert len(values) == 10
+    assert len(values) == 11
     assert len(set(values)) == len(values)
     assert all(v.isascii() and "\x00" not in v for v in values)
 

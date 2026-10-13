@@ -7,6 +7,7 @@ from opencomplai_core.rules import (
     match_annex_iii_categories,
     match_prohibited_signals,
 )
+from opencomplai_core.scanner.detectors import _signals
 
 SIGNAL_TO_TAXONOMY: dict[SignalCategory, list[str]] = {
     SignalCategory.AI_SDK: [],
@@ -39,6 +40,11 @@ _AREA_TO_TAXONOMY: dict[int, str] = {
 }
 
 
+# Taxonomy keys the ``area_signals`` group of ai_signals.json may name; a token
+# listed there maps to its key on the default scan path.
+_AREA_SIGNAL_KEYS = ("critical_infrastructure", "education", "employment")
+
+
 def signal_category_to_taxonomy(
     category: SignalCategory,
     token_label: str = "",
@@ -53,6 +59,10 @@ def signal_category_to_taxonomy(
         mapped = [_AREA_TO_TAXONOMY[annex_iii_area]]
     else:
         mapped = list(SIGNAL_TO_TAXONOMY.get(category, []))
+    if category == SignalCategory.SCORING_PROFILING:
+        groups = _signals.load_signals().get("area_signals", {})
+        token = token_label.partition("@")[0]  # a label may carry "@category"
+        mapped.extend(k for k in _AREA_SIGNAL_KEYS if token in groups.get(k, ()))
     mapped.extend(match_annex_iii_categories(token_label).categories)
     if match_prohibited_signals(token_label):
         mapped.append("unacceptable")

@@ -39,6 +39,8 @@ with `opencomplai check`. A framework that `opencomplai.yaml` gates (see
 | `--repo-root` | `.` | Repo root for artifact path probes (Arts. 9/13/14/16/24/43) |
 | `--target` | manifest | Framework to assess (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`); repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. More than one target prints a table per framework and adds a `frameworks` block to the JSON. `ISO_IEC_42001` is the native pack, attestation-led (partial, unreviewed): most rows read Unverified until an attestation is recorded under `framework_inputs`. See [Frameworks](../frameworks/index.md) |
 | `--map-to` | *(none)* | `DORA` or `EBA`; repeat for both. Adds a mapped-only citation column per regime to the EU AI Act table and a `mapped_regimes` block to the JSON. A citation, not a verdict; low confidence, needs founder review. See [Mapped-only regimes](../concepts/mapped-regimes.md) |
+| `--strict` | off | Exit `2` on unknown top-level keys in the manifest instead of warning and ignoring them |
+| `--sort` | `article` | Row order of the human tables: `article`, or `priority` (rows that are not Met first, then earliest known deadline, worst status, smallest effort). With `--output json`, `priority` also adds a `backlog` list of the open rows, ranked; `articles` stay in article order. A NIST-only run keeps subcategory order. The effort is an engineering estimate, not a compliance claim |
 | `--output` / `-o` | `human` | `human` or `json` (JSON is wrapped in a versioned envelope — not a signed artifact) |
 
 ## Understanding gap statuses

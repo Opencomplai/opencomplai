@@ -26,8 +26,11 @@ Cross-check your declared `intended_purpose` against AI capability signals detec
 | `--manifest` | `system-manifest.json` | System manifest path |
 | `--repo-root` | `.` | Repository root to scan |
 | `--commit-ref` | `HEAD` | Commit reference for provenance |
-| `--emit-evidence` | on | Append `code_corroboration` ledger event |
-| `--enqueue-review` | off | Route major/critical gaps to HITL |
+| `--emit-evidence` / `--no-emit-evidence` | on | Append the `code_corroboration` ledger event, or skip it with `--no-emit-evidence`. `--quick` always skips it |
+| `--enqueue-review` / `--no-enqueue-review` | off | Route major/critical gaps to HITL, or leave them out with `--no-enqueue-review`. `--quick` always leaves them out |
+| `--strict` | off | Exit `2` on unknown top-level keys in the manifest instead of warning and ignoring them. No effect with `--quick`, which loads no manifest |
+| `--ai-deep` | off | With `--ai-intent` or `--propose`: run the intent analysis on every callsite in the repository. By default only callsites in files that already have a lexical finding are analysed, which is faster. No effect with `--ai-legacy`, which already analyses every callsite |
+| `--ai-verbose` | off | With `--ai-intent`: in the human report, list every finding instead of the first 10 per list (the callsite list is capped at 50) and add the matched signals, regulation reference and gate reason to each flag rationale. No effect on `--output json` |
 | `--baseline` | — | JSON file with `accepted_categories` |
 | `--fail-on` | `none` | CI gating: `none`, `new-major`, `major`, `critical` |
 | `--output` | `human` | `human` or `json` |
@@ -35,10 +38,10 @@ Cross-check your declared `intended_purpose` against AI capability signals detec
 | `--ocignore` | repo-root `.ocignore` | Custom scan config path (must be inside `--repo-root`) |
 | `--ocignore-bootstrap` / `--no-ocignore-bootstrap` | bootstrap on | Create default `.ocignore` on first scan if missing |
 | `--ai-intent` | off | Run local AI intent classification on extracted callsites (requires `opencomplai-ai`) |
-| `--ai-model` | configured default | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
+| `--ai-model` | configured default (`codebert-onnx` under `--propose`) | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
 | `--framework-detectors` | off | Opt-in AST-level detection of orchestration-framework object construction + invocation (see below) |
 | `--quick` | off | Zero-config discovery scan — no manifest, never gates CI, never emits evidence (see below) |
-| `--propose` | off | Write `classification-proposal.json`: a classification the scan suggests from your code, for you to confirm with [`accept --proposal`](accept.md#confirming-a-classification-proposal). Turns on the intent analysis; needs the optional AI plugin (see below) |
+| `--propose` | off | Write `classification-proposal.json`: a classification the scan suggests from your code, for you to confirm with [`accept --proposal`](accept.md#confirming-a-classification-proposal). Turns on the intent analysis with the deterministic `codebert-onnx` backend unless `--ai-model` is given; needs the optional AI plugin (see below) |
 | `--sarif-output` | — | Write scan evidence as a SARIF 2.1.0 document, for GitHub code scanning / GHAS upload (see [SARIF integration](../guides/sarif-integration.md)) |
 
 ## Zero-config discovery (`--quick`)
@@ -80,18 +83,23 @@ have a system to declare — `--quick` finding nothing is not itself a pass/fail
 ## Suggesting a classification (`--propose`)
 
 `opencomplai scan --propose` suggests a classification from your code; you confirm it.
-It turns on the intent analysis (as `--ai-intent` does, and `--ai-model` still
-applies), groups the call-site findings by Annex III area, and writes
+It turns on the intent analysis (as `--ai-intent` does) with the deterministic
+`codebert-onnx` backend, ignoring the configured default model; `--ai-model` still
+selects another model. It groups the call-site findings by Annex III area, and writes
 `classification-proposal.json` into the repository root. The file names the most
 supported area (or `none`), a confidence label that is a count of supporting call
 sites rather than a probability, the supporting and minority evidence with file
-and line, and any prohibited-practice signals.
+and line, and any prohibited-practice signals. It also records `ai_backend` and `ai_model_id`
+(optional; older proposals lack them and still confirm), and the command prints
+`Intent backend: <model> (<backend>)` after the path.
 
 === "macOS / Linux"
     ```bash
     pip install opencomplai-ai
     opencomplai scan --manifest system-manifest.json --repo-root . --propose
     opencomplai accept --accepted-by "you@example.com" --proposal classification-proposal.json
+    # opt into an LLM backend instead of the default (needs the [deep] extra):
+    opencomplai scan --manifest system-manifest.json --repo-root . --propose --ai-model qwen2.5-coder-1.5b
     ```
 
 === "Windows (PowerShell)"
@@ -99,23 +107,60 @@ and line, and any prohibited-practice signals.
     pip install opencomplai-ai
     opencomplai scan --manifest system-manifest.json --repo-root . --propose
     opencomplai accept --accepted-by "you@example.com" --proposal classification-proposal.json
+    # opt into an LLM backend instead of the default (needs the [deep] extra):
+    opencomplai scan --manifest system-manifest.json --repo-root . --propose --ai-model qwen2.5-coder-1.5b
     ```
 
+The default backend is `codebert-onnx`. `--ai-model` with another id from
+[the model table](#available-models) opts into that backend instead.
+
+After a code or manifest change the proposal is `stale`: `check` warns once on stderr
+and ignores it. Run `scan --propose`, then `accept --proposal`, to refresh it.
+
 - **It needs the optional AI plugin.** `--propose` needs `opencomplai-ai`
-  (`pip install opencomplai-ai`); without it the command prints the install hint and
+  (`pip install opencomplai-ai`); the base install is enough for the default backend
+  and the `[deep]` extra is only for GGUF models. Without it the command prints the install hint and
   exits `1`. It also exits `2`, writing nothing, with `--quick` or `--ai-legacy`, or
   when the intent analysis did not run.
 - **The declared purpose stays the source.** The proposal is a suggestion, not a legal
   determination, and the file says so. It stays `unconfirmed` until a person confirms
   it, and the confirmation records only that the person confirmed it as shown.
-- **It changes no verdict.** `check` does not read the proposal or the confirmation in
-  this release, so no exit code or finding moves because of them.
+- **`check --scan` reads it only after a person confirms it.** A confirmed proposal that
+  names an Annex III area your declared purpose does not cover adds a
+  `confirmed_proposal:<area>` row, counted as `major` under `--fail-on` (see
+  [`check`](check.md)). An absent, unconfirmed, edited or stale proposal changes nothing.
 - **Its exit code can differ from a plain scan.** `--propose` turns on the intent
   analysis, so under `--fail-on` the exit code can differ from a plain scan of the
   same repository. A scan that fails `--fail-on` still writes the file.
-- **The file is part of the tree.** A later scan of the repository sees
-  `classification-proposal.json` like any other file, so its input digest differs
-  from the one the proposal recorded; the findings do not change.
+- **The file does not move the input digest.** A later scan still reads
+  `classification-proposal.json`, but the files the tool writes itself (the proposal,
+  the confirmation record under `.opencomplai/acceptances/` and `.ocignore`, and any
+  file named `scan-report.json`, `eval-report.json` or `compliance-artifact.json` at any
+  depth) are left out of the digest, so writing them does not change it. A report file
+  you write inside the scanned tree with `--sarif-output` or `--output-file` is part of
+  the digest. Write it outside the repository or list it in `.ocignore`, or a confirmed
+  proposal reads stale on the next run. The proposal also records a
+  digest of the scanned code (`scan_tree_sha256`). When the code or the manifest changes
+  after that, `check` treats the proposal as stale and ignores it; run `scan --propose`
+  and `accept --proposal` again to refresh it.
+
+## Candidates (leads for a person)
+
+With `--ai-intent`, the scan also lists **candidates**: an AI library that production code
+imports but that yields no Annex III signal. They are reported apart from the findings, under
+`eu_ai_scan.candidates` in the JSON and in a separate block of the terminal report headed
+"Candidates (leads for a person, not findings)". Each one names the library, the file and line
+of the import, and the reason `imported_not_classified`.
+
+- **A candidate is a lead, not a finding.** It asks a person to check whether the library is
+  used for something that needs a classification. Nothing in the scan treats it as evidence.
+- **It moves nothing.** A candidate changes no verdict, no exit code and no count in the
+  classification proposal, and it is not part of the gate.
+- **It carries no accuracy figure.** Candidates are excluded from precision and recall. The
+  [benchmark page](../concepts/annex-iii-benchmark.md#candidates-leads-not-findings) lists the
+  measured counts on its synthetic programs and makes no claim beyond that table.
+
+The fields and the rules are described in [Candidate tier](../concepts/candidate-tier.md).
 
 ## Framework object detection (`--framework-detectors`)
 

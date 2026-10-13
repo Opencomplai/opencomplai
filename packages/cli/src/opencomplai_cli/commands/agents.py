@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import UTC, date, datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,7 @@ from opencomplai_core.agent_report import (
     build_agent_report,
     render_agent_report_markdown,
 )
+from opencomplai_core.agent_sources import expired_mandates
 from opencomplai_core.models import CorroborationReport, SystemManifest
 
 app = typer.Typer(help="Agent inventory commands (offline; evidence only).")
@@ -49,6 +51,11 @@ _SCAN = typer.Option(
     help="Optional CorroborationReport JSON (from `opencomplai check --scan`) "
     "to cross-check the declared inventory against.",
 )
+
+
+def _today() -> date:
+    """The only clock read in this module (UTC date); tests patch it (E-14)."""
+    return datetime.now(UTC).date()
 
 
 def _fail(msg: str) -> None:
@@ -151,9 +158,13 @@ def check_cmd(
 
     Exit 2: missing or invalid manifest or inventory. Exit 1: declared-versus-
     detected findings. Exit 0: none. Never a compliance verdict.
+
+    An expired mandate (UTC calendar date, as in `gaps`) is listed after the
+    findings, not counted as one, and does not change the exit status.
     """
     manifest, scan = _load(manifest_file, scan_report_file)
     findings = build_agent_report(manifest, scan)["findings"]
+    expired = expired_mandates(manifest, _today())
     invalid = [f for f in findings if f["kind"] == "invalid_inventory"]
     code = 2 if invalid else 1 if findings else 0
     if output_format == OutputFormat.json:
@@ -162,12 +173,18 @@ def check_cmd(
                 "system_id": manifest.system_id,
                 "notice": NOT_A_VERDICT,
                 "findings": findings,
+                "expired_mandates": [{"id": i, "expires_at": e} for i, e in expired],
                 "exit_code": code,
             }
         )
     else:
         for f in findings:
             typer.echo(f"[{f['evidence']}] {f['kind']}: {f['detail']}")
+        for agent_id, expires_at in expired:
+            typer.echo(
+                f"[declared] expired_mandate: agent '{agent_id}' mandate "
+                f"expired (expires_at {expires_at})"
+            )
         typer.echo(f"{len(findings)} finding(s); {NOT_A_VERDICT}.")
     raise typer.Exit(code)
 

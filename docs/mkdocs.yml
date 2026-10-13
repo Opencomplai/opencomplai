@@ -218,6 +218,7 @@ nav:
     - Evaluators: concepts/evaluators.md
     - Scan workflow: concepts/scan-workflow.md
     - Annex III detection benchmark: concepts/annex-iii-benchmark.md
+    - Candidate tier: concepts/candidate-tier.md
     - Rule-set versioning: concepts/rule-set-versioning.md
     - Roles and applicability: concepts/roles-and-applicability.md
     - Backlog order: concepts/backlog.md

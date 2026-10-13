@@ -190,3 +190,57 @@ def test_signing_key_available(tmp_path, monkeypatch):
     assert not signing_key_available(tmp_path / "none")
     monkeypatch.setenv("SIGNING_KEY_PRIVATE", "x")
     assert signing_key_available(tmp_path / "none")
+
+
+def test_check_reports_state_signed_with_key_id(tmp_path, monkeypatch):
+    from opencomplai_core.agent_attestation import key_id_for_public_pem
+
+    manifest_file, key_dir = _setup(tmp_path, monkeypatch)
+    result = _check(
+        manifest_file,
+        "--sign",
+        "--summary-md",
+        "r.md",
+        "--report-junit",
+        "r.xml",
+        "--sarif-output",
+        "r.sarif",
+    )
+    assert result.exit_code == 0, result.output
+    kid = key_id_for_public_pem((key_dir / "signing.pub").read_text(encoding="utf-8"))
+    assert f"| Signed | `yes (key {kid})` |" in (tmp_path / "r.md").read_text("utf-8")
+    junit = (tmp_path / "r.xml").read_text("utf-8")
+    assert 'name="opencomplai.signed" value="true"' in junit
+    assert f'name="opencomplai.signer_key_id" value="{kid}"' in junit
+    props = json.loads((tmp_path / "r.sarif").read_text("utf-8"))["runs"][0][
+        "properties"
+    ]
+    assert props["signed"] is True
+    assert props["signer_key_id"] == kid
+    raw = _artifact_dict(tmp_path)
+    assert not any("key_id" in k for k in raw)
+    artifact = ScanStatusArtifact.model_validate(raw)
+    assert verify_artifact(artifact, key_dir / "signing.pub") is True
+
+
+def test_check_reports_state_unsigned_without_key(tmp_path, monkeypatch):
+    manifest_file, _ = _setup(tmp_path, monkeypatch, key=False)
+    result = _check(
+        manifest_file,
+        "--sign-if-available",
+        "--summary-md",
+        "r.md",
+        "--report-junit",
+        "r.xml",
+        "--sarif-output",
+        "r.sarif",
+    )
+    assert result.exit_code == 0, result.output
+    assert "| Signed | `no (unsigned artifact)` |" in (tmp_path / "r.md").read_text(
+        "utf-8"
+    )
+    assert 'name="opencomplai.signed" value="false"' in (tmp_path / "r.xml").read_text(
+        "utf-8"
+    )
+    sarif = json.loads((tmp_path / "r.sarif").read_text("utf-8"))
+    assert sarif["runs"][0]["properties"]["signed"] is False

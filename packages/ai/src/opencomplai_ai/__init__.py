@@ -1,8 +1,12 @@
-"""opencomplai-ai — AI-powered EU AI Act intent classification plugin."""
+"""opencomplai-ai — optional EU AI Act intent analysis plugin.
+
+The `codebert-onnx` matcher is deterministic and needs no model download;
+local GGUF models need the `[deep]` extra.
+"""
 
 from __future__ import annotations
 
-__version__ = "0.11.1"
+__version__ = "0.12.0"
 
 from opencomplai_ai.models import MODEL_CATALOG, IntentAnnotation
 from opencomplai_ai.registry import ModelRegistry

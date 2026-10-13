@@ -70,7 +70,7 @@ after editing either data file.
 | Art. 16 | `artifact:provider_qms_bundle` |
 | Art. 17 | `artifact:provider_qms` |
 | Art. 24 | `artifact:distributor_conformity` |
-| Art. 26 | `artifact:deployer_use_records`, `manifest:agent_declarations` |
+| Art. 26 | `artifact:deployer_use_records`, `manifest:agent_declarations`, `manifest:imported_provider_pack` |
 | Art. 43 | `artifact:conformity_assessment_docs` |
 | Art. 53 | `obligation:gpai_provider`, `artifact:gpai_model_documentation`, `artifact:gpai_downstream_information` |
 | Art. 55 | `obligation:gpai_systemic_risk`, `artifact:gpai_systemic_risk_evaluation` |

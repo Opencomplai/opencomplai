@@ -75,3 +75,102 @@ def test_checker_page_counts_match_fixtures() -> None:
     n_shared = len(json.loads(_read(_SHARED_VECTORS))["vectors"])
     assert int(golden.group(1)) == n_golden
     assert int(shared.group(1)) == n_shared
+
+
+_PROVENANCE_TESTS = [
+    "packages/cli/tests/test_provenance_stamp.py",
+    "packages/core/tests/test_tree_digest.py",
+]
+_LEDGER_SOURCES = [
+    "packages/core/src/opencomplai_core/models.py",
+    "packages/core/src/opencomplai_core/dossier_generator.py",
+    "infra/compose/docker-compose.yml",
+    "sync/reset_demo.py",
+]
+_CUSTOMER_CI_SNIPPETS = [
+    "docs/ci/github-actions.yml",
+    "dashboard-saas/docs/ci/github-actions.yml",
+    "docs/src/guides/ci-integration.md",
+    "docs/src/guides/ci-recipes.md",
+    "dashboard-saas/services/web/src/lib/ciSnippets.ts",
+    "docs/src/examples/basic-usage.md",
+    "docs/src/examples/integrations.md",
+    "docs/src/getting-started/first-project.md",
+]
+
+
+def _existing(rels: list[str]) -> list[str]:
+    """Paths present in this checkout; the public checkout lacks some of them."""
+    return [rel for rel in rels if (_ROOT / rel).exists()]
+
+
+def test_no_epic_id_in_provenance_and_digest_tests() -> None:
+    pattern = re.compile(r"\b(?:SU|CL)-[A-Z]?\d+[a-z]?\b")
+    present = _existing(_PROVENANCE_TESTS)
+    assert present, "none of the provenance/digest test files exist"
+    hits = [
+        f"{rel}:{n}"
+        for rel in present
+        for n, line in enumerate(_read(rel).splitlines(), 1)
+        if pattern.search(line)
+    ]
+    assert not hits, "internal epic ids in public test comments: " + ", ".join(hits)
+
+
+def test_no_merkle_word_in_ledger_sources() -> None:
+    present = _existing(_LEDGER_SOURCES)
+    assert present, "none of the ledger source files exist"
+    hits = [
+        f"{rel}:{n}"
+        for rel in present
+        for n, line in enumerate(_read(rel).splitlines(), 1)
+        if re.search("merkle", line, re.I)
+    ]
+    assert not hits, (
+        "the ledger is a linear hash chain, not a Merkle tree: " + ", ".join(hits)
+    )
+
+
+def test_customer_ci_snippets_pin_checkout_v7() -> None:
+    seen = 0
+    bad: list[str] = []
+    for rel in _existing(_CUSTOMER_CI_SNIPPETS):
+        for n, line in enumerate(_read(rel).splitlines(), 1):
+            if "actions/checkout@" not in line:
+                continue
+            seen += 1
+            if not line.strip().endswith("actions/checkout@v7"):
+                bad.append(f"{rel}:{n}: {line.strip()}")
+    assert seen >= 6, f"expected at least six checkout lines, saw {seen}"
+    assert not bad, "customer snippets must pin actions/checkout@v7: " + "; ".join(bad)
+
+
+_PLANNING_ID = re.compile("V" + "12-[A-Za-z]+[0-9]*" + "|" + "V" + "-D[0-9]+")
+
+
+def test_no_planning_ids_in_package_sources_and_tests() -> None:
+    """Public trees carry no internal planning ids."""
+    roots = [
+        *sorted((_ROOT / "packages").glob("*/src")),
+        *sorted((_ROOT / "packages").glob("*/tests")),
+        *([_ROOT / "integrations"] if (_ROOT / "integrations").exists() else []),
+    ]
+    assert roots, "none of the package source or test trees exist"
+    me = Path(__file__).resolve()
+    hits: list[str] = []
+    for root in roots:
+        for path in sorted(root.rglob("*")):
+            if (
+                not path.is_file()
+                or path.resolve() == me
+                or {"__pycache__", "node_modules"} & set(path.parts)
+            ):
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except (UnicodeDecodeError, OSError):
+                continue
+            for n, line in enumerate(text.splitlines(), 1):
+                if _PLANNING_ID.search(line):
+                    hits.append(f"{path.relative_to(_ROOT).as_posix()}:{n}")
+    assert not hits, "planning ids in public sources or tests: " + ", ".join(hits)

@@ -217,9 +217,14 @@ _ACTION_PAGE = _ROOT / "docs" / "src" / "guides" / "github-action.md"
 # span, as the forward guard does.
 _STRICT = {"check", "agents"}
 
-# ratchet: a follow-up epic documents these; the stale-entry test fails when one
-# is documented but still listed.
-_KNOWN_UNDOCUMENTED: dict[str, set[str]] = {
+# ratchet: stays empty. Every real option of a non-strict command is named on its
+# page. A new entry needs an epic that documents the option first; the stale-entry
+# test fails when one is documented but still listed.
+_KNOWN_UNDOCUMENTED: dict[str, set[str]] = {}
+
+# The 19 options this ratchet listed before the pages documented them. The guards
+# below keep them pinned to real options and to their pages.
+_FORMERLY_UNDOCUMENTED: dict[str, set[str]] = {
     "checker": {"--local"},
     "dashboard": {"--local-only"},
     "docs": {"--manifest", "--no-push", "--push"},
@@ -328,6 +333,58 @@ def test_known_undocumented_entries_are_real_and_still_missing():
             for opt in options & _named(name, text)
         ]
     assert not problems, problems
+
+
+def test_known_undocumented_list_is_empty():
+    assert not _KNOWN_UNDOCUMENTED
+
+
+def test_formerly_undocumented_options_are_real_and_documented():
+    documented = {name: (cmd, text) for name, cmd, text in _documented_commands()}
+    for name, options in _FORMERLY_UNDOCUMENTED.items():
+        assert name in documented, f"{name}: no page for this command"
+        command, text = documented[name]
+        real = _real_options(command)
+        assert options <= real, f"{name}: not real options {sorted(options - real)}"
+        named = _named(name, text)
+        assert options <= named, (
+            f"{name}: not named on its page {sorted(options - named)}"
+        )
+
+
+_ROW_CELLS_RE = re.compile(r"^\|([^|]*)\|([^|]*)\|")
+
+
+def test_new_option_rows_state_the_real_default():
+    # (command, option) -> the second cell the table row must state, exactly.
+    wanted = {
+        ("gaps", "--sort"): "`article`",
+        ("recommend", "--sort"): "`article`",
+        ("report", "--sort"): "`article`",
+        ("init", "--repo-root"): "`.`",
+        ("init", "--scan"): "`False`",
+        ("scan", "--strict"): "off",
+        ("scan", "--ai-deep"): "off",
+        ("scan", "--ai-verbose"): "off",
+        ("scan", "--no-enqueue-review"): "off",
+        ("scan", "--no-emit-evidence"): "on",
+        ("gaps", "--strict"): "off",
+        ("docs", "--push"): "`--no-push`",
+        ("docs", "--manifest"): "*(none)*",
+        ("dashboard", "--local-only"): "off",
+    }
+    texts = {name: text for name, _cmd, text in _documented_commands()}
+    for (name, option), token in wanted.items():
+        assert name in texts, f"{name}: no page for this command"
+        cells = [
+            m.group(2).strip()
+            for line in texts[name].splitlines()
+            if (m := _ROW_CELLS_RE.match(line)) and f"`{option}`" in m.group(1)
+        ]
+        assert cells, f"{name} {option}: no table row names it"
+        assert cells[0] == token, (
+            f"{name} {option}: default cell is {cells[0]!r}, expected {token!r}"
+        )
 
 
 def test_check_page_guard_fails_when_any_option_row_is_removed():

@@ -11,11 +11,16 @@ from opencomplai_core.models import (
     ArticleGapStatus,
     ConfidenceLabel,
     GapStatus,
+    ImportedPackEvidence,
     SystemManifest,
 )
 
 MANIFEST_SOURCE_REFS: frozenset[str] = frozenset(
-    {"human_oversight_declaration", "record_keeping_declaration"}
+    {
+        "human_oversight_declaration",
+        "record_keeping_declaration",
+        "imported_provider_pack",
+    }
 )
 
 # E-15: wording and the PARTIAL ceiling are the founder's/lawyer's to approve.
@@ -41,6 +46,20 @@ NEEDS_REVIEW_NOTES: dict[str, dict] = {
             "A declaration reads PARTIAL at most (MISSING when logging is "
             "declared off) and Art. 12 is never MET from it; the ceiling and "
             "the row wording need approval."
+        ),
+    },
+    "imported_provider_pack": {
+        "source": (
+            "Regulation (EU) 2024/1689 Art. 26 (text unverified here); "
+            "provider-supplied deployer pack recorded by `deployer-pack "
+            "import`, not verified by the deployer"
+        ),
+        "confidence": "low",
+        "needs_founder_review": True,
+        "note": (
+            "A received pack reads PARTIAL at most and Art. 26 is never MET "
+            "from it; a verified and an unsigned pack both read PARTIAL; the "
+            "ceiling and the row wording need approval."
         ),
     },
 }
@@ -72,6 +91,30 @@ def _oversight_row(manifest: SystemManifest) -> ArticleGapStatus | None:
     )
 
 
+def _imported_pack_row(manifest: SystemManifest) -> ArticleGapStatus | None:
+    packs = [
+        e
+        for e in manifest.imported_evidence.values()
+        if isinstance(e, ImportedPackEvidence)
+    ]
+    if not packs:
+        return None
+    unsigned = sum(p.verification == "unsigned" for p in packs)
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.PARTIAL,  # never MET: the provider's own statement
+        source=ArticleGapSource.MANIFEST,
+        evidence_ref="manifest:imported_provider_pack",
+        rationale=(
+            f"{len(packs)} deployer pack(s) received from a provider, {unsigned} "
+            "unsigned; provider-supplied, not verified by the deployer. "
+            "A record of receipt only; not verified against the system."
+        ),
+        confidence=None,
+        confidence_label=ConfidenceLabel.NOT_ASSESSED,
+    )
+
+
 def manifest_gap_status(ref: str, manifest: SystemManifest) -> ArticleGapStatus | None:
     """The row for a manifest source ref, or None (unknown ref or not declared)."""
     if ref == "record_keeping_declaration":
@@ -80,6 +123,8 @@ def manifest_gap_status(ref: str, manifest: SystemManifest) -> ArticleGapStatus 
         return record_keeping_gap_status(manifest)
     if ref == "human_oversight_declaration":
         return _oversight_row(manifest)
+    if ref == "imported_provider_pack":
+        return _imported_pack_row(manifest)
     return None
 
 

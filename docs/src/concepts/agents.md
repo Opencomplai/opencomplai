@@ -15,7 +15,7 @@ The inventory is the provider's own declaration. Each agent has an `id` and a `n
 | Mandate | What the agent may and may not do (`permitted_actions`, `prohibited_actions`, `limits`), who granted it, and an optional expiry and review cadence. |
 | Delegation | Which agents it may hand work to, and how deep. |
 | Guardrails | A list of guardrail kinds, each with an optional evidence reference. |
-| Logging | Where the agent's decision log lives and whether it captures intent. |
+| Logging | Where the agent's decision log lives and whether it captures intent. The reference is checked as a file inside the repository; an optional `#anchor` is matched in its text. |
 
 A tool in a mandate is written `tool:<name>` and must name a tool declared by the same agent. The block can
 also carry a `responsibility_map`, which is free text the provider writes and the tool records verbatim.
@@ -35,7 +35,8 @@ determination of who owes what.
 ## What reaches the gap report
 
 The manifest's agent inventory feeds Articles 12, 14, 15 and 26 of the gap report. It can lift a row to
-`partial` at most, never `met`, and nothing changes for a manifest with no inventory. Scan findings alone
+`partial` at most, never `met`, and nothing changes for a manifest with no inventory. A decision log reference that
+names no file inside the repository reads `missing`. Scan findings alone
 never produce `met` for an agent framework.
 
 ## Attestations

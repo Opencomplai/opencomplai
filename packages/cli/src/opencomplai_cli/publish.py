@@ -39,6 +39,19 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+SCHEMA_VIOLATION_HINT = (
+    "hint: the receiving service does not accept this artifact schema: "
+    "upgrade the service, or pin the CLI to the version the service was released with."
+)
+
+
+def schema_violation_hint(data: Mapping[str, Any]) -> str:
+    """Return the upgrade hint for a SCHEMA_VIOLATION error body, else ""."""
+    if isinstance(data, Mapping) and data.get("error_code") == "SCHEMA_VIOLATION":
+        return SCHEMA_VIOLATION_HINT
+    return ""
+
+
 _MIN_COMMIT_REF_LENGTH = 7
 _UNRESOLVED_COMMIT_REF = "unresolved"
 
@@ -438,9 +451,11 @@ def publish_dossier_envelope(
 
 
 __all__ = [
+    "SCHEMA_VIOLATION_HINT",
     "envelope_signature",
     "prepare_dossier_envelope",
     "prepare_scan_status_artifact",
     "publish_dossier_envelope",
     "publish_scan_status",
+    "schema_violation_hint",
 ]

@@ -7,7 +7,9 @@
     "EU_AIA_ART6_HIGH_RISK",
     "EU_AIA_ART6_PROFILING"
   ],
-  "evidence_hashes": [],
+  "evidence_hashes": [
+    "sha256:9a5a1c3fd6fa56346d0135e29662d6636dfab1690b1dd4e287181e8c0244c655"
+  ],
   "rationale_hash": "sha256:e299319d93e1789346ff3f39d6ae202578a750c1288bbc3be2c84d3fb4949a49",
   "duration_ms": <DURATION>,
   "pending_verifications_count": 0,

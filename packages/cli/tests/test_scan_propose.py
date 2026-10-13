@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 from opencomplai_cli.main import app
@@ -13,6 +14,7 @@ from opencomplai_core.classification_proposal import (
 )
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.models import SystemManifest
+from opencomplai_core.scan_engine import run_scan
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -132,13 +134,24 @@ def test_scan_ignores_existing_proposal_file(tmp_path: Path) -> None:
     assert (repo / PROPOSAL_FILENAME).is_file()
     after = json.loads(_scan(tmp_path, repo, *args).stdout)["payload"]
     assert after["detected_categories"] == before["detected_categories"]
-    # The input digest is content-based, so the extra file moves it (and the
-    # report hash that covers it); nothing the detectors produced may move.
-    assert after["input_digest"] != before["input_digest"]
+    # The proposal file is written by the tool, so the input digest leaves it
+    # out: writing it must not make a proposal look stale.
+    assert after["input_digest"] == before["input_digest"]
     run_specific = {"scan_id", "generated_at", "input_digest", "report_hash"}
     assert {k: v for k, v in after.items() if k not in run_specific} == {
         k: v for k, v in before.items() if k not in run_specific
     }
+
+
+def test_proposal_records_scan_tree_sha256(tmp_path: Path) -> None:
+    repo = _employment_repo(tmp_path)
+    assert _scan(tmp_path, repo, "--propose").exit_code == 0
+    doc = load_proposal(repo / PROPOSAL_FILENAME)
+    report = run_scan("prop-sys", "HEAD", repo, "customer support chatbot")
+    assert report.source_tree_sha256
+    assert doc["scan_tree_sha256"] == report.source_tree_sha256
+    # The proposal file now sits in the tree and the value does not move.
+    assert (repo / PROPOSAL_FILENAME).is_file()
 
 
 def test_propose_with_legacy_exits_2_writes_nothing(tmp_path: Path) -> None:
@@ -146,3 +159,72 @@ def test_propose_with_legacy_exits_2_writes_nothing(tmp_path: Path) -> None:
     result = _scan(tmp_path, repo, "--propose", "--ai-legacy")
     assert result.exit_code == 2, result.output
     assert not (repo / PROPOSAL_FILENAME).exists()
+
+
+def _propose(tmp_path: Path, repo: Path, *extra: str):
+    """A `--propose` scan without the `--ai-model` that `_COMMON` carries."""
+    return runner.invoke(
+        app,
+        [
+            "scan",
+            "--manifest",
+            str(_manifest(tmp_path)),
+            "--repo-root",
+            str(repo),
+            "--no-emit-evidence",
+            "--no-ocignore-bootstrap",
+            "--propose",
+            *extra,
+        ],
+    )
+
+
+def _base_install(monkeypatch, tmp_path: Path, config: str | None = None) -> None:
+    monkeypatch.setitem(sys.modules, "llama_cpp", None)
+    cfg = tmp_path / "ai-config.yaml"
+    if config is not None:
+        cfg.write_text(config, encoding="utf-8")
+    monkeypatch.setattr("opencomplai_ai.config._AI_CONFIG_FILE", cfg)
+
+
+def test_propose_defaults_to_deterministic_backend(monkeypatch, tmp_path: Path) -> None:
+    _base_install(monkeypatch, tmp_path)
+    repo = _employment_repo(tmp_path)
+    result = _propose(tmp_path, repo)
+    assert result.exit_code == 0, result.output
+    doc = load_proposal(repo / PROPOSAL_FILENAME)
+    assert doc["ai_model_id"] == "codebert-onnx"
+    assert doc["ai_backend"] == "deterministic"
+    assert "Intent backend: codebert-onnx" in result.output
+
+
+def test_propose_ai_model_flag_is_respected(monkeypatch, tmp_path: Path) -> None:
+    _base_install(monkeypatch, tmp_path)
+    import opencomplai_cli.main as cli_main
+
+    seen: list[str | None] = []
+
+    def preload(model_id):
+        seen.append(model_id)
+        return True
+
+    monkeypatch.setattr(cli_main, "_preload_ai_model", preload)
+    repo = _employment_repo(tmp_path)
+    result = _propose(tmp_path, repo, "--ai-model", "qwen2.5-coder-0.5b")
+    assert seen == ["qwen2.5-coder-0.5b"]
+    assert result.exit_code == 2, result.output
+    assert not (repo / PROPOSAL_FILENAME).exists()
+
+    monkeypatch.undo()
+    _base_install(monkeypatch, tmp_path)
+    ok = _propose(tmp_path, repo, "--ai-model", "codebert-onnx")
+    assert ok.exit_code == 0, ok.output
+    assert load_proposal(repo / PROPOSAL_FILENAME)["ai_model_id"] == "codebert-onnx"
+
+
+def test_propose_ignores_configured_default_model(monkeypatch, tmp_path: Path) -> None:
+    _base_install(monkeypatch, tmp_path, "model_id: qwen2.5-coder-0.5b\n")
+    repo = _employment_repo(tmp_path)
+    result = _propose(tmp_path, repo)
+    assert result.exit_code == 0, result.output
+    assert load_proposal(repo / PROPOSAL_FILENAME)["ai_model_id"] == "codebert-onnx"

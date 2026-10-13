@@ -73,7 +73,7 @@ jobs:
   compliance:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install Opencomplai
         run: pip install opencomplai
@@ -104,7 +104,7 @@ After a successful run, download the artifact from the Actions tab. It contains 
   "commit_ref": "abc1234",
   "result": "pass",
   "failed_controls": [],
-  "evidence_hashes": [],
+  "evidence_hashes": ["sha256:..."],
   "rationale_hash": "sha256:...",
   "duration_ms": 0,
   "pending_verifications_count": 0,

@@ -21,10 +21,13 @@ from opencomplai_core.acceptance import (
 from opencomplai_core.classification_proposal import (
     PROPOSAL_DOCUMENT_TYPE,
     PROPOSAL_FILENAME,
+    TOOL_WRITTEN_NAMES,
     build_proposal_document,
     confirmation_status,
+    is_tool_written_path,
     load_proposal,
     proposal_digest,
+    proposal_tree_sha256,
 )
 from opencomplai_core.control_identity import fingerprint_manifest
 from opencomplai_core.models import ScanResult, ScanStatusArtifact, SystemManifest
@@ -230,3 +233,129 @@ def test_confirmation_record_is_not_a_classification_acceptance(
     record = _confirm(tmp_path, manifest, _doc(manifest))
     status = evaluate_record(record, manifest, CLASSIFICATION_ACCEPTANCE)
     assert status.state == "mismatch"
+
+
+def test_proposal_without_backend_fields_still_loads_and_confirms(
+    tmp_path: Path,
+) -> None:
+    manifest = _manifest()
+    doc = _doc(manifest)
+    assert "ai_backend" not in doc
+    assert "ai_model_id" not in doc
+    proposal = _write_proposal(tmp_path, doc)
+    assert load_proposal(proposal) == doc
+    record = _confirm(tmp_path, manifest, doc)
+    assert confirmation_status(proposal, record, manifest).state == "valid"
+
+
+def test_backend_fields_are_covered_by_the_digest(tmp_path: Path) -> None:
+    doc = _doc(_manifest())
+    doc = build_proposal_document(
+        **{
+            k: doc[k]
+            for k in (
+                "system_id",
+                "commit_ref",
+                "scanner_version",
+                "scan_input_digest",
+                "scan_report_hash",
+                "manifest_fingerprint",
+                "declared_purpose",
+                "area",
+                "confidence",
+            )
+        },
+        evidence=doc["evidence"],
+        minority_evidence=[],
+        prohibited_signals=[],
+        proposal=doc["proposal"],
+        ai_backend="deterministic",
+        ai_model_id="codebert-onnx",
+    )
+    path = _write_proposal(tmp_path, doc)
+    assert load_proposal(path)["ai_model_id"] == "codebert-onnx"
+    path.write_text(
+        json.dumps({**doc, "ai_model_id": "other"}, sort_keys=True), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="edited after it was written"):
+        load_proposal(path)
+
+
+def test_scan_tree_sha256_optional_and_covered_by_digest(tmp_path: Path) -> None:
+    manifest = _manifest()
+    plain = _doc(manifest)
+    assert "scan_tree_sha256" not in plain  # older shape, byte-identical
+    assert proposal_tree_sha256(plain) is None
+
+    kwargs = {
+        k: plain[k]
+        for k in (
+            "system_id",
+            "commit_ref",
+            "scanner_version",
+            "scan_input_digest",
+            "scan_report_hash",
+            "manifest_fingerprint",
+            "declared_purpose",
+            "area",
+            "confidence",
+        )
+    }
+    tree = "ef" * 32
+    doc = build_proposal_document(
+        **kwargs,
+        evidence=plain["evidence"],
+        minority_evidence=[],
+        prohibited_signals=[],
+        proposal=plain["proposal"],
+        scan_tree_sha256=tree,
+    )
+    assert proposal_tree_sha256(doc) == tree
+    assert doc["proposal_sha256"] != plain["proposal_sha256"]
+    path = _write_proposal(tmp_path, doc)
+    assert load_proposal(path)["scan_tree_sha256"] == tree
+    path.write_text(
+        json.dumps({**doc, "scan_tree_sha256": "00" * 32}, sort_keys=True),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="edited after it was written"):
+        load_proposal(path)
+    assert proposal_tree_sha256({"scan_tree_sha256": ""}) is None
+    assert proposal_tree_sha256({"scan_tree_sha256": 5}) is None
+
+
+LITERAL_SIDECARS = ("scan-report.json", "eval-report.json", "compliance-artifact.json")
+
+
+def test_tool_written_names_pin_the_sidecars() -> None:
+    assert set(LITERAL_SIDECARS) <= set(TOOL_WRITTEN_NAMES)
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        PROPOSAL_FILENAME,
+        ".ocignore",
+        ".opencomplai/acceptances/s.record.json",
+        *LITERAL_SIDECARS,
+        *("out/" + n for n in LITERAL_SIDECARS),
+    ],
+)
+def test_tool_written_names_are_tool_written(rel: str) -> None:
+    assert is_tool_written_path(rel)
+
+
+@pytest.mark.parametrize("rel", ["src/scan_report.py", "notes/scan-report.json.bak"])
+def test_lookalike_names_are_not_tool_written(rel: str) -> None:
+    assert not is_tool_written_path(rel)
+
+
+def test_is_tool_written_path() -> None:
+    assert is_tool_written_path(PROPOSAL_FILENAME)
+    assert is_tool_written_path(".ocignore")
+    assert is_tool_written_path(".opencomplai/acceptances/s.record.json")
+    assert not is_tool_written_path("src/" + PROPOSAL_FILENAME)
+    assert not is_tool_written_path("src/.ocignore")
+    assert not is_tool_written_path(".opencomplai/acceptances")
+    assert not is_tool_written_path(".opencomplai/config.yaml")
+    assert not is_tool_written_path("app.py")

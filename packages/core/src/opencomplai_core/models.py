@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from datetime import datetime
 from enum import StrEnum
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Final, Literal
 
 from pydantic import (
     BaseModel,
@@ -727,7 +727,7 @@ class ScanStatusArtifact(BaseModel):
 
 class LedgerEvent(BaseModel):
     """
-    A single event in the append-only Merkle-linked evidence ledger.
+    A single event in the append-only hash-chained evidence ledger.
     Implemented in full in Phase 8 (Evidence Vault).
     """
 
@@ -1256,8 +1256,31 @@ class EuAiRegulatoryFinding(BaseModel):
     rationale: FlagRationale | None = None
 
 
+CANDIDATE_REASON_IMPORTED_NOT_CLASSIFIED: Final = "imported_not_classified"
+
+
+class EuAiCandidate(BaseModel):
+    """A lead for a person: an AI library is imported but yields no signal.
+
+    Not a finding. There is no tier, area, severity or confidence field on
+    purpose, so a candidate cannot be mistaken for a classification.
+    """
+
+    library: str
+    file: str
+    line: int = Field(ge=1, description="1-based line of the import")
+    reason: Literal["imported_not_classified"] = (
+        CANDIDATE_REASON_IMPORTED_NOT_CLASSIFIED
+    )
+
+
 class EuAiScanSummary(BaseModel):
-    """Structured EU AI Act scan output (--ai-intent)."""
+    """Structured EU AI Act scan output (--ai-intent).
+
+    ``candidates`` are leads, not findings: they are excluded from
+    ``regulatory_finding_count``, from ``report_hash``, from the proposal and
+    from every exit code.
+    """
 
     capabilities: list[EuAiUsageEntry] = Field(default_factory=list)
     prohibited: list[EuAiRegulatoryFinding] = Field(default_factory=list)
@@ -1265,6 +1288,7 @@ class EuAiScanSummary(BaseModel):
     limited_risk: list[EuAiRegulatoryFinding] = Field(default_factory=list)
     gated_callsite_count: int = 0
     regulatory_finding_count: int = 0
+    candidates: list[EuAiCandidate] = Field(default_factory=list)
 
 
 class CorroborationReport(BaseModel):
@@ -1314,6 +1338,24 @@ class CorroborationReport(BaseModel):
     generated_at: str
     report_hash: str
     eu_ai_scan: EuAiScanSummary | None = None
+    # In-process only (excluded from every dump, so no JSON, golden or
+    # report_hash change): the commit-independent tree digest that
+    # `scan --propose` stores and `check` compares.
+    source_tree_sha256: str = Field(default="", exclude=True)
+    proposal_status: str | None = Field(
+        default=None,
+        description=(
+            "Classification-proposal state (confirmed, unconfirmed, stale, "
+            "absent) set by `check` only; omitted when None."
+        ),
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_proposal_status(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        # A report without a status serialises byte-for-byte as before.
+        return omit_by_table(self, handler(self), {"proposal_status": OMIT_NONE})
 
 
 DISCLAIMER_V1 = (

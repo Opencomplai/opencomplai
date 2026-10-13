@@ -28,7 +28,7 @@ Run the EU AI Act applicability checker (checker version `checker-2026-10-05`).
 | `--write-manifest` | Write a manifest pre-filled from checker results |
 | `--intended-purpose` | With `--write-manifest`: what the system does, written to `intended_purpose` (prompted when omitted) |
 | `--web` | Open the interactive checker in your browser (hosted docs page) |
-| `--web --local` | Serve the checker locally and open it — no internet required |
+| `--local` | With `--web`: serve the bundled checker from a temporary HTTP server on `127.0.0.1` and open it instead of the hosted page; no internet required. Ignored without `--web`. Exits `1` when the bundled page is missing |
 
 ## Examples
 

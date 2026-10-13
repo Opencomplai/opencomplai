@@ -57,8 +57,13 @@ workflow, give each call its own `artifact-name`.
 | `artifact-name` | `compliance-artifact-<sha>` | Name of the uploaded artifact, unique within a workflow run |
 | `sign` | `false` | Sign the artifact when a signing key is in the environment (`--sign-if-available`) |
 | `with-gaps` | `false` | Add the per-article gap report to the artifact (`--with-gaps`) |
+| `strict` | `false` | Apply the strict preset: `--with-gaps --scan --fail-on major --require-exemption-record --sign-if-available` |
 | `fail-on-error` | `true` | Fail the job when `check` exits non-zero |
 | `github-token` | `github.token` | Token for the comment |
+
+`strict: "true"` adds `--with-gaps --scan --fail-on major --require-exemption-record --sign-if-available`,
+each only when you have not already set it. Flags you set through `args`, `sign` or `with-gaps` win and are
+never passed twice. Exit codes and the CLI defaults are unchanged; the preset adds gates, it never relaxes one.
 
 ## Outputs
 

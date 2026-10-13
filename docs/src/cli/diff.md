@@ -41,6 +41,22 @@ Status order, best to worst: `met`, `unverified`, `partial`, `missing`. A change
 
 An artifact written by a recent `check` carries `rule_set_version`. When both inputs carry one, the output says whether the rules changed and lists the history entries between the two versions. When either input does not carry one (a gap report or envelope never does), the rule set is reported as unknown and nothing is claimed either way.
 
+## Tool changed
+
+An artifact also records which tool wrote it. When both inputs carry the same field, `diff` compares `cli_version`, `rule_set_version` and `scan_summary.scanner_version`, and prints a "Tool changed" block listing each field that differs as `field: from -> to`. A field present on only one side is not compared. A gap report or envelope carries none of these, so nothing is claimed.
+
+When a verdict got worse and the tool also changed, the output adds a note that the worse verdict may come from the upgrade rather than from your code. The note never changes the exit code.
+
+JSON output gains an additive `tool_changes` field; every other key is unchanged:
+
+```json
+{"changed": true, "fields": [{"field": "cli_version", "from": "0.9.0", "to": "0.9.1"}]}
+```
+
+`changed` is `null` when no field could be compared, and `fields` is then empty. Detector versions are not recorded in artifacts, so they are not shown.
+
+`scanner_version` identifies the scanner engine only. The signal dictionary and the scope classifier carry their own versions, named in the release notes, so findings can change between releases while `scanner_version` stays the same. `cli_version` is the field that reveals an upgrade.
+
 ## Exit codes
 
 | Code | Meaning |

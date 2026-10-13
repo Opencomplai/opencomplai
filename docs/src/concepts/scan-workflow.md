@@ -42,10 +42,10 @@ Both modes produce a `ScanStatusArtifact` written to `compliance-artifact.json`:
 {
   "install_id": "a1b2c3d4-...",
   "system_id": "my-model",
-  "commit_ref": "HEAD",
+  "commit_ref": "abc1234",
   "result": "pass",
   "failed_controls": [],
-  "evidence_hashes": [],
+  "evidence_hashes": ["sha256:..."],
   "rationale_hash": "sha256:...",
   "duration_ms": 42,
   "pending_verifications_count": 0,
