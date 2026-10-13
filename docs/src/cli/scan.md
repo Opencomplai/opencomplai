@@ -37,7 +37,7 @@ Cross-check your declared `intended_purpose` against AI capability signals detec
 | `--output-file` / `-f` | — | Write results to `.json` or `.md` file (stdout unchanged) |
 | `--ocignore` | repo-root `.ocignore` | Custom scan config path (must be inside `--repo-root`) |
 | `--ocignore-bootstrap` / `--no-ocignore-bootstrap` | bootstrap on | Create default `.ocignore` on first scan if missing |
-| `--ai-intent` | off | Run local AI intent classification on extracted callsites (requires `opencomplai-ai`) |
+| `--ai-intent` | off | Run local AI intent classification on extracted callsites (requires `opencomplai-ai`). It uses the configured model (`qwen2.5-coder-1.5b` unless changed), which needs the `[deep]` extra by default; on a base install the scan prints that AI intent was skipped. `--propose` uses the deterministic `codebert-onnx` backend instead |
 | `--ai-model` | configured default (`codebert-onnx` under `--propose`) | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
 | `--framework-detectors` | off | Opt-in AST-level detection of orchestration-framework object construction + invocation (see below) |
 | `--quick` | off | Zero-config discovery scan — no manifest, never gates CI, never emits evidence (see below) |
@@ -143,6 +143,10 @@ and ignores it. Run `scan --propose`, then `accept --proposal`, to refresh it.
   digest of the scanned code (`scan_tree_sha256`). When the code or the manifest changes
   after that, `check` treats the proposal as stale and ignores it; run `scan --propose`
   and `accept --proposal` again to refresh it.
+
+Intent snippets are read relative to `--repo-root`, not the working directory. A snippet that
+cannot be read adds a `snippet_unreadable` warning to the scan report (shown with
+`--output json`) instead of being skipped silently.
 
 ## Candidates (leads for a person)
 

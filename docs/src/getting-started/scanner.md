@@ -175,7 +175,8 @@ A file's scope is decided by whole tokens of its path, split on `/`, `_`, `-` an
 with a token such as `tests`, `test`, `docs`, `dev`, `vendor` or `generated` is non-production, so
 `tests/test_scan.py` and `docs/guide.md` are non-production, and so is `dev/x.py`. A path such as
 `src/devices/` or `documents/` is production, because `devices` and `documents` are not whole tokens
-that match those words. Non-production scope lowers a finding's confidence.
+that match those words. Non-production scope lowers a finding's confidence. The scope classifier is at version 1.1.0, so
+findings for the same input can differ from earlier versions.
 
 ### Flags
 

@@ -39,7 +39,7 @@ The JSON package is validated by the published schema `evidence_package.schema.j
 | `identity.commit_ref` | The commit reference recorded by the check. |
 | `identity.manifest_sha256` | SHA-256 of the manifest the check read; `null` when not stamped. |
 | `identity.tree_sha256` | SHA-256 digest of the checked tree; `null` when the artifact does not carry one. |
-| `identity.tree_dirty` | Whether the tree had uncommitted changes; `null` when the artifact does not carry it. |
+| `identity.tree_dirty` | Whether the tree had uncommitted changes; `null` when the artifact does not carry it. A `.ocignore` created by the first `check --scan` does not mark the tree dirty: the tree is sampled before the file is written. |
 | `identity.timestamp` | The time the check stamped; `null` when not stamped. |
 | `provenance.cli_version` | The CLI version that wrote the artifact. |
 | `provenance.rule_set_version` | The rule-set version the verdicts were computed under. |
@@ -102,6 +102,20 @@ opencomplai verify embedded-artifact.json --kind artifact --pub-key ./signing.pu
 ```
 
 The key must come from the signer, never from the package. An unsigned artifact exports with `verification.signed` set to `false` and proves nothing. See [verify](verify.md).
+
+## Upgrading to 0.12
+
+0.12 adds fields to existing JSON files. Nothing is renamed or removed, but a reader that rejects unknown keys must accept them:
+
+| Where | New field |
+|---|---|
+| `compliance-artifact.json`, `scan-report.json` | `evidence_hashes` entries for the scan and evaluation sidecars (`sha256:` digests only) |
+| export package | `package_signature` (only with `--sign`) and `gaps_included` |
+| `scan-report.json` | `proposal_status` |
+| `diff --output json` | `tool_changes` |
+| `classification-proposal.json` | `ai_backend` and `ai_model_id` (optional) |
+| `agents check --output json` | `expired_mandates` |
+| `scan --output json` | `eu_ai_scan.candidates` (with `--ai-intent`) |
 
 ## Exit codes
 

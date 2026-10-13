@@ -103,3 +103,61 @@ def test_no_docs_page_calls_iso_42001_mapped_only():
         if _ISO_MAPPED_ONLY.search(_text(path))
     ]
     assert not hits, hits
+
+
+def _page(*parts: str) -> str:
+    return _text(DOCS.joinpath(*parts))
+
+
+def test_scan_page_documents_unreadable_snippet_warning():
+    page = _page("cli", "scan.md")
+    assert "snippet_unreadable" in page
+    assert "relative to `--repo-root`" in page
+
+
+def test_scan_page_separates_ai_intent_model_from_propose_backend():
+    page = _page("cli", "scan.md")
+    assert "needs the `[deep]` extra by default" in page
+    assert "`--propose` uses the deterministic `codebert-onnx` backend" in page
+
+
+def test_deployer_pack_page_states_import_reads_partial_at_most():
+    page = _page("cli", "deployer-pack.md")
+    assert "provider-supplied, not verified by the deployer" in page
+    assert "`data_version` of the EU AI Act framework" in page
+
+
+def test_scope_classifier_version_is_documented():
+    assert "1.1.0" in _page("cli", "diff.md")
+    assert "whole path tokens split on `_`, `-` and `.`" in _page("cli", "diff.md")
+    assert "version 1.1.0" in _page("getting-started", "scanner.md")
+
+
+def test_export_page_documents_provenance_sampling_and_upgrade_note():
+    page = _page("cli", "export.md")
+    assert "the tree is sampled before the file is written" in page
+    note = page[page.index("## Upgrading to 0.12") :]
+    for field in (
+        "evidence_hashes",
+        "package_signature",
+        "gaps_included",
+        "proposal_status",
+        "tool_changes",
+        "ai_backend",
+        "ai_model_id",
+        "expired_mandates",
+        "eu_ai_scan.candidates",
+    ):
+        assert field in note, field
+
+
+def test_agents_concept_states_anchor_matching():
+    page = _page("concepts", "agents.md")
+    assert "matched literally in the file or by heading slug" in page
+    assert "names no regular file inside the repository" in page
+
+
+def test_push_page_points_at_schema_violation_hint():
+    page = _page("cli", "push.md")
+    assert "SCHEMA_VIOLATION" in page
+    assert "pin the CLI to the version the service was released with" in page

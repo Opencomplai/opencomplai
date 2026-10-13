@@ -134,6 +134,10 @@ replaces the record.
   `verified` and `unsigned` read the same. The pack is the provider's statement,
   not evidence about your deployment. An expired agent mandate still reads
   Missing. The record stays in your local manifest and is not pushed.
+- **An import can change gate results.** Because the Art. 26 row can move from
+  Missing to Partial, a CI gate on Missing EU rows can exit
+  differently after an import, and the `data_version` of the EU AI Act framework
+  report changes.
 
 `--output json` prints one object with `pack_id`, `pack_sha256`,
 `provider_system_id`, `verification`, `signer_key_id`, `manifest` and `recorded`

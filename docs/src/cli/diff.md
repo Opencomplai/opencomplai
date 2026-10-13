@@ -50,12 +50,12 @@ When a verdict got worse and the tool also changed, the output adds a note that 
 JSON output gains an additive `tool_changes` field; every other key is unchanged:
 
 ```json
-{"changed": true, "fields": [{"field": "cli_version", "from": "0.9.0", "to": "0.9.1"}]}
+{"changed": true, "fields": [{"field": "cli_version", "from": "0.11.1", "to": "0.12.0"}]}
 ```
 
 `changed` is `null` when no field could be compared, and `fields` is then empty. Detector versions are not recorded in artifacts, so they are not shown.
 
-`scanner_version` identifies the scanner engine only. The signal dictionary and the scope classifier carry their own versions, named in the release notes, so findings can change between releases while `scanner_version` stays the same. `cli_version` is the field that reveals an upgrade.
+`scanner_version` identifies the scanner engine only. The signal dictionary and the scope classifier carry their own versions, named in the release notes, so findings can change between releases while `scanner_version` stays the same. A file's scope is decided by whole path tokens split on `_`, `-` and `.`; the scope classifier is at version 1.1.0, so findings for the same input can differ from earlier versions. `cli_version` is the field that reveals an upgrade.
 
 ## Exit codes
 

@@ -110,6 +110,8 @@ the API key.
 | 0 | The dashboard answered HTTP 200 or 201. |
 | 3 | Anything else: unset environment variables, missing or unreadable file, no dossier found, or a non-success answer from the dashboard. |
 
+When the receiving service rejects the artifact schema (`SCHEMA_VIOLATION`), `push` prints a `hint:` line: upgrade the receiving service, or pin the CLI to the version the service was released with. The exit code is still `3`; see [Error handling](../guides/error-handling.md#a-push-rejected-for-its-artifact-schema).
+
 A `check` that failed the gate still pushes with exit `0` if the dashboard
 accepts it. See [Exit codes](exit-codes.md) for the contract of the other
 commands.
