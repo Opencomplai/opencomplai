@@ -1,6 +1,6 @@
 # checker
 
-Run the EU AI Act applicability checker (checker version `checker-2026-10-05`).
+Run the EU AI Act applicability checker (checker version `checker-2026-10-14`).
 
 ## Synopsis
 

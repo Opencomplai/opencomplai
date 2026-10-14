@@ -13,11 +13,11 @@
   },
   "high_risk": {
     "title": "High-risk AI system",
-    "body": "Your AI system is classified as high-risk under Article 6. Additional obligations under Title III, Chapter 2 apply before placing the system on the market or putting it into service."
+    "body": "Your AI system is classified as high-risk under Article 6. Additional obligations under Chapter III, Section 2 apply before placing the system on the market or putting it into service."
   },
   "high_risk_exception": {
     "title": "High-risk exception for deployers",
-    "body": "As a deployer operating in the EU, certain high-risk classification pathways (Annex III use cases) may not impose full provider obligations on you, but deployer obligations under Chapter 3, Section 4 still apply."
+    "body": "As a deployer operating in the EU, certain high-risk classification pathways (Annex III use cases) may not impose full provider obligations on you, but deployer obligations under Chapter III, Section 3 still apply."
   },
   "prohibited": {
     "title": "Prohibited AI practice",

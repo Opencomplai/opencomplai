@@ -1,6 +1,6 @@
 /**
  * TypeScript port of packages/core/src/opencomplai_core/compliance_checker/engine.py
- * Deterministic compliance checker — checker version checker-2026-10-05.
+ * Deterministic compliance checker — checker version checker-2026-10-14.
  *
  * Must produce identical output to the Python evaluate() for all golden
  * vectors in packages/core/tests/fixtures/checker_golden_vectors_shared.json.
@@ -12,7 +12,7 @@ import {
   StatusChangeItem,
 } from "./catalog";
 
-export const CHECKER_VERSION = "checker-2026-10-05";
+export const CHECKER_VERSION = "checker-2026-10-14";
 
 export type EntityType =
   | "provider"

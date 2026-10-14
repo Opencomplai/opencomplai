@@ -65,12 +65,23 @@ def test_credit_scoring_deployer_session_produces_fria():
     assert "fria" in [o.id for o in result.obligations]
 
 
-def test_prohibited_body_lists_ninth_practice_with_date():
+def test_prohibited_body_lists_new_practices_ba_bb_with_date():
     prohibited = _obligations()["prohibited"]
     assert "social scoring of natural persons" in prohibited["body"]
     assert "2 December 2026" in prohibited["body"]
     assert "non-consensual intimate imagery" in prohibited["body"]
+    assert "points (ba) and (bb)" in prohibited["body"]
+    assert "Directive 2011/93/EU" in prohibited["body"]
+    assert "5(1)(i)" not in prohibited["body"]  # there is no point (i)
     assert prohibited["article_ref"] == "Art. 5"
+
+
+def test_ai_literacy_body_follows_the_replacement_art_4():
+    literacy = _obligations()["ai_literacy"]
+    assert "support the development of AI literacy" in literacy["body"]
+    assert "guarantee any specific level" in literacy["body"]
+    assert "sufficient level" not in literacy["body"]
+    assert literacy["article_ref"] == "Art. 4"
 
 
 def test_cli_fria_prompt_matches_questions_json():

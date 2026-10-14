@@ -169,7 +169,7 @@ label was edited after a score was seen.
 
 **What is in it.** 12 programs labelled with an Annex III area (areas 2, 4, 5
 and 7 twice, the others once), 4 Article 5(1) positives with no area (points
-(c), (e), (f) and (i)), and 8 programs with no area, including a vision toolkit
+(c), (e), (f) and (ba)), and 8 programs with no area, including a vision toolkit
 that identifies nobody, a scoring model over products, a scoring model over
 portfolios and a plain question-answering chatbot. 8 of the 24 are not Python:
 two JavaScript, two TypeScript, two Java and two Go (Java and Go programs are

@@ -9,6 +9,32 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.1] — 2026-10-14
+
+### Changed
+
+- Regulatory timeline checked against the Official Journal text of Regulation
+  (EU) 2026/1744: the new prohibitions are Art. 5(1)(ba) and (bb), not a point
+  (i), and apply from 2 December 2026; the Art. 50(2) transition for systems
+  placed on the market before 2 August 2026 ends on 2 December 2026; the Annex
+  III, Annex I, Art. 5 and Art. 50 dates now read confidence high and cite
+  their provisions; an AI literacy entry (Art. 4, from 2 February 2025) is
+  added. The Art. 49(2) registration date stays unconfirmed, with both
+  readings recorded. The checker wording for Art. 4 and Art. 5, and the Art. 4
+  `recommend` checklist, follow the same text. The EU AI Act framework
+  `data_version` changes.
+- The EU AI Act checker version is now `checker-2026-10-14`, because its Art. 4
+  and Art. 5 wording changed and its high-risk and deployer status messages now
+  cite Chapter III, Sections 2 and 3. The rules and the golden test vectors are
+  unchanged.
+
+### Fixed
+
+- Docs: the risk-levels and troubleshooting pages cite the final AI Act
+  numbering (Chapter II, and Chapter III, Section 2) instead of the draft's
+  Titles, and the minimal-risk level no longer says nothing is mandated: AI
+  literacy (Art. 4) applies to every provider and deployer.
+
 ## [0.13.0] — 2026-10-13
 
 ### Added
@@ -1283,6 +1309,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.13.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.1
 [0.13.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.0
 [0.12.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.12.0
 [0.11.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.11.1

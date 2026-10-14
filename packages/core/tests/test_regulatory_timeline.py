@@ -21,8 +21,10 @@ def test_every_entry_has_source_confidence_and_review_flag():
     assert entries
     for e in entries:
         assert e.source.strip(), e.id
-        assert e.confidence in {"medium", "low"}, e.id  # never above medium
+        assert e.confidence in {"high", "medium", "low"}, e.id
         assert e.needs_founder_review is True, e.id
+        if e.confidence == "high":  # high only for text read in the Official Journal
+            assert (e.note or "").startswith("verified:"), e.id
         if e.applies_from is None:
             assert e.confidence == "low", e.id
             assert (e.note or "").startswith("unverified:"), e.id
@@ -38,13 +40,15 @@ def test_unverified_entries_are_low_confidence():
 def test_omnibus_and_statutory_dates_are_present():
     dates = {e.id: e.applies_from for e in rt.load_timeline()}
     assert dates["art5_prohibitions"] == "2025-02-02"
-    assert dates["art5_ninth_prohibition"] == "2026-12-02"
+    assert dates["ai_literacy"] == "2025-02-02"
+    assert dates["art5_ba_bb_prohibitions"] == "2026-12-02"
     assert dates["gpai_obligations"] == "2025-08-02"
     assert dates["art50_transparency"] == "2026-08-02"
+    assert dates["art50_2_transition"] == "2026-12-02"
     assert dates["annex_iii_high_risk"] == "2027-12-02"
     assert dates["annex_i_high_risk"] == "2028-08-02"
-    assert dates["art50_2_transition"] is None
     assert dates["art49_2_registration"] is None
+    assert "art5_ninth_prohibition" not in dates  # there is no Art. 5(1)(i)
 
 
 def test_loader_rejects_malformed_entries():
@@ -68,10 +72,16 @@ def test_knowledge_applies_from_agrees_with_timeline():
     known = rt.knowledge_dates()
     assert set(known) == {
         "prohibited:*:min",
-        "prohibited:Art.5(1)(i)",
+        "prohibited:Art.5(1)(ba)",
+        "prohibited:Art.5(1)(bb)",
         "limited_risk:*",
     }
-    by_ref = {e.knowledge_ref: e for e in rt.load_timeline() if e.knowledge_ref}
+    by_ref = {
+        ref: e
+        for e in rt.load_timeline()
+        if e.knowledge_ref
+        for ref in e.knowledge_ref.split(",")
+    }
     assert set(by_ref) == set(known)
     for ref, applies_from in known.items():
         assert by_ref[ref].applies_from == applies_from, ref
@@ -106,9 +116,13 @@ def test_timeline_for_articles_orders_by_date():
         "annex_iii_high_risk",
         "annex_i_high_risk",
         "art49_2_registration",
-        "art50_2_transition",
     ]
-    assert rt.timeline_for_articles(["Art. 4"]) == []
+    # the Art. 50(2) transition is set by Art. 111(4), so it leaves Art. 50 its date
+    assert [e.id for e in rt.timeline_for_articles(["Art. 111"])] == [
+        "art50_2_transition"
+    ]
+    assert [e.id for e in rt.timeline_for_articles(["Art. 4"])] == ["ai_literacy"]
+    assert rt.timeline_for_articles(["Art. 3"]) == []
     # a range in the data covers a single article in the argument
     assert "annex_iii_high_risk" in [
         e.id for e in rt.timeline_for_articles(["Art. 24"])

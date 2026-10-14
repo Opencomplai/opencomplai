@@ -151,7 +151,7 @@ def test_heldout_set_shape():
     assert len(art5) >= 4
     points = set()
     for f in art5:
-        match = re.match(r"Art\.5\(1\)\(([a-i])\)", f["why"])
+        match = re.match(r"Art\.5\(1\)\(([a-h]|ba|bb)\)", f["why"])
         assert match, (f["name"], f["why"])
         points.add(match.group(1))
     assert len(points) >= 4

@@ -6,8 +6,8 @@ Opencomplai reports one of four EU AI Act-aligned risk levels for every assessed
 
 | Level | `RiskLevel` enum | EU AI Act basis | Typical `ScanResult` |
 |---|---|---|---|
-| Unacceptable | `UNACCEPTABLE` | Title II (Art. 5) — prohibited practices | `policy_block` |
-| High | `HIGH` | Title III (Art. 6 + Annex III) — high-risk systems | `control_fail` (if controls incomplete) |
+| Unacceptable | `UNACCEPTABLE` | Chapter II (Art. 5) — prohibited practices | `policy_block` |
+| High | `HIGH` | Chapter III (Art. 6 + Annex III) — high-risk systems | `control_fail` (if controls incomplete) |
 | Limited | `LIMITED` | Art. 50 — transparency obligations | `pass` with transparency controls |
 | Minimal | `MINIMAL` | All other AI systems | `pass` |
 
@@ -29,7 +29,7 @@ Systems listed in **Annex III** of the EU AI Act, such as AI used in:
 - Migration, asylum, and border control
 - Administration of justice
 
-High-risk systems must comply with obligations in Title III Chapter 2 (risk management, data governance, technical documentation, human oversight, accuracy, robustness, and cybersecurity).
+High-risk systems must meet the requirements in Chapter III, Section 2 (risk management, data governance, technical documentation, record-keeping, transparency to deployers, human oversight, accuracy, robustness and cybersecurity).
 
 ### Limited
 
@@ -37,7 +37,7 @@ Systems subject to transparency obligations under Art. 50 — e.g., chatbots tha
 
 ### Minimal
 
-All other AI systems. Compliance is recommended but not mandated.
+All other AI systems. The Act sets no risk-based obligations for them; AI literacy (Art. 4) still applies to every provider and deployer.
 
 ## How the rule engine assigns risk
 

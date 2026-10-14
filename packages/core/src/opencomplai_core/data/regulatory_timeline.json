@@ -7,22 +7,34 @@
       "applies_from": "2025-02-02",
       "articles": ["Art. 5"],
       "scope_note": "Practices (a) to (h) of the Art. 5(1) prohibition list.",
-      "source": "Reg. (EU) 2024/1689, Art. 5 and Art. 113",
-      "confidence": "medium",
+      "source": "Reg. (EU) 2024/1689, Art. 5 and Art. 113(a) as amended by Reg. (EU) 2026/1744, Art. 1(40)(a)",
+      "confidence": "high",
       "needs_founder_review": true,
-      "knowledge_ref": "prohibited:*:min"
+      "knowledge_ref": "prohibited:*:min",
+      "note": "verified: Art. 113(a) read in the Official Journal text of Reg. (EU) 2026/1744 (OJ L, 24.7.2026); Chapters I and II apply from 2 February 2025."
     },
     {
-      "id": "art5_ninth_prohibition",
-      "title": "Ninth prohibited AI practice, Art. 5(1)(i)",
+      "id": "ai_literacy",
+      "title": "AI literacy, Art. 4",
+      "applies_from": "2025-02-02",
+      "articles": ["Art. 4"],
+      "scope_note": "Providers and deployers of AI systems take measures to support the development of AI literacy of their staff and other persons dealing with the operation and use of AI systems on their behalf.",
+      "source": "Reg. (EU) 2024/1689, Art. 4 and Art. 113(a)",
+      "confidence": "high",
+      "needs_founder_review": true,
+      "note": "verified: Art. 4 was replaced by Reg. (EU) 2026/1744, Art. 1(5). It is in Chapter I, which applies from 2 February 2025."
+    },
+    {
+      "id": "art5_ba_bb_prohibitions",
+      "title": "New prohibited AI practices, Art. 5(1)(ba) and (bb)",
       "applies_from": "2026-12-02",
       "articles": ["Art. 5"],
-      "scope_note": "Practice (i) added to the Art. 5(1) prohibition list.",
-      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), Art. 5(1)(i)",
-      "confidence": "low",
+      "scope_note": "Points (ba) and (bb) added to the Art. 5(1) prohibition list: non-consensual intimate or sexually explicit imagery, video or audio of an identifiable person, and material within Directive 2011/93/EU Art. 2, points (c) and (e). Art. 5(1a) and (1b) add conditions.",
+      "source": "Reg. (EU) 2026/1744, Art. 1(7) and Art. 1(40)(a)",
+      "confidence": "high",
       "needs_founder_review": true,
-      "knowledge_ref": "prohibited:Art.5(1)(i)",
-      "note": "unverified: date and wording not checked against the Official Journal; single secondary source."
+      "knowledge_ref": "prohibited:Art.5(1)(ba),prohibited:Art.5(1)(bb)",
+      "note": "verified: points (ba) and (bb) and Art. 5(1a) and (1b) read in the Official Journal text; Art. 113(a) as amended applies them from 2 December 2026."
     },
     {
       "id": "gpai_obligations",
@@ -32,7 +44,8 @@
       "scope_note": "Providers of general-purpose AI models, and of those with systemic risk.",
       "source": "Reg. (EU) 2024/1689, Arts. 53, 55 and 113",
       "confidence": "medium",
-      "needs_founder_review": true
+      "needs_founder_review": true,
+      "note": "Art. 111(3): providers of general-purpose AI models placed on the market before 2 August 2025 comply by 2 August 2027."
     },
     {
       "id": "art50_transparency",
@@ -40,21 +53,22 @@
       "applies_from": "2026-08-02",
       "articles": ["Art. 50"],
       "scope_note": "Chatbot disclosure, synthetic content marking, emotion recognition and deepfake disclosure.",
-      "source": "Reg. (EU) 2024/1689, Art. 50 and Art. 113",
-      "confidence": "medium",
+      "source": "Reg. (EU) 2024/1689, Art. 50 and Art. 113, first paragraph",
+      "confidence": "high",
       "needs_founder_review": true,
-      "knowledge_ref": "limited_risk:*"
+      "knowledge_ref": "limited_risk:*",
+      "note": "verified: Art. 50 keeps the general application date of 2 August 2026; Reg. (EU) 2026/1744 replaces only Art. 50(7) (codes of practice)."
     },
     {
       "id": "art50_2_transition",
       "title": "Art. 50(2) transition period end",
-      "applies_from": null,
-      "articles": ["Art. 50"],
-      "scope_note": "Marking of synthetic content by providers of generative systems placed on the market earlier.",
-      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), Art. 50(2)",
-      "confidence": "low",
+      "applies_from": "2026-12-02",
+      "articles": ["Art. 111(4)"],
+      "scope_note": "Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or text content that were placed on the market before 2 August 2026 take the necessary steps to comply with Art. 50(2) by this date.",
+      "source": "Reg. (EU) 2024/1689, Art. 111(4), added by Reg. (EU) 2026/1744, Art. 1(39)(b)",
+      "confidence": "high",
       "needs_founder_review": true,
-      "note": "unverified: Art. 50(2) transition end date not confirmed; founder to supply"
+      "note": "verified: Art. 111(4) read in the Official Journal text of Reg. (EU) 2026/1744."
     },
     {
       "id": "annex_iii_high_risk",
@@ -62,10 +76,10 @@
       "applies_from": "2027-12-02",
       "articles": ["Art. 6", "Art. 9-17", "Art. 22-29", "Art. 43"],
       "scope_note": "Stand-alone high-risk systems listed in Annex III.",
-      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113",
-      "confidence": "low",
+      "source": "Reg. (EU) 2024/1689, Art. 113(c)(i) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b)",
+      "confidence": "high",
       "needs_founder_review": true,
-      "note": "unverified: date not checked against the Official Journal."
+      "note": "verified: Art. 113(c)(i) read in the Official Journal text; Chapter III, Sections 1, 2 and 3, with the exception of Art. 6(5), apply from 2 December 2027 to systems classified as high-risk under Art. 6(2) and Annex III."
     },
     {
       "id": "annex_i_high_risk",
@@ -73,10 +87,10 @@
       "applies_from": "2028-08-02",
       "articles": ["Art. 6", "Art. 9-17", "Art. 22-29", "Art. 43"],
       "scope_note": "High-risk AI that is a safety component of, or is itself, a product under Annex I legislation.",
-      "source": "Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113",
-      "confidence": "low",
+      "source": "Reg. (EU) 2024/1689, Art. 113(c)(ii) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b)",
+      "confidence": "high",
       "needs_founder_review": true,
-      "note": "unverified: date not checked against the Official Journal."
+      "note": "verified: Art. 113(c)(ii) read in the Official Journal text; Chapter III, Sections 1, 2 and 3, with the exception of Art. 6(5), apply from 2 August 2028 to systems classified as high-risk under Art. 6(1) and Annex I."
     },
     {
       "id": "art49_2_registration",
@@ -84,10 +98,10 @@
       "applies_from": null,
       "articles": ["Art. 6"],
       "scope_note": "Registration duty for providers who consider an Annex III system not high-risk.",
-      "source": "Reg. (EU) 2024/1689, Art. 49(2)",
+      "source": "Reg. (EU) 2024/1689, Art. 49(2) and Art. 6(4)",
       "confidence": "low",
       "needs_founder_review": true,
-      "note": "unverified: date not confirmed"
+      "note": "unverified: Reg. (EU) 2026/1744, Art. 1(42) keeps the registration duty and deletes only Annex VIII Section B points 7 and 9; the text does not settle its date. Reading 1: the duty is triggered through Art. 6(4), which is in Chapter III Section 1, so 2 December 2027 under Art. 113(c)(i). Reading 2: Art. 49 is in Chapter III Section 5, which Art. 113(c) does not list, so the general date of 2 August 2026 applies. Not chosen; for the lawyer."
     }
   ]
 }

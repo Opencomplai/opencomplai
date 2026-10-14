@@ -69,14 +69,14 @@ Statuses are heuristic estimates — not a legal determination.
 Mapped: ISO/IEC 42001:2023 clause from the framework crosswalk (data/framework_crosswalk.json) — a citation, not a computed conformity verdict.
 
 Regulatory timeline
-  2025-02-02 - Prohibited AI practices, Art. 5(1)(a)-(h) [Reg. (EU) 2024/1689, Art. 5 and Art. 113; confidence medium; pending founder review]
+  2025-02-02 - AI literacy, Art. 4 [Reg. (EU) 2024/1689, Art. 4 and Art. 113(a); confidence high; pending founder review]
+  2025-02-02 - Prohibited AI practices, Art. 5(1)(a)-(h) [Reg. (EU) 2024/1689, Art. 5 and Art. 113(a) as amended by Reg. (EU) 2026/1744, Art. 1(40)(a); confidence high; pending founder review]
   2025-08-02 - General-purpose AI model obligations [Reg. (EU) 2024/1689, Arts. 53, 55 and 113; confidence medium; pending founder review]
-  2026-08-02 - Transparency obligations, Art. 50(1)-(4) [Reg. (EU) 2024/1689, Art. 50 and Art. 113; confidence medium; pending founder review]
-  2026-12-02 - Ninth prohibited AI practice, Art. 5(1)(i) [Reg. (EU) 2026/1744 (Digital Omnibus), Art. 5(1)(i); confidence low; pending founder review]
-  2027-12-02 - High-risk obligations for Annex III systems [Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113; confidence low; pending founder review]
-  2028-08-02 - High-risk obligations for Annex I product systems [Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113; confidence low; pending founder review]
-  date unconfirmed - Art. 49(2) registration of systems exempted under Art. 6(3) [Reg. (EU) 2024/1689, Art. 49(2); confidence low; pending founder review]
-  date unconfirmed - Art. 50(2) transition period end [Reg. (EU) 2026/1744 (Digital Omnibus), Art. 50(2); confidence low; pending founder review]
+  2026-08-02 - Transparency obligations, Art. 50(1)-(4) [Reg. (EU) 2024/1689, Art. 50 and Art. 113, first paragraph; confidence high; pending founder review]
+  2026-12-02 - New prohibited AI practices, Art. 5(1)(ba) and (bb) [Reg. (EU) 2026/1744, Art. 1(7) and Art. 1(40)(a); confidence high; pending founder review]
+  2027-12-02 - High-risk obligations for Annex III systems [Reg. (EU) 2024/1689, Art. 113(c)(i) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b); confidence high; pending founder review]
+  2028-08-02 - High-risk obligations for Annex I product systems [Reg. (EU) 2024/1689, Art. 113(c)(ii) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b); confidence high; pending founder review]
+  date unconfirmed - Art. 49(2) registration of systems exempted under Art. 6(3) [Reg. (EU) 2024/1689, Art. 49(2) and Art. 6(4); confidence low; pending founder review]
 
 
 Principle Summary

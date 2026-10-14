@@ -180,7 +180,7 @@ only after completing the appropriate conformity assessment.
 
 ## `opencomplai check` exits with code 3 (POLICY_BLOCK)
 
-**Cause:** The system was classified as `unacceptable` risk under EU AI Act Title II (Art. 5). Prohibited AI practices produce this result regardless of other controls.
+**Cause:** The system was classified as `unacceptable` risk under EU AI Act Chapter II (Art. 5). Prohibited AI practices produce this result regardless of other controls.
 
 **Fix:** Review your `intended_purpose` — if it describes a prohibited practice (social scoring, real-time biometric identification in public spaces, etc.), the block is correct by design.
 

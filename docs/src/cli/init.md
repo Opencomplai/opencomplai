@@ -101,7 +101,7 @@ Section 2/3 fields (with `null`/empty defaults when not supplied):
   "incident_response_procedure": null,
   "operator_role": "deployer",
   "checker_session": {
-    "checker_version": "checker-2026-10-05",
+    "checker_version": "checker-2026-10-14",
     "session_id": "uuid",
     "completed_at": "2026-06-09T12:00:00+00:00",
     "report_json_path": "./eu-ai-act-result.json",

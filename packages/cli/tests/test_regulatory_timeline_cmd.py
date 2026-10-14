@@ -16,7 +16,10 @@ from rich.console import Console
 from typer.testing import CliRunner
 
 runner = CliRunner()
-SOURCE = "Reg. (EU) 2026/1744 (Digital Omnibus), amending Reg. (EU) 2024/1689 Art. 113"
+SOURCES = (
+    "Reg. (EU) 2024/1689, Art. 113(c)(i) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b)",
+    "Reg. (EU) 2024/1689, Art. 113(c)(ii) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b)",
+)
 
 
 def _manifest(tmp_path: Path) -> Path:
@@ -51,7 +54,8 @@ def test_gaps_prints_timeline_block(tmp_path, monkeypatch):
     # the Art. 6 row implies both Annex dates; the source text is printed verbatim
     assert "2027-12-02" in out
     assert "2028-08-02" in out
-    assert f"[{SOURCE}; confidence low; pending founder review]" in out
+    for source in SOURCES:
+        assert f"[{source}; confidence high; pending founder review]" in out
     assert "date unconfirmed" in out
     assert "(upcoming)" not in out  # dates only, no clock
     assert "(in force)" not in out
@@ -79,7 +83,8 @@ def test_check_human_output_shows_timeline(monkeypatch):
     assert "Regulatory timeline" in out
     assert "(upcoming)" in out
     assert "(in force)" in out
-    assert f"[{SOURCE}; confidence low; pending founder review]" in out
+    for source in SOURCES:
+        assert f"[{source}; confidence high; pending founder review]" in out
 
     buf.truncate(0)
     buf.seek(0)

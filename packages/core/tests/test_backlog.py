@@ -34,7 +34,7 @@ REAL_TABLE = {
     "Art. 9": None,
     "Art. 50": date(2026, 8, 2),
     "Art. 53": date(2025, 8, 2),
-    "Art. 4": None,
+    "Art. 4": date(2025, 2, 2),
 }
 
 

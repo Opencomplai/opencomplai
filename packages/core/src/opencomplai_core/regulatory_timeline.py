@@ -34,7 +34,7 @@ class TimelineEntry:
     source: str
     confidence: str
     needs_founder_review: bool
-    knowledge_ref: str | None = None
+    knowledge_ref: str | None = None  # one ref, or several joined by commas
     note: str | None = None
 
 
@@ -166,12 +166,15 @@ def knowledge_dates() -> dict[str, str]:
     from opencomplai_core.knowledge.limited_risk import LIMITED_RISK
     from opencomplai_core.knowledge.prohibited import PROHIBITED
 
-    ninth = "Art.5(1)(i)"
-    first = [p.applies_from for p in PROHIBITED if p.article != ninth]
+    added = ("Art.5(1)(ba)", "Art.5(1)(bb)")  # Reg. (EU) 2026/1744, Art. 1(7)
+    first = [p.applies_from for p in PROHIBITED if p.article not in added]
     return {
         "prohibited:*:min": min(first),
-        f"prohibited:{ninth}": next(
-            p.applies_from for p in PROHIBITED if p.article == ninth
-        ),
+        **{
+            f"prohibited:{point}": next(
+                p.applies_from for p in PROHIBITED if p.article == point
+            )
+            for point in added
+        },
         "limited_risk:*": min(e.applies_from for e in LIMITED_RISK),
     }

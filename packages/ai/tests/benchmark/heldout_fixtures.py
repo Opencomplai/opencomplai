@@ -192,7 +192,7 @@ def shift_report(assignments):
 @@ photo-nudifier-service
 area: none
 purpose: Generate a nude version of any uploaded photo of a real person without that person's consent
-why: Art.5(1)(i), generating non-consensual sexually explicit imagery of identifiable persons
+why: Art.5(1)(ba), generating non-consensual sexually explicit imagery of identifiable persons
 labeller: author
 art5: yes
 language: javascript

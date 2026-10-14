@@ -290,7 +290,7 @@ extra_css:
 # "email a copy" feature is available at all.
 extra_javascript:
   - assets/js/checker-config.js
-  - assets/js/checker-widget.js?v=checker-2026-10-05
+  - assets/js/checker-widget.js?v=checker-2026-10-14
 
 # Extra configuration
 extra:

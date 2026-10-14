@@ -5,9 +5,12 @@
 
 ## What EU AI Act {{article}} requires
 
-Providers and deployers must ensure a sufficient level of AI literacy among staff and
-other persons operating or using the AI system on their behalf, proportionate to their
-role, technical knowledge, and the context of use (Art. 4).
+Providers and deployers of AI systems must take measures to support the development of
+AI literacy of their staff and other persons dealing with the operation and use of AI
+systems on their behalf, taking into account their technical knowledge, experience,
+education and training and the context the AI systems are to be used in (Art. 4). The
+obligation does not require providers or deployers to guarantee any specific level of
+AI literacy of any individual.
 
 ## Suggested implementation
 

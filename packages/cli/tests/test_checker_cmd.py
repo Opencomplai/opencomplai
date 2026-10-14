@@ -306,7 +306,7 @@ def test_checker_results_show_timeline_dates(monkeypatch) -> None:
     assert "upcoming" in row
     row = next(line for line in out.splitlines() if "2026-08-02" in line)
     assert "in force" in row
-    assert "Reg. (EU) 2026/1744 (Digital Omnibus)" in out
+    assert "Art. 113(c)(i) as amended by Reg. (EU) 2026/1744, Art. 1(40)(b)" in out
 
     buf.truncate(0)
     buf.seek(0)

@@ -2,8 +2,10 @@
 
 Source of truth: eu-ai-act/references/risk-classification.md (Art. 5 section).
 
-All 9 prohibitions are listed. The 9th (nudification / CSAM) applies from
-2 Dec 2026 per the AI Omnibus; the original 8 from 2 Feb 2025.
+All 10 practices of Art. 5(1) are listed: points (a) to (h), which apply from
+2 Feb 2025, and points (ba) and (bb), inserted by Regulation (EU) 2026/1744
+(Digital Omnibus on AI), Art. 1(7), which apply from 2 Dec 2026 (AI Act
+Art. 113(a) as amended by Art. 1(40)(a)). There is no point (i).
 
 Bundled into core (not the optional opencomplai-ai plugin) so
 opencomplai_core.rules always has a non-empty ruleset to classify against.
@@ -218,29 +220,61 @@ PROHIBITED: list[ProhibitedEntry] = [
         applies_from="2025-02-02",
     ),
     ProhibitedEntry(
-        article="Art.5(1)(i)",
-        title="Non-consensual sexually explicit imagery or CSAM generation (AI Omnibus)",
+        article="Art.5(1)(ba)",
+        title=(
+            "Generating or manipulating intimate or sexually explicit imagery, "
+            "video or audio of an identifiable person without explicit consent "
+            "(Digital Omnibus)"
+        ),
         keywords=(
             "nudify AI",
             "nudification AI",
             "non-consensual intimate imagery AI",
             "deepfake nude",
-            "CSAM AI",
-            "child sexual abuse material AI",
-            "synthetic CSAM",
             "non-consensual explicit imagery",
         ),
         code_signals=(
             "nudify",
             "nudification",
             "deepfake_nude",
-            "csam_generate",
             "intimate_imagery_generate",
             "explicit_deepfake",
             "synthetic_nude",
         ),
         exceptions=(
-            "systems with effective technical safeguards that reliably prevent prohibited outputs",
+            "the identifiable person gave freely-given, specific, informed, "
+            "unambiguous and explicit consent for that generation or manipulation",
+            "Art. 5(1a): placing on the market or putting into service is "
+            "prohibited only where that generation is the intended purpose, or a "
+            "reasonably foreseeable and reproducible outcome without reasonable "
+            "and adequate safeguards; use is prohibited only where the deployer "
+            "uses the system for that purpose",
+            "Art. 5(1b): manipulation that does not increase exposure or alter "
+            "the nature of the depicted activity is not manipulation",
+        ),
+        applies_from="2026-12-02",
+    ),
+    ProhibitedEntry(
+        article="Art.5(1)(bb)",
+        title=(
+            "Generating or manipulating material or performance within Directive "
+            "2011/93/EU Art. 2(c) and (e) (Digital Omnibus)"
+        ),
+        keywords=(
+            "CSAM AI",
+            "child sexual abuse material AI",
+            "synthetic CSAM",
+        ),
+        code_signals=("csam_generate",),
+        exceptions=(
+            "a 'without right' defence applies under national law",
+            "Art. 5(1a): placing on the market or putting into service is "
+            "prohibited only where that generation is the intended purpose, or a "
+            "reasonably foreseeable and reproducible outcome without reasonable "
+            "and adequate safeguards; use is prohibited only where the deployer "
+            "uses the system for that purpose",
+            "Art. 5(1b): manipulation that does not increase exposure or alter "
+            "the nature of the depicted activity is not manipulation",
         ),
         applies_from="2026-12-02",
     ),

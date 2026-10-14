@@ -7,7 +7,7 @@ Answer a short questionnaire to find out whether the EU AI Act applies to your
 AI system, in what operator role, at what risk tier, and which obligations follow.
 
 The engine is a direct port of a published EU AI Act compliance checker
-flowchart (version **checker-2026-10-05**), verified against 22 golden fixtures
+flowchart (version **checker-2026-10-14**), verified against 22 golden fixtures
 plus 24 shared parity vectors that the Python engine, the dashboard copy and the
 widget engine each replay in CI.
 

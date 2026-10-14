@@ -1,9 +1,9 @@
-"""Release notes and report-file pages for the next release block of CHANGELOG.md.
+"""Release notes and report-file pages for the 0.13.0 block of CHANGELOG.md.
 
-The notes are the body of ``## [Unreleased]`` while it holds a ``### `` heading,
-otherwise the newest dated block. The scan and check pages must name the
-written-files manifest and no longer carry the old report-file limit text. Pure
-file reads; a missing file skips its tests with a reason.
+The notes are the body of the ``## [0.13.0]`` block, found by its heading. The
+scan and check pages must name the written-files manifest and no longer carry
+the old report-file limit text. Pure file reads; a missing file skips its tests
+with a reason.
 """
 
 import re
@@ -38,11 +38,8 @@ def _notes() -> str:
     if not CHANGELOG.is_file():
         pytest.skip("CHANGELOG.md is not in this tree")
     text = CHANGELOG.read_text(encoding="utf-8").replace("\r\n", "\n")
-    m = re.search(r"^## \[Unreleased\]\n(.*?)(?=^## \[)", text, re.S | re.M)
-    if m and re.search(r"^### ", m.group(1), re.M):
-        return m.group(1)
-    m = re.search(r"^## \[\d+\.\d+\.\d+\][^\n]*\n(.*?)(?=^## \[)", text, re.S | re.M)
-    assert m, "no [Unreleased] notes and no dated block"
+    m = re.search(r"^## \[0\.13\.0\][^\n]*\n(.*?)(?=^## \[)", text, re.S | re.M)
+    assert m, "no [0.13.0] block"
     return m.group(1)
 
 

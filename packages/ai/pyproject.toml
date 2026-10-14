@@ -1,6 +1,6 @@
 [project]
 name = "opencomplai-ai"
-version = "0.13.0"
+version = "0.13.1"
 description = "Optional intent-analysis package for Opencomplai (EU AI Act); includes a deterministic matcher that needs no model download"
 readme = "README.md"
 license = { text = "AGPL-3.0-only" }
@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
-    "opencomplai-core>=0.13.0",
+    "opencomplai-core>=0.13.1",
     "huggingface-hub>=0.23",
     "rich>=13",
     "pydantic>=2.0",
