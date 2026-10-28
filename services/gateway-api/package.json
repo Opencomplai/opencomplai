@@ -1,6 +1,6 @@
 {
   "name": "opencomplai-gateway-api",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
@@ -15,31 +15,32 @@
   },
   "dependencies": {
     "@fastify/rate-limit": "^11.2.1",
-    "@fastify/swagger": "^9.9.0",
-    "@fastify/swagger-ui": "^6.1.1",
-    "fastify": "^5.12.5",
-    "jose": "^6.2.12",
-    "zod": "^4.6.5"
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^6.1.2",
+    "fastify": "^5.12.7",
+    "jose": "^6.2.13",
+    "zod": "^4.6.7"
   },
   "optionalDependencies": {
-    "@opentelemetry/auto-instrumentations-node": "^0.81.0",
-    "@opentelemetry/exporter-prometheus": "^0.223.0",
-    "@opentelemetry/resources": "^2.11.0",
-    "@opentelemetry/sdk-node": "^0.223.0",
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.82.0",
+    "@opentelemetry/exporter-prometheus": "^0.300.0",
+    "@opentelemetry/resources": "^3.0.0",
+    "@opentelemetry/sdk-node": "^0.300.0",
     "@opentelemetry/semantic-conventions": "^1.43.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.2",
-    "@typescript-eslint/eslint-plugin": "^8.70.1",
-    "@typescript-eslint/parser": "^8.70.1",
-    "@vitest/coverage-v8": "^5.0.1",
-    "eslint": "^10.11.0",
+    "@types/node": "^26.6.5",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
+    "@typescript-eslint/parser": "^8.72.0",
+    "@vitest/coverage-v8": "^5.0.5",
+    "eslint": "^10.13.0",
     "globals": "^17.12.0",
-    "prettier": "^3.9.9",
+    "prettier": "^3.9.10",
     "tsx": "^4.23.15",
     "typescript": "^5.3.3",
     "vite": "^7.3.7",
-    "vitest": "^5.0.1"
+    "vitest": "^5.0.5"
   }
 }

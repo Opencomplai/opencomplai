@@ -81,7 +81,7 @@ app = FastAPI(
         "Implements REQ-RISK-001 (Annex III), REQ-RISK-002 (profiling), "
         "REQ-RISK-003 (modification trap)."
     ),
-    version="0.13.1",
+    version="0.13.2",
 )
 
 logger = logging.getLogger(__name__)

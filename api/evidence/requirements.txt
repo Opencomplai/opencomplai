@@ -12,8 +12,8 @@ psycopg2-binary==2.9.12
 cryptography==50.0.1
 pydantic==2.13.3
 prometheus-client==0.25.0
-opentelemetry-sdk==1.42.0
-opentelemetry-exporter-prometheus==0.63b0
-opentelemetry-instrumentation-fastapi==0.63b0
+opentelemetry-sdk==1.45.1
+opentelemetry-exporter-prometheus==0.66b1
+opentelemetry-instrumentation-fastapi==0.66b1
 # Vercel Blob SDK — required when STORAGE_BACKEND=vercel_blob
 vercel-blob>=0.1.0

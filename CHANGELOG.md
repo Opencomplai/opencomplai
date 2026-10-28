@@ -9,6 +9,32 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.13.2] — 2026-10-28
+
+### Changed
+
+- Dependencies updated to versions without known vulnerabilities: Pillow 13.0.0
+  (used for reports), certifi 2026.10.23, filelock 4.2.4, fpdf2 2.8.9 and the
+  Python OpenTelemetry packages 1.45.1 (instrumentation 0.66b1).
+- gateway-api dependencies updated: fastify 5.12.7, jose 6.2.13, zod 4.6.7, the
+  Swagger plugins 9.9.2 and 6.1.2, and the optional OpenTelemetry packages
+  (resources 3.0.0, SDK and Prometheus exporter 0.300.0, auto-instrumentations
+  0.82.0). Its development tools move to eslint 10.13, typescript-eslint 8.72,
+  prettier 3.9.10 and vitest 5.0.5. The EU AI Act Checker's test runner moves to
+  vitest 5.0.5 as well. This lands pull requests #103 and #105.
+- gateway-api: the Prometheus exporter is now passed to the OpenTelemetry SDK
+  through its `metricReaders` option, which the updated SDK (0.300) reads in place
+  of the older `metricReader`, and `@opentelemetry/api` 1.10 is listed with the
+  other optional OpenTelemetry packages because the updated SDK needs it. A new
+  test starts the real SDK and checks that the metrics endpoint answers with
+  metrics.
+
+### Fixed
+
+- The dependency audit (`pip-audit`) in CI passes again. It had been failing on
+  42 advisories published after 0.13.1, which also kept every other Python job
+  from running.
+
 ## [0.13.1] — 2026-10-14
 
 ### Changed
@@ -1309,6 +1335,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.13.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.2
 [0.13.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.1
 [0.13.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.0
 [0.12.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.12.0

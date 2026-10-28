@@ -22,7 +22,7 @@ export function configureTelemetry(): void {
   type SdkInstance = { start(): void; shutdown(): Promise<void> };
   type NodeSDKCtor = new (opts: {
     resource: unknown;
-    metricReader: unknown;
+    metricReaders: unknown[];
     instrumentations: unknown[];
   }) => SdkInstance;
   type GetNodeAutoInstrumentations = () => unknown[];
@@ -69,7 +69,9 @@ export function configureTelemetry(): void {
 
   const sdk = new NodeSDK({
     resource,
-    metricReader: prometheusExporter,
+    // `metricReaders` (a list) is the option current NodeSDK versions read; the
+    // older singular `metricReader` is ignored, which leaves the exporter unbound.
+    metricReaders: [prometheusExporter],
     instrumentations: [getNodeAutoInstrumentations()],
   });
 
