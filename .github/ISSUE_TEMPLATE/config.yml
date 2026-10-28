@@ -1,1 +1,11 @@
 blank_issues_enabled: true
+contact_links:
+  - name: Ask a question or share an idea
+    url: https://github.com/Opencomplai/opencomplai/discussions
+    about: Questions, ideas and show-and-tell belong in GitHub Discussions, where the answers stay searchable.
+  - name: Report a security vulnerability
+    url: https://github.com/Opencomplai/opencomplai/security/policy
+    about: Please do not open a public issue for a new vulnerability. Follow the security policy instead.
+  - name: Chat with the community
+    url: https://discord.gg/egjX5JgQJ
+    about: The Developer Discord is the quick-chat room for EU AI Act workflows and CI integration.

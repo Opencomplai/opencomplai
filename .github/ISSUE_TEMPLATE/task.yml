@@ -1,6 +1,6 @@
 name: Task
 description: A defined piece of work (internal or contributor)
-labels: ["type:task", "status:ready"]
+labels: ["needs-triage"]
 body:
   - type: textarea
     id: outcome

@@ -80,7 +80,7 @@ OpenComplAI is free to use today — `opencomplai scan --quick` and the EU AI Ac
 both work with zero setup. We're actively building with early adopters and want your feedback.
 
 - **[Join our Developer Discord](https://discord.gg/egjX5JgQJ)** — discuss EU AI Act workflows, pipeline integration, and stress-test the engine with other MLOps engineers
-- [Report a bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug_report.md) · [Request a feature](https://github.com/Opencomplai/opencomplai/discussions/new?category=ideas)
+- [Report a bug](https://github.com/Opencomplai/opencomplai/issues/new?template=bug-report.yml) · [Request a feature](https://github.com/Opencomplai/opencomplai/discussions/new?category=ideas)
 - [LinkedIn](https://www.linkedin.com/company/opencomplai) · [Reddit research community](https://www.reddit.com/user/akin_opencomplai/m/opencomplai_research/)
 
 ## EU AI Act Checker
