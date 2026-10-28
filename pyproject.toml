@@ -62,6 +62,7 @@ dev = [
     "anyio>=4.14.2",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
+    "pytest-cov>=5.0.0",
     # Pinned to the exact version CI resolves so local, pre-commit and CI agree; Dependabot bumps it.
     "ruff==0.15.12",
     # packages/cli/tests/test_publish.py's structural schema-validation

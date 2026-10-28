@@ -107,6 +107,13 @@ Python:
 pytest packages/
 ```
 
+With coverage:
+
+```bash
+uv run pytest packages/core --cov=opencomplai_core --cov-report=term-missing
+uv run pytest packages/cli --cov=opencomplai_cli --cov-report=term-missing
+```
+
 Node.js (in `services/gateway-api`):
 
 ```bash
