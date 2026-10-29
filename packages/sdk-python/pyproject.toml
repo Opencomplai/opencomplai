@@ -6,14 +6,26 @@ readme = "README.md"
 license = { text = "AGPL-3.0-only" }
 authors = [{ name = "Opencomplai", email = "hello@opencomplai.com" }]
 requires-python = ">=3.11"
+keywords = [
+    "ai-governance",
+    "ci-cd",
+    "compliance-as-code",
+    "eu-ai-act",
+    "nist-ai-rmf",
+    "risk-assessment",
+    "sdk",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Environment :: Console",
     "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
     "Topic :: Software Development :: Quality Assurance",
     "Typing :: Typed",
 ]
