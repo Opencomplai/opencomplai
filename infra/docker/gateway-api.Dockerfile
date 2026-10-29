@@ -40,4 +40,10 @@ USER 1001
 
 EXPOSE 8080
 
+# The runtime stage installs curl above, so the same probe style as the
+# other images (doc-generator, egress-proxy, evidence-vault, risk-engine)
+# works here. /health is defined in services/gateway-api/src/routes/health.ts.
+HEALTHCHECK --interval=15s --timeout=5s --retries=5 \
+  CMD curl -fsS http://localhost:8080/health || exit 1
+
 CMD ["node", "dist/server.js"]
