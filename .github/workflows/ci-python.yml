@@ -44,6 +44,10 @@ jobs:
       - run: uv sync --all-packages
       - run: uv run ruff check .
       - run: uv run ruff format --check .
+      - name: Check principles docs are up to date
+        run: uv run python scripts/generate_principle_docs.py --check
+      - name: Test docs generation --check mode
+        run: uv run pytest scripts/tests -v --tb=short
 
   test-core:
     name: Test / core
