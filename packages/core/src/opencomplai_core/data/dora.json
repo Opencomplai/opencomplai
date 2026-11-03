@@ -1,0 +1,609 @@
+{
+  "DORA:Art. 5(1)-(2)": {
+    "title": "Governance and organisation: management body accountability",
+    "note": "Evidence that the management body owns, approves and oversees the ICT risk arrangements, including the resilience strategy, budget, continuity plans, internal audit plans and reporting on third-party providers and major incidents.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 5(1)-(2)"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_27001": ["A.5.1", "A.5.2", "A.5.4"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 5(3)": {
+    "title": "Governance and organisation: ICT third-party oversight role",
+    "note": "Evidence that a named role or senior manager is assigned to monitor ICT third-party arrangements and their documentation (entities other than microenterprises).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 5(3)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.2", "A.5.19"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 5(4)": {
+    "title": "Governance and organisation: management body ICT knowledge",
+    "note": "Evidence that members of the management body keep their ICT risk knowledge and skills current through regular training matched to the risk being managed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 5(4)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.3"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 6(1)-(3)": {
+    "title": "ICT risk management framework: framework and asset protection",
+    "note": "Evidence of a documented ICT risk management framework inside overall risk management, with strategies, policies, protocols and tools protecting information and ICT assets, and complete information available to the supervisor on request.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 6(1)-(3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 17"],
+    "iso_27001": ["A.5.1", "A.5.2"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 6(4)": {
+    "title": "ICT risk management framework: control function and independence",
+    "note": "Evidence that ICT risk oversight sits with a control function kept separate from ICT operations and internal audit, to avoid conflicts of interest (entities other than microenterprises).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 6(4)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.2", "A.5.3"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 6(5)": {
+    "title": "ICT risk management framework: documentation and review",
+    "note": "Evidence that the framework is documented, reviewed at least yearly and after major incidents, supervisory instructions or test and audit findings, and improved from lessons learned (periodic review for microenterprises).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 6(5)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.35", "A.5.36"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 6(6)-(7)": {
+    "title": "ICT risk management framework: internal audit and follow-up",
+    "note": "Evidence of regular internal audit of the ICT risk framework by suitably skilled, independent auditors, and a formal process to verify and fix critical audit findings on time.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 6(6)-(7)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.35"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 6(8)": {
+    "title": "ICT risk management framework: digital operational resilience strategy",
+    "note": "Evidence of a written resilience strategy setting ICT risk tolerance, security objectives and metrics, reference architecture, detection and prevention mechanisms, testing plans and an incident communication approach.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 6(8)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.1"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 7": {
+    "title": "ICT systems, protocols and tools",
+    "note": "Evidence that the ICT systems and tools in use are kept up to date, reliable, sized for peak volumes, including after new technology is introduced, and resilient under stress.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 7"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.6", "A.8.8"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 8": {
+    "title": "Identification",
+    "note": "Evidence of current inventories of ICT-supported business functions, information and ICT assets and third-party dependencies, with ICT risk sources and scenarios reviewed at least yearly and risk assessed after major changes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 8"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.9", "A.5.12", "A.8.8"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 9": {
+    "title": "Protection and prevention",
+    "note": "Evidence of continuous monitoring and preventive controls: an information security policy, network segmentation, access restriction, strong authentication and encryption, documented change management and patching.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 9"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.1", "A.5.14", "A.5.15", "A.5.18", "A.8.2", "A.8.3", "A.8.5", "A.8.8", "A.8.20", "A.8.22", "A.8.24", "A.8.32"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 10": {
+    "title": "Detection",
+    "note": "Evidence of mechanisms and resources that promptly spot anomalous activity and incidents, with alert thresholds, automatic alerts to responders, user activity monitoring and regular testing of the detection mechanisms.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 10"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 12"],
+    "iso_27001": ["A.8.15", "A.8.16"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 11": {
+    "title": "Response and recovery",
+    "note": "Evidence of an ICT business continuity policy with response and recovery plans, a business impact analysis, at least yearly plan testing, a crisis management function and records kept while plans are active.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 11"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.26", "A.5.29", "A.5.30", "A.8.14"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 12": {
+    "title": "Backup policies and procedures, restoration and recovery procedures and methods",
+    "note": "Evidence of documented backup and restoration procedures, tested backup systems, segregated restore systems, redundant capacity, recovery time and point objectives, and data integrity checks after recovery.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 12"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.13", "A.8.14", "A.5.30"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 13": {
+    "title": "Learning and evolving",
+    "note": "Evidence of vulnerability and threat intelligence gathering, post-incident reviews, lessons fed back into the framework, yearly reporting to the management body and compulsory ICT security awareness and resilience training.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 13"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_27001": ["A.5.7", "A.5.27", "A.6.3"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 14": {
+    "title": "Communication",
+    "note": "Evidence of crisis communication plans and internal and external communication policies, with a named person handling public and media communication about ICT incidents.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 14"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.24"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 16": {
+    "title": "Simplified ICT risk management framework",
+    "note": "Applies only to the small entities listed in Art. 16(1): evidence of the lighter framework that replaces Arts 5-15, covering monitoring, resilient systems, detection, key third-party dependencies, continuity with backups, regular tests and training.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 16"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 17"],
+    "iso_27001": ["A.5.19", "A.5.30", "A.8.13", "A.8.16"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 17": {
+    "title": "ICT-related incident management process",
+    "note": "Evidence of a defined process to detect, record, categorise, escalate and respond to ICT incidents and significant cyber threats, with early warning indicators, assigned roles and root causes identified and fixed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 17"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.26", "A.5.27", "A.5.28", "A.6.8"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 18": {
+    "title": "Classification of ICT-related incidents and cyber threats",
+    "note": "Evidence that incidents are classified against the Art. 18 impact criteria (clients and transactions affected, duration, geographic spread, data loss, service criticality, economic impact) and cyber threats are rated for significance.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 18"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.25"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 19(1), (4)": {
+    "title": "Reporting of major ICT-related incidents to authorities",
+    "note": "Evidence of a route to report major ICT incidents to the competent authority as an initial notification, intermediate reports and a final report, using the prescribed templates and time limits.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 19(1), (4)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.26", "A.6.8"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 19(3)": {
+    "title": "Informing clients of major ICT-related incidents",
+    "note": "Evidence that clients affected by a major incident are told promptly what happened and what is being done, and clients exposed to a significant cyber threat are told what protective steps they can take.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 19(3)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.26"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 24": {
+    "title": "General requirements for digital operational resilience testing",
+    "note": "Evidence of a risk-based resilience testing programme run by independent testers, with prioritised remediation of findings and at least yearly tests of systems supporting critical or important functions (entities other than microenterprises).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 24"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.35", "A.8.29"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 25": {
+    "title": "Testing of ICT tools and systems",
+    "note": "Evidence that the testing programme runs suitable tests, such as vulnerability scans, network and source code reviews, scenario, performance and end-to-end tests and penetration tests.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 25"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.29"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 26": {
+    "title": "Advanced testing of ICT tools, systems and processes based on TLPT",
+    "note": "Only for entities that authorities require to do it: evidence of threat-led penetration testing at least every three years on live critical functions, with provider participation, risk controls and a findings summary sent to the authority.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 26"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.29", "A.8.34"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 27": {
+    "title": "Requirements for testers for the carrying out of TLPT",
+    "note": "Evidence that TLPT testers meet the suitability, expertise, certification, independent assurance and insurance conditions, that contracts protect test data, and that internal testers have authority approval and external threat intelligence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 27"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.6.1"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(1)": {
+    "title": "General principles: ICT third-party risk inside the framework",
+    "note": "Evidence that ICT third-party risk is managed as part of the ICT risk framework in proportion to the dependency, and that the entity remains fully responsible for its obligations when it relies on ICT services.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(2)": {
+    "title": "General principles: strategy on ICT third-party risk",
+    "note": "Evidence of an adopted, regularly reviewed strategy and policy on ICT third-party risk, including for services supporting critical or important functions (not for Art. 16 entities or microenterprises).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(2)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(3)": {
+    "title": "General principles: register of information",
+    "note": "Evidence of an up-to-date register of all contracts for ICT services, separating those supporting critical or important functions, that can be reported yearly and given to the supervisor on request.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(3)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.5.19"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(4)": {
+    "title": "General principles: assessment before contracting",
+    "note": "Evidence that before signing, the entity checks whether the service supports a critical or important function, whether supervisory conditions are met, assesses risks including concentration, and does due diligence and conflict checks.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(4)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(5)": {
+    "title": "General principles: provider information security standards",
+    "note": "Evidence that contracts are made only with providers meeting appropriate information security standards, with the most up-to-date and highest quality standards considered for critical or important functions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(5)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19", "A.5.20"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(6)": {
+    "title": "General principles: audit and inspection rights",
+    "note": "Evidence that audit and inspection frequency and scope are set in advance on a risk basis against accepted audit standards, with auditors who have the skills for technically complex services.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(6)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.22"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(7)": {
+    "title": "General principles: termination rights",
+    "note": "Evidence that ICT service contracts can be ended for significant breach, changed circumstances, weak provider risk management or loss of effective supervision.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(7)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 28(8)": {
+    "title": "General principles: exit strategies",
+    "note": "Evidence of documented, tested and periodically reviewed exit plans for ICT services supporting critical or important functions, with alternatives and transition plans that avoid business disruption.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 28(8)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.5.23"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 29": {
+    "title": "Preliminary assessment of ICT concentration risk at entity level",
+    "note": "Evidence that concentration risk is assessed before contracting: provider substitutability, repeated use of the same or closely connected providers, subcontracting chains, insolvency law and third-country factors.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 29"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19", "A.5.21"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 30(1)-(2)": {
+    "title": "Key contractual provisions: written contract and core terms",
+    "note": "Evidence that each ICT services contract is in writing and covers the core terms: service and sub-contracting description, locations, data protection, data return, service levels, incident help, authority cooperation, termination and training.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 30(1)-(2)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.20"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 30(3)": {
+    "title": "Key contractual provisions: critical or important functions",
+    "note": "Evidence that contracts for critical or important functions add full service levels, notification duties, continuity and security requirements, TLPT cooperation, access and audit rights, and an exit transition period.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 30(3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.20", "A.5.22", "A.5.30"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the title is the project's own short label (shortened or paragraph-level); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "DORA:Art. 45": {
+    "title": "Information-sharing arrangements on cyber threat information and intelligence",
+    "note": "Only if the entity joins a threat-information sharing community (sharing is optional): evidence of participation rules, confidentiality and data-protection safeguards, and notice to the supervisor of joining or leaving.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "DORA:Art. 45"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.6", "A.5.7"],
+    "source": "Regulation (EU) 2022/2554 (DORA), OJ L 333, 27.12.2022, p. 1 (CELEX 32022R2554, text as published, applies from 17 Jan 2025); id and heading checked against that text and its article/paragraph numbering cross-checked against the CISO Assistant DORA library (ids only); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

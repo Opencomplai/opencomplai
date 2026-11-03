@@ -20,6 +20,7 @@
       "gate:yes",
       "e1:provider",
       "s1:none"
-    ]
+    ],
+    "obligation_basis": {}
   }
 }

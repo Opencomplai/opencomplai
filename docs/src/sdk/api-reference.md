@@ -133,7 +133,7 @@ System-of-record description of the AI system. Created by `opencomplai init`.
 | `intended_purpose` | `str` | *(required)* | Primary intended purpose (maps to Annex III categories). |
 | `compliance_target` | `ComplianceTarget` | `EU_AI_ACT` | Legacy single target: `EU_AI_ACT` or `NIST_AI_RMF`. Used when `compliance_targets` is unset. |
 | `compliance_targets` | `list[str] \| None` | `None` | Framework keys to assess side by side, e.g. `["EU_AI_ACT", "NIST_AI_RMF"]`. Must be non-empty when set. |
-| `framework_inputs` | `dict[str, FrameworkInputs]` | `{}` | Per framework: `excluded` (requirement id → reason) and `attested` (requirement id → `Attestation(statement, attested_by, attested_at)`). |
+| `framework_inputs` | `dict[str, FrameworkInputs]` | `{}` | Per framework: `excluded` (requirement id → reason) and `attested` (requirement id → `Attestation(statement, attested_by, attested_at)`), and optionally `scope` (`FrameworkScope`: yes/no answers `trains_models`, `uses_retrieval`, `public_api`). |
 | `high_risk_presumption` | `bool` | `False` | Provider presumes high-risk pending classification. |
 | `commit_ref` | `str` | `HEAD` | Git commit reference. |
 
@@ -158,8 +158,9 @@ other targets follow in order. Each input resolves the rows that depend on it, a
 `opencomplai gaps`: `risk_result` the rule-backed EU AI Act articles,
 `corroboration_report` the scan-backed rows, `eval_report` the evaluator-backed rows,
 and `repo_root` the documentation probes. A row whose input is missing is
-**Unverified**. Requirements excluded in `manifest.framework_inputs` move to
-`FrameworkReport.excluded`. Raises `ValueError` on an unknown framework, on
+**Unverified**. Requirements excluded in `manifest.framework_inputs`, and native rows
+that its `scope` answers rule out (see [ISO/IEC 27090](../concepts/iso-27090.md#scoping-rows-that-may-not-apply)),
+move to `FrameworkReport.excluded`. Raises `ValueError` on an unknown framework, on
 `framework_inputs` for `EU_AI_ACT`, on an excluded or attested id the framework does
 not accept, or on a blank exclusion reason.
 

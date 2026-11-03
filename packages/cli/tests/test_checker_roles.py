@@ -65,7 +65,7 @@ def test_repeated_entity_type_writes_roles_and_obligation_ids(
     assert data["operator_roles"] == ["provider", "deployer"]
     ids = data["checker_session"]["obligation_ids"]
     assert "provider_high_risk" in ids
-    assert "deployer_general" in ids
+    assert "deployer_high_risk" in ids
     assert len(data["checker_session"]["rationale"]) == 2
 
 
@@ -96,7 +96,7 @@ def test_write_manifest_appends_and_preserves_other_fields(
     assert after["custom_note"] == {"keep": "me"}
     assert after["operator_role"] == "provider"
     assert after["operator_roles"] == ["provider", "deployer"]
-    assert "deployer_general" in after["checker_session"]["obligation_ids"]
+    assert "deployer_high_risk" in after["checker_session"]["obligation_ids"]
     assert "provider_high_risk" in after["checker_session"]["obligation_ids"]
 
 
@@ -166,7 +166,7 @@ def test_rationale_in_markdown_and_json_export(
     assert "## Role rationale" in md.read_text(encoding="utf-8")
     data = json.loads(js.read_text(encoding="utf-8"))
     assert len(data["rationale"]) == 2
-    assert "deployer_general" in [o["id"] for o in data["obligations"]]
+    assert "deployer_high_risk" in [o["id"] for o in data["obligations"]]
 
 
 def test_single_role_run_without_entity_type_keeps_old_manifest_keys(

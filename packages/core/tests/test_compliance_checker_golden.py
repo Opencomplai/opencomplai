@@ -36,3 +36,4 @@ def test_golden_fixture(fixture_path: Path):
     assert [item.id for item in result.status_changes] == expected["status_change_ids"]
     assert [item.id for item in result.obligations] == expected["obligation_ids"]
     assert result.determination_path == expected["determination_path"]
+    assert result.obligation_basis == expected["obligation_basis"]

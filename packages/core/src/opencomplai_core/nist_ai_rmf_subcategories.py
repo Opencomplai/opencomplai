@@ -5,11 +5,12 @@ Loads and validates `data/nist_ai_rmf_subcategories.json`, mirroring
 missing data file raises `ValueError` rather than silently degrading to an
 empty or partial taxonomy.
 
-This is TAXONOMY data only (the RMF 1.0 subcategory catalogue) -- it carries
-no verdict and is not itself compliance-facing content in the way the
-crosswalk is. `nist_rmf_report.py` is what re-projects existing
-EU-AI-Act-native evidence onto this taxonomy via `framework_crosswalk.py`.
-See the data file's `_meta` block for the research date and the
+Besides the RMF 1.0 subcategory catalogue, each entry carries its mapping:
+`eu_ai_act` (the EU AI Act articles whose evidence `nist_rmf_report.py`
+re-projects onto it; empty when that evidence holds nothing for it, and the
+subcategory then takes a provider attestation) and informational links to
+ISO/IEC 42001 and ISO/IEC 27090 rows. No entry carries a verdict. See the
+data file's `_meta` block for sources, research dates and the
 pending-NIST-revision caveat (GOVERN 3 / MEASURE 2.12 in particular).
 """
 
@@ -25,6 +26,7 @@ from opencomplai_core.models import RmfFunction
 _DATA_PATH = Path(__file__).resolve().parent / "data" / "nist_ai_rmf_subcategories.json"
 
 _VALID_FUNCTIONS = {f.value for f in RmfFunction}
+_VALID_CONFIDENCES = {"low", "medium", "high"}
 
 
 @dataclass(frozen=True)
@@ -34,6 +36,11 @@ class RmfSubcategoryEntry:
     category: str
     category_title: str
     outcome: str
+    # (EU AI Act article, mapping confidence) pairs; empty = attestation only.
+    eu_ai_act: tuple[tuple[str, str], ...] = ()
+    mapping_note: str = ""
+    iso_42001: tuple[str, ...] = ()
+    iso_27090: tuple[str, ...] = ()
 
 
 @lru_cache(maxsize=1)
@@ -114,12 +121,45 @@ def get_subcategories() -> dict[str, RmfSubcategoryEntry]:
                 f"nist_ai_rmf_subcategories: entry {subcat_id!r} has an empty outcome"
             )
 
+        links = row.get("eu_ai_act")
+        if not isinstance(links, list) or not all(
+            isinstance(link, dict)
+            and isinstance(link.get("article"), str)
+            and link["article"].strip()
+            and link.get("confidence") in _VALID_CONFIDENCES
+            for link in links
+        ):
+            raise ValueError(
+                f"nist_ai_rmf_subcategories: entry {subcat_id!r} has a malformed "
+                "eu_ai_act list (each item needs an article and a confidence)"
+            )
+        mapping_note = row.get("mapping_note")
+        if not isinstance(mapping_note, str) or not mapping_note.strip():
+            raise ValueError(
+                f"nist_ai_rmf_subcategories: entry {subcat_id!r} has an empty mapping_note"
+            )
+        ids: dict[str, list[str]] = {}
+        for key in ("iso_42001", "iso_27090"):
+            value = row.get(key)
+            if not isinstance(value, list) or not all(
+                isinstance(item, str) and item.strip() for item in value
+            ):
+                raise ValueError(
+                    f"nist_ai_rmf_subcategories: entry {subcat_id!r} has a "
+                    f"malformed {key} list"
+                )
+            ids[key] = value
+
         taxonomy[subcat_id] = RmfSubcategoryEntry(
             id=subcat_id,
             function=function,
             category=category,
             category_title=category_title,
             outcome=outcome,
+            eu_ai_act=tuple((link["article"], link["confidence"]) for link in links),
+            mapping_note=mapping_note,
+            iso_42001=tuple(ids["iso_42001"]),
+            iso_27090=tuple(ids["iso_27090"]),
         )
 
     return taxonomy

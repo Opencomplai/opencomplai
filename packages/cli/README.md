@@ -7,7 +7,7 @@
 The `opencomplai` command-line tool for AI compliance assessment. It scans your
 repository, classifies your AI system against the EU AI Act, reports gaps for every
 framework your manifest targets (NIST AI RMF 1.0 is derived from the EU AI Act evidence),
-and produces an auditable, CI-gateable compliance artifact. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
+and produces an auditable, CI-gateable compliance artifact. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
 
 Built on [`opencomplai-core`](https://pypi.org/project/opencomplai-core/) — the same
 deterministic, rule-based risk engine, with a rich terminal UX.

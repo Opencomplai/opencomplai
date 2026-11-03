@@ -122,6 +122,15 @@ incomplete HIGH-risk dossier still exits `2` (without `--allow-incomplete`) afte
 Rendering is not signed and `verify` checks the JSON file only. PDF output needs the `reports` extra
 (fpdf2); if it is missing the command exits `1` after writing the JSON and Markdown.
 
+## Cybersecurity section
+
+When the manifest's `compliance_targets` include `ISO_IEC_27090`, the dossier gains a `cybersecurity`
+part with one entry per ISO/IEC 27090 row, built from the same statuses `check` and `gaps` report; the
+`--scan-report` and `--eval-report` files feed the evaluator rows. Without that target the key is absent
+and the dossier is unchanged. It needs local mode: with `OPENCOMPLAI_API_URL` set the command warns and
+the dossier made by the service has no such part. See
+[ISO/IEC 27090](../concepts/iso-27090.md#in-the-technical-documentation).
+
 ## Halt / resume
 
 If the system is currently `HALTED_PENDING_REVIEW` (see

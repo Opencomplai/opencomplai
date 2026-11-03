@@ -24,6 +24,8 @@ def _format_answer_value(value: Any, options: dict[str, str] | None) -> str:
         return options[value]
     if value is None:
         return "(no answer)"
+    if isinstance(value, list):
+        return "; ".join(_format_answer_value(v, options) for v in value) or "None"
     return str(value)
 
 

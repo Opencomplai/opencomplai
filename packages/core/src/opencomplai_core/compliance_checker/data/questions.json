@@ -91,6 +91,17 @@
     "label": "Does the system require transparency obligations (chatbot, deepfake, synthetic content)?",
     "section": "Obligations"
   },
+  "r4_transparency_items": {
+    "label": "Which of these does the system do? (Art. 50)",
+    "section": "Obligations",
+    "options": {
+      "interaction": "Interacts directly with people (for example a chatbot)",
+      "synthetic_content": "Generates synthetic audio, images, video or text",
+      "emotion_biometric": "Emotion recognition or biometric categorisation",
+      "deepfake": "Generates or manipulates deep fake image, audio or video",
+      "public_interest_text": "Generates text published to inform the public on matters of public interest"
+    }
+  },
   "r5_fria": {
     "label": "Are you a body governed by public law, a private entity providing public services, or a deployer of an Annex III 5(b) or 5(c) system (credit scoring or life/health insurance pricing) (FRIA under Art 27)?",
     "section": "Obligations"

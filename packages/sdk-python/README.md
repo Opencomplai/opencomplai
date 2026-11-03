@@ -6,7 +6,7 @@
 
 The convenience meta-package for [Opencomplai](https://opencomplai.com) — AI compliance
 for your AI systems: the EU AI Act, and a NIST AI RMF 1.0 view derived from the same
-evidence. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only. Installing `opencomplai` gives you both the risk engine and the command-line
+evidence. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed). Installing `opencomplai` gives you both the risk engine and the command-line
 tool in one step.
 
 ## Install

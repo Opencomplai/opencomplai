@@ -34,7 +34,7 @@ than guessed.
 ## Not covered
 
 - Art. 47 and Art. 48: no counterpart identified.
-- Serious-incident reporting (Arts 72/73): not in the control catalog, so no DORA incident-reporting row can
-  key on it.
+- Post-market monitoring and serious-incident reporting (Arts 72/73): in the control catalog, but no DORA
+  incident-reporting row is mapped to them yet; DORA Chapter III is a likely counterpart, pending review.
 
 The data lives in `mapped_regimes.json`, separate from `framework_crosswalk.json`. This page is not legal advice.

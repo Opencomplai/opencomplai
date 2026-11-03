@@ -13,10 +13,11 @@
     "is_high_risk": false,
     "is_prohibited": false,
     "effective_entity": "deployer",
-    "status_change_ids": [],
+    "status_change_ids": [
+      "transparency_only"
+    ],
     "obligation_ids": [
       "ai_literacy",
-      "deployer_general",
       "transparency"
     ],
     "determination_path": [
@@ -25,6 +26,14 @@
       "s1:in_scope",
       "e1:ai_literacy",
       "r4:transparency"
-    ]
+    ],
+    "obligation_basis": {
+      "ai_literacy": [
+        "e1_entity_type"
+      ],
+      "transparency": [
+        "r4_transparency"
+      ]
+    }
   }
 }

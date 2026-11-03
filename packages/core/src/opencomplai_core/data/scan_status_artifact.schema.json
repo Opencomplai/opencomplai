@@ -654,7 +654,7 @@
       "type": "object"
     },
     "NistRmfReport": {
-      "description": "Per-subcategory NIST AI RMF 1.0 gap report (`opencomplai gaps --target\nNIST_AI_RMF`), re-projected from an existing EU_AI_ACT `GapReport`.\n\nIntroduces no new analysis: every row cites the EU AI Act evidence\n(`source_eu_ai_act_articles`) it was derived from via the framework\ncrosswalk. See `nist_rmf_report.py`.",
+      "description": "Per-subcategory NIST AI RMF 1.0 gap report (`opencomplai gaps --target\nNIST_AI_RMF`), re-projected from an existing EU_AI_ACT `GapReport`.\n\nIntroduces no new analysis: every re-projected row cites the EU AI Act\nevidence (`source_eu_ai_act_articles`) it was derived from, and every\nother row is unassessed or attested. See `nist_rmf_report.py`.",
       "properties": {
         "commit_ref": {
           "title": "Commit Ref",
@@ -1103,7 +1103,7 @@
       "type": "string"
     },
     "RmfSubcategoryStatus": {
-      "description": "Met/Partial/Missing/Unverified status for one NIST AI RMF 1.0\nsubcategory (CP-16, D-3c).\n\nPurely a re-projection of `ArticleGapStatus` rows already computed for\n`EU_AI_ACT` by `gap_report.py`, keyed through\n`data/framework_crosswalk.json` \u2014 no new scanner or evaluator backs this.\nA crosswalk row's `confidence` never gets upgraded when re-projected here\n(see `nist_rmf_report.py`), and `needs_founder_review` is always `True`:\nthis content has not been confirmed by a human reviewer.",
+      "description": "Met/Partial/Missing/Unverified status for one NIST AI RMF 1.0\nsubcategory (CP-16, D-3c).\n\nA re-projection of `ArticleGapStatus` rows already computed for\n`EU_AI_ACT` by `gap_report.py`, keyed through the subcategory's own\n`eu_ai_act` mapping in `data/nist_ai_rmf_subcategories.json` \u2014 no new\nscanner or evaluator backs this. A subcategory with no EU AI Act mapping\nreads Met only from a provider attestation (`confidence_label`\n\"attested\"). A mapping's `confidence` never gets upgraded when\nre-projected here (see `nist_rmf_report.py`), and `needs_founder_review`\nis always `True`: this content has not been confirmed by a human reviewer.",
       "properties": {
         "category": {
           "description": "e.g. 'GOVERN 1'",
@@ -1132,7 +1132,7 @@
             }
           ],
           "default": null,
-          "description": "The framework_crosswalk.json row confidence ('low'|'medium'|'high') this verdict was re-projected through; None when no crosswalk row maps to this subcategory's category.",
+          "description": "The lowest mapping confidence ('low'|'medium'|'high') of the EU AI Act articles this verdict was re-projected from; None when no mapped article contributed (unmapped, absent or attested).",
           "title": "Mapping Confidence"
         },
         "needs_founder_review": {

@@ -23,7 +23,10 @@ from opencomplai_core.compliance_checker import (
     render_pdf,
 )
 from opencomplai_core.compliance_checker.bridge import derogation_grounds
-from opencomplai_core.compliance_checker.catalog import load_help_content
+from opencomplai_core.compliance_checker.catalog import (
+    load_help_content,
+    load_questions,
+)
 from opencomplai_core.compliance_checker.merge import (
     MergedCheckerResult,
     merge_role_results,
@@ -270,6 +273,14 @@ def run_interactive_wizard(
         "Does the system require transparency obligations (chatbot, deepfake, synthetic content)?",
         default=False,
     )
+    if answers["r4_transparency"]:
+        answers["r4_transparency_items"] = [
+            value
+            for value, label in load_questions()["r4_transparency_items"][
+                "options"
+            ].items()
+            if _confirm(f"Art. 50: {label}?", default=False)
+        ]
 
     if entity == EntityType.DEPLOYER.value:
         answers["r5_fria"] = _confirm(

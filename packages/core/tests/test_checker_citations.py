@@ -40,15 +40,15 @@ def test_no_proposal_era_strings_in_core_checker_data():
 
 def test_fria_scope_names_public_services_and_annex_iii_5b_5c():
     obligations = _obligations()
-    for text in (
-        obligations["fria"]["body"],
-        obligations["deployer_high_risk"]["body"],
-        _fria_label(),
-    ):
+    for text in (obligations["fria"]["body"], _fria_label()):
         assert "public services" in text
         assert "5(b)" in text
         assert "5(c)" in text
     assert obligations["fria"]["article_ref"] == "Art. 27"
+    # The FRIA scope lives in the fria entry only, so a deployer who answered
+    # No to the FRIA question is never shown it (consistency review CF-05).
+    assert "impact assessment" not in obligations["deployer_high_risk"]["body"]
+    assert obligations["deployer_high_risk"]["article_ref"] == "Art. 26"
 
 
 def test_credit_scoring_deployer_session_produces_fria():

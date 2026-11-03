@@ -145,8 +145,8 @@ def test_eu_and_nist_json_adds_frameworks_and_neutral_disclaimer(cli):
     assert re.fullmatch(r"[0-9a-f]{12}", nist["data_version"])
     rows = {row["article"]: row for row in nist["report"]["articles"]}
     assert len(rows) == 72
-    assert rows["NIST_AI_RMF:GOVERN 1.1"]["source"] == "crosswalk"
-    assert "Art. 17" in rows["NIST_AI_RMF:GOVERN 1.1"]["evidence_ref"]
+    assert rows["NIST_AI_RMF:GOVERN 1.2"]["source"] == "crosswalk"
+    assert "Art. 17" in rows["NIST_AI_RMF:GOVERN 1.2"]["evidence_ref"]
 
 
 def test_eu_and_nist_human_prints_one_block_per_target_in_order(cli):

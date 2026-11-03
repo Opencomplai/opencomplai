@@ -27,9 +27,10 @@ and — per Art. 27(1) — must cover at minimum the elements below.
 
 ## Notes
 
-- Art. 27(2): if any of the obligations above are already satisfied by a data
-  protection impact assessment under GDPR Art. 35 or NIS2 Art. 27, this FRIA
-  may complement rather than duplicate that assessment.
+- Art. 27(4): if any of the obligations above are already met by a data
+  protection impact assessment under GDPR Art. 35 or Directive (EU) 2016/680
+  Art. 27, this FRIA may cross-reference the relevant sections of that
+  assessment or include the relevant parts of it.
 - Art. 27(3): the deployer must notify the relevant market surveillance
   authority of the assessment's outcome (a template questionnaire is to be
   issued by the AI Office per Art. 27(5) — check for the current version

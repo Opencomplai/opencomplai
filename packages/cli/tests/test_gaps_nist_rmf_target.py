@@ -65,12 +65,12 @@ def test_target_nist_ai_rmf_prints_subcategory_profile(tmp_path):
     )
     assert result.exit_code == 0, result.output
     assert "NIST AI RMF Gap Report" in result.output
-    # GOVERN 1.1 must cite Art. 17 (the crosswalk's most direct mapping) as
-    # its EU AI Act evidence -- the citation trail the epic's Accept
-    # criterion requires.
-    assert "GOVERN 1.1" in result.output
+    # GOVERN 1.2 must cite Art. 17 (its quality-management mapping) as its
+    # EU AI Act evidence -- the citation trail the epic's Accept criterion
+    # requires.
+    assert "GOVERN 1.2" in result.output
     assert "Art. 17" in result.output
-    assert "framework crosswalk" in result.output
+    assert "subcategory's mapping" in result.output
 
 
 def test_target_nist_ai_rmf_json_output_carries_citation_trail(tmp_path):
@@ -96,23 +96,23 @@ def test_target_nist_ai_rmf_json_output_carries_citation_trail(tmp_path):
     nist_report = envelope["payload"]["nist_rmf_report"]
     assert len(nist_report["subcategories"]) == 72
 
-    govern_1_1 = next(
+    govern_1_2 = next(
         row
         for row in nist_report["subcategories"]
-        if row["subcategory"] == "GOVERN 1.1"
+        if row["subcategory"] == "GOVERN 1.2"
     )
-    assert "Art. 17" in govern_1_1["source_eu_ai_act_articles"]
-    assert govern_1_1["needs_founder_review"] is True
+    assert "Art. 17" in govern_1_2["source_eu_ai_act_articles"]
+    assert govern_1_2["needs_founder_review"] is True
 
-    # Uncovered function (no crosswalk row maps to MANAGE): unverified, not
-    # fabricated.
-    manage_1_1 = next(
+    # No EU AI Act evidence maps to MANAGE 2.1 and nothing is attested:
+    # unverified, not fabricated.
+    manage_2_1 = next(
         row
         for row in nist_report["subcategories"]
-        if row["subcategory"] == "MANAGE 1.1"
+        if row["subcategory"] == "MANAGE 2.1"
     )
-    assert manage_1_1["status"] == "unverified"
-    assert manage_1_1["mapping_confidence"] is None
+    assert manage_2_1["status"] == "unverified"
+    assert manage_2_1["mapping_confidence"] is None
 
 
 def test_target_eu_ai_act_json_output_has_no_nist_key(tmp_path):

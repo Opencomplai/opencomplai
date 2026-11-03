@@ -221,6 +221,33 @@ class ImportedPackEvidence(BaseModel):
     imported_on: _NonEmptyStr = Field(..., description="ISO 8601 date")
 
 
+class FrameworkScope(BaseModel):
+    """Yes/no answers about the system that take framework rows out of scope.
+
+    None means not answered; only an answer of False can take a row out.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    trains_models: bool | None = Field(
+        default=None, description="The system trains or fine-tunes models"
+    )
+    uses_retrieval: bool | None = Field(
+        default=None, description="The system retrieves external content for the model"
+    )
+    public_api: bool | None = Field(
+        default=None, description="The model is reachable through a public API"
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unanswered(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(
+            self, handler(self), dict.fromkeys(type(self).model_fields, OMIT_NONE)
+        )
+
+
 class FrameworkInputs(BaseModel):
     """Per-framework compliance declarations carried in the manifest.
 
@@ -238,6 +265,20 @@ class FrameworkInputs(BaseModel):
         default_factory=dict,
         description="Requirement id -> provider attestation that it is met",
     )
+    scope: FrameworkScope | None = Field(
+        default=None,
+        description=(
+            "Answers about the system that take rows out of scope. Left out of "
+            "the serialised manifest when unset."
+        ),
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_scope(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        # A manifest that never used `scope` serialises to the same bytes as before.
+        return omit_by_table(self, handler(self), {"scope": OMIT_NONE})
 
 
 class RecordKeeping(BaseModel):
@@ -1563,12 +1604,14 @@ class RmfSubcategoryStatus(BaseModel):
     """Met/Partial/Missing/Unverified status for one NIST AI RMF 1.0
     subcategory (CP-16, D-3c).
 
-    Purely a re-projection of `ArticleGapStatus` rows already computed for
-    `EU_AI_ACT` by `gap_report.py`, keyed through
-    `data/framework_crosswalk.json` — no new scanner or evaluator backs this.
-    A crosswalk row's `confidence` never gets upgraded when re-projected here
-    (see `nist_rmf_report.py`), and `needs_founder_review` is always `True`:
-    this content has not been confirmed by a human reviewer.
+    A re-projection of `ArticleGapStatus` rows already computed for
+    `EU_AI_ACT` by `gap_report.py`, keyed through the subcategory's own
+    `eu_ai_act` mapping in `data/nist_ai_rmf_subcategories.json` — no new
+    scanner or evaluator backs this. A subcategory with no EU AI Act mapping
+    reads Met only from a provider attestation (`confidence_label`
+    "attested"). A mapping's `confidence` never gets upgraded when
+    re-projected here (see `nist_rmf_report.py`), and `needs_founder_review`
+    is always `True`: this content has not been confirmed by a human reviewer.
     """
 
     subcategory: str = Field(..., description="e.g. 'GOVERN 1.1'")
@@ -1578,9 +1621,9 @@ class RmfSubcategoryStatus(BaseModel):
     mapping_confidence: str | None = Field(
         None,
         description=(
-            "The framework_crosswalk.json row confidence ('low'|'medium'|'high') "
-            "this verdict was re-projected through; None when no crosswalk row "
-            "maps to this subcategory's category."
+            "The lowest mapping confidence ('low'|'medium'|'high') of the EU AI "
+            "Act articles this verdict was re-projected from; None when no "
+            "mapped article contributed (unmapped, absent or attested)."
         ),
     )
     confidence_label: ConfidenceLabel = ConfidenceLabel.NOT_ASSESSED
@@ -1597,9 +1640,9 @@ class NistRmfReport(BaseModel):
     """Per-subcategory NIST AI RMF 1.0 gap report (`opencomplai gaps --target
     NIST_AI_RMF`), re-projected from an existing EU_AI_ACT `GapReport`.
 
-    Introduces no new analysis: every row cites the EU AI Act evidence
-    (`source_eu_ai_act_articles`) it was derived from via the framework
-    crosswalk. See `nist_rmf_report.py`.
+    Introduces no new analysis: every re-projected row cites the EU AI Act
+    evidence (`source_eu_ai_act_articles`) it was derived from, and every
+    other row is unassessed or attested. See `nist_rmf_report.py`.
     """
 
     system_id: str

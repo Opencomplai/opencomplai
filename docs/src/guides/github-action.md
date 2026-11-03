@@ -1,6 +1,6 @@
 # GitHub Action
 
-The composite Action in `integrations/github-action/` runs [`opencomplai check`](../cli/check.md)
+The composite Action, published on the [GitHub Marketplace](https://github.com/marketplace/actions/opencomplai-check) from [`Opencomplai/opencomplai-action`](https://github.com/Opencomplai/opencomplai-action), runs [`opencomplai check`](../cli/check.md)
 on a system manifest, posts the result as one sticky pull request comment, keeps the
 `compliance-artifact.json` as a workflow artifact, optionally uploads the SARIF verdict to code
 scanning, and fails the job when the check fails.
@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@<40-hex commit SHA> # vN
-      - uses: Opencomplai/opencomplai/integrations/github-action@<40-hex commit SHA> # vN
+      - uses: Opencomplai/opencomplai-action@<40-hex commit SHA> # v1
         with:
           manifest: system-manifest.json
           # version: <release>   # optional; defaults to the release pinned in action.yml
@@ -34,8 +34,7 @@ jobs:
 
 Pin every `uses:` to a full commit SHA with a trailing version comment. The Action installs
 `opencomplai` through `uvx` at one exact release, pinned with `==`, so a run is reproducible.
-Until the Action is listed on the Marketplace, reference it by path in this repository, or copy
-`integrations/github-action/` into yours.
+The `v1` tag moves to each compatible release; the SHA is what keeps your workflow reproducible.
 
 ## Inputs
 
@@ -92,7 +91,7 @@ the full table is in [Exit codes](../cli/exit-codes.md).
 ```
 
 ```yaml
-      - uses: Opencomplai/opencomplai/integrations/github-action@<40-hex commit SHA> # vN
+      - uses: Opencomplai/opencomplai-action@<40-hex commit SHA> # v1
         with:
           strict: "true"
 ```
@@ -115,7 +114,7 @@ the full table is in [Exit codes](../cli/exit-codes.md).
 Use the `args` input for any other [`check` option](../cli/check.md#options):
 
 ```yaml
-      - uses: Opencomplai/opencomplai/integrations/github-action@<40-hex commit SHA> # vN
+      - uses: Opencomplai/opencomplai-action@<40-hex commit SHA> # v1
         with:
           args: --scan --fail-on major --strict
 ```

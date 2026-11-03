@@ -137,6 +137,9 @@ nav:
       - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
       - Annex IV coverage ledger: concepts/annex-iv-coverage.md
     - NIST AI RMF: concepts/nist-ai-rmf.md
+    - ISO/IEC 27090: concepts/iso-27090.md
+    - More framework packs: frameworks/more-packs.md
+    - Framework mappings: frameworks/mappings.md
     - Mapped-only regimes (DORA, EBA): concepts/mapped-regimes.md
     - GPAI training summary and Code of Practice: frameworks/gpai-training-summary-and-cop.md
 
@@ -290,7 +293,7 @@ extra_css:
 # "email a copy" feature is available at all.
 extra_javascript:
   - assets/js/checker-config.js
-  - assets/js/checker-widget.js?v=checker-2026-10-14
+  - assets/js/checker-widget.js?v=checker-2026-10-26
 
 # Extra configuration
 extra:

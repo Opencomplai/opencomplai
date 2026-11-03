@@ -1,0 +1,994 @@
+{
+  "CRA:Art. 13(2)": {
+    "title": "Cybersecurity risk assessment",
+    "note": "A cybersecurity risk assessment is carried out and its outcome shapes every phase from planning to maintenance; for a high-risk AI system it can sit inside the AI risk work. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(2)"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_threat_model",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.8.25", "A.8.27"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(3)": {
+    "title": "Documented, updated risk assessment",
+    "note": "The risk assessment is written down, reflects intended and foreseeable use and the operating environment, states how each Part I requirement applies, and is kept current during the support period. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.8.25"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(5)": {
+    "title": "Due diligence on third-party components",
+    "note": "Third-party components, open source included, are vetted before integration so they do not weaken the product. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(5)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21", "A.8.28"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(6)": {
+    "title": "Component flaws reported upstream and fixed",
+    "note": "A flaw found in an integrated component is reported to whoever maintains it and fixed under the Part II process, with any fix shared back where appropriate. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(6)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.21", "A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(7)": {
+    "title": "Systematic cybersecurity documentation",
+    "note": "Cybersecurity facts about the product, including known vulnerabilities and input from third parties, are documented in proportion to the risk, and the risk assessment is updated from them. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(7)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.37", "A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(8)": {
+    "title": "Support period and vulnerability handling",
+    "note": "A support period is set (five years at least, unless the product is expected to be used for less) with its basis recorded, and vulnerabilities are handled throughout it. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(8)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(9)": {
+    "title": "Security updates kept available",
+    "note": "Each security update issued during the support period stays available for at least 10 years or the rest of the support period, whichever is longer. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(9)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(12)": {
+    "title": "Documentation, assessment, declaration and CE mark",
+    "note": "Before the product is sold, the technical documentation exists, a conformity assessment is done, the EU declaration of conformity is drawn up and the CE marking is applied; for a high-risk AI system the AI Act Art. 43 procedure applies (CRA Art. 12(2)). Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(12)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 16", "Art. 43"],
+    "iso_27001": ["A.5.31"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(13)": {
+    "title": "Documentation kept for 10 years",
+    "note": "Technical documentation and the declaration of conformity are kept for the authorities for 10 years or the support period, whichever is longer. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(13)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.33"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(14)": {
+    "title": "Conformity across series production",
+    "note": "Procedures keep series-produced units in line with the rules when processes, design or the applied standards change. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(14)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.32"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(15)": {
+    "title": "Product identification number",
+    "note": "Each product carries a type, batch or serial number, or equivalent on its packaging or paperwork, that identifies it. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(15)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(16)": {
+    "title": "Manufacturer contact details on product",
+    "note": "The manufacturer's name and contact details appear on the product, packaging or accompanying paperwork, in a language users and authorities understand. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(16)"
+      }
+    ],
+    "eu_ai_act": ["Art. 16"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(17)": {
+    "title": "Single point of contact",
+    "note": "One easily found contact point lets users reach the manufacturer, including to report vulnerabilities, without being limited to automated tools. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(17)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(18)": {
+    "title": "User information and instructions supplied",
+    "note": "Clear, legible Annex II information comes with the product and stays available for 10 years or the support period, whichever is longer. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(18)"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(19)": {
+    "title": "Support period end date stated",
+    "note": "The end date of the support period, at least month and year, is stated at purchase, with an end-of-support notice to users where feasible. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(19)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(20)": {
+    "title": "Declaration of conformity supplied",
+    "note": "A copy of the EU declaration of conformity, or a simplified one giving the web address of the full text, goes with the product. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(20)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(21)": {
+    "title": "Corrective action, withdrawal or recall",
+    "note": "If the product or the manufacturer's processes are found not to conform, corrective action, withdrawal or recall follows immediately. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(21)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(22)": {
+    "title": "Cooperation with market surveillance",
+    "note": "On a reasoned request the manufacturer gives a market surveillance authority the documentation it needs and cooperates on risk-removing measures. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(22)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.5"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 13(23)": {
+    "title": "Notice before ceasing operations",
+    "note": "If the manufacturer is about to stop operating and so cannot meet the Regulation, authorities and, where possible, users are told beforehand. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 13(23)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 14(1)": {
+    "title": "Actively exploited vulnerability reporting",
+    "note": "Actively exploited vulnerabilities are notified to the lead CSIRT and ENISA through the single reporting platform: early warning in 24 hours, fuller notice in 72 hours, final report within 14 days of a fix being available. Applies from 11 Sep 2026, also to products already on the market.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 14(1)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.5", "A.5.24", "A.5.26", "A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 14(3)": {
+    "title": "Severe incident reporting",
+    "note": "Severe incidents affecting product security are notified through the single reporting platform: early warning in 24 hours, notice in 72 hours, final report within one month. Applies from 11 Sep 2026, also to products already on the market.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 14(3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.24", "A.5.25", "A.5.26", "A.6.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 14(8)": {
+    "title": "Users informed of exploited flaws and incidents",
+    "note": "Impacted users, and all users where fitting, are told of an exploited vulnerability or severe incident and what they can do, ideally in machine-readable form. Applies from 11 Sep 2026, also to products already on the market.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 14(8)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.26"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 28": {
+    "title": "EU declaration of conformity",
+    "note": "An EU declaration of conformity in the Annex V structure is drawn up, kept current and available in the required languages; for a high-risk AI system it must also show the AI Act Art. 15 cybersecurity level was achieved (CRA Art. 12(1)(c)). Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 28"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 16", "Art. 43"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Art. 30": {
+    "title": "CE marking",
+    "note": "The CE marking is affixed visibly, legibly and indelibly, or on packaging, declaration or website for software, before the product is placed on the market. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Art. 30"
+      }
+    ],
+    "eu_ai_act": ["Art. 16"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (1)": {
+    "title": "Risk-based level of cybersecurity by design",
+    "note": "The product's overall security level is set to match the risks it faces and designed in from the start. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.25", "A.8.26", "A.8.27"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(a)": {
+    "title": "No known exploitable vulnerabilities at release",
+    "note": "Nothing ships with a vulnerability already known to be exploitable. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(a)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.29"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(b)": {
+    "title": "Secure by default configuration",
+    "note": "Out-of-the-box settings are secure, and the user can reset the product to its original state. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(b)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.9", "A.8.27"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(c)": {
+    "title": "Vulnerabilities fixable by security updates",
+    "note": "Security fixes can be delivered as updates, with automatic installation on by default, an easy opt-out and a way to defer. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(c)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.32"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(d)": {
+    "title": "Protection from unauthorised access",
+    "note": "Authentication and access-management controls block unauthorised access, and suspected unauthorised access is reported. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(d)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.15", "A.5.16", "A.8.5"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(e)": {
+    "title": "Confidentiality of data",
+    "note": "Stored, transmitted and processed data stays confidential, for example through current encryption. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(e)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.14", "A.8.24"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(f)": {
+    "title": "Integrity of data, commands and programs",
+    "note": "Data, commands, programs and configuration are protected from unauthorised change, and corruption is reported. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(f)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.16", "A.8.24"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(g)": {
+    "title": "Data minimisation",
+    "note": "The product handles only the data it needs for its stated purpose. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(g)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34", "A.8.11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(h)": {
+    "title": "Availability of essential functions",
+    "note": "Core functions keep working, including after an incident and under denial-of-service attempts. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(h)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.6", "A.8.14"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(i)": {
+    "title": "Limited impact on other devices and networks",
+    "note": "The product limits any harm it can do to the availability of other devices, services or networks. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(i)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.20"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(j)": {
+    "title": "Limited attack surface",
+    "note": "Exposed interfaces and other attack surfaces are kept to a minimum by design. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(j)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.26", "A.8.27"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(k)": {
+    "title": "Exploitation mitigation",
+    "note": "Built-in mitigations reduce the damage if an attack on the product succeeds. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(k)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.27", "A.8.28"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(l)": {
+    "title": "Security logging and monitoring",
+    "note": "Relevant internal activity, including access to or change of data, services and functions, is recorded and monitored as security information, with a user opt-out. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(l)"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 15"],
+    "iso_27001": ["A.8.15", "A.8.16"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part I (2)(m)": {
+    "title": "Secure permanent data removal",
+    "note": "Users can permanently erase all their data and settings, and any data that can move to other systems moves securely. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part I (2)(m)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.7.14", "A.8.10"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (1)": {
+    "title": "Vulnerabilities and components documented, SBOM",
+    "note": "Known vulnerabilities and product components are documented, including a machine-readable software bill of materials covering at least top-level dependencies. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (1)"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.9", "A.5.21", "A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (2)": {
+    "title": "Vulnerabilities remediated without delay",
+    "note": "Vulnerabilities are fixed promptly in proportion to risk, with security updates shipped apart from feature updates where feasible. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (2)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.32"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (3)": {
+    "title": "Regular security tests and reviews",
+    "note": "Security tests and reviews of the product are run regularly and are effective. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.29"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (4)": {
+    "title": "Public disclosure of fixed vulnerabilities",
+    "note": "After a fix ships, what was fixed, who is affected, how severe it is and how to remediate are published; publication may wait only in justified cases. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (4)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (5)": {
+    "title": "Coordinated vulnerability disclosure policy",
+    "note": "A coordinated vulnerability disclosure policy is in place and enforced. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (5)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.8", "A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (6)": {
+    "title": "Vulnerability information sharing and contact",
+    "note": "Information on potential flaws, including in third-party components, is shared, and a contact address for reports is provided. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (6)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.6", "A.6.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (7)": {
+    "title": "Secure distribution of updates",
+    "note": "Updates reach users through a secure distribution mechanism, automatic for security updates where applicable. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (7)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.24", "A.8.32"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex I Part II (8)": {
+    "title": "Updates disseminated without delay",
+    "note": "Security updates go out without delay, free of charge unless otherwise agreed for tailor-made products, with advisory messages telling users what to do. Also feeds the CRA Art. 12 presumption that a high-risk AI system meets AI Act Art. 15 cybersecurity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex I Part II (8)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (1)": {
+    "title": "Manufacturer identity and contact",
+    "note": "The manufacturer's name and contact details come with the product. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (2)": {
+    "title": "Vulnerability reporting contact",
+    "note": "The user information names a single contact point for vulnerability reports and where the disclosure policy can be found. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (2)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (3)": {
+    "title": "Product identification",
+    "note": "The user information identifies the exact product by name, type and any other identifying detail. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (3)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (4)": {
+    "title": "Intended purpose and security properties",
+    "note": "The user information states the intended purpose, the security environment the manufacturer provides, essential functions and security properties. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (4)"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (5)": {
+    "title": "Known risk circumstances and foreseeable misuse",
+    "note": "The user information warns of known or foreseeable situations, including reasonably foreseeable misuse, that could create significant cybersecurity risk. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (5)"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (6)": {
+    "title": "Web address of declaration of conformity",
+    "note": "Where there is one, the user information gives the web address of the EU declaration of conformity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (6)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (7)": {
+    "title": "Security support offered and end date",
+    "note": "The user information states what technical security support is offered and when the support period ends. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (7)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (8)": {
+    "title": "Instructions for secure use through to decommissioning",
+    "note": "The user information gives instructions, or a link to them, covering secure commissioning and use, effects of changes, installing updates, decommissioning with data removal, turning off automatic updates, and what integrators need. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (8)"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex II (9)": {
+    "title": "Location of the SBOM if offered",
+    "note": "If a software bill of materials is made available to users, the user information says where to find it. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex II (9)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (1)": {
+    "title": "General description of the product",
+    "note": "The technical file describes the product: purpose, software versions that affect conformity, hardware appearance where relevant, and the user information. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (2)": {
+    "title": "Design, development, production, vulnerability handling",
+    "note": "The technical file covers design, development, production and vulnerability handling, including architecture, the SBOM, the disclosure policy, the reporting contact and how updates are distributed securely. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (2)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (3)": {
+    "title": "Cybersecurity risk assessment in the file",
+    "note": "The technical file holds the cybersecurity risk assessment and shows how Part I requirements apply, with a clear justification for any that do not; for a high-risk AI system it can be part of the AI risk work. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (4)": {
+    "title": "Basis for the support period",
+    "note": "The technical file records what was considered in setting the support period. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (4)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (5)": {
+    "title": "Standards and solutions applied",
+    "note": "The technical file lists the harmonised standards, common specifications or certification schemes applied, in full or part, and describes other solutions used where none were. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (5)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (6)": {
+    "title": "Test reports",
+    "note": "The technical file contains the test reports showing the product and its vulnerability handling meet Annex I. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (6)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 15"],
+    "iso_27001": ["A.8.29"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (7)": {
+    "title": "Copy of the declaration of conformity",
+    "note": "The technical file contains a copy of the EU declaration of conformity. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (7)"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "CRA:Annex VII (8)": {
+    "title": "SBOM available on authority request",
+    "note": "A software bill of materials can be produced for a market surveillance authority on a reasoned request. Applies from 11 Dec 2027.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "CRA:Annex VII (8)"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "Regulation (EU) 2024/2847 (Cyber Resilience Act), OJ L, 20.11.2024, ELI http://data.europa.eu/eli/reg/2024/2847/oj; article, paragraph and annex numbering as published, short titles are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

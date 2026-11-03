@@ -53,6 +53,7 @@ from opencomplai_core.evaluators.seed_corpus import seed_sample_set
 from opencomplai_core.exemption_gap import apply_exemption_gate
 from opencomplai_core.frameworks import (
     EU_AI_ACT,
+    ISO_27090,
     evaluate_targets,
     gate_failures,
     requirement_title,
@@ -68,6 +69,7 @@ from opencomplai_core.models import (
     DISCLAIMER_V1,
     DISCLAIMER_V2,
     AssessmentInput,
+    Attestation,
     ControlInstance,
     ControlState,
     CorroborationReport,
@@ -1505,10 +1507,16 @@ def gaps_cmd(
             "Framework to assess; repeat for several. Replaces the manifest's "
             "compliance_targets (else its compliance_target). EU_AI_ACT is "
             "evaluated natively; NIST_AI_RMF by re-projecting the EU_AI_ACT "
-            "evidence through data/framework_crosswalk.json — see "
-            "docs/src/concepts/nist-ai-rmf.md. ISO_IEC_42001 is the native "
-            "ISO/IEC 42001 pack, attestation-led (partial, unreviewed), not a "
-            "certification."
+            "evidence per subcategory, with attestations where that evidence "
+            "holds nothing — see docs/src/concepts/nist-ai-rmf.md. "
+            "ISO_IEC_42001 is the native ISO/IEC 42001 pack, attestation-led "
+            "(unreviewed), not a certification. ISO_IEC_27090 is the native "
+            "ISO/IEC 27090 AI security guidance pack, attestation-led "
+            "(unreviewed); guidance, not a certification. ISO_IEC_27001, SOC_2, "
+            "NIS2, DORA, EBA, EIOPA_AI, GDPR, CRA, ETSI_EN_304_223, ISO_IEC_42005 "
+            "and ISO_IEC_23894 are further native packs, attestation-led "
+            "(unreviewed): no audit, certification or legal assessment — see "
+            "docs/src/frameworks/more-packs.md."
         ),
     ),
     map_to: list[str] | None = typer.Option(
@@ -1541,7 +1549,11 @@ def gaps_cmd(
     `--target NIST_AI_RMF` re-projects the same evidence into a per-subcategory
     NIST AI RMF 1.0 profile — no new scanner or evaluator involved.
     `--target ISO_IEC_42001` reports the native ISO/IEC 42001 pack,
-    attestation-led (partial, unreviewed); it certifies nothing.
+    attestation-led (unreviewed); it certifies nothing.
+    `--target ISO_IEC_27090` reports the ISO/IEC 27090 AI security guidance
+    pack, attestation-led (unreviewed); it certifies nothing.
+    Eleven further packs (ISO_IEC_27001, SOC_2, NIS2, DORA, EBA, EIOPA_AI, GDPR,
+    CRA, ETSI_EN_304_223, ISO_IEC_42005, ISO_IEC_23894) work the same way.
     """
     if not manifest_file.exists():
         err_console.print(f"[red]Error:[/red] manifest file not found: {manifest_file}")
@@ -1617,7 +1629,11 @@ def gaps_cmd(
         extra=[reports[fw] for fw in targets if fw != EU_AI_ACT],
     )
 
-    nist_report = build_nist_rmf_report(report) if "NIST_AI_RMF" in targets else None
+    nist_report = (
+        build_nist_rmf_report(report, _nist_attested(manifest))
+        if "NIST_AI_RMF" in targets
+        else None
+    )
     # Exactly one EU AI Act or NIST AI RMF target keeps today's output.
     legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
 
@@ -1708,6 +1724,12 @@ def _resolve_gate(
     return frameworks, fail_on
 
 
+def _nist_attested(manifest: SystemManifest) -> dict[str, Attestation] | None:
+    """The manifest's NIST AI RMF attestations, validated by evaluate_targets."""
+    inputs = manifest.framework_inputs.get("NIST_AI_RMF")
+    return inputs.attested if inputs else None
+
+
 def _evaluate_targets_or_exit(
     manifest: SystemManifest, targets: list[str], **kwargs: Any
 ) -> dict[str, FrameworkReport]:
@@ -1734,8 +1756,9 @@ def _print_nist_gaps(
 ) -> None:
     console.print(f"\n[bold]Opencomplai NIST AI RMF Gap Report[/bold] — {system_id}\n")
     console.print(
-        "[dim]Re-projected from EU AI Act evidence via the framework crosswalk "
-        "(data/framework_crosswalk.json) — heuristic estimates, not a legal "
+        "[dim]Re-projected from EU AI Act evidence via each subcategory's mapping "
+        "(data/nist_ai_rmf_subcategories.json), or attested where that evidence "
+        "is silent — heuristic estimates, not a legal "
         "determination. See docs/src/concepts/nist-ai-rmf.md for the "
         "methodology; no new scanner or evaluator backs this.[/dim]\n"
     )
@@ -3665,7 +3688,9 @@ def check_cmd(
                 else None
             )
             nist_rmf_report = (
-                build_nist_rmf_report(gap_report) if "NIST_AI_RMF" in targets else None
+                build_nist_rmf_report(gap_report, _nist_attested(manifest))
+                if "NIST_AI_RMF" in targets
+                else None
             )
             # Exactly one EU AI Act or NIST AI RMF target keeps today's artifact.
             legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
@@ -4826,6 +4851,15 @@ def docs_generate_cmd(
                 "[yellow]Warning:[/yellow] --render needs local mode (unset "
                 "OPENCOMPLAI_API_URL); no Markdown or PDF was written."
             )
+        if loaded_manifest is not None and ISO_27090 in (
+            loaded_manifest.compliance_targets or []
+        ):
+            err_console.print(
+                f"[yellow]Warning:[/yellow] {ISO_27090} is a target, but the "
+                "cybersecurity section needs local mode (unset "
+                "OPENCOMPLAI_API_URL); the dossier made by the service has no such "
+                "section."
+            )
         sys.exit(0)
     except ConnectionError:
         pass
@@ -4859,12 +4893,27 @@ def docs_generate_cmd(
                 )
             )
         )
+        # The cybersecurity section is built from the ISO_IEC_27090 report, so
+        # evaluate that target only when the manifest asks for it.
+        framework_reports = (
+            _evaluate_targets_or_exit(
+                manifest,
+                [ISO_27090],
+                commit_ref=commit_ref,
+                risk_result=risk_result,
+                corroboration_report=scan_report,
+                eval_report=eval_report,
+            )
+            if ISO_27090 in (manifest.compliance_targets or [])
+            else None
+        )
         dossier = generate_dossier(
             manifest,
             risk_result,
             provider_name=provider_name,
             eval_report=eval_report,
             corroboration_report=scan_report,
+            framework_reports=framework_reports,
         )
         # A declared high_risk_presumption must gate schema validation the
         # same way the doc-generator service does (see its main.py) — the

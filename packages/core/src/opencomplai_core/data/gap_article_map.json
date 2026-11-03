@@ -144,7 +144,7 @@
       { "kind": "obligation", "ref": "transparency" },
       { "kind": "artifact", "ref": "transparency_notice_evidence" }
     ],
-    "applies_when_any": ["transparency"],
+    "applies_when_any": ["transparency", "transparency_interaction", "transparency_synthetic", "transparency_emotion_biometric", "transparency_deepfake", "transparency_public_text"],
     "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
   "Art. 53": {

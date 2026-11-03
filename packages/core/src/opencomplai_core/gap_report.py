@@ -19,7 +19,11 @@ from opencomplai_core.agent_sources import AGENT_SOURCE_REF, agent_gap_status
 from opencomplai_core.compliance_checker.catalog import load_obligations
 from opencomplai_core.evaluators.seed_corpus import SEED_EVAL_SET_ID
 from opencomplai_core.exemption_gap import exemption_record_status
-from opencomplai_core.gap_probes import STUB_SOURCE_REFS, artifact_gap_status
+from opencomplai_core.gap_probes import (
+    STUB_SOURCE_REFS,
+    artifact_gap_status,
+    supporting_gap_status,
+)
 from opencomplai_core.manifest_sources import manifest_gap_status
 from opencomplai_core.models import (
     ArticleGapSource,
@@ -337,6 +341,10 @@ def build_gap_report(
     `when_obligation_any` is skipped unless the session recorded one of those
     obligation ids (GPAI documentation probes), so sessionless output is unchanged.
     A `record` source reads the signed Art. 6(3) exemption record under `repo_root`.
+    An `artifact` source with `"role": "supporting"` never lowers a row: it only
+    points at evidence it found (a Met row keeps its status and names the file in
+    its rationale; an Unverified one stays Unverified and names the file) and is
+    silent otherwise.
     `today` (default: the current UTC date) is the date agent mandate expiry is
     compared with.
     """
@@ -344,6 +352,7 @@ def build_gap_report(
     articles: list[ArticleGapStatus] = []
     not_applicable: dict[str, str] = {}
     effective_today = today if today is not None else datetime.now(UTC).date()
+    supporting_hits: dict[str, ArticleGapStatus | None] = {}  # one probe run per ref
 
     for article, config in article_map.items():
         reason = _not_applicable_reason(article, config, manifest, checker_session)
@@ -354,6 +363,7 @@ def build_gap_report(
         row: ArticleGapStatus | None = None
         manifest_row: ArticleGapStatus | None = None
         agent_missing = False
+        supporting: list[tuple[str, ArticleGapStatus]] = []
 
         for source in sources:
             kind = source["kind"]
@@ -362,6 +372,13 @@ def build_gap_report(
                 continue
             if ref in STUB_SOURCE_REFS.get(kind, frozenset()):
                 continue  # placeholder slot: never a candidate
+            if kind == "artifact" and source.get("role") == "supporting":
+                if ref not in supporting_hits:
+                    supporting_hits[ref] = supporting_gap_status(ref, repo_root)
+                hit = supporting_hits[ref]
+                if hit is not None:
+                    supporting.append((ref, hit))
+                continue  # resolved after the other sources, below
             candidate: ArticleGapStatus | None = None
 
             if kind == "rule" and risk_result is not None:
@@ -430,6 +447,33 @@ def build_gap_report(
                 or STATUS_SEVERITY[manifest_row.status] > STATUS_SEVERITY[row.status]
             ):
                 row = manifest_row
+
+        # Supporting evidence only points at a file: it lifts nothing to Met and
+        # lowers nothing. Missing and Partial rows are left as they are.
+        if supporting:
+            found = ", ".join(f"{hit.evidence_ref} ({ref})" for ref, hit in supporting)
+            if row is None or row.status == GapStatus.UNVERIFIED:
+                # Finding a file is not a verdict: the row stays Unverified (so it
+                # never fails a gate) and names the file and how to attest.
+                rest = f" {row.rationale}" if row is not None else ""
+                row = supporting[0][1].model_copy(
+                    update={
+                        "status": GapStatus.UNVERIFIED,
+                        "confidence": None,
+                        "confidence_label": ConfidenceLabel.NOT_ASSESSED,
+                        "rationale": f"Evidence found in {found}, not attested. "
+                        f"{supporting[0][1].rationale}{rest}",
+                    }
+                )
+            elif row.status == GapStatus.MET:
+                # evidence_ref stays: control derivation binds it as the control's
+                # evidence, and a changing string would pile up stale references.
+                row = row.model_copy(
+                    update={
+                        "rationale": f"{row.rationale} Supporting evidence also "
+                        f"found: {found}."
+                    }
+                )
 
         if row is None:
             fallback_kind = sources[0]["kind"] if sources else "rule"

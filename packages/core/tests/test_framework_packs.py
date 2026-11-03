@@ -17,6 +17,7 @@ from opencomplai_core.agent_sources import AGENT_SOURCE_REF
 from opencomplai_core.compliance_checker.catalog import load_obligations
 from opencomplai_core.evaluators.registry import EVALUATOR_REGISTRY
 from opencomplai_core.frameworks import (
+    _SCOPE_FALSE,
     EU_AI_ACT,
     FRAMEWORKS,
     FrameworkPack,
@@ -28,7 +29,12 @@ from opencomplai_core.frameworks import (
 from opencomplai_core.gap_probes import _PROBE_PATTERNS, STUB_SOURCE_REFS
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.manifest_sources import MANIFEST_SOURCE_REFS
-from opencomplai_core.models import ArticleGapSource, SignalCategory, SystemManifest
+from opencomplai_core.models import (
+    ArticleGapSource,
+    FrameworkScope,
+    SignalCategory,
+    SystemManifest,
+)
 from opencomplai_core.rules import RULE_REGISTRY
 
 FIXTURE_REQUIREMENTS = (
@@ -111,11 +117,31 @@ def test_native_requirements_are_well_formed(pack: FrameworkPack):
             allowed = NATIVE_KINDS | EU_ONLY_KINDS if is_eu else NATIVE_KINDS
             assert kind in allowed, f"{rid}: kind {kind!r}"
             assert not (is_eu and kind == "attestation")
+            if "role" in source:
+                # Supporting evidence: only an artifact probe, never the sole source.
+                assert (kind, source["role"]) == ("artifact", "supporting"), rid
+                assert any("role" not in s for s in config["sources"]), rid
             if kind == "attestation":
                 # The attestation is looked up by the requirement's own id.
                 assert ref == rid
             else:
                 assert ref in known[kind], f"{rid}: unknown {kind} ref {ref!r}"
+
+
+@pytest.mark.parametrize(
+    "pack", [p for p in ALL_PACKS if p.requirements is not None], ids=lambda p: p.id
+)
+def test_scope_out_uses_only_known_answers(pack: FrameworkPack):
+    known = set(FrameworkScope.model_fields)
+    assert set(_SCOPE_FALSE) == known
+    for rid, config in load_requirements_map(pack.requirements).items():
+        groups = config.get("scope_out", [])
+        assert isinstance(groups, list), rid
+        for group in groups:
+            assert isinstance(group, list), rid
+            assert group, f"{rid}: empty scope_out group"
+            assert set(group) <= known, f"{rid}: unknown scope answer in {group}"
+            assert len(set(group)) == len(group), f"{rid}: repeated answer in {group}"
 
 
 @pytest.mark.parametrize(
@@ -171,7 +197,7 @@ def test_registry_data_versions_differ():
 
 def test_registry_data_versions_are_pairwise_distinct():
     versions = [data_version(pack) for pack in FRAMEWORKS.values()]
-    assert len(versions) == 3
+    assert len(versions) == 15
     assert len(set(versions)) == len(versions)
 
 

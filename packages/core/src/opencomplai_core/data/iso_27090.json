@@ -1,0 +1,660 @@
+{
+  "ISO_IEC_27090:5.1": {
+    "title": "General",
+    "note": "Conventional security controls are chosen from a risk assessment, and the AI-specific threats in clause 6 are considered at every life-cycle stage.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MANAGE 1.3"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.15", "A.8.16", "A.8.27"],
+    "soc2": ["CC3.2", "CC5.1"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.2": {
+    "title": "AI governance programme",
+    "note": "AI security is owned by the organisation's AI governance, and every AI system in use is known and accounted for.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 1.6", "GOVERN 2.1"],
+    "iso_42001": ["ISO_IEC_42001:Clause 5.1", "ISO_IEC_42001:A.2.2", "ISO_IEC_42001:A.3.2"],
+    "iso_27001": ["A.5.1", "A.5.2"],
+    "soc2": ["CC1.3", "CC5.3"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.3": {
+    "title": "Zero trust principles",
+    "note": "Models, agents and the tools they call get only the access they need, and every request to them is authenticated and authorised.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": [],
+    "iso_27001": ["A.5.15", "A.8.2", "A.8.5", "A.8.27"],
+    "soc2": ["CC6.1", "CC6.2", "CC6.3"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.4": {
+    "title": "Applying software engineering best practices to AI",
+    "note": "Secure development practice (review, testing, change control) covers models, data pipelines and the code around them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 17"],
+    "nist_ai_rmf": ["GOVERN 4.1", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.4"],
+    "iso_27001": ["A.8.25", "A.8.28", "A.8.29"],
+    "soc2": ["CC8.1"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.5": {
+    "title": "Supply chain management",
+    "note": "Third-party models, datasets, libraries and hosted AI services are vetted, pinned and tracked, with security expectations agreed with their providers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": ["GOVERN 6.1", "GOVERN 6.2", "MAP 4.1", "MAP 4.2", "MANAGE 3.1", "MANAGE 3.2"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.7.5", "ISO_IEC_42001:A.10.2", "ISO_IEC_42001:A.10.3"],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.21", "A.5.22", "A.5.23", "A.8.8"],
+    "soc2": ["CC6.8", "CC7.1", "CC9.1", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.6": {
+    "title": "Threat modelling",
+    "note": "Each AI system has a threat model that includes AI-specific attacks, feeds the risk assessment and is updated when the system changes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.6"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_threat_model",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "nist_ai_rmf": ["MAP 5.1", "MEASURE 1.1", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 8.2"],
+    "iso_27001": ["A.5.7"],
+    "soc2": ["CC3.2"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:5.7": {
+    "title": "Red teaming",
+    "note": "The system is attacked on purpose, for example with jailbreak and injection prompts, before release and after significant changes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:5.7"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_ADVERSARIAL_V1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 55"],
+    "nist_ai_rmf": ["MEASURE 1.3", "MEASURE 2.6", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.4"],
+    "iso_27001": ["A.8.25", "A.8.28", "A.8.29"],
+    "soc2": ["CC6.6", "CC6.7", "CC7.1", "CC8.1", "PI1.3"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.2": {
+    "title": "Data poisoning attack",
+    "note": "Training, fine-tuning and retrieval data, including data collected in operation, is checked for provenance and tampering before use.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 10", "Art. 15"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.7.3", "ISO_IEC_42001:A.7.4", "ISO_IEC_42001:A.7.5"],
+    "iso_27001": ["A.5.12", "A.8.25", "A.8.29"],
+    "soc2": ["CC3.2", "PI1.2"],
+    "scope_out": [["trains_models", "uses_retrieval"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.3": {
+    "title": "Evasion attack",
+    "note": "Inputs crafted to make the model err are tested for, the system is hardened and monitored against them, and known weaknesses are stated in the instructions for use.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.5", "MEASURE 2.6", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.29"],
+    "soc2": ["CC7.1"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.4": {
+    "title": "Membership inference",
+    "note": "The system does not reveal whether a given record was part of its training data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MEASURE 2.10"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.11", "A.8.12"],
+    "soc2": ["C1.1", "C1.2", "CC6.1"],
+    "scope_out": [["trains_models"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.5": {
+    "title": "Model exfiltration",
+    "note": "Query access cannot be used to rebuild a working copy of the model.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "rate_limiting_config",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.3", "A.8.16"],
+    "soc2": ["CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "scope_out": [["public_api"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.6": {
+    "title": "Model inversion",
+    "note": "Outputs cannot be used to reconstruct training data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MEASURE 2.10"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.3", "A.8.11", "A.8.12"],
+    "soc2": ["C1.1", "C1.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "scope_out": [["trains_models"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.7": {
+    "title": "Direct model poisoning",
+    "note": "Model weights and pre-trained components are protected against tampering in development and in operation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 25"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MANAGE 3.2"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.10.3"],
+    "iso_27001": ["A.5.21", "A.8.30", "A.8.32"],
+    "soc2": ["CC6.8", "CC8.1", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.8": {
+    "title": "Sensitive model output",
+    "note": "Outputs do not disclose confidential data such as training records or other users' inputs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.8"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_DATA_LEAKAGE_V1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MEASURE 2.10"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.5.34", "A.8.3", "A.8.12"],
+    "soc2": ["C1.1", "C1.2", "CC6.1", "CC6.6", "CC6.7", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.9": {
+    "title": "Prompt injection",
+    "note": "Instructions hidden in user input, documents or tool results cannot take control of the system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.9"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_ADVERSARIAL_V1"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_SAFETY_LEXICAL_V1"
+      }
+    ],
+    "eu_ai_act": ["Art. 14", "Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.25", "A.8.28", "A.8.29"],
+    "soc2": ["CC6.6", "CC6.7", "CC7.1", "CC8.1", "PI1.3"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.10": {
+    "title": "Output contains injection attacks",
+    "note": "Model output is treated as untrusted and validated or encoded before it reaches other components.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.10"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_SAFETY_LEXICAL_V1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.25", "A.8.28", "A.8.29"],
+    "soc2": ["CC6.6", "CC6.7", "CC7.1", "CC8.1", "PI1.3"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:6.11": {
+    "title": "Considerations for AI systems",
+    "note": "Data given to the system is limited to reduce impact, unwanted model behaviour in operation (including agent actions) is governed and contained, and the provenance of the system and its data is recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:6.11"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 12", "Art. 14", "Art. 15"],
+    "nist_ai_rmf": ["GOVERN 3.2", "MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.7.5"],
+    "iso_27001": ["A.8.6", "A.8.15", "A.8.16"],
+    "soc2": ["A1.1", "CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.2": {
+    "title": "Conflicting interactions of mitigations",
+    "note": "Mitigations are checked for side effects on one another, and the trade-offs are recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["MEASURE 1.2", "MANAGE 1.3"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.3"],
+    "iso_27001": [],
+    "soc2": ["CC5.1"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.3": {
+    "title": "Continuity of mitigations across the AI life cycle",
+    "note": "Mitigations stay in place from design through operation, retraining and retirement.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "nist_ai_rmf": ["GOVERN 1.7", "MANAGE 4.1"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.1", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.8.25", "A.8.32"],
+    "soc2": ["CC8.1"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.4": {
+    "title": "Model and mitigation deterioration over time",
+    "note": "Models and their defences are re-tested on a schedule, because both lose effect as data and attacks change.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 72"],
+    "nist_ai_rmf": ["MEASURE 2.4", "MEASURE 3.1"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.1", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27001": ["A.5.24", "A.5.25", "A.5.26", "A.5.27", "A.5.28", "A.8.16"],
+    "soc2": ["CC7.2", "CC7.3", "CC7.4", "CC7.5"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.5": {
+    "title": "Logging and monitoring",
+    "note": "Inputs, outputs, tool calls and query patterns are logged and watched for signs of attack, and alerts feed the incident process.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 26", "Art. 72", "Art. 73"],
+    "nist_ai_rmf": ["MEASURE 2.4", "MANAGE 4.1"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.8"],
+    "iso_27001": ["A.5.24", "A.5.25", "A.5.26", "A.5.27", "A.5.28", "A.8.15", "A.8.16"],
+    "soc2": ["CC7.2", "CC7.3", "CC7.4", "CC7.5"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.6": {
+    "title": "Development environment protection",
+    "note": "Training pipelines, datasets and model files are protected against unauthorised access and change.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.4.4"],
+    "iso_27001": ["A.8.4", "A.8.31"],
+    "soc2": ["CC6.1", "CC8.1"],
+    "scope_out": [["trains_models"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.7": {
+    "title": "Malicious input detection and filtering",
+    "note": "Malicious, adversarial or out-of-range inputs are detected and filtered, in addition to access control rather than instead of it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": [],
+    "iso_27001": ["A.8.26"],
+    "soc2": ["CC6.6"],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.8": {
+    "title": "Throttling model use",
+    "note": "Rate and volume limits slow down query-based attacks and resource exhaustion.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.8"
+      },
+      {
+        "kind": "artifact",
+        "ref": "rate_limiting_config",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": [],
+    "iso_27001": ["A.8.6", "A.8.15", "A.8.16"],
+    "soc2": ["A1.1", "CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "scope_out": [["public_api"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:7.9": {
+    "title": "Optimising the size of the model",
+    "note": "Model size is matched to the task, which limits attack surface and memorisation of training data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:7.9"
+      }
+    ],
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": [],
+    "iso_27001": [],
+    "soc2": [],
+    "scope_out": [["trains_models"]],
+    "source": "ISO/IEC 27090:2026 (clause id and title checked against the publisher's table of contents, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.2": {
+    "title": "Denial-of-service attacks",
+    "note": "Expensive or flooding inputs cannot exhaust the system; quotas and resource monitoring are in place.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "rate_limiting_config",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": ["ISO_IEC_42001:A.4.5"],
+    "iso_27001": ["A.8.6", "A.8.15", "A.8.16"],
+    "soc2": ["A1.1", "CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "scope_out": [["public_api"]],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.3": {
+    "title": "Supply chain attacks",
+    "note": "Compromised models, datasets, libraries or model hubs are considered and checked for.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 25"],
+    "nist_ai_rmf": ["GOVERN 6.1", "MAP 4.1", "MANAGE 3.2"],
+    "iso_42001": ["ISO_IEC_42001:A.10.3"],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.21", "A.5.22", "A.5.23", "A.8.8"],
+    "soc2": ["CC6.8", "CC7.1", "CC9.1", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.4": {
+    "title": "Backdoor attacks",
+    "note": "Models, especially third-party ones, are checked for hidden triggers before use.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 25"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MANAGE 3.2"],
+    "iso_42001": [],
+    "iso_27001": ["A.5.21", "A.8.30", "A.8.32"],
+    "soc2": ["CC6.8", "CC8.1", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.5": {
+    "title": "Direct model theft",
+    "note": "Model weights are protected in storage and in use by access control and encryption.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.5"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 55"],
+    "nist_ai_rmf": ["MEASURE 2.7"],
+    "iso_42001": [],
+    "iso_27001": ["A.8.3", "A.8.16"],
+    "soc2": ["CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.6": {
+    "title": "Direct training data leak",
+    "note": "Training datasets are protected by access control, encryption, minimisation and de-identification.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MEASURE 2.10"],
+    "iso_42001": ["ISO_IEC_42001:A.7.2"],
+    "iso_27001": ["A.8.3", "A.8.11", "A.8.12"],
+    "soc2": ["C1.1", "C1.2", "CC6.1", "CC6.2", "CC6.3", "CC7.2"],
+    "scope_out": [["trains_models"]],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27090:B.7": {
+    "title": "Model input leak",
+    "note": "Prompts and other inputs sent to the model stay confidential, including towards hosted model providers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27090:B.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "nist_ai_rmf": ["MEASURE 2.10"],
+    "iso_42001": ["ISO_IEC_42001:A.10.3"],
+    "iso_27001": ["A.5.34", "A.8.3", "A.8.12"],
+    "soc2": ["C1.1", "C1.2", "CC6.1", "CC6.6", "CC6.7", "CC9.2"],
+    "source": "ISO/IEC 27090:2026 Annex B (informative) (title matches the standard's defined term; the B.x number comes from the CISO Assistant outline and is not yet checked against the standard text; the note is the project's own wording)",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

@@ -12,7 +12,12 @@ from typing import Any
 from pydantic import BaseModel, Field, SerializerFunctionWrapHandler, model_serializer
 
 from opencomplai_core.agent_inventory import AgentInventory
-from opencomplai_core.models import ComplianceTarget, HumanOversight
+from opencomplai_core.models import (
+    ArticleGapSource,
+    ComplianceTarget,
+    GapStatus,
+    HumanOversight,
+)
 from opencomplai_core.serialization import OMIT_NONE, omit_by_table
 
 
@@ -196,6 +201,66 @@ class AnnexIVSection9(BaseModel):
     provider_supplied: bool = False
 
 
+#: Fixed wording that opens the cybersecurity part. Stored in the part itself so
+#: a signed dossier carries what it says about the guidance's standing.
+CYBERSECURITY_LEAD_IN = (
+    "Annex IV point 2(h) asks for the cybersecurity measures put in place, and "
+    "Article 15(5) names AI-specific vulnerabilities such as data poisoning, "
+    "adversarial examples and confidentiality attacks. This part is structured "
+    "using ISO/IEC 27090 guidance, one entry per clause that asks for "
+    "something. The guidance is not a certification and gives no presumption "
+    "of conformity with the EU AI Act. A status records a provider attestation "
+    "or an evaluator result; it does not show that the system is secure."
+)
+
+
+class CybersecurityEntry(BaseModel):
+    """One ISO/IEC 27090 clause as it stood in the run's framework report."""
+
+    clause_id: str = Field(..., description="Requirement id, e.g. 'ISO_IEC_27090:5.5'")
+    heading: str
+    status: GapStatus
+    source: ArticleGapSource
+    evidence_ref: str = Field(
+        ...,
+        description=(
+            "'attestation:<by>@<at>' for an attestation, the evidence hash for "
+            "an evaluator, 'none' when nothing was recorded"
+        ),
+    )
+    rationale: str = Field(
+        "", description="Attestation statement or 'EVALUATOR (ref): outcome.'"
+    )
+
+
+class CybersecurityExclusion(BaseModel):
+    """A clause the manifest excluded, with the reason it gave."""
+
+    clause_id: str
+    heading: str
+    reason: str
+
+
+class AnnexIVCybersecurity(BaseModel):
+    """Cybersecurity measures (Annex IV point 2(h); Art. 15(5)) from ISO/IEC 27090.
+
+    Built from the run's `ISO_IEC_27090` framework report and present on the
+    dossier only when that framework is a target.
+    """
+
+    framework: str = "ISO_IEC_27090"
+    data_version: str = Field(
+        ..., description="Short hash of the register the statuses came from"
+    )
+    lead_in: str = CYBERSECURITY_LEAD_IN
+    status_counts: dict[str, int] = Field(
+        default_factory=dict,
+        description="Entries per status (met, partial, missing, unverified)",
+    )
+    entries: list[CybersecurityEntry] = Field(default_factory=list)
+    excluded: list[CybersecurityExclusion] = Field(default_factory=list)
+
+
 class AnnexIVDossier(BaseModel):
     """
     Annex IV technical documentation dossier (EU AI Act Article 11).
@@ -210,6 +275,7 @@ class AnnexIVDossier(BaseModel):
 
     `agent_inventory` is the manifest's declared inventory, omitted when absent
     so a manifest without it yields the same bytes and checksum as before.
+    `cybersecurity` is the same for runs that do not target ISO_IEC_27090.
 
     This is the output of the Documentation Generator (REQ-DOC-001).
     In OSS mode: produced as a local bundle with a SHA-256 checksum.
@@ -241,6 +307,10 @@ class AnnexIVDossier(BaseModel):
     # no agent point, so it sits beside record_keeping; nothing is derived from
     # it and it is left out of the serialised dossier when absent.
     agent_inventory: AgentInventory | None = None
+
+    # Annex IV point 2(h) / Art. 15(5), built from the ISO/IEC 27090 framework
+    # report. Left out of the serialised dossier when 27090 is not a target.
+    cybersecurity: AnnexIVCybersecurity | None = None
 
     evidence_hashes: list[str] = Field(
         default_factory=list,
@@ -322,10 +392,14 @@ class AnnexIVDossier(BaseModel):
     )
 
     @model_serializer(mode="wrap")
-    def _omit_unset_agent_inventory(
+    def _omit_unset_optional_blocks(
         self, handler: SerializerFunctionWrapHandler
     ) -> dict[str, Any]:
-        return omit_by_table(self, handler(self), {"agent_inventory": OMIT_NONE})
+        return omit_by_table(
+            self,
+            handler(self),
+            {"agent_inventory": OMIT_NONE, "cybersecurity": OMIT_NONE},
+        )
 
 
 def validate_dossier_schema(

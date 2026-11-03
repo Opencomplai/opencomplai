@@ -1,0 +1,983 @@
+{
+  "SOC_2:CC1.1": {
+    "title": "Integrity and ethical values",
+    "note": "Evidence that a code of conduct exists, staff attest to it, and records show breaches were investigated and acted on.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.4", "A.6.2", "A.6.4"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC1.2": {
+    "title": "Board independence and oversight of internal control",
+    "note": "Evidence that board charters, independence statements, skills matrices and minutes show the board reviews how internal controls perform.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC1.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.4", "A.5.35"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC1.3": {
+    "title": "Structures, reporting lines and responsibilities",
+    "note": "Evidence that organisation charts, role descriptions and a delegation of authority document set out who reports to whom and who decides what.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC1.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_27001": ["A.5.2", "A.5.3"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC1.4": {
+    "title": "Attracting, developing and retaining competent people",
+    "note": "Evidence that hiring standards, training plans, performance reviews and succession records show the organisation staffs and develops the skills it needs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC1.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.6.1", "A.6.3"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC1.5": {
+    "title": "Accountability for internal control duties",
+    "note": "Evidence that job objectives, performance reviews and disciplinary records tie people's evaluation to their control duties.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC1.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.4", "A.6.4"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC2.1": {
+    "title": "Quality information to support internal control",
+    "note": "Evidence that data flow diagrams, an asset inventory and data quality checks show which information feeds controls and where it comes from.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC2.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.5.12"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC2.2": {
+    "title": "Internal communication of objectives and duties",
+    "note": "Evidence that policies, staff notices, training and an incident reporting route reach employees, with board briefings on control matters.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC2.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.1", "A.6.3", "A.6.8"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC2.3": {
+    "title": "Communication with external parties",
+    "note": "Evidence that customer-facing documents, contracts, a status page and a feedback or complaint channel inform outside parties about the service.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC2.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.5", "A.6.8"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC3.1": {
+    "title": "Clear objectives so risks can be assessed",
+    "note": "Evidence that documented business and service objectives, with risk tolerances, are specific enough to be used in the risk assessment.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC3.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.1", "A.5.31"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC3.2": {
+    "title": "Risk identification and analysis",
+    "note": "Evidence that a risk register from a recurring assessment lists risks to objectives, rates them, names owners and records chosen responses.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC3.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.7", "A.8.8"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC3.3": {
+    "title": "Fraud risk consideration",
+    "note": "Evidence that the risk assessment includes a fraud section covering pressures, opportunities and IT misuse scenarios.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC3.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.3"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC3.4": {
+    "title": "Assessing changes that affect internal control",
+    "note": "Evidence that risk reviews are triggered by change, such as new products, leaders, vendors or threats, with records of what was reassessed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC3.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.7", "A.8.32"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC4.1": {
+    "title": "Ongoing and separate control evaluations",
+    "note": "Evidence that a monitoring plan, internal audit or self-assessment reports, and external reviews show controls are tested regularly.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC4.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.35", "A.5.36"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC4.2": {
+    "title": "Reporting and correcting control deficiencies",
+    "note": "Evidence that a deficiency log with severity, owner and due date exists, and management or board reports show escalation and closure.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC4.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.35", "A.5.36"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC5.1": {
+    "title": "Control activities that reduce risk",
+    "note": "Evidence that a control matrix links each risk to the controls that reduce it, including duty splits where needed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC5.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.1", "A.5.37"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC5.2": {
+    "title": "General controls over technology",
+    "note": "Evidence that general IT controls, such as infrastructure management, security administration and system development standards, are documented and operated.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC5.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.9", "A.8.25"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC5.3": {
+    "title": "Controls deployed through policies and procedures",
+    "note": "Evidence that approved policies and matching procedures have owners, are reviewed on schedule, and are applied by staff.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC5.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_27001": ["A.5.1", "A.5.37"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.1": {
+    "title": "Logical access security over protected assets",
+    "note": "Evidence that system configurations show protected assets sit behind enforced sign-in, role permissions and encryption, backed by an asset inventory.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.12", "A.5.15", "A.5.16", "A.5.17", "A.8.2", "A.8.3", "A.8.5", "A.8.24"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.2": {
+    "title": "User registration and credential issuance",
+    "note": "Evidence that access request and approval tickets exist before accounts are created, and that deactivation records follow departures.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.16", "A.5.18"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.3": {
+    "title": "Granting, changing and removing access",
+    "note": "Evidence that role definitions, approval records and periodic access reviews show rights follow job need and are removed or changed promptly.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.3", "A.5.15", "A.5.18", "A.8.2"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.4": {
+    "title": "Physical access to facilities and assets",
+    "note": "Evidence that badge logs, visitor records, lock configurations and data-centre access lists show only approved people enter sensitive areas.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.7.1", "A.7.2", "A.7.3", "A.7.4"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.5": {
+    "title": "Secure disposal of assets and media",
+    "note": "Evidence that asset retirement records, wipe or destruction certificates and media logs show data was unrecoverable before equipment left control.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.7.10", "A.7.14", "A.8.10"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.6": {
+    "title": "Protection against threats from outside the system boundary",
+    "note": "Evidence that firewall rules, network diagrams, external scans and intrusion prevention settings show the system edge is defended.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.20", "A.8.21", "A.8.22", "A.8.23"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.7": {
+    "title": "Controls over moving and transmitting information",
+    "note": "Evidence that transfer tooling, encryption-in-transit settings and removable media rules show data movement is restricted and protected.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.7.10", "A.8.12", "A.8.24"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC6.8": {
+    "title": "Preventing and detecting malicious software",
+    "note": "Evidence that endpoint protection, email and web filtering, and software allow-lists are deployed, with alert and response records.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC6.8"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.7", "A.8.16", "A.8.19"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC7.1": {
+    "title": "Detecting vulnerabilities and risky configuration changes",
+    "note": "Evidence that vulnerability scan reports, configuration drift alerts and patch records show weaknesses and risky changes are detected.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC7.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8", "A.8.9", "A.8.16"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC7.2": {
+    "title": "Monitoring systems for anomalies",
+    "note": "Evidence that log collection, alert rules and a reviewed alert queue show unusual system activity is noticed and investigated.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC7.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 72"],
+    "iso_27001": ["A.8.15", "A.8.16"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC7.3": {
+    "title": "Evaluating security events as incidents",
+    "note": "Evidence that security alert tickets show each event triaged against defined criteria, with the incident or not-incident decision recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC7.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.25", "A.6.8"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC7.4": {
+    "title": "Incident response program",
+    "note": "Evidence that an incident response plan exists and incident records show containment, fixes, stakeholder updates and a closing review.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC7.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.26", "A.5.27", "A.5.28"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC7.5": {
+    "title": "Recovery from security incidents",
+    "note": "Evidence that recovery runbooks, restore or failover test results and post-incident reviews show the organisation can return to normal service.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC7.5"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.26", "A.5.29", "A.5.30", "A.8.13"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC8.1": {
+    "title": "Change management",
+    "note": "Evidence that change tickets and pipeline records show each change designed, tested, approved and released through a set process, including urgent fixes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC8.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 17"],
+    "iso_27001": ["A.5.8", "A.8.9", "A.8.25", "A.8.26", "A.8.29", "A.8.31", "A.8.32", "A.8.33"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC9.1": {
+    "title": "Risk mitigation for business disruption",
+    "note": "Evidence that a business continuity plan, impact analysis, insurance cover and exercise results exist for disruptions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC9.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.29", "A.5.30", "A.8.13", "A.8.14"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:CC9.2": {
+    "title": "Vendor and business partner risk",
+    "note": "Evidence that vendor inventories, due diligence files, contracts and periodic reviews show supplier risk is evaluated and followed up.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:CC9.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.21", "A.5.22", "A.5.23"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:A1.1": {
+    "title": "Capacity management",
+    "note": "Evidence that capacity dashboards, utilisation thresholds and demand forecasts exist, with scaling actions taken ahead of shortfalls.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:A1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.6"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:A1.2": {
+    "title": "Environmental protections, backup and recovery infrastructure",
+    "note": "Evidence that backup job reports, environmental protection records (power, cooling, fire) and recovery environment documentation support availability.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:A1.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.30", "A.7.5", "A.7.8", "A.7.11", "A.7.13", "A.8.13", "A.8.14"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:A1.3": {
+    "title": "Testing of recovery plans",
+    "note": "Evidence that dated disaster recovery or restore test reports exist, with results compared to targets and fixes tracked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:A1.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.30", "A.8.13"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:C1.1": {
+    "title": "Identifying and maintaining confidential information",
+    "note": "Evidence that a data inventory or classification marks confidential items, with handling rules, permission limits and retention periods in place.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:C1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.5.12", "A.5.13", "A.6.6"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:C1.2": {
+    "title": "Disposal of confidential information",
+    "note": "Evidence that disposal records, deletion logs or destruction certificates show confidential data removed when retention ended.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:C1.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.7.10", "A.7.14", "A.8.10"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:PI1.1": {
+    "title": "Processing objectives and information specifications",
+    "note": "Evidence that service descriptions, data definitions and specifications state what is processed and expected, and are shared with users.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:PI1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.37", "A.8.26"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:PI1.2": {
+    "title": "Controls over system inputs",
+    "note": "Evidence that input validation rules, reconciliation checks and input logs show incoming data is checked for completeness and accuracy.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:PI1.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.26", "A.8.28"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:PI1.3": {
+    "title": "Controls over system processing",
+    "note": "Evidence that processing controls such as job monitoring, error handling and authorisation checks show processing runs completely and accurately.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:PI1.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.26", "A.8.29"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:PI1.4": {
+    "title": "Controls over system outputs",
+    "note": "Evidence that output reports, delivery logs and reconciliations show results reach the intended recipients complete and on time.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:PI1.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.8.3"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:PI1.5": {
+    "title": "Controls over stored items",
+    "note": "Evidence that integrity checks, backups and storage permissions show stored data stays complete, accurate and protected for its retention period.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:PI1.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.33", "A.8.13"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P1.1": {
+    "title": "Privacy notice to data subjects",
+    "note": "Evidence that a published privacy notice exists, with a version history showing it is updated and changes are communicated.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P2.1": {
+    "title": "Choice and consent",
+    "note": "Evidence that consent and preference mechanisms, such as opt-in screens or settings, exist along with records of choices people made.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P2.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P3.1": {
+    "title": "Collection of personal information",
+    "note": "Evidence that data collection points and forms are listed and checked against stated privacy purposes, so only needed data is gathered.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P3.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P3.2": {
+    "title": "Explicit consent for sensitive information",
+    "note": "Evidence that explicit consent capture, with an explanation of what refusal means, is built into collection flows and consent records are stored.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P3.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P4.1": {
+    "title": "Use limited to stated purposes",
+    "note": "Evidence that a record of processing purposes and internal use restrictions shows data is applied only to the stated purposes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P4.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P4.2": {
+    "title": "Retention of personal information",
+    "note": "Evidence that a retention schedule for personal data exists and system settings or deletion jobs apply it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P4.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.33", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P4.3": {
+    "title": "Secure disposal of personal information",
+    "note": "Evidence that deletion or destruction logs show personal data removed securely once no longer required.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P4.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34", "A.7.14", "A.8.10"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P5.1": {
+    "title": "Data subject access to their information",
+    "note": "Evidence that a request-handling procedure, an identity verification step and a request log show people can obtain a copy of their data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P5.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P5.2": {
+    "title": "Correction of personal information",
+    "note": "Evidence that correction requests are logged and completed, with records of notices sent to third parties who hold the data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P5.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.1": {
+    "title": "Disclosure to third parties with consent",
+    "note": "Evidence that consent records are checked before data is shared externally, shown by sharing approvals or workflow gates.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.2": {
+    "title": "Record of authorised disclosures",
+    "note": "Evidence that a disclosure log lists each approved sharing of personal data, with date, recipient and purpose.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.33", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.3": {
+    "title": "Record of unauthorised disclosures and breaches",
+    "note": "Evidence that an incident or breach register records suspected and confirmed unauthorised disclosures, with dates, scope and handling.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.28", "A.5.33", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.4": {
+    "title": "Privacy commitments from vendors and third parties",
+    "note": "Evidence that vendor contracts contain privacy terms and that assessments, questionnaires or audit reports on those vendors are on file.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.22", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.5": {
+    "title": "Vendor duty to report unauthorised disclosures",
+    "note": "Evidence that vendor agreements require prompt notice of suspected data exposure, with tested contact routes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.5.22"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.6": {
+    "title": "Breach and incident notification",
+    "note": "Evidence that a breach notification procedure and records of notices sent to individuals and regulators show affected parties are informed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.26", "A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P6.7": {
+    "title": "Accounting of held and disclosed information",
+    "note": "Evidence that a procedure and request log show individuals can obtain a summary of the data held and who it was shared with.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P6.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P7.1": {
+    "title": "Accuracy and quality of personal information",
+    "note": "Evidence that data quality checks, update processes and user self-service corrections keep personal records accurate and current.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P7.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.34"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "SOC_2:P8.1": {
+    "title": "Privacy inquiries, complaints and compliance monitoring",
+    "note": "Evidence that a complaint and inquiry log, resolution records and periodic privacy compliance reviews exist.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "SOC_2:P8.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34", "A.5.36"],
+    "source": "AICPA 2017 Trust Services Criteria with revised points of focus (2022): criterion id as numbered by AICPA, ids cross-checked against public libraries (the AICPA PDF is behind a free-account login and was not read); title and note are the project's own wording; iso_27001 and eu_ai_act links are the project's own judgement, not the AICPA crosswalk",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

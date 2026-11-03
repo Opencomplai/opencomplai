@@ -19,7 +19,11 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from opencomplai_core.dossier import PROVIDER_SUPPLIED_PLACEHOLDER, AnnexIVDossier
+from opencomplai_core.dossier import (
+    PROVIDER_SUPPLIED_PLACEHOLDER,
+    AnnexIVCybersecurity,
+    AnnexIVDossier,
+)
 from opencomplai_core.dossier_generator import STUB_TEXT
 
 NOT_PROVIDED = "NOT PROVIDED"
@@ -114,6 +118,35 @@ def _banner(dossier: AnnexIVDossier, schema_valid: bool) -> list[Block]:
     return out
 
 
+def _cybersecurity_blocks(part: AnnexIVCybersecurity) -> list[Block]:
+    """The ISO/IEC 27090 part (Annex IV 2(h)); only built when the dossier has one."""
+    counts = ", ".join(f"{k.capitalize()} {v}" for k, v in part.status_counts.items())
+    out: list[Block] = [
+        ("h2", "Cybersecurity measures (Annex IV point 2(h), ISO/IEC 27090)"),
+        ("p", _text(part.lead_in)),
+        ("p", f"Rows reported: {len(part.entries)}. {counts}."),
+    ]
+    for e in part.entries:
+        out.append(
+            (
+                "li",
+                f"{e.clause_id} {_text(e.heading)}: {e.status.value.capitalize()} "
+                f"({e.source.value}; {_text(e.evidence_ref)})",
+            )
+        )
+        if e.evidence_ref != "none" and e.rationale:
+            out.append(("li2", _text(e.rationale)))
+    if part.excluded:
+        out.append(("p", "Rows excluded by the manifest:"))
+        out.extend(
+            ("li", f"{x.clause_id} {_text(x.heading)}: {_text(x.reason)}")
+            for x in part.excluded
+        )
+    else:
+        out.append(("p", "Rows excluded by the manifest: none."))
+    return out
+
+
 def _blocks(dossier: AnnexIVDossier, schema_valid: bool) -> list[Block]:
     out: list[Block] = [
         ("h1", f"Annex IV technical documentation dossier {dossier.dossier_id}"),
@@ -145,6 +178,8 @@ def _blocks(dossier: AnnexIVDossier, schema_valid: bool) -> list[Block]:
         out.append(("p", NOT_PROVIDED))
     else:
         _emit("record_keeping", dossier.record_keeping, out)
+    if dossier.cybersecurity is not None:
+        out.extend(_cybersecurity_blocks(dossier.cybersecurity))
     out.append(("h2", "Evidence hashes"))
     _emit("evidence_hashes", dossier.evidence_hashes, out)
     out.append(("h2", "Signature status"))

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
@@ -22,6 +22,7 @@ from typing import Any
 
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.models import (
+    Attestation,
     CorroborationReport,
     EvalReport,
     FrameworkInputs,
@@ -31,11 +32,15 @@ from opencomplai_core.models import (
     RiskResult,
     SystemManifest,
 )
-from opencomplai_core.nist_rmf_report import nist_rmf_as_gap_report
+from opencomplai_core.nist_rmf_report import (
+    attestable_subcategories,
+    nist_rmf_as_gap_report,
+)
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
 
 EU_AI_ACT = "EU_AI_ACT"
+ISO_27090 = "ISO_IEC_27090"
 
 
 @dataclass(frozen=True)
@@ -45,7 +50,10 @@ class FrameworkPack:
     disclaimer_ref: str = "DISCLAIMER_V2"
     # Exactly one of `requirements` (native) and `derive` (derived) is set.
     requirements: Path | None = None
-    derive: Callable[[GapReport], GapReport] | None = None
+    # Called with the EU AI Act report and the pack's attestations.
+    derive: Callable[[GapReport, Mapping[str, Attestation]], GapReport] | None = None
+    # A derived pack's requirement ids that take an attestation.
+    attestable: Callable[[], set[str]] | None = None
     # Data a pack reads besides its requirements map, for data_version.
     data_files: tuple[Path, ...] = ()
 
@@ -62,17 +70,63 @@ FRAMEWORKS: dict[str, FrameworkPack] = {
         "NIST_AI_RMF",
         "NIST AI RMF 1.0 (derived from EU AI Act evidence)",
         derive=nist_rmf_as_gap_report,
-        data_files=(
-            _DATA_DIR / "framework_crosswalk.json",
-            _DATA_DIR / "nist_ai_rmf_subcategories.json",
-        ),
+        attestable=attestable_subcategories,
+        data_files=(_DATA_DIR / "nist_ai_rmf_subcategories.json",),
     ),
     "ISO_IEC_42001": FrameworkPack(
         "ISO_IEC_42001",
         "ISO/IEC 42001:2023 AI management system (attestation-led, not a certification)",
         requirements=_DATA_DIR / "iso_42001.json",
     ),
+    ISO_27090: FrameworkPack(
+        ISO_27090,
+        "ISO/IEC 27090:2026 AI security guidance (attestation-led, guidance, not a certification)",
+        requirements=_DATA_DIR / "iso_27090.json",
+    ),
 }
+
+# Further native, attestation-led packs: key -> (label, data file).
+_MORE_PACKS = {
+    "ISO_IEC_27001": (
+        "ISO/IEC 27001:2022 information security management",
+        "iso_27001.json",
+    ),
+    "SOC_2": ("SOC 2 Trust Services Criteria (not a SOC 2 report)", "soc_2.json"),
+    "NIS2": ("NIS2 Directive (EU) 2022/2555 cybersecurity measures", "nis2.json"),
+    "DORA": (
+        "DORA Regulation (EU) 2022/2554 digital operational resilience",
+        "dora.json",
+    ),
+    "EBA": ("EBA Guidelines on ICT, outsourcing and loan origination", "eba.json"),
+    "EIOPA_AI": ("EIOPA Opinion on AI governance and risk management", "eiopa_ai.json"),
+    "GDPR": (
+        "GDPR Regulation (EU) 2016/679, duties relevant to AI systems",
+        "gdpr.json",
+    ),
+    "CRA": ("Cyber Resilience Act Regulation (EU) 2024/2847", "cra.json"),
+    "ETSI_EN_304_223": (
+        "ETSI EN 304 223 baseline cyber security for AI",
+        "etsi_en_304_223.json",
+    ),
+    "ISO_IEC_42005": (
+        "ISO/IEC 42005:2025 AI system impact assessment",
+        "iso_42005.json",
+    ),
+    "ISO_IEC_23894": (
+        "ISO/IEC 23894:2023 AI risk management guidance",
+        "iso_23894.json",
+    ),
+}
+FRAMEWORKS.update(
+    {
+        key: FrameworkPack(
+            key,
+            f"{label} (attestation-led, not an audit, certification or legal assessment)",
+            requirements=_DATA_DIR / fname,
+        )
+        for key, (label, fname) in _MORE_PACKS.items()
+    }
+)
 
 _FAIL_ON: dict[str, frozenset[GapStatus]] = {
     "missing": frozenset({GapStatus.MISSING}),
@@ -144,6 +198,44 @@ def data_version(pack: FrameworkPack) -> str:
     return hashlib.sha256(blob).hexdigest()[:12]
 
 
+# What each `framework_inputs.<FW>.scope` answer of false says, for the reason
+# written when it takes a row out of scope.
+_SCOPE_FALSE = {
+    "trains_models": "does not train or fine-tune models",
+    "uses_retrieval": "does not use retrieval over external content",
+    "public_api": "is not reachable through a public API",
+}
+
+
+def _scope_exclusions(
+    fw: str, requirements: Mapping[str, Any], inputs: FrameworkInputs
+) -> dict[str, str]:
+    """Rows of a native pack that the manifest's scope takes out, with reasons.
+
+    A row's `scope_out` lists groups of answer keys; the row goes when every
+    answer of any one group is false (an unanswered key never counts). A row
+    with an attestation stays: the provider says it applies.
+    """
+    scope = inputs.scope
+    if scope is None:
+        return {}
+    prefix = f"framework_inputs.{fw}.scope"
+    out: dict[str, str] = {}
+    for rid, config in requirements.items():
+        if rid in inputs.attested:
+            continue
+        for group in config.get("scope_out", []):
+            if all(getattr(scope, key) is False for key in group):
+                says = " and ".join(_SCOPE_FALSE[key] for key in group)
+                answers = ", ".join(f"{prefix}.{key} = false" for key in group)
+                out[rid] = (
+                    f"Not applicable: the manifest's scope says the system {says} "
+                    f"({answers})."
+                )
+                break
+    return out
+
+
 def evaluate_targets(
     manifest: SystemManifest,
     targets: Sequence[str],
@@ -158,7 +250,9 @@ def evaluate_targets(
 
     The EU AI Act entry is present even when it is not a target, because its
     report is the legacy `gap_report`. Other entries follow in target order;
-    rows the manifest excludes move from `report.articles` to `excluded`.
+    rows the manifest excludes, and rows a native pack's `scope_out` takes out
+    given `framework_inputs.<FW>.scope`, move from `report.articles` to
+    `excluded`; an explicit exclusion keeps its own reason over a generated one.
     Raises ValueError on an unknown framework, EU AI Act framework_inputs,
     an excluded/attested id the framework does not have, or a blank
     exclusion justification.
@@ -197,9 +291,10 @@ def evaluate_targets(
             continue
         pack = FRAMEWORKS[fw]
         inputs = manifest.framework_inputs.get(fw, FrameworkInputs())
+        out_of_scope: dict[str, str] = {}
         if pack.derive is not None:
-            report = pack.derive(eu)
-            attestable: set[str] = set()
+            report = pack.derive(eu, inputs.attested)
+            attestable: set[str] = pack.attestable() if pack.attestable else set()
         else:
             requirements = load_requirements_map(pack.requirements)
             report = build_gap_report(
@@ -219,6 +314,7 @@ def evaluate_targets(
                 for rid, config in requirements.items()
                 if any(s["kind"] == "attestation" for s in config.get("sources", []))
             }
+            out_of_scope = _scope_exclusions(fw, requirements, inputs)
 
         ids = {row.article for row in report.articles}
         for rid, reason in inputs.excluded.items():
@@ -237,10 +333,11 @@ def evaluate_targets(
                     "requirement that takes an attestation"
                 )
 
+        excluded = {**out_of_scope, **inputs.excluded}
         kept = [
             row.model_copy(update={"disclaimer_ref": pack.disclaimer_ref})
             for row in report.articles
-            if row.article not in inputs.excluded
+            if row.article not in excluded
         ]
         reports[fw] = FrameworkReport(
             framework=fw,
@@ -249,9 +346,9 @@ def evaluate_targets(
             derived_from=EU_AI_ACT if pack.derive is not None else None,
             disclaimer_ref=pack.disclaimer_ref,
             excluded={
-                row.article: inputs.excluded[row.article]
+                row.article: excluded[row.article]
                 for row in report.articles
-                if row.article in inputs.excluded
+                if row.article in excluded
             },
             report=report.model_copy(update={"articles": kept}),
         )

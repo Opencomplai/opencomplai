@@ -43,7 +43,7 @@ Expected output:
 
 ## CI integration
 
-See [`integrations/github-action/README.md`](../../integrations/github-action/README.md) for the GitHub Action.
+See the [GitHub Action](https://github.com/marketplace/actions/opencomplai-check) on the Marketplace.
 
 ## Customising `manifest.yaml`
 

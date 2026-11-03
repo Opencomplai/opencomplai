@@ -11,7 +11,7 @@ There are two kinds of pack:
   findings and pipeline evaluators. The EU AI Act is native.
 - **Derived:** a function that re-projects the EU AI Act gap report into another
   framework's requirements. NIST AI RMF is derived; see
-  [NIST AI RMF](../concepts/nist-ai-rmf.md) for how its crosswalk works.
+  [NIST AI RMF](../concepts/nist-ai-rmf.md) for how its mapping works.
 
 This page walks through a native pack. The design is recorded in
 `docs/adr/ADR-framework-packs.md`.
@@ -52,7 +52,8 @@ example):
 | key | `<KEY>:<id>`, where `<KEY>` is the registry key. The prefix keeps requirement and control ids from colliding with other frameworks'. |
 | `title` | Non-empty. Shown in the `gaps` table and used as the control title. |
 | `default_ttl_days` | A positive integer, or `null` for evidence that does not go stale. Used as the control's TTL. |
-| `sources` | At least one. When several resolve, the worst status wins (Missing, then Partial, then Unverified, then Met). |
+| `sources` | At least one. When several resolve, the worst status wins (Missing, then Partial, then Unverified, then Met). A source can add `"role": "supporting"` (see below). |
+| `scope_out` | Optional. A list of groups of answer keys from `framework_inputs.<KEY>.scope`: `trains_models`, `uses_retrieval`, `public_api`. When every answer in any one group is `false`, the row leaves the report and is listed under `excluded` with a generated reason. An explicit exclusion keeps its own reason, and a row with a recorded attestation stays. |
 
 Source kinds a native pack may use:
 
@@ -65,7 +66,9 @@ Source kinds a native pack may use:
 
 `rule` and `obligation` sources are EU AI Act only. Do not edit
 `gap_article_map.json`, the EU AI Act's map. If you need a probe that does not exist,
-add it to `_PROBE_PATTERNS` with tests of its own.
+add it to `_PROBE_PATTERNS` with tests of its own. A probe can require content
+markers (`_CONTENT_MARKERS`); one that reads code sets `select=True` there, so only
+the matched files that satisfy the markers count.
 
 Map a requirement only to a source that actually evidences it. When nothing
 Opencomplai measures does, use an `attestation` source: the row then reads
@@ -73,13 +76,38 @@ Opencomplai measures does, use an `attestation` source: the row then reads
 `attested`, once they do. A probe that merely finds a file is not evidence of a
 requirement it does not check.
 
+### Supporting evidence
+
+A probe never reads Met, so a plain `artifact` source next to an `attestation` would
+turn an attested row Partial (file found) or Missing (no file), and an unattested one
+Partial or Missing instead of Unverified. To let a probe add to
+an attestation without deciding the row, mark the source:
+
+```json
+"sources": [
+  { "kind": "attestation", "ref": "ACME_AI:REQ-2" },
+  { "kind": "artifact", "ref": "ai_threat_model", "role": "supporting" }
+]
+```
+
+| Rule | Effect |
+|---|---|
+| The other sources resolve to Met | The row stays Met. The file the probe found is named in the rationale; `evidence_ref` is unchanged. |
+| The other sources resolve to Unverified and the probe found evidence | The row stays Unverified, so it never fails a gate. Its source is `artifact`, `evidence_ref` the file, and the rationale says the evidence was found, is not attested, and how to record an attestation. |
+| The probe finds nothing, or a file without its content markers | Nothing changes. |
+| The other sources resolve to Missing or Partial | Nothing changes: a failing evaluator still reads Missing. |
+
+`role` is accepted only on `artifact` sources, only with a probe name from
+`_PROBE_PATTERNS`, and only next to at least one source without it;
+`test_framework_packs.py` checks all three. Keep the attestation source first.
+
 ## Step 2: Register the pack
 
 Add one entry to `FRAMEWORKS` in `frameworks.py`:
 
 ```python
 FRAMEWORKS: dict[str, FrameworkPack] = {
-    # ... EU_AI_ACT and NIST_AI_RMF ...
+    # ... EU_AI_ACT, NIST_AI_RMF, ISO_IEC_42001 and ISO_IEC_27090 ...
     "ACME_AI": FrameworkPack(
         "ACME_AI",
         "ACME AI Standard 1.0",
@@ -94,7 +122,9 @@ FRAMEWORKS: dict[str, FrameworkPack] = {
   `DISCLAIMER_V1` names the EU AI Act and belongs to it alone.
 - A derived pack sets `derive` instead of `requirements`, never both, and lists every
   data file the function reads in `data_files`, so `data_version` changes when they
-  do. Its rows must carry the prefix too.
+  do. Its rows must carry the prefix too. `derive` receives the EU AI Act report and
+  the pack's attestations; a derived pack that accepts attestations also sets
+  `attestable`, a function returning the ids that take one.
 
 Targets are registry keys, so the new key works in `compliance_targets`, `--target`,
 `framework_inputs` and `gate.frameworks` at once. Do not add it to the
@@ -106,7 +136,8 @@ Targets are registry keys, so the new key works in `compliance_targets`, `--targ
 `test_framework_packs.py` runs every registered pack through its conformance checks
 without any change on your side: exactly one of `requirements` and `derive`, prefixed
 ids, non-empty titles, valid TTLs, known source kinds and refs, attestation refs equal
-to their own id, and a stable 12-character `data_version`.
+to their own id, `scope_out` groups that are non-empty and use only the three known
+answers, and a stable 12-character `data_version`.
 
 Add behaviour tests for what the pack should conclude, in the style of
 `test_evaluate_targets.py`: build a `SystemManifest` that targets the framework, call

@@ -12,10 +12,10 @@
     "note": "article_ref corrected from 'Art. 26, Art. 29' to 'Art. 26'; last sentence reworded to cite no article number"
   },
   "obligations.deployer_high_risk": {
-    "source": "Regulation (EU) 2024/1689, Art. 26 and Art. 27 (fundamental rights impact assessment)",
+    "source": "Regulation (EU) 2024/1689, Art. 26",
     "confidence": "medium",
     "needs_founder_review": true,
-    "note": "FRIA sentence rewritten to the Art. 27 scope (public-law bodies, private entities providing public services, Annex III 5(b)/5(c) deployers); wording is draft"
+    "note": "Consistency review 2026-10-26 (CF-04/05/06/07, PC-04): now the single Art. 26 entry for a high-risk deployer; absorbs the deployer_general duties; FRIA sentence removed (Art. 27 stays in the fria entry); article_ref 'Art. 26, Art. 27' -> 'Art. 26'. deployer_general is no longer emitted (Art. 26 binds deployers of high-risk systems only). Wording is draft, legal review pending"
   },
   "obligations.fria": {
     "source": "Regulation (EU) 2024/1689, Art. 27",
@@ -58,5 +58,41 @@
     "confidence": "high",
     "needs_founder_review": true,
     "note": "docs/src/concepts/risk-levels.md: 'social scoring by public authorities' changed to 'social scoring of natural persons'"
+  },
+  "obligations.transparency_interaction": {
+    "source": "Regulation (EU) 2024/1689, Art. 50, paragraph per entry, as mapped in opencomplai_core.knowledge.limited_risk",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-09): Art. 50(1), emitted for the provider role when the matching r4_transparency_items entry is ticked. Wording is draft, legal review pending"
+  },
+  "obligations.transparency_synthetic": {
+    "source": "Regulation (EU) 2024/1689, Art. 50, paragraph per entry, as mapped in opencomplai_core.knowledge.limited_risk",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-09): Art. 50(2), emitted for the provider role when the matching r4_transparency_items entry is ticked. Wording is draft, legal review pending"
+  },
+  "obligations.transparency_emotion_biometric": {
+    "source": "Regulation (EU) 2024/1689, Art. 50, paragraph per entry, as mapped in opencomplai_core.knowledge.limited_risk",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-09): Art. 50(3), emitted for the deployer role when the matching r4_transparency_items entry is ticked. Wording is draft, legal review pending"
+  },
+  "obligations.transparency_deepfake": {
+    "source": "Regulation (EU) 2024/1689, Art. 50, paragraph per entry, as mapped in opencomplai_core.knowledge.limited_risk",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-09): Art. 50(4), first subparagraph, emitted for the deployer role when the matching r4_transparency_items entry is ticked. Wording is draft, legal review pending"
+  },
+  "obligations.transparency_public_text": {
+    "source": "Regulation (EU) 2024/1689, Art. 50, paragraph per entry, as mapped in opencomplai_core.knowledge.limited_risk",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-09): Art. 50(4), second subparagraph, emitted for the deployer role when the matching r4_transparency_items entry is ticked. Wording is draft, legal review pending"
+  },
+  "engine.product_manufacturer_treated_as_provider": {
+    "source": "Regulation (EU) 2024/1689, Art. 4, Art. 25(1) and 25(3)",
+    "confidence": "medium",
+    "needs_founder_review": true,
+    "note": "Consistency review 2026-10-26 (CF-01, CF-02): a product manufacturer with an AI system built in keeps the product_manufacturer obligation after a substantial modification, gets ai_literacy, and gets the provider Art. 50 items. Legal review pending"
   }
 }

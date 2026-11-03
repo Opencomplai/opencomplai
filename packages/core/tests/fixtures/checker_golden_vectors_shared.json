@@ -24,7 +24,12 @@
         "determination_path": [
           "gate:yes",
           "e1:authorised_rep"
-        ]
+        ],
+        "obligation_basis": {
+          "authorised_representative": [
+            "e1_entity_type"
+          ]
+        }
       }
     },
     {
@@ -48,7 +53,8 @@
         "obligation_ids": [],
         "determination_path": [
           "gate:no"
-        ]
+        ],
+        "obligation_basis": {}
       }
     },
     {
@@ -77,7 +83,8 @@
           "gate:yes",
           "e1:provider",
           "s1:none"
-        ]
+        ],
+        "obligation_basis": {}
       }
     },
     {
@@ -108,7 +115,8 @@
           "e1:provider",
           "s1:in_scope",
           "r2:excluded"
-        ]
+        ],
+        "obligation_basis": {}
       }
     },
     {
@@ -144,7 +152,12 @@
           "hr:high_risk",
           "s1:in_scope",
           "r3:prohibited"
-        ]
+        ],
+        "obligation_basis": {
+          "prohibited": [
+            "r3_prohibited"
+          ]
+        }
       }
     },
     {
@@ -179,7 +192,21 @@
           "hr:high_risk",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -209,7 +236,6 @@
         "obligation_ids": [
           "ai_literacy",
           "deployer_high_risk",
-          "deployer_general",
           "fria"
         ],
         "determination_path": [
@@ -220,7 +246,31 @@
           "s1:high_risk_exception",
           "e1:ai_literacy",
           "r5:fria"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "deployer_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ],
+          "fria": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory",
+            "r5_fria"
+          ]
+        }
       }
     },
     {
@@ -258,7 +308,23 @@
           "hr:high_risk",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type",
+            "e2_modifications"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "e2_modifications",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -293,7 +359,15 @@
           "s1:in_scope",
           "e1:ai_literacy",
           "r1:gpai"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "gpai_provider": [
+            "s1_gpai"
+          ]
+        }
       }
     },
     {
@@ -331,7 +405,19 @@
           "e1:ai_literacy",
           "r1:gpai",
           "r1:gpai_systemic_risk"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "gpai_provider": [
+            "s1_gpai"
+          ],
+          "gpai_systemic_risk": [
+            "s1_gpai",
+            "s1_gpai_systemic_risk"
+          ]
+        }
       }
     },
     {
@@ -353,10 +439,11 @@
         "is_high_risk": false,
         "is_prohibited": false,
         "effective_entity": "deployer",
-        "status_change_ids": [],
+        "status_change_ids": [
+          "transparency_only"
+        ],
         "obligation_ids": [
           "ai_literacy",
-          "deployer_general",
           "transparency"
         ],
         "determination_path": [
@@ -365,7 +452,15 @@
           "s1:in_scope",
           "e1:ai_literacy",
           "r4:transparency"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "transparency": [
+            "r4_transparency"
+          ]
+        }
       }
     },
     {
@@ -394,7 +489,8 @@
           "gate:yes",
           "e1:product_manufacturer",
           "e3:none"
-        ]
+        ],
+        "obligation_basis": {}
       }
     },
     {
@@ -424,8 +520,7 @@
         ],
         "obligation_ids": [
           "ai_literacy",
-          "deployer_high_risk",
-          "deployer_general"
+          "deployer_high_risk"
         ],
         "determination_path": [
           "gate:yes",
@@ -434,7 +529,21 @@
           "s1:in_scope",
           "s1:high_risk_exception",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "deployer_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -467,7 +576,18 @@
           "e1:distributor",
           "hr:high_risk",
           "s1:in_scope"
-        ]
+        ],
+        "obligation_basis": {
+          "distributor": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -493,7 +613,8 @@
           "gate:yes",
           "e1:distributor",
           "s1:in_scope"
-        ]
+        ],
+        "obligation_basis": {}
       }
     },
     {
@@ -531,7 +652,21 @@
           "hr:high_risk",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -565,7 +700,21 @@
           "s1:in_scope",
           "e1:ai_literacy",
           "hr:derogation_registration"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_art_6_4_registration": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -604,7 +753,24 @@
           "s1:in_scope",
           "e1:ai_literacy",
           "r4:transparency"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ],
+          "transparency": [
+            "r4_transparency"
+          ]
+        }
       }
     },
     {
@@ -644,7 +810,17 @@
           "hr:high_risk",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling"
+          ]
+        }
       }
     },
     {
@@ -680,7 +856,17 @@
           "hr:high_risk",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr1_annex_i",
+            "hr8_conformity_assessment"
+          ]
+        }
       }
     },
     {
@@ -713,7 +899,18 @@
           "e1:importer",
           "hr:high_risk",
           "s1:in_scope"
-        ]
+        ],
+        "obligation_basis": {
+          "importer": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "hr3_art_6_3",
+            "hr4_narrow_task",
+            "hr5_no_significant_risk",
+            "hr6_accessory"
+          ]
+        }
       }
     },
     {
@@ -739,15 +936,19 @@
         "effective_entity": "deployer",
         "status_change_ids": [],
         "obligation_ids": [
-          "ai_literacy",
-          "deployer_general"
+          "ai_literacy"
         ],
         "determination_path": [
           "gate:yes",
           "e1:deployer",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ]
+        }
       }
     },
     {
@@ -773,15 +974,19 @@
         "effective_entity": "deployer",
         "status_change_ids": [],
         "obligation_ids": [
-          "ai_literacy",
-          "deployer_general"
+          "ai_literacy"
         ],
         "determination_path": [
           "gate:yes",
           "e1:deployer",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ]
+        }
       }
     },
     {
@@ -807,15 +1012,537 @@
         "effective_entity": "deployer",
         "status_change_ids": [],
         "obligation_ids": [
-          "ai_literacy",
-          "deployer_general"
+          "ai_literacy"
         ],
         "determination_path": [
           "gate:yes",
           "e1:deployer",
           "s1:in_scope",
           "e1:ai_literacy"
-        ]
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ]
+        }
+      }
+    },
+    {
+      "name": "25_product_manufacturer_modifies",
+      "categories": [
+        "entity:product_manufacturer",
+        "review:CF-01"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "product_manufacturer",
+          "e2_modifications": true,
+          "e3_product_integration": "integrated",
+          "s1_in_scope": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "provider",
+        "status_change_ids": [
+          "become_provider"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "product_manufacturer"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:product_manufacturer",
+          "e2:become_provider",
+          "s1:in_scope",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type",
+            "e2_modifications",
+            "e3_product_integration"
+          ],
+          "product_manufacturer": [
+            "e1_entity_type",
+            "e2_modifications",
+            "e3_product_integration"
+          ]
+        }
+      }
+    },
+    {
+      "name": "26_product_manufacturer_integrated_not_high_risk",
+      "categories": [
+        "entity:product_manufacturer",
+        "review:CF-02"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "product_manufacturer",
+          "e3_product_integration": "integrated",
+          "s1_in_scope": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "product_manufacturer",
+        "status_change_ids": [],
+        "obligation_ids": [
+          "ai_literacy",
+          "product_manufacturer"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:product_manufacturer",
+          "s1:in_scope",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type",
+            "e3_product_integration"
+          ],
+          "product_manufacturer": [
+            "e1_entity_type",
+            "e3_product_integration"
+          ]
+        }
+      }
+    },
+    {
+      "name": "27_deployer_not_high_risk",
+      "categories": [
+        "entity:deployer",
+        "review:CF-06"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "deployer",
+          "s1_in_scope": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "deployer",
+        "status_change_ids": [],
+        "obligation_ids": [
+          "ai_literacy"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:deployer",
+          "s1:in_scope",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ]
+        }
+      }
+    },
+    {
+      "name": "28_high_risk_deployer_fria_no",
+      "categories": [
+        "entity:deployer",
+        "high_risk:annex_iii",
+        "review:CF-05"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "deployer",
+          "hr2_annex_iii": true,
+          "hr7_profiling": true,
+          "s1_in_scope": true,
+          "s1_scope_region": "eu",
+          "r5_fria": false
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": true,
+        "is_prohibited": false,
+        "effective_entity": "deployer",
+        "status_change_ids": [
+          "high_risk",
+          "high_risk_exception"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "deployer_high_risk"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:deployer",
+          "hr:high_risk",
+          "s1:in_scope",
+          "s1:high_risk_exception",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "deployer_high_risk": [
+            "e1_entity_type",
+            "hr2_annex_iii",
+            "hr7_profiling"
+          ]
+        }
+      }
+    },
+    {
+      "name": "29_deployer_transparency_items",
+      "categories": [
+        "entity:deployer",
+        "transparency:items",
+        "review:CF-09"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "deployer",
+          "s1_in_scope": true,
+          "r4_transparency": true,
+          "r4_transparency_items": [
+            "interaction",
+            "deepfake",
+            "public_interest_text"
+          ]
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "deployer",
+        "status_change_ids": [
+          "transparency_only"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "transparency_deepfake",
+          "transparency_public_text"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:deployer",
+          "s1:in_scope",
+          "e1:ai_literacy",
+          "r4:transparency"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "transparency_deepfake": [
+            "e1_entity_type",
+            "r4_transparency_items"
+          ],
+          "transparency_public_text": [
+            "e1_entity_type",
+            "r4_transparency_items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "30_provider_transparency_items",
+      "categories": [
+        "entity:provider",
+        "transparency:items",
+        "review:CF-09"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "provider",
+          "s1_in_scope": true,
+          "r4_transparency": true,
+          "r4_transparency_items": [
+            "interaction",
+            "synthetic_content",
+            "emotion_biometric"
+          ]
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "provider",
+        "status_change_ids": [
+          "transparency_only"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "transparency_interaction",
+          "transparency_synthetic"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:provider",
+          "s1:in_scope",
+          "e1:ai_literacy",
+          "r4:transparency"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "transparency_interaction": [
+            "e1_entity_type",
+            "r4_transparency_items"
+          ],
+          "transparency_synthetic": [
+            "e1_entity_type",
+            "r4_transparency_items"
+          ]
+        }
+      }
+    },
+    {
+      "name": "31_gpai_without_systemic_risk",
+      "categories": [
+        "entity:provider",
+        "gpai"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "provider",
+          "s1_in_scope": true,
+          "s1_gpai": true,
+          "s1_gpai_systemic_risk": false
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "provider",
+        "status_change_ids": [
+          "gpai"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "gpai_provider"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:provider",
+          "s1:in_scope",
+          "e1:ai_literacy",
+          "r1:gpai"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "gpai_provider": [
+            "s1_gpai"
+          ]
+        }
+      }
+    },
+    {
+      "name": "32_distributor_not_high_risk",
+      "categories": [
+        "entity:distributor"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "distributor",
+          "s1_in_scope": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": false,
+        "is_prohibited": false,
+        "effective_entity": "distributor",
+        "status_change_ids": [],
+        "obligation_ids": [],
+        "determination_path": [
+          "gate:yes",
+          "e1:distributor",
+          "s1:in_scope"
+        ],
+        "obligation_basis": {}
+      }
+    },
+    {
+      "name": "33_annex_iii_art_6_3_with_annex_i",
+      "categories": [
+        "entity:provider",
+        "high_risk:annex_i",
+        "high_risk:annex_iii"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "provider",
+          "hr1_annex_i": true,
+          "hr8_conformity_assessment": true,
+          "hr2_annex_iii": true,
+          "hr4_narrow_task": true,
+          "s1_in_scope": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": true,
+        "is_prohibited": false,
+        "effective_entity": "provider",
+        "status_change_ids": [
+          "high_risk"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "provider_high_risk"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:provider",
+          "hr:high_risk",
+          "s1:in_scope",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "provider_high_risk": [
+            "e1_entity_type",
+            "hr1_annex_i",
+            "hr8_conformity_assessment",
+            "hr2_annex_iii",
+            "hr7_profiling"
+          ]
+        }
+      }
+    },
+    {
+      "name": "34_deployer_annex_i_only",
+      "categories": [
+        "entity:deployer",
+        "high_risk:annex_i"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "deployer",
+          "hr1_annex_i": true,
+          "hr8_conformity_assessment": true,
+          "s1_in_scope": true,
+          "s1_scope_region": "eu"
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": true,
+        "is_prohibited": false,
+        "effective_entity": "deployer",
+        "status_change_ids": [
+          "high_risk"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "deployer_high_risk"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:deployer",
+          "hr:high_risk",
+          "s1:in_scope",
+          "e1:ai_literacy"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "deployer_high_risk": [
+            "e1_entity_type",
+            "hr1_annex_i",
+            "hr8_conformity_assessment"
+          ]
+        }
+      }
+    },
+    {
+      "name": "35_deployer_annex_i_and_iii_fria",
+      "categories": [
+        "entity:deployer",
+        "high_risk:annex_i",
+        "high_risk:annex_iii"
+      ],
+      "session": {
+        "answers": {
+          "gate_is_ai_system": true,
+          "e1_entity_type": "deployer",
+          "hr1_annex_i": true,
+          "hr8_conformity_assessment": true,
+          "hr2_annex_iii": true,
+          "hr7_profiling": true,
+          "s1_in_scope": true,
+          "s1_scope_region": "eu",
+          "r5_fria": true
+        }
+      },
+      "expected": {
+        "in_scope": true,
+        "is_high_risk": true,
+        "is_prohibited": false,
+        "effective_entity": "deployer",
+        "status_change_ids": [
+          "high_risk"
+        ],
+        "obligation_ids": [
+          "ai_literacy",
+          "deployer_high_risk",
+          "fria"
+        ],
+        "determination_path": [
+          "gate:yes",
+          "e1:deployer",
+          "hr:high_risk",
+          "s1:in_scope",
+          "e1:ai_literacy",
+          "r5:fria"
+        ],
+        "obligation_basis": {
+          "ai_literacy": [
+            "e1_entity_type"
+          ],
+          "deployer_high_risk": [
+            "e1_entity_type",
+            "hr1_annex_i",
+            "hr8_conformity_assessment",
+            "hr2_annex_iii",
+            "hr7_profiling"
+          ],
+          "fria": [
+            "e1_entity_type",
+            "hr1_annex_i",
+            "hr8_conformity_assessment",
+            "hr2_annex_iii",
+            "hr7_profiling",
+            "r5_fria"
+          ]
+        }
       }
     }
   ]

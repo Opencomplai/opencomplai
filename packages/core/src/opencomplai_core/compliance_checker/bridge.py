@@ -39,7 +39,7 @@ def bridge_to_manifest_fields(result: ComplianceCheckerResult) -> dict[str, obje
         verdict = "prohibited_practice"
     elif result.is_high_risk:
         verdict = "high_risk_ai_system"
-    elif any(item.id == "transparency" for item in result.obligations):
+    elif any(item.id.startswith("transparency") for item in result.obligations):
         verdict = "limited_risk_transparency"
     elif any(item.id == "gpai_provider" for item in result.obligations):
         verdict = "general_purpose_ai_model"

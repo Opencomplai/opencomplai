@@ -8,7 +8,7 @@ The compliance engine at the heart of [Opencomplai](https://opencomplai.com).
 `opencomplai-core` turns a declared `system-manifest.json` and your source tree into a
 deterministic, rule-based EU AI Act risk classification and gap report — no LLM calls,
 no network access, fully reproducible. The same evidence also yields a NIST AI RMF 1.0
-view, re-projected through a built-in crosswalk rather than measured separately. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
+view, re-projected per subcategory rather than measured separately. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
 
 It powers risk classification (`UnacceptableRiskRule`, `AnnexIIIClassifierRule`,
 `ProfilingDetectionRule`, `SubstantialModificationRule`) and the code-corroboration scan
@@ -88,7 +88,7 @@ for framework, report in reports.items():
     print(FRAMEWORKS[framework].label, len(report.report.articles), "requirements")
 ```
 
-`FRAMEWORKS` lists what this release can assess. EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only. See
+`FRAMEWORKS` lists what this release can assess. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed). See
 [Frameworks](https://docs.opencomplai.com/frameworks/).
 
 ## What you get

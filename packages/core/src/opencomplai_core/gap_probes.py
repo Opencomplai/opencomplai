@@ -87,6 +87,35 @@ PROBE_PROVENANCE: dict[str, dict] = {
         "confidence": "low",
         "needs_founder_review": True,
     },
+    # The four ISO/IEC 27090 probes below are supporting evidence only (see
+    # `supporting_gap_status`); the clause ids are the only part taken from the standard.
+    "ai_supply_chain_pins": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 5.5 and "
+        "B.3 (ids and headings only); SBOM header, hash pin or hub model pinned "
+        "to a commit hash",
+        "confidence": "low",
+        "needs_founder_review": True,
+    },
+    "rate_limiting_config": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 6.5, 7.8 "
+        "and B.2 (ids and headings only); rate-limit library imports and nginx or "
+        "Envoy directives, by name",
+        "confidence": "low",
+        "needs_founder_review": True,
+    },
+    "ai_threat_model": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.6 (id "
+        "and heading only); file-name convention plus AI-attack keywords",
+        "confidence": "low",
+        "needs_founder_review": True,
+    },
+    "ai_red_team_report": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.7 (id "
+        "and heading only); file-name convention plus AI-attack and test-result "
+        "keywords",
+        "confidence": "low",
+        "needs_founder_review": True,
+    },
     "gpai_model_documentation": {
         "source": "Reg. (EU) 2024/1689 Art. 53 and Annex XI (text unverified "
         "here); file-name convention only",
@@ -217,6 +246,43 @@ _PROBE_PATTERNS: dict[str, tuple[str, ...]] = {
     # it sits inside the repo, e.g. OPENCOMPLAI_STATE_DIR=.opencomplai in CI or a
     # committed exported copy. File presence only: Partial at most, never Met.
     "event_log_evidence": ("**/oversight-log.json", "**/agent-log.jsonl"),
+    # ISO/IEC 27090 supporting probes. The two that read code match on content
+    # (`select`), so their `**/*.py`-style globs are only candidates.
+    "ai_supply_chain_pins": (
+        "**/*.spdx.json",
+        "**/*.cdx.json",
+        "**/sbom*.json",
+        "**/bom.json",
+        "**/dvc.lock",  # DVC pins data and model files by hash
+        "**/*.dvc",
+        "**/models.lock*",
+        "**/datasets.lock*",
+        "**/model-pins*",
+        "**/dataset-pins*",
+        "**/*.py",  # a hub model pinned to a commit
+    ),
+    "rate_limiting_config": (
+        "**/*.py",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "**/*.ts",
+        "**/*.conf*",  # nginx
+        "**/*.yaml",  # Envoy
+        "**/*.yml",
+    ),
+    "ai_threat_model": (
+        "**/threat-model*",
+        "**/threat_model*",
+        "**/threat-model/**",
+        "docs/**/threat*model*",
+    ),
+    "ai_red_team_report": (
+        "**/red-team*",
+        "**/red_team*",
+        "**/red-team/**",
+        "docs/**/adversarial-testing*",
+    ),
     # Art. 17(1)(a)-(m) per-clause probes. `provider_qms` above stays as the
     # whole-article convenience probe; these are narrower, clause-appropriate
     # glob sets so a partially-documented QMS shows which sub-points are
@@ -365,6 +431,10 @@ class _ContentSpec:
     body_only: bool = False
     forbid_scaffold: bool = False
     note: str = ""  # appended to the rationale
+    # The markers choose the files: only matched files that satisfy them count as
+    # found (the first five globbed files would otherwise hide a later hit). For
+    # probes that read code, where most matched files are not evidence.
+    select: bool = False
 
 
 # Raw-text marker of a signed-log line (never JSON-parsed here).
@@ -449,6 +519,80 @@ _CONTENT_MARKERS["serious_incident_log"] = _ContentSpec(
     noun="incident log",
 )
 
+# ISO/IEC 27090 supporting probes. source: heuristic (no legal source);
+# confidence: low; needs_founder_review: true (E-15). The words mirror the pack's
+# own threat headings; "evasion" and "backdoor" are ambiguous alone, so they need
+# a second word.
+_AI_ATTACK_TERMS = re.compile(
+    r"prompt[\s_-]*injection|jailbreak|(?:data|model)[\s_-]*poisoning"
+    r"|evasion\s+attack|adversarial\s+(?:example|input|prompt)"
+    r"|membership[\s_-]*inference|model[\s_-]*(?:inversion|extraction|exfiltration)"
+    r"|backdoor\s+attack|model\s+backdoor",
+    re.I,
+)
+_CONTENT_MARKERS["ai_threat_model"] = _ContentSpec(
+    patterns=(_AI_ATTACK_TERMS,),
+    found_label="an AI-specific attack term",
+    lacks_label="AI-specific attack term and minimum body length",
+    noun="threat model",
+    body_only=True,
+)
+_CONTENT_MARKERS["ai_red_team_report"] = _ContentSpec(
+    patterns=(
+        _AI_ATTACK_TERMS,
+        re.compile(
+            r"\b(?:findings?|results?|outcomes?|success\s+rate|vulnerabilit(?:y|ies)"
+            r"|bypass(?:ed|es)?|passed|failed)\b",
+            re.I,
+        ),
+    ),
+    found_label="an AI-specific attack term and a test-result marker",
+    lacks_label="AI-specific attack term, test-result marker and minimum body length",
+    noun="red-team report",
+    body_only=True,
+)
+# Library names are matched where they are used (an import, a directive), never as
+# bare words, so a README, a lock file or a vendored copy that merely names one does
+# not count.
+_CONTENT_MARKERS["rate_limiting_config"] = _ContentSpec(
+    patterns=(
+        re.compile(
+            r"\b(?:from|import)\s+(?:slowapi|fastapi_limiter|flask_limiter"
+            r"|django_ratelimit)\b"
+            r"|\b(?:require\s*\(|import\s*\(?|from)\s*[\"']"
+            r"(?:express-rate-limit|@fastify/rate-limit|rate-limiter-flexible)[\"']"
+            r"|^[ \t]*limit_(?:req|conn)(?:_zone)?[ \t]+(?:zone=|\$)"
+            r"|\benvoy\.filters\.http\.(?:local_)?ratelimit\b"
+            r"|\bDEFAULT_THROTTLE_RATES\b",
+            re.I | re.M,
+        ),
+    ),
+    found_label="a rate-limit library import or directive",
+    lacks_label="rate-limit library import or directive",
+    noun="rate-limit configuration",
+    select=True,
+)
+# SBOM header, a hash written as a key (DVC files, lock files), or a hub model
+# pinned to a commit hash. `revision="main"` or a tag is not a pin.
+_CONTENT_MARKERS["ai_supply_chain_pins"] = _ContentSpec(
+    patterns=(
+        re.compile(
+            r"\"(?:spdxVersion|bomFormat)\""
+            r"|\b(?:md5|sha1|sha256)\b[\"']?\s*[:=]\s*[\"']?[0-9a-f]{32,64}\b"
+            r"|\b(?:from_pretrained|hf_hub_download|snapshot_download)\([^)]*"
+            r"\brevision\s*=\s*[\"'][0-9a-f]{7,40}[\"']",
+            re.I,
+        ),
+    ),
+    found_label="an SBOM header, a hash pin or a hub revision pinned to a commit",
+    lacks_label="SBOM header, hash pin or pinned hub revision",
+    noun="supply-chain pin",
+    select=True,
+)
+
+# Never selected from: a Python environment's installed packages (its name varies).
+_VENDORED_DIR = "site-packages"
+
 
 @dataclass
 class ProbeResult:
@@ -501,7 +645,11 @@ def _glob_to_regex(pattern: str) -> re.Pattern[str]:
     return re.compile("".join(out), re.IGNORECASE)
 
 
-def _match_patterns(repo_root: Path, patterns: tuple[str, ...]) -> list[str]:
+def _match_patterns(
+    repo_root: Path, patterns: tuple[str, ...], select: _ContentSpec | None = None
+) -> list[str]:
+    """Up to five repo-relative paths matching ``patterns``; with ``select``, only
+    those whose content satisfies it (and not under a ``site-packages`` dir)."""
     found: list[str] = []
     if not repo_root.is_dir():
         return found
@@ -516,6 +664,11 @@ def _match_patterns(repo_root: Path, patterns: tuple[str, ...]) -> list[str]:
             rx = _glob_to_regex(pattern)
             for rel in files:
                 if rx.fullmatch(rel) and rel not in found:
+                    if select is not None and (
+                        _VENDORED_DIR in rel.split("/")
+                        or not _spec_met(select, repo_root / rel)[0]
+                    ):
+                        continue
                     found.append(rel)
                     if len(found) >= 5:
                         return found
@@ -605,6 +758,24 @@ def _body_text(text: str) -> str:
     )
 
 
+def _spec_met(spec: _ContentSpec, candidate: Path) -> tuple[bool, int]:
+    """(markers hold, scaffold placeholders seen) for one file."""
+    try:
+        if not candidate.is_file() or candidate.stat().st_size > 1_048_576:
+            return False, 0
+        # For .json files we also just search the raw text — no parsing.
+        text = candidate.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return False, 0
+    if spec.forbid_scaffold and SCAFFOLD_PLACEHOLDER in text:
+        return False, text.count(SCAFFOLD_PLACEHOLDER)
+    if spec.body_only:
+        text = _body_text(text)
+        if len(text.split()) < _MIN_BODY_WORDS:
+            return False, 0
+    return all(marker.search(text) for marker in spec.patterns), 0
+
+
 def _content_markers_met(
     repo_root: Path, found_paths: list[str], ref: str
 ) -> tuple[bool | None, int]:
@@ -615,23 +786,9 @@ def _content_markers_met(
     met = False
     scaffold_hits = 0
     for rel in found_paths:
-        candidate = repo_root / rel
-        try:
-            if not candidate.is_file() or candidate.stat().st_size > 1_048_576:
-                continue
-            # For .json files we also just search the raw text — no parsing.
-            text = candidate.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
-        if spec.forbid_scaffold and SCAFFOLD_PLACEHOLDER in text:
-            scaffold_hits += text.count(SCAFFOLD_PLACEHOLDER)
-            continue
-        if spec.body_only:
-            text = _body_text(text)
-            if len(text.split()) < _MIN_BODY_WORDS:
-                continue
-        if all(marker.search(text) for marker in spec.patterns):
-            met = True
+        ok, scaffold = _spec_met(spec, repo_root / rel)
+        met = met or ok
+        scaffold_hits += scaffold
     return met, scaffold_hits
 
 
@@ -639,7 +796,10 @@ def run_artifact_probe(ref: str, repo_root: Path | None) -> ProbeResult:
     patterns = _PROBE_PATTERNS.get(ref, ())
     if repo_root is None or not patterns:
         return ProbeResult(found_paths=[])
-    paths = _match_patterns(repo_root, patterns)
+    spec = _CONTENT_MARKERS.get(ref)
+    paths = _match_patterns(
+        repo_root, patterns, spec if spec is not None and spec.select else None
+    )
     code_hits = 0
     hint = _CODE_HINTS.get(ref)
     if hint is not None:
@@ -827,6 +987,24 @@ def artifact_gap_status(ref: str, repo_root: Path | None) -> ArticleGapStatus:
         update["status"] = GapStatus.PARTIAL
         update["evidence_ref"] = found[0].row.evidence_ref
     return row.model_copy(update=update)
+
+
+def supporting_gap_status(ref: str, repo_root: Path | None) -> ArticleGapStatus | None:
+    """The probe's row for a ``"role": "supporting"`` source, or None.
+
+    None unless the probe found evidence: a matched path (or code hint) whose
+    content markers, if the ref has any, hold. A supporting source that finds
+    nothing, or only an empty or off-topic file, must change nothing; `build_gap_report`
+    applies the row.
+    """
+    if repo_root is None:
+        return None
+    result = run_artifact_probe(ref, repo_root)
+    if not (result.found_paths or result.code_hits):
+        return None
+    if result.content_markers_met is False:
+        return None
+    return _probe_row(ref, repo_root, result)
 
 
 def qms_article_17_clause_statuses(

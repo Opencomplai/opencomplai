@@ -1,0 +1,130 @@
+{
+  "EIOPA_AI:3.1-3.6": {
+    "title": "Risk-based approach and proportionality",
+    "note": "Evidence that each in-scope AI system gets an impact assessment (data scale and sensitivity, customers affected, autonomy, consumer-facing use, prudential effect) and that governance measures are scaled to the result.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.1-3.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": [],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.7-3.11": {
+    "title": "Risk management system",
+    "note": "Evidence of a documented, regularly reviewed approach to AI use across the organisation, covering the whole lifecycle, defined roles and responsibilities, and information and assurances obtained from third-party AI providers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.7-3.11"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 17", "Art. 25"],
+    "iso_27001": ["A.5.1", "A.5.2", "A.5.19"],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.12-3.16": {
+    "title": "Fairness and ethics",
+    "note": "Evidence of customer-centric fairness practice for AI systems: ethics guidance and staff training, bias removal in data, regular output monitoring with fairness metrics, and a way for harmed customers to seek redress.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.12-3.16"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": [],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.17-3.21": {
+    "title": "Data governance",
+    "note": "Evidence of a data governance policy for AI that requires training and test data to be complete, accurate and appropriate, documents data limitations, works to remove bias, and holds externally sourced data to the same standard.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.17-3.21"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.34"],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.22-3.24": {
+    "title": "Documentation and record keeping",
+    "note": "Evidence that records of training and testing data and modelling methods are kept well enough to reproduce and trace results, and that higher-risk uses have their records reviewed regularly.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.22-3.24"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 12"],
+    "iso_27001": ["A.5.33", "A.5.37"],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.25-3.28": {
+    "title": "Transparency and explainability",
+    "note": "Evidence that AI outcomes can be meaningfully explained, with explanations suited to authorities, auditors and customers, customers told when they deal with an AI system, and extra safeguards where full explanation is not possible.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.25-3.28"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "iso_27001": [],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.29-3.33": {
+    "title": "Human oversight",
+    "note": "Evidence of internal controls over the AI lifecycle: defined roles and escalation, management body understanding, compliance, audit, data protection and actuarial involvement, trained staff, and guardrails that catch bias and keep the system within bounds.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.29-3.33"
+      }
+    ],
+    "eu_ai_act": ["Art. 4", "Art. 14"],
+    "iso_27001": ["A.5.2", "A.6.3"],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EIOPA_AI:3.34-3.38": {
+    "title": "Accuracy, robustness and cybersecurity",
+    "note": "Evidence that accuracy, robustness and cybersecurity levels are defined and monitored with suitable metrics, API connections are tested, drift is caught, and the system resists tampering such as data poisoning, with fall-back plans.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EIOPA_AI:3.34-3.38"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.30", "A.8.8", "A.8.29"],
+    "source": "EIOPA Opinion on AI governance and risk management, EIOPA-BoS-25-360, 6 Aug 2025 (eiopa.europa.eu); the id is the paragraph range the Opinion numbers under each topic heading of its section 3 and the title is that heading; the Opinion is addressed to supervisors, sets no new requirements (para 2.8) and leaves out prohibited and high-risk AI systems under the AI Act (para 2.6); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

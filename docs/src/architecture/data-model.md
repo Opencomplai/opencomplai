@@ -75,6 +75,12 @@ class SystemManifest(BaseModel):
 class FrameworkInputs(BaseModel):  # rejects unknown keys and empty strings
     excluded: dict[str, str] = {}           # requirement id -> reason
     attested: dict[str, Attestation] = {}   # requirement id -> statement
+    scope: FrameworkScope | None = None     # yes/no answers that rule rows out
+
+class FrameworkScope(BaseModel):  # each answer: bool | None, None = not answered
+    trains_models: bool | None = None
+    uses_retrieval: bool | None = None
+    public_api: bool | None = None
 
 class Attestation(BaseModel):
     statement: str
@@ -82,7 +88,8 @@ class Attestation(BaseModel):
     attested_at: str  # ISO 8601 date or timestamp
 ```
 
-`compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`); when
+`compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`,
+`ISO_IEC_27090` and the further packs on [More framework packs](../frameworks/more-packs.md)); when
 it is unset, the single `compliance_target` is the target. Both new fields are dropped
 from the serialised manifest when unset, so a manifest that does not use them keeps its
 exact bytes. See [Frameworks](../frameworks/index.md).

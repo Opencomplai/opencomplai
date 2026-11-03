@@ -13,9 +13,18 @@
 
 ## Product boundary
 
-The dashboard ingests **only signed, allowlisted metadata** produced by OSS installs. It never
-receives raw evidence, model artifacts, datasets or PII. Anything that would persist or render a
-field outside the pinned allowlist is a scope violation, not a feature gap.
+The dashboard ingests signed, allowlisted metadata produced by OSS installs. It never receives
+raw evidence, model artifacts or datasets through that path, and the ingest path has no field
+for personal data. Anything that would persist or render a field outside the pinned allowlist is a
+scope violation, not a feature gap.
+
+Beside ingest, three things exist that do not use it. Users of an organisation type governance
+records (policies, risks, vendors, trainings, incidents and tasks) into the web app; these may
+contain personal data the customer chooses to enter, and they are never read from CI. File uploads
+are opt-in: off by default, enabled per organisation, stored privately and capped at 4 MB, with
+links as the default way to attach evidence. Slack, signed webhook and email notifications are
+queued and sent by one authenticated scheduled route; destinations are checked, their secrets are
+stored encrypted, and the sender is off unless configured.
 
 ## Components
 

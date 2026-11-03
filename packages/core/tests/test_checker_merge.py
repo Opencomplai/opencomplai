@@ -50,7 +50,7 @@ def test_single_role_returns_result_unchanged() -> None:
 def test_merge_unions_obligations_in_order_without_duplicates() -> None:
     merged = _merged()
     ids = merged.obligation_ids
-    assert "deployer_general" in ids
+    assert "deployer_high_risk" in ids
     assert "provider_high_risk" in ids
     assert ids.count("ai_literacy") == 1
     assert len(ids) == len(set(ids))
@@ -115,3 +115,54 @@ def test_render_markdown_and_json_include_rationale() -> None:
     assert data["rationale"] == lines
     assert data["in_scope"] == result.in_scope
     assert render_pdf(result, rationale=lines).startswith(b"%PDF")
+
+
+def _session(**answers) -> CheckerSession:
+    return CheckerSession(
+        answers={"gate_is_ai_system": True, "s1_in_scope": True, **answers}
+    )
+
+
+def test_merge_drops_notes_another_role_contradicts() -> None:
+    """Consistency review CF-03 and CF-10."""
+    high = {"hr2_annex_iii": True, "hr7_profiling": True, "s1_scope_region": "eu"}
+    runs = [
+        (role, evaluate(_session(e1_entity_type=role, **high)))
+        for role in ("provider", "deployer")
+    ]
+    assert "high_risk_exception" in [n.id for n in runs[1][1].status_changes]
+    merged = merge_role_results(runs)
+    assert "high_risk_exception" not in [n.id for n in merged.result.status_changes]
+
+    runs = [
+        (role, evaluate(_session(e1_entity_type=role, e2_modifications=True)))
+        for role in ("provider", "deployer")
+    ]
+    merged = merge_role_results(runs)
+    assert "become_provider" not in [n.id for n in merged.result.status_changes]
+    alone = merge_role_results(runs[1:])
+    assert "become_provider" in [n.id for n in alone.result.status_changes]
+
+
+def test_merge_unions_obligation_basis() -> None:
+    runs = [
+        (role, evaluate(_session(e1_entity_type=role, s1_gpai=True)))
+        for role in ("provider", "deployer")
+    ]
+    merged = merge_role_results(runs)
+    assert merged.result.obligation_basis["ai_literacy"] == ["e1_entity_type"]
+    assert merged.result.obligation_basis["gpai_provider"] == ["s1_gpai"]
+
+
+def test_merge_drops_one_roles_out_of_scope_note_when_another_is_in_scope() -> None:
+    runs = [
+        ("provider", evaluate(_session(e1_entity_type="provider"))),
+        (
+            "product_manufacturer",
+            evaluate(_session(e1_entity_type="product_manufacturer")),
+        ),
+    ]
+    assert "out_of_scope" in [n.id for n in runs[1][1].status_changes]
+    merged = merge_role_results(runs)
+    assert merged.result.in_scope is True
+    assert "out_of_scope" not in [n.id for n in merged.result.status_changes]

@@ -1,7 +1,7 @@
 openapi: "3.1.0"
 info:
   title: Opencomplai Gateway API
-  version: 0.13.2
+  version: 0.14.0
   description: |
     REST API gateway for the Opencomplai compliance platform.
     All routes proxy to the appropriate Python service.
@@ -1270,6 +1270,22 @@ components:
           description: Requirement id -> provider attestation that it is met
           additionalProperties:
             $ref: "#/components/schemas/Attestation"
+        scope:
+          type: object
+          description: >-
+            Answers about the system that take framework rows out of scope.
+            A question left out is unanswered; only false takes a row out.
+          additionalProperties: false
+          properties:
+            trains_models:
+              type: boolean
+              description: The system trains or fine-tunes models
+            uses_retrieval:
+              type: boolean
+              description: The system retrieves external content for the model
+            public_api:
+              type: boolean
+              description: The model is reachable through a public API
 
     Attestation:
       type: object

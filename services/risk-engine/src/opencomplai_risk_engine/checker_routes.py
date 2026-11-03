@@ -79,9 +79,24 @@ class _RateLimiter:
         self._window_seconds = window_seconds
         self._max_requests = max_requests
         self._hits: dict[str, list[float]] = {}
+        self._last_sweep = 0.0
+
+    def _sweep(self, now: float) -> None:
+        """Drop keys with no hit inside the window.
+
+        ``check`` only trims the key it is called for, so keys that stop sending
+        requests (one-off client addresses) would otherwise stay forever.
+        Runs at most once per window, so the cost is amortised O(1) per call.
+        """
+        if now - self._last_sweep < self._window_seconds:
+            return
+        self._last_sweep = now
+        cutoff = now - self._window_seconds
+        self._hits = {k: v for k, v in self._hits.items() if v and v[-1] >= cutoff}
 
     def check(self, key: str) -> bool:
         now = time.time()
+        self._sweep(now)
         hits = self._hits.setdefault(key, [])
         cutoff = now - self._window_seconds
         while hits and hits[0] < cutoff:

@@ -16,8 +16,8 @@
   },
   "deployer_high_risk": {
     "title": "Deployer obligations for high-risk AI systems",
-    "body": "Deployers of high-risk AI systems must take appropriate technical and organisational measures, ensure human oversight, monitor operation, keep automatically generated logs, and inform the provider or distributor where they consider that use may constitute a risk. Deployers that are bodies governed by public law or private entities providing public services, and deployers of Annex III point 5(b) and 5(c) systems, must perform a fundamental rights impact assessment before first use of the system.",
-    "article_ref": "Art. 26, Art. 27"
+    "body": "Deployers of high-risk AI systems must use them in accordance with the instructions for use and take appropriate technical and organisational measures to do so, assign human oversight to natural persons who have the necessary competence, training and authority, ensure that input data under their control is relevant and sufficiently representative in view of the intended purpose, monitor the operation of the system, keep the automatically generated logs, and inform the provider or distributor where they consider that use may present a risk. Where the Regulation requires it, deployers must inform workers' representatives and the natural persons concerned that they are subject to the use of a high-risk AI system.",
+    "article_ref": "Art. 26"
   },
   "deployer_general": {
     "title": "General deployer obligations",
@@ -53,6 +53,31 @@
     "title": "Transparency obligations",
     "body": "Providers must ensure that AI systems intended to interact directly with natural persons are designed and developed so that the persons concerned are informed that they are interacting with an AI system. Providers of AI systems that generate synthetic audio, image, video or text content must ensure outputs are marked in a machine-readable format and detectable as artificially generated.",
     "article_ref": "Art. 50"
+  },
+  "transparency_interaction": {
+    "title": "Transparency: AI systems that interact with people",
+    "body": "Providers must ensure that AI systems intended to interact directly with natural persons are designed and developed so that the persons concerned are informed that they are interacting with an AI system, unless this is obvious to a reasonably well-informed person from the circumstances and the context of use.",
+    "article_ref": "Art. 50(1)"
+  },
+  "transparency_synthetic": {
+    "title": "Transparency: synthetic content",
+    "body": "Providers of AI systems that generate synthetic audio, image, video or text content must ensure that the outputs are marked in a machine-readable format and detectable as artificially generated or manipulated.",
+    "article_ref": "Art. 50(2)"
+  },
+  "transparency_emotion_biometric": {
+    "title": "Transparency: emotion recognition and biometric categorisation",
+    "body": "Deployers of an emotion recognition system or a biometric categorisation system must inform the natural persons exposed to it of the operation of the system, and process personal data in accordance with the applicable data protection law.",
+    "article_ref": "Art. 50(3)"
+  },
+  "transparency_deepfake": {
+    "title": "Transparency: deep fakes",
+    "body": "Deployers of an AI system that generates or manipulates image, audio or video content constituting a deep fake must disclose that the content has been artificially generated or manipulated. For evidently artistic, creative, satirical or fictional work, the disclosure is limited to the existence of such content, in a way that does not hamper the display or enjoyment of the work.",
+    "article_ref": "Art. 50(4)"
+  },
+  "transparency_public_text": {
+    "title": "Transparency: text published on matters of public interest",
+    "body": "Deployers of an AI system that generates or manipulates text published to inform the public on matters of public interest must disclose that the text has been artificially generated or manipulated, unless the content has undergone human review or editorial control and a natural or legal person holds editorial responsibility for its publication.",
+    "article_ref": "Art. 50(4)"
   },
   "prohibited": {
     "title": "Prohibited AI practices",

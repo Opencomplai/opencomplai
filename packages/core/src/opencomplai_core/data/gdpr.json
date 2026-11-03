@@ -1,0 +1,338 @@
+{
+  "GDPR:Art. 5": {
+    "title": "Principles relating to processing of personal data",
+    "note": "Evidence that personal data in the AI system is handled to the core principles: lawful and fair, for stated purposes, no more than needed, accurate, kept no longer than needed, secured, and the organisation can show it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 5"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.34", "A.8.10"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 6": {
+    "title": "Lawfulness of processing",
+    "note": "Evidence that each purpose for which the AI system uses personal data, in training and in live use, rests on a documented lawful basis.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 6"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.31", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 9": {
+    "title": "Processing of special categories of personal data",
+    "note": "Evidence that sensitive data (health, biometrics, beliefs and the like) is only processed in the AI system under a documented exemption, including any use of such data to detect bias.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 9"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.12", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 12": {
+    "title": "Transparent information and modalities for exercising data subject rights",
+    "note": "Evidence that information and replies given to individuals about the AI system's use of their data are in clear plain language, handled in time, and normally free of charge.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 12"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published (shortened to fit 80 characters); EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 13": {
+    "title": "Information to be provided where data are collected from the data subject",
+    "note": "Evidence that people whose data is collected directly are told at that point who is processing it, why, on what basis, with whom it is shared, and what logic applies to any automated decision.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 13"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 26", "Art. 50"],
+    "iso_27001": ["A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published (shortened to fit 80 characters); EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 14": {
+    "title": "Information where data have not been obtained from the data subject",
+    "note": "Evidence that people whose data reached the AI system from another source (bought, scraped or shared datasets) are informed in good time, or that a documented exception applies.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 14"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 26", "Art. 50"],
+    "iso_27001": ["A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published (shortened to fit 80 characters); EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 15": {
+    "title": "Right of access by the data subject",
+    "note": "Evidence that the organisation can answer an individual's request for a copy of their data and related processing details, including information on automated decisions, from the AI system's data stores.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 15"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 26"],
+    "iso_27001": ["A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 17": {
+    "title": "Right to erasure ('right to be forgotten')",
+    "note": "Evidence that erasure requests can be carried out across the AI system's data, including training sets, logs and copies passed on, or that a documented ground for refusing applies.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 17"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34", "A.8.10"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 21": {
+    "title": "Right to object",
+    "note": "Evidence that individuals can object to processing based on legitimate or public interest and to profiling or direct marketing, and that objections are acted on unless a compelling reason is documented.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 21"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 22": {
+    "title": "Automated individual decision-making, including profiling",
+    "note": "Evidence that decisions taken solely by automated means with legal or similarly significant effect have a permitted basis, human intervention and a way to contest; the AI Act's own right to an explanation (its Art. 86) applies only where GDPR does not already give one.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 22"
+      }
+    ],
+    "eu_ai_act": ["Art. 14", "Art. 26"],
+    "iso_27001": [],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 24": {
+    "title": "Responsibility of the controller",
+    "note": "Evidence that the controller has put in place and reviews technical and organisational measures scaled to the AI system's risk, and can show that its processing follows the GDPR.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 24"
+      }
+    ],
+    "eu_ai_act": ["Art. 17", "Art. 26"],
+    "iso_27001": ["A.5.1", "A.5.2", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 25": {
+    "title": "Data protection by design and by default",
+    "note": "Evidence that privacy protections such as minimisation and pseudonymisation were built into the AI system from the start, and that its defaults expose only the data needed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 25"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 15"],
+    "iso_27001": ["A.5.34", "A.8.25", "A.8.27"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 28": {
+    "title": "Processor",
+    "note": "Evidence that each processor handling personal data for the AI system (model host, labelling or analytics vendor) was vetted and is bound by a written contract with the required terms.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 28"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.22"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 30": {
+    "title": "Records of processing activities",
+    "note": "Evidence that a current record of processing exists covering the AI system's purposes, data categories, recipients, transfers, retention periods and security measures.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 30"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 32": {
+    "title": "Security of processing",
+    "note": "Evidence that security measures suited to the risk protect the AI system's personal data, such as access control, encryption or pseudonymisation, resilience and regular testing.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 32"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.15", "A.5.34", "A.5.35", "A.8.11", "A.8.13", "A.8.24"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 33": {
+    "title": "Notification of a personal data breach to the supervisory authority",
+    "note": "Evidence of a process to detect breaches of the AI system's personal data and report them to the supervisory authority within 72 hours where required, with each breach recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 33"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.24", "A.5.25", "A.5.26", "A.5.27", "A.5.28", "A.6.8"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 34": {
+    "title": "Communication of a personal data breach to the data subject",
+    "note": "Evidence of a process to tell affected individuals, in plain language and without undue delay, when a breach of the AI system's data is likely to put them at high risk, unless a documented exception applies.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 34"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.25", "A.5.26", "A.5.27", "A.5.28"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 35": {
+    "title": "Data protection impact assessment",
+    "note": "A DPIA is carried out before processing likely to create a high risk, and its findings feed the AI system's risk work.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 35"
+      }
+    ],
+    "eu_ai_act": ["Art. 26", "Art. 27"],
+    "iso_27001": ["A.5.8", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 36": {
+    "title": "Prior consultation",
+    "note": "Evidence that where a DPIA shows a high risk the organisation cannot reduce, the supervisory authority is consulted before the processing starts.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 36"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.5", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published; EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Art. 37-39": {
+    "title": "Designation, position and tasks of the data protection officer",
+    "note": "Evidence that a data protection officer is designated where required, is independent and involved early, and carries out the advisory and monitoring tasks for the AI system's processing.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Art. 37-39"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.2", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published (combined from the headings of Arts 37, 38 and 39); EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "GDPR:Chapter V": {
+    "title": "Transfers of personal data to third countries or international organisations",
+    "note": "Evidence that any transfer of the AI system's personal data outside the EEA (hosting, model APIs, remote support access) rests on an adequacy decision, safeguards or a documented derogation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "GDPR:Chapter V"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.5.34"],
+    "source": "Regulation (EU) 2016/679 (GDPR), OJ L 119, 4.5.2016, p. 1 (CELEX 32016R0679); article heading as published (this is the heading of Chapter V, Arts 44-50); EU AI Act and ISO 27001 links are the project's own judgement (no official crosswalk used); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

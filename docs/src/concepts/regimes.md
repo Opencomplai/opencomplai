@@ -9,15 +9,16 @@ cited. None of these is a legal determination or a certification.
 | Regime | Key | Status | How it is produced | Confidence |
 |---|---|---|---|---|
 | EU AI Act | `EU_AI_ACT` | Evaluated | Natively, per article, from rules, obligations, the code scan, evaluators and documentation probes. Always gates [`check`](../cli/check.md). | Per row, as the row states it. |
-| NIST AI RMF 1.0 | `NIST_AI_RMF` | Derived, partial | Re-projected from the EU AI Act evidence through a crosswalk, per subcategory. No NIST scanner exists; a subcategory without a crosswalk row stays Unverified. | `low` or `medium` per crosswalk row, never raised when re-projected. Every row is flagged for review. |
-| ISO/IEC 42001:2023 | `ISO_IEC_42001` | Native pack, attestation-led, partial | Native rows per clause and Annex A control. Most rows are provider attestations that read Unverified until one is recorded under `framework_inputs`; a few also look for a matching document, and the worse of the two wins. | `low`, every row flagged for review. |
-| DORA | not a target | Mapped only | A citation per EU AI Act article, added by `gaps --map-to DORA`. No status is computed. | `low`, flagged for review. |
-| EBA guidelines | not a target | Mapped only | The same, with `--map-to EBA`. | `low`, flagged for review. |
+| NIST AI RMF 1.0 | `NIST_AI_RMF` | Derived, per subcategory | Re-projected from the EU AI Act articles each subcategory lists. No NIST scanner exists; the 14 subcategories with no EU AI Act evidence stay Unverified until attested. | `low` or `medium` per mapped article, never raised when re-projected. Every row is flagged for review. |
+| ISO/IEC 42001:2023 | `ISO_IEC_42001` | Native pack, attestation-led | Native rows per clause and Annex A control. Most rows are provider attestations that read Unverified until one is recorded under `framework_inputs`; a few also look for a matching document, and the worse of the two wins. | `low`, every row flagged for review. |
+| ISO/IEC 27090:2026 | `ISO_IEC_27090` | Native pack, attestation-led guidance | Native rows per guidance clause on AI security threats. Every row is a provider attestation; four also take an output evaluator, which can overrule it when an eval is supplied, and eight look for supporting evidence in the repository, which never lowers a row, never makes one Met and leaves an unattested row Unverified while naming the file. Guidance, not a certification. | `low`, every row flagged for review. |
+| ISO/IEC 27001, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA, ETSI EN 304 223, ISO/IEC 42005, ISO/IEC 23894 | see [More framework packs](../frameworks/more-packs.md) | Native packs, attestation-led | Native rows per requirement, each a provider attestation that reads Unverified until recorded; a few also look for supporting evidence. No audit, certification or legal assessment. | `low`, every row flagged for review. |
+| DORA and EBA citations | via `--map-to` | Mapped only | A citation per EU AI Act article, added by `gaps --map-to DORA` or `--map-to EBA`. No status is computed. | `low`, flagged for review. |
 
-The wording for the first three is shared with [Frameworks](../frameworks/index.md), which is the page to
-read for targeting, exclusions, attestations and gating. `EU_AI_ACT`, `NIST_AI_RMF` and `ISO_IEC_42001` are
-the only keys `--target` and `compliance_targets` accept; any other key, DORA and EBA included, exits `2`.
-The `ComplianceTarget` value that the dossier schema embeds is unchanged by the mapped-only regimes.
+The wording is shared with [Frameworks](../frameworks/index.md), which is the page to read for targeting,
+exclusions, attestations and gating. The keys in the table are the only ones `--target` and
+`compliance_targets` accept; any other key exits `2`. The `ComplianceTarget` value that the dossier schema
+embeds is unchanged by any of the attestation-led packs or the mapped-only citations.
 
 ## Evaluated
 
@@ -32,10 +33,11 @@ a gate on it fails on the same underlying gaps. See [NIST AI RMF](nist-ai-rmf.md
 
 ## Native, attestation-led
 
-ISO/IEC 42001 rows are mostly statements by you that a clause is met. The tool records an attestation
-verbatim and does not check it; the row then reads Met with the source `attestation` and the confidence
-label `attested`. Nothing here certifies ISO/IEC 42001 conformity. Clause titles come from the project's
-draft catalogue, not from the licensed standard text.
+ISO/IEC 42001 rows, and the rows of every other native pack after the EU AI Act, are mostly statements by
+you that a requirement is met. The tool records an attestation verbatim and does not check it; the row then
+reads Met with the source `attestation` and the confidence label `attested`. Nothing here certifies
+conformity with any standard or regulation. Titles of copyrighted standards are headings only, never their
+text.
 
 ## Mapped only
 

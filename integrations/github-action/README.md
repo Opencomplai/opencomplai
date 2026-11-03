@@ -5,8 +5,8 @@ comment, optionally uploads the SARIF verdict, and fails the job when the check 
 
 The Action reports what the check found. It does not certify anything and is not legal advice.
 
-Marketplace publication is pending. Until it is listed, reference the Action by path in this
-repository or copy `integrations/github-action/` into yours.
+The Action is listed on the [GitHub Marketplace](https://github.com/marketplace/actions/opencomplai-check) and published from
+[`Opencomplai/opencomplai-action`](https://github.com/Opencomplai/opencomplai-action). Use that repository in your workflows.
 
 ## Usage
 
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@<40-hex commit SHA> # vN
-      - uses: Opencomplai/opencomplai/integrations/github-action@<40-hex commit SHA> # vN
+      - uses: Opencomplai/opencomplai-action@<40-hex commit SHA> # v1
         with:
           manifest: system-manifest.json
 ```

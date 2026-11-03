@@ -7,7 +7,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-CHECKER_VERSION = "checker-2026-10-14"
+CHECKER_VERSION = "checker-2026-10-26"
 
 
 class EntityType(StrEnum):
@@ -67,6 +67,10 @@ class ComplianceCheckerResult(BaseModel):
     answers: dict[str, Any] = Field(
         default_factory=dict,
         description="Answer snapshot for audit exports and manifest replay",
+    )
+    obligation_basis: dict[str, list[str]] = Field(
+        default_factory=dict,
+        description="For each obligation id, the answer keys that made it apply",
     )
     session_id: str | None = Field(
         None, description="UUID for this checker run when persisted"

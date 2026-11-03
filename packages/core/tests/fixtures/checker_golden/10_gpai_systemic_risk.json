@@ -29,6 +29,18 @@
       "e1:ai_literacy",
       "r1:gpai",
       "r1:gpai_systemic_risk"
-    ]
+    ],
+    "obligation_basis": {
+      "ai_literacy": [
+        "e1_entity_type"
+      ],
+      "gpai_provider": [
+        "s1_gpai"
+      ],
+      "gpai_systemic_risk": [
+        "s1_gpai",
+        "s1_gpai_systemic_risk"
+      ]
+    }
   }
 }

@@ -16,6 +16,7 @@
     "obligation_ids": [],
     "determination_path": [
       "gate:no"
-    ]
+    ],
+    "obligation_basis": {}
   }
 }

@@ -9,6 +9,110 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.14.0] — 2026-11-03
+
+### Added
+
+- Eleven more native, attestation-led framework packs, each a `--target` key with rows that read
+  Unverified until attested and links to the EU AI Act articles they relate to:
+  - security standards: ISO/IEC 27001:2022 (`ISO_IEC_27001`, 118 rows), SOC 2 Trust Services Criteria
+    (`SOC_2`, 61), ETSI EN 304 223 (`ETSI_EN_304_223`, 72);
+  - EU law: GDPR (`GDPR`, 21), NIS2 (`NIS2`, 21), DORA (`DORA`, 37), the Cyber Resilience Act (`CRA`, 63);
+  - financial supervisors: EBA guidelines (`EBA`, 25) and the EIOPA Opinion on AI governance (`EIOPA_AI`, 8);
+  - AI management standards: ISO/IEC 42005:2025 (`ISO_IEC_42005`, 20) and ISO/IEC 23894:2023
+    (`ISO_IEC_23894`, 23).
+
+  Security packs also link ISO/IEC 27001 Annex A controls; ISO/IEC 42005 and 23894 link ISO/IEC 42001
+  rows. None is an audit, a certification, a SOC 2 report or a legal assessment, and every row is flagged
+  for review. `gaps --map-to DORA|EBA` is unchanged. See
+  [More framework packs](docs/src/frameworks/more-packs.md).
+- ISO/IEC 27090:2026 (guidance on security threats to AI systems) as a new target,
+  `ISO_IEC_27090`. It has 31 rows, one per guidance clause, each with its heading and a
+  one-line note in our own words. Every row takes a provider attestation under
+  `framework_inputs`. Four rows (red teaming, sensitive output, prompt injection,
+  injected output) also take an output evaluator, which can overrule the attestation
+  when you supply an eval. Rows also name ISO/IEC 27001 Annex A controls and
+  SOC 2 criteria (ids only), and the docs page has a scoping table for rows that may not
+  apply. It is guidance, so nothing here is a certification. Every row is flagged for
+  review.
+- Cross-framework links: every NIST AI RMF subcategory, ISO/IEC 42001 row and
+  ISO/IEC 27090 row now lists the EU AI Act articles and the requirements of the other
+  two frameworks it relates to. The NIST AI RMF to ISO/IEC 42001 links come from NIST's
+  own crosswalk; the others are our mapping, at low confidence. The new
+  [Framework mappings](docs/src/frameworks/mappings.md) page shows them all.
+- NIST AI RMF attestations: the 14 subcategories the EU AI Act evidence holds nothing
+  for (for example `NIST_AI_RMF:MANAGE 2.1`) accept a provider attestation under
+  `framework_inputs.NIST_AI_RMF.attested`, and read Met with source `attestation` once
+  one is recorded.
+- Framework scoping: `framework_inputs.<FW>.scope` takes three optional yes/no answers
+  (`trains_models`, `uses_retrieval`, `public_api`). Rows of a native
+  framework can name the answers that rule them out (`scope_out`), and `gaps` and
+  `check` move those rows to `excluded` with a reason that names the answer. ISO/IEC
+  27090 uses it for nine rows. An explicit exclusion keeps its own reason, and an attested
+  row stays in the report.
+- Supporting evidence: an artifact source of a native framework can carry
+  `"role": "supporting"`. It never lowers a row: an attested row stays Met and names the
+  file, and an unattested row stays Unverified and names the file, so evidence can never
+  fail a gate. ISO/IEC 27090 rows 5.5, 5.6, 5.7, 6.5, 7.5, 7.8, B.2 and B.3 look for it in
+  the repository: an SBOM or model pins, rate-limit code, a threat model naming AI
+  attacks, a red-team report, an event log. This is evidence for a person to read, not a
+  claim of conformity.
+- Annex IV dossier: when `ISO_IEC_27090` is among the manifest's `compliance_targets`,
+  `docs generate` adds a `cybersecurity` part (Annex IV point 2(h), Art. 15(5)). It lists
+  every ISO/IEC 27090 row with its status, source and evidence, counts per status, and
+  the excluded rows with their reasons. `--render md` and `--render pdf` print it.
+  Dossiers without that target are unchanged. An older CLI cannot verify a signed dossier
+  that carries this part.
+
+### Changed
+
+- NIST AI RMF verdicts are now mapped per subcategory instead of per category. Each
+  subcategory lists the EU AI Act articles whose evidence it re-uses, so a subcategory
+  no longer inherits the verdict of unrelated articles in its category. Subcategories in
+  GOVERN 5, MAP 4, MEASURE 4 and MANAGE 1 to 3, which had no verdict, are now mapped or
+  attestable. NIST AI RMF results therefore change: rows that used to read Unverified
+  can now read Missing, so a CI gate on `NIST_AI_RMF` (`check --gate NIST_AI_RMF`) can
+  fail where it passed before.
+- The NIST AI RMF outcome texts were checked against NIST AI 100-1; 25 that had been
+  shortened or reworded now match the published text.
+- The EU AI Act checker version is now `checker-2026-10-26`, because a review
+  of every answer combination changed what some answers produce:
+  - A product manufacturer with an AI system built in now gets AI literacy
+    (Art. 4), and keeps its own Art. 25(1) obligation when it substantially
+    modifies the system.
+  - A deployer gets one Art. 26 entry, and only for a high-risk system. The
+    fundamental rights impact assessment (Art. 27) is listed only when the
+    FRIA question is answered Yes.
+  - The transparency question can list which Art. 50 items apply (people
+    interacting with the system, synthetic content, emotion recognition or
+    biometric categorisation, deep fakes, text on matters of public interest).
+    Each item becomes its own obligation for the role that carries it. An
+    answer without the list keeps the single Art. 50 obligation.
+  - Each result now records which answers made each obligation apply
+    (`obligation_basis`).
+  - With several roles, the notes "You become a provider" and the deployer
+    high-risk exception are left out when another selected role contradicts
+    them.
+- Package metadata: every Python package now lists keywords and more precise
+  PyPI classifiers, so the packages are easier to find on PyPI. Thanks to
+  @hamid-digitalmarketer (#163).
+- gateway-api dependencies updated: jose 6.2.15, OpenTelemetry semantic
+  conventions 1.44.0 and @types/node 26.6.6.
+- CI checks that the generated EU AI Act principles page is up to date
+  (`python scripts/generate_principle_docs.py --check`). Thanks to
+  @hamid-digitalmarketer (#164).
+- CI reports test coverage for core, cli and the SDK in the job summary,
+  without running any suite twice. Thanks to @mkarimdev (#161).
+
+### Fixed
+
+- The checker API's rate limiter no longer keeps an entry for every client
+  address it has ever seen: addresses that stop sending requests are removed
+  once their window has passed. Thanks to @parijat1222q (#166).
+- The FRIA template now cites EU AI Act Art. 27(4) and Directive (EU) 2016/680 Art. 27 (it said
+  Art. 27(2) and NIS2 Art. 27) for reusing a data protection impact assessment, with the wording as
+  amended by Regulation (EU) 2026/1744.
+
 ## [0.13.2] — 2026-10-28
 
 ### Changed
@@ -1335,6 +1439,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.14.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.14.0
 [0.13.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.2
 [0.13.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.1
 [0.13.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.0

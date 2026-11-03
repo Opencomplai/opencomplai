@@ -10,7 +10,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1", "MAP 1.3", "MAP 1.4", "MAP 4.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 4.2": {
     "title": "Understanding the needs and expectations of interested parties",
@@ -23,7 +26,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": [],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 4.3": {
     "title": "Determining the scope of the AI management system",
@@ -36,7 +42,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["MAP 3.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 4.4": {
     "title": "AI management system",
@@ -49,7 +58,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "MEASURE 3.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 5.1": {
     "title": "Leadership and commitment",
@@ -62,7 +74,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.3", "MAP 1.4"],
+    "iso_27090": ["ISO_IEC_27090:5.2"]
   },
   "ISO_IEC_42001:Clause 5.2": {
     "title": "AI policy",
@@ -75,7 +90,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 2.3", "MAP 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 5.3": {
     "title": "Roles, responsibilities and authorities",
@@ -88,7 +106,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 6.1.1": {
     "title": "General",
@@ -101,7 +122,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "MAP 1.5", "MEASURE 1.1", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 6.1.2": {
     "title": "AI risk assessment",
@@ -118,7 +142,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "GOVERN 1.4", "MAP 5.1", "MEASURE 1.1", "MEASURE 1.3", "MEASURE 2.8", "MANAGE 1.2", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:5.6"]
   },
   "ISO_IEC_42001:Clause 6.1.3": {
     "title": "AI risk treatment",
@@ -135,7 +162,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "GOVERN 1.4", "MANAGE 1.2", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:7.2"]
   },
   "ISO_IEC_42001:Clause 6.1.4": {
     "title": "AI system impact assessment",
@@ -148,7 +178,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.2", "MAP 1.1", "MANAGE 1.2", "MANAGE 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 6.2": {
     "title": "AI objectives and planning to achieve them",
@@ -161,7 +194,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1", "MAP 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 6.3": {
     "title": "Planning of changes",
@@ -174,7 +210,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": [],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 7.1": {
     "title": "Resources",
@@ -187,7 +226,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 2.1", "MANAGE 2.1", "MANAGE 2.2"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 7.2": {
     "title": "Competence",
@@ -200,7 +242,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4"],
+    "nist_ai_rmf": ["GOVERN 2.1", "GOVERN 2.2", "GOVERN 3.2", "MAP 1.2", "MAP 3.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 7.3": {
     "title": "Awareness",
@@ -213,7 +258,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MAP 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 7.4": {
     "title": "Communication",
@@ -226,7 +274,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "nist_ai_rmf": ["GOVERN 2.1", "GOVERN 4.2", "MAP 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 7.5": {
     "title": "Documented information",
@@ -239,7 +290,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 1.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 8.1": {
     "title": "Operational planning and control",
@@ -252,7 +306,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": [],
+    "iso_27090": ["ISO_IEC_27090:7.3"]
   },
   "ISO_IEC_42001:Clause 8.2": {
     "title": "AI risk assessment",
@@ -265,7 +322,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.5", "MAP 3.2", "MEASURE 2.6", "MEASURE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.6"]
   },
   "ISO_IEC_42001:Clause 8.3": {
     "title": "AI risk treatment",
@@ -278,7 +338,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.4", "GOVERN 1.5", "MAP 3.2"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 8.4": {
     "title": "AI system impact assessment",
@@ -291,7 +354,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 27"],
+    "nist_ai_rmf": ["GOVERN 1.5", "MAP 3.2", "MEASURE 3.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 9.1": {
     "title": "Monitoring, measurement, analysis and evaluation",
@@ -304,7 +370,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 12", "Art. 72"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MEASURE 2.4", "MEASURE 4.1", "MEASURE 4.2"],
+    "iso_27090": ["ISO_IEC_27090:7.4"]
   },
   "ISO_IEC_42001:Clause 9.2": {
     "title": "Internal audit",
@@ -317,7 +386,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 43"],
+    "nist_ai_rmf": ["MEASURE 1.3", "MEASURE 4.2", "MANAGE 4.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 9.3": {
     "title": "Management review",
@@ -330,7 +402,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.3", "GOVERN 3.2", "MEASURE 4.3", "MANAGE 1.2", "MANAGE 4.2", "MANAGE 4.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 10.1": {
     "title": "Continual improvement",
@@ -343,7 +418,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 72"],
+    "nist_ai_rmf": ["MEASURE 3.2", "MANAGE 2.2"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:Clause 10.2": {
     "title": "Nonconformity and corrective action",
@@ -356,7 +434,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 73"],
+    "nist_ai_rmf": ["MANAGE 2.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.2.2": {
     "title": "AI policy",
@@ -369,7 +450,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.1", "GOVERN 1.2", "MAP 4.1"],
+    "iso_27090": ["ISO_IEC_27090:5.2"]
   },
   "ISO_IEC_42001:A.2.3": {
     "title": "Alignment with other organizational policies",
@@ -382,7 +466,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["MEASURE 2.7", "MEASURE 2.10"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.2.4": {
     "title": "Review of the AI policy",
@@ -395,7 +482,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.3.2": {
     "title": "AI roles and responsibilities",
@@ -408,7 +498,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17", "Art. 26"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MEASURE 2.7"],
+    "iso_27090": ["ISO_IEC_27090:5.2"]
   },
   "ISO_IEC_42001:A.3.3": {
     "title": "Reporting of concerns",
@@ -421,7 +514,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["MANAGE 2.2"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.4.2": {
     "title": "Resource documentation",
@@ -434,7 +530,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MEASURE 2.1", "MANAGE 2.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.4.3": {
     "title": "Data resources",
@@ -447,7 +546,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.4.4": {
     "title": "Tooling resources",
@@ -460,7 +562,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MANAGE 3.2"],
+    "iso_27090": ["ISO_IEC_27090:7.6"]
   },
   "ISO_IEC_42001:A.4.5": {
     "title": "System and computing resources",
@@ -473,7 +578,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MEASURE 2.12"],
+    "iso_27090": ["ISO_IEC_27090:B.2"]
   },
   "ISO_IEC_42001:A.4.6": {
     "title": "Human resources",
@@ -486,7 +594,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4", "Art. 14"],
+    "nist_ai_rmf": ["GOVERN 1.6", "GOVERN 3.1", "GOVERN 3.2", "MAP 1.2", "MAP 2.1", "MAP 3.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.5.2": {
     "title": "AI system impact assessment process",
@@ -499,7 +610,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.1", "MAP 1.1", "MAP 1.4", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MAP 5.1", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.7", "MEASURE 2.10"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.5.3": {
     "title": "Documentation of AI system impact assessments",
@@ -512,7 +626,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 27"],
+    "nist_ai_rmf": ["GOVERN 3.2", "GOVERN 5.1", "MAP 1.1", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MANAGE 1.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.5.4": {
     "title": "Assessing AI system impact on individuals or groups of individuals",
@@ -525,7 +642,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 27"],
+    "nist_ai_rmf": ["GOVERN 3.1", "GOVERN 4.1", "GOVERN 4.2", "GOVERN 5.1", "GOVERN 5.2", "MAP 1.1", "MAP 1.6", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.8", "MEASURE 2.11", "MEASURE 4.1", "MANAGE 1.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.5.5": {
     "title": "Assessing societal impacts of AI systems",
@@ -538,7 +658,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.2", "GOVERN 5.2", "MAP 1.1", "MAP 1.6", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.8", "MEASURE 2.11", "MEASURE 2.12", "MEASURE 4.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.6.1.2": {
     "title": "Objectives for responsible development of AI system",
@@ -551,7 +674,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 4.1", "GOVERN 4.3", "MEASURE 2.7", "MEASURE 2.8", "MANAGE 2.2"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.6.1.3": {
     "title": "Processes for responsible AI system design and development",
@@ -564,7 +690,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 3.2", "GOVERN 4.1", "GOVERN 4.3", "GOVERN 5.2", "MAP 2.3", "MAP 3.5", "MAP 5.2", "MANAGE 1.1", "MANAGE 2.2", "MANAGE 2.4"],
+    "iso_27090": ["ISO_IEC_27090:5.4"]
   },
   "ISO_IEC_42001:A.6.2.2": {
     "title": "AI system requirements and specification",
@@ -577,7 +706,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 1.4", "MAP 1.6"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.6.2.3": {
     "title": "Documentation of AI system design and development",
@@ -590,7 +722,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 2.1", "MEASURE 2.7"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.3", "ISO_IEC_27090:6.4", "ISO_IEC_27090:6.5", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.7", "ISO_IEC_27090:6.8", "ISO_IEC_27090:6.9", "ISO_IEC_27090:6.10"]
   },
   "ISO_IEC_42001:A.6.2.4": {
     "title": "AI system verification and validation",
@@ -603,7 +738,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.3", "MEASURE 1.2", "MEASURE 2.1", "MEASURE 2.2", "MEASURE 2.5", "MEASURE 2.6", "MEASURE 2.13", "MEASURE 4.1", "MANAGE 1.1", "MANAGE 2.2", "MANAGE 4.2"],
+    "iso_27090": ["ISO_IEC_27090:5.4", "ISO_IEC_27090:5.7", "ISO_IEC_27090:6.3"]
   },
   "ISO_IEC_42001:A.6.2.5": {
     "title": "AI system deployment",
@@ -616,7 +754,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 43"],
+    "nist_ai_rmf": ["MEASURE 2.5", "MEASURE 2.9"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.6.2.6": {
     "title": "AI system operation and monitoring",
@@ -629,7 +770,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26", "Art. 72"],
+    "nist_ai_rmf": ["GOVERN 1.7", "GOVERN 4.3", "GOVERN 5.2", "MAP 5.2", "MEASURE 2.3", "MEASURE 2.4", "MEASURE 2.6", "MEASURE 2.13", "MEASURE 3.2", "MEASURE 4.3", "MANAGE 2.2", "MANAGE 3.2", "MANAGE 4.1", "MANAGE 4.2", "MANAGE 4.3"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.3", "ISO_IEC_27090:6.4", "ISO_IEC_27090:6.5", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.7", "ISO_IEC_27090:6.8", "ISO_IEC_27090:6.9", "ISO_IEC_27090:6.10", "ISO_IEC_27090:7.3", "ISO_IEC_27090:7.4", "ISO_IEC_27090:7.5"]
   },
   "ISO_IEC_42001:A.6.2.7": {
     "title": "AI system technical documentation",
@@ -646,7 +790,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.2", "MAP 2.3", "MAP 3.5", "MAP 4.2", "MEASURE 2.1", "MEASURE 2.5", "MEASURE 2.9", "MEASURE 4.3", "MANAGE 1.4", "MANAGE 2.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.6.2.8": {
     "title": "AI system recording of event logs",
@@ -659,7 +806,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 12"],
+    "nist_ai_rmf": ["MEASURE 2.4", "MEASURE 2.6", "MEASURE 3.2"],
+    "iso_27090": ["ISO_IEC_27090:7.5"]
   },
   "ISO_IEC_42001:A.7.2": {
     "title": "Data for development and enhancement of AI system",
@@ -672,7 +822,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.7", "MEASURE 2.8", "MEASURE 2.10", "MANAGE 2.2"],
+    "iso_27090": ["ISO_IEC_27090:B.6"]
   },
   "ISO_IEC_42001:A.7.3": {
     "title": "Acquisition of data",
@@ -685,7 +838,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.10"],
+    "iso_27090": ["ISO_IEC_27090:6.2"]
   },
   "ISO_IEC_42001:A.7.4": {
     "title": "Quality of data for AI systems",
@@ -698,7 +854,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:6.2"]
   },
   "ISO_IEC_42001:A.7.5": {
     "title": "Data provenance",
@@ -711,7 +870,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.9"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.11"]
   },
   "ISO_IEC_42001:A.7.6": {
     "title": "Data preparation",
@@ -724,7 +886,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.8.2": {
     "title": "System documentation and information for users",
@@ -741,7 +906,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.2", "MAP 3.5", "MAP 4.2", "MEASURE 2.5", "MEASURE 2.9", "MEASURE 3.3", "MEASURE 4.2", "MANAGE 1.4", "MANAGE 2.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.8.3": {
     "title": "External reporting",
@@ -754,7 +922,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 73"],
+    "nist_ai_rmf": ["GOVERN 4.3", "GOVERN 5.1", "GOVERN 5.2", "MAP 5.2", "MEASURE 3.3", "MEASURE 4.2", "MANAGE 4.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.8.4": {
     "title": "Communication of incidents",
@@ -767,7 +938,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 73"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MEASURE 2.1", "MEASURE 3.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.8.5": {
     "title": "Information for interested parties",
@@ -780,7 +954,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "nist_ai_rmf": ["GOVERN 4.2", "GOVERN 4.3", "MANAGE 4.3"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.9.2": {
     "title": "Processes for responsible use of AI systems",
@@ -793,7 +970,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26"],
+    "nist_ai_rmf": ["GOVERN 4.1", "MAP 4.1", "MANAGE 1.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.9.3": {
     "title": "Objectives for responsible use of AI system",
@@ -806,7 +986,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 3.2", "GOVERN 4.1", "MAP 2.2", "MEASURE 2.7", "MEASURE 2.8", "MANAGE 1.1"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.9.4": {
     "title": "Intended use of the AI system",
@@ -819,7 +1002,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 26"],
+    "nist_ai_rmf": ["MAP 1.4", "MAP 4.1", "MANAGE 1.1", "MANAGE 2.4"],
+    "iso_27090": []
   },
   "ISO_IEC_42001:A.10.2": {
     "title": "Allocating responsibilities",
@@ -832,7 +1018,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": ["GOVERN 6.1", "GOVERN 6.2", "MANAGE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.5"]
   },
   "ISO_IEC_42001:A.10.3": {
     "title": "Suppliers",
@@ -845,7 +1034,10 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 4.1", "GOVERN 6.1", "GOVERN 6.2", "MAP 4.2", "MANAGE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:6.7", "ISO_IEC_27090:B.3", "ISO_IEC_27090:B.7"]
   },
   "ISO_IEC_42001:A.10.4": {
     "title": "Customers",
@@ -858,6 +1050,9 @@
     ],
     "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
     "confidence": "low",
-    "needs_founder_review": true
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 25"],
+    "nist_ai_rmf": ["GOVERN 5.1", "GOVERN 5.2", "MAP 1.4", "MANAGE 4.1"],
+    "iso_27090": []
   }
 }

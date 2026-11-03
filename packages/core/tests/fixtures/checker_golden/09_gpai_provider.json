@@ -26,6 +26,14 @@
       "s1:in_scope",
       "e1:ai_literacy",
       "r1:gpai"
-    ]
+    ],
+    "obligation_basis": {
+      "ai_literacy": [
+        "e1_entity_type"
+      ],
+      "gpai_provider": [
+        "s1_gpai"
+      ]
+    }
   }
 }

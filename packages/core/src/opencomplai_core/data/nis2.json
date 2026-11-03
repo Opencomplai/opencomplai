@@ -1,0 +1,338 @@
+{
+  "NIS2:Art. 20(1)": {
+    "title": "Governance: management approves and oversees the security measures",
+    "note": "Evidence that the management body formally approves the cybersecurity risk-management measures, oversees how they are rolled out, and accepts accountability for them (the Implementing Regulation's annex 1.1, 1.2 and 2.3 add detail for digital-infrastructure entities).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 20(1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_27001": ["A.5.2", "A.5.4"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 20(2)": {
+    "title": "Governance: cybersecurity training for management bodies",
+    "note": "Evidence that members of the management body take regular training that lets them judge cybersecurity risks and the organisation's practices, and that similar training is offered to staff.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 20(2)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.3"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(1)": {
+    "title": "Appropriate and proportionate cybersecurity risk-management measures",
+    "note": "Evidence that technical, operational and organisational security measures are chosen in proportion to the organisation's risk exposure, size and incident impact, to protect its network and information systems and their users.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_27001": ["A.5.1", "A.5.36"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(a)": {
+    "title": "Policies on risk analysis and information system security",
+    "note": "Evidence of a maintained risk-analysis process and an information-system security policy that management approves and reviews (Implementing Regulation annex 1 and 2).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(a)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_27001": ["A.5.1", "A.5.2", "A.5.3", "A.5.4", "A.5.7", "A.5.19", "A.5.20", "A.5.21", "A.5.31", "A.5.35", "A.5.36", "A.8.34"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 1.1, 1.2, 2.1, 2.2, 2.3 combined); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(b)": {
+    "title": "Incident handling",
+    "note": "Evidence of an incident-handling process covering monitoring and logging, reporting of events, assessment, response and post-incident review (Implementing Regulation annex 3).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(b)"
+      }
+    ],
+    "eu_ai_act": ["Art. 26", "Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.25", "A.5.26", "A.5.27", "A.5.28", "A.6.8", "A.8.15", "A.8.16", "A.8.17"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 3.1-3.6 combined); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(c)": {
+    "title": "Business continuity, backup, disaster recovery and crisis management",
+    "note": "Evidence of business continuity, disaster recovery, backup and crisis-management plans that are kept current and recovery-tested (Implementing Regulation annex 4; annex 13 on utilities and physical threats also applies).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(c)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.26", "A.5.29", "A.5.30", "A.7.11", "A.8.13", "A.8.14"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 4.1-4.3 combined, plus A.7.11 from annex 13.1); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(d)": {
+    "title": "Supply chain security, including direct suppliers and service providers",
+    "note": "Evidence that the security of suppliers and service providers is managed through a policy, a supplier directory and security terms in contracts (Implementing Regulation annex 5).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(d)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.20", "A.5.21", "A.5.22", "A.8.30"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 5.1 and 5.2 combined); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(e)": {
+    "title": "Security in systems acquisition, development, maintenance and vulnerabilities",
+    "note": "Evidence of security requirements when buying or building systems, secure development, change and patch management, testing, network security and a vulnerability handling and disclosure process (Implementing Regulation annex 6).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(e)"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.21", "A.5.23", "A.5.32", "A.7.13", "A.8.7", "A.8.8", "A.8.9", "A.8.16", "A.8.20", "A.8.22", "A.8.25", "A.8.29", "A.8.31", "A.8.32", "A.8.33", "A.8.34"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 6.1-6.10 combined); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(f)": {
+    "title": "Assessing the effectiveness of cybersecurity risk-management measures",
+    "note": "Evidence of a routine for checking whether the security measures work, such as audits, testing and metrics, with results reported to management (Implementing Regulation annex 7).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(f)"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.35", "A.5.36"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links are the project's own judgement (no ENISA mapping for this point); ENISA maps annex 7 only to ISO 27001 clauses 6.2, 9.1 and 9.3, not to Annex A, so A.5.35 and A.5.36 (which ENISA attaches to annex 2.2 and 2.3) are the project's judgement here; EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(g)": {
+    "title": "Basic cyber hygiene practices and cybersecurity training",
+    "note": "Evidence of staff awareness, basic cyber hygiene practices and role-appropriate security training (Implementing Regulation annex 8).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(g)"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.6.3", "A.8.7"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 8.1 and 8.2 combined); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(h)": {
+    "title": "Cryptography and, where appropriate, encryption",
+    "note": "Evidence of a policy that sets when and how cryptography and encryption are used, including key management (Implementing Regulation annex 9).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(h)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.31", "A.8.24"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 9.1); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(i)": {
+    "title": "Human resources security, access control and asset management",
+    "note": "Evidence of staff vetting and leaver handling, access control with least privilege, and a classified asset inventory (Implementing Regulation annex 10, 11, 12 and 13); this one point bundles three topics and could be split.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(i)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.5.10", "A.5.11", "A.5.12", "A.5.13", "A.5.15", "A.5.16", "A.5.17", "A.5.18", "A.6.1", "A.6.2", "A.6.4", "A.6.5", "A.7.1", "A.7.2", "A.7.3", "A.7.4", "A.7.5", "A.8.2", "A.8.3"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids) (annex 10-13, pruned: A.5.3, A.5.14, A.6.3, A.7.7, A.7.10, A.7.11, A.8.5, A.8.18, A.8.21 and A.8.24 are left out because they sit on other rows or are secondary there); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(2)(j)": {
+    "title": "Multi-factor authentication and secured communications",
+    "note": "Evidence that multi-factor or continuous authentication and secured voice, video, text and emergency communications are used where appropriate (Implementing Regulation annex 11.7 covers multi-factor only; it has no section on secured communications).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(2)(j)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.8.5"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links come in part from the official crosswalk in ENISA Technical Implementation Guidance on Implementing Regulation (EU) 2024/2690, mapping table v1.2 of 21.08.2025 (annex section -> Annex A ids); A.8.5 is from annex 11.7, A.5.14 (information transfer) is the project's judgement for the secured-communications part, which the annex does not address; EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(3)": {
+    "title": "Supplier vulnerabilities and quality when choosing supply chain measures",
+    "note": "Evidence that supplier choices take into account each direct supplier's known vulnerabilities, product quality and secure development practice, and any EU-level coordinated supply chain risk assessment.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(3)"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21", "A.5.22"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); the ids are those ENISA gives for annex 5.1 and 5.2, attached to this paragraph by the project's judgement; EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 21(4)": {
+    "title": "Corrective measures when the Art. 21(2) measures are not met",
+    "note": "Evidence that when a gap against the Art. 21(2) measures is found, corrective action is taken without undue delay and tracked to closure (Implementing Regulation annex 2.3 has corrective actions on review results).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 21(4)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.35", "A.5.36"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(1)": {
+    "title": "Notifying the CSIRT or authority of significant incidents",
+    "note": "Evidence that the organisation can tell which incidents are significant for it and notifies its CSIRT or competent authority without undue delay, and affected service recipients where appropriate (Implementing Regulation Art. 3 sets criteria for in-scope digital entities).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(1)"
+      }
+    ],
+    "eu_ai_act": ["Art. 26", "Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.24", "A.5.25"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; annex section named in the note is from Commission Implementing Regulation (EU) 2024/2690, OJ L, 18.10.2024 (CELEX 32024R2690); ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(2)": {
+    "title": "Informing service recipients of significant cyber threats",
+    "note": "Evidence that recipients of the service who may be affected by a significant cyber threat are told what measures or remedies they can apply, and of the threat itself where appropriate.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(2)"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.26"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(4)(a)": {
+    "title": "Early warning within 24 hours",
+    "note": "Evidence of a process to send an early warning within 24 hours of becoming aware of a significant incident, saying whether malicious acts are suspected or cross-border impact is possible.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(4)(a)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.26", "A.6.8"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(4)(b)": {
+    "title": "Incident notification within 72 hours",
+    "note": "Evidence of a process to send an incident notification within 72 hours that updates the early warning with an initial assessment of severity and impact and, where known, indicators of compromise.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(4)(b)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.25", "A.5.26"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(4)(c)": {
+    "title": "Intermediate report on request",
+    "note": "Evidence that a status-update report on an ongoing significant incident can be produced when the CSIRT or authority asks for one.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(4)(c)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.26"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "NIS2:Art. 23(4)(d)": {
+    "title": "Final report within one month",
+    "note": "Evidence of a process to deliver a final report within one month of the incident notification (or a progress report then and a final one later if the incident is still ongoing), covering root cause, mitigation and impact.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "NIS2:Art. 23(4)(d)"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_27001": ["A.5.5", "A.5.27", "A.5.28"],
+    "source": "Directive (EU) 2022/2555 (NIS2), OJ L 333, 27.12.2022, p. 80 (CELEX 32022L2555); id as numbered in the Directive; the Directive has no headings below article level, so the title is the project's short description of the paragraph or list point; ISO 27001 links are the project's own judgement (no ENISA mapping for this point); EU AI Act links are the project's own judgement; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

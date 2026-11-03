@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to Opencomplai — an open-source AI compliance toolkit for AI engineering teams. It evaluates the EU AI Act natively and derives a NIST AI RMF 1.0 view from the same evidence (see [Frameworks](../frameworks/index.md)). EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only.
+Welcome to Opencomplai — an open-source AI compliance toolkit for AI engineering teams. It evaluates the EU AI Act natively and derives a NIST AI RMF 1.0 view from the same evidence (see [Frameworks](../frameworks/index.md)). EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
 
 ## What is Opencomplai?
 

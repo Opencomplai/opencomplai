@@ -27,6 +27,11 @@
       "hr:high_risk",
       "s1:in_scope",
       "r3:prohibited"
-    ]
+    ],
+    "obligation_basis": {
+      "prohibited": [
+        "r3_prohibited"
+      ]
+    }
   }
 }

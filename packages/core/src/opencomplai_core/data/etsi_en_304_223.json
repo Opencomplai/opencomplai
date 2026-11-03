@@ -1,0 +1,1206 @@
+{
+  "ETSI_EN_304_223:5.1.1-1": {
+    "title": "P1 Awareness: AI content in security training",
+    "note": "Evidence that the staff training plan contains an AI-threat module, its revision history shows updates as the threat picture shifted, and attendance records exist. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.1-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.6.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.1-1.1": {
+    "title": "P1 Awareness: Training matched to each role",
+    "note": "Evidence that course material or a role matrix shows which AI security topics each job family receives, for example separate tracks for engineers and support staff. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.1-1.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.6.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.1-2": {
+    "title": "P1 Awareness: Staff stay current on AI threats",
+    "note": "Evidence that staff are briefed on new AI vulnerabilities, shown by briefing notes or awareness-campaign records that also pass on known countermeasures. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.1-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.5.7", "A.6.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.1-2.1": {
+    "title": "P1 Awareness: Threat updates via several channels",
+    "note": "Recommended: evidence that AI threat news is distributed by more than one route, such as a mailing list plus an intranet page, shown by sent items or page history. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.1-2.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.1-2.2": {
+    "title": "P1 Awareness: Secure AI coding training for developers",
+    "note": "Evidence that engineers completed courses or workshops on building AI systems securely, shown by syllabi and completion records. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.1-2.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_27001": ["A.6.3", "A.8.28"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-1": {
+    "title": "P2 Secure design: Assess need and risk before building",
+    "note": "Evidence that a pre-project assessment record states the problem to be solved, lists the AI security exposures and sets out the mitigations chosen, dated before build approval. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.5.8"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-1.1": {
+    "title": "P2 Secure design: Data owner joins requirements talks",
+    "note": "Evidence that meeting notes or a requirements document show the in-house data owner took part when the system's data needs were decided. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-2": {
+    "title": "P2 Secure design: Withstands attacks and failures",
+    "note": "Evidence that design documents and test results show the system was built to tolerate hostile inputs, malformed requests and component failures. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.27"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-3": {
+    "title": "P2 Secure design: Audit trail of models, data and prompts",
+    "note": "Evidence that a traceable history exists for each model, dataset and prompt the system uses, covering how it was run and changed through its life. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 12"],
+    "iso_27001": ["A.8.15", "A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-4": {
+    "title": "P2 Secure design: Risk assessment of external components",
+    "note": "Evidence that each third-party component has a recorded security review that looks at AI-specific hazards, produced through the normal supplier-vetting routine. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-5": {
+    "title": "P2 Secure design: Use fits data sensitivity",
+    "note": "Evidence that a record links the planned use of the system to the sensitivity classification of its training data and the protections applied to that data. Applies to: Data Custodians.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.12"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-5.1": {
+    "title": "P2 Secure design: Staff encouraged to flag AI risks",
+    "note": "Recommended: evidence that staff have an easy way to raise AI security worries, such as a reporting channel, with examples of reports received and handled. Applies to: any organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-5.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.8"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-6": {
+    "title": "P2 Secure design: Least privilege on connected systems",
+    "note": "Evidence that an access review lists what the AI system can reach in connected systems, justifies each permission as necessary and carries a risk rating. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-6"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.15", "A.8.2"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.2-7": {
+    "title": "P2 Secure design: Due diligence on external providers",
+    "note": "Evidence that supplier due-diligence files exist for each outside AI provider, including a check of whether the provider follows this standard. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.2-7"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-1": {
+    "title": "P3 Threats and risks: Threat modelling and risk management",
+    "note": "Evidence that a threat model document for the AI system exists, with review dates, covering attacks on models and data such as poisoning, inversion and membership inference. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_threat_model",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_27001": ["A.5.7", "A.8.27"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-1.1": {
+    "title": "P3 Threats and risks: Repeat when settings change",
+    "note": "Evidence that threat model revision records tie each update to a new or changed configuration option or setting. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-1.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_threat_model",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.8.9", "A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-1.2": {
+    "title": "P3 Threats and risks: Risk from surplus model capability",
+    "note": "Evidence that a risk entry covers model features the deployment does not use, such as an idle image or audio capability, with the treatment decided. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-1.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.8.27"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-1.3": {
+    "title": "P3 Threats and risks: Controls chosen against risk tolerance",
+    "note": "Evidence that the risk register links each identified risk to a chosen control and notes how cost and risk tolerance influenced the choice. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-1.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-2": {
+    "title": "P3 Threats and risks: Unresolved threats passed down the chain",
+    "note": "Evidence that a hand-off record shows threats the developer could not fix were passed to the operator, and the operator's user notice describes them and suggests actions. Applies to: Developers; System Operators; End-users.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-3": {
+    "title": "P3 Threats and risks: Assurance from external risk owners",
+    "note": "Recommended: evidence that where another party carries an AI security risk, the operator holds assurance from that party, such as an attestation or audit report. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.22"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.3-4": {
+    "title": "P3 Threats and risks: Ongoing review against risk appetite",
+    "note": "Recommended: evidence that infrastructure reviews happen on a schedule tied to the organisation's stated risk appetite, with minutes noting residual AI risk that was accepted. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.3-4"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_27001": ["A.8.16"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.4-1": {
+    "title": "P4 Human responsibility: Human oversight capability",
+    "note": "Recommended: evidence that the system has features for a person to supervise, step in or override it, such as a review queue or stop control, plus upkeep records. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.4-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 14"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.4-2": {
+    "title": "P4 Human responsibility: Outputs easy for humans to judge",
+    "note": "Recommended: evidence that reviewers can judge outputs easily, shown by explanation views, confidence information or interpretability reports. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.4-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 14"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.4-3": {
+    "title": "P4 Human responsibility: Technical measures behind oversight",
+    "note": "Evidence that verification records exist for the technical controls that make oversight effective, such as override tests, along with their maintenance history. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.4-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 14"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.4-4": {
+    "title": "P4 Human responsibility: Check data owner's controls were built in",
+    "note": "Recommended: evidence that a traceability matrix maps each control the data owner requires to the place it appears in the build. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.4-4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.29"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.1.4-5": {
+    "title": "P4 Human responsibility: End-users told of prohibited uses",
+    "note": "Recommended: evidence that users are told which activities the system must not be used for, shown by acceptable-use text or onboarding material. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.1.4-5"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-1": {
+    "title": "P5 Assets: Asset inventory with dependencies",
+    "note": "Evidence that an asset inventory lists models, datasets, pipelines and services and records how they depend on each other. Applies to: Developers; Data Custodians; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-2": {
+    "title": "P5 Assets: Track, authenticate and version assets",
+    "note": "Evidence that tooling records show AI assets are versioned, verified for authenticity and access-protected, for instance through a registry or signed artefacts. Applies to: Developers; Data Custodians; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9", "A.8.9"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-3": {
+    "title": "P5 Assets: Recovery plans cover AI attacks",
+    "note": "Evidence that the disaster recovery plan has scenarios for attacks specific to AI, such as tampered training data or a swapped model, with exercise results. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.30", "A.8.13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-3.1": {
+    "title": "P5 Assets: Restorable known-good state",
+    "note": "Recommended: evidence that a trusted earlier version of the system can be brought back, shown by a successful restore test. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-3.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-4": {
+    "title": "P5 Assets: Protect sensitive training and test data",
+    "note": "Evidence that access controls and permission lists cover training and test datasets, with logs showing who touched them. Applies to: Developers; Data Custodians; System Operators; End-users.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-4"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.15", "A.8.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-4.1": {
+    "title": "P5 Assets: Check and sanitise data and inputs",
+    "note": "Evidence that data validation and cleansing records exist for training inputs, and the same steps were rerun when the model was retrained or revised. Applies to: Developers; Data Custodians; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-4.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 15"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.1-4.2": {
+    "title": "P5 Assets: Protect confidential data and weights",
+    "note": "Evidence that a protection scheme, for example encryption or restricted storage, covers confidential datasets and model weight files. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.1-4.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.3", "A.8.24"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-1": {
+    "title": "P6 Infrastructure: Access control for APIs, models and data",
+    "note": "Evidence that an access control review covering interfaces, models, datasets and pipelines exists, with the resulting measures documented. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.15", "A.5.18", "A.8.3"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-2": {
+    "title": "P6 Infrastructure: Controls on externally offered APIs",
+    "note": "Evidence that configuration or code shows safeguards on the public model API, such as request quotas, with test results. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.20"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-3": {
+    "title": "P6 Infrastructure: Separate development and tuning environments",
+    "note": "Evidence that architecture diagrams and access settings show build and tuning work happens in separate, tightly permissioned environments. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.15", "A.8.31"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-4": {
+    "title": "P6 Infrastructure: Published vulnerability disclosure policy",
+    "note": "Evidence that a vulnerability disclosure policy is on the public website with a reporting address. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.6.8", "A.8.8"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-5": {
+    "title": "P6 Infrastructure: Tested incident and recovery plans",
+    "note": "Evidence that an AI incident response plan and a recovery plan exist, with records of exercises and updates. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-5"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 73"],
+    "iso_27001": ["A.5.24", "A.5.26"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.2-6": {
+    "title": "P6 Infrastructure: Cloud contracts back these requirements",
+    "note": "Recommended: evidence that cloud provider agreements contain security terms matching these requirements, shown by contract clauses. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.2-6"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.20", "A.5.23"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-1": {
+    "title": "P7 Supply chain: Secure software supply-chain process",
+    "note": "Evidence that the build and release process for AI components uses controlled sources, integrity checks and dependency tracking, shown by pipeline settings. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.21"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-2": {
+    "title": "P7 Supply chain: Justify weakly documented components",
+    "note": "Evidence that a written rationale exists for each model or component adopted despite thin documentation or weak security, such as a note that no alternative was available. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.21"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-2.1": {
+    "title": "P7 Supply chain: Mitigations for such components",
+    "note": "Evidence that a risk assessment and compensating controls are on file for each such component. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-2.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 25"],
+    "iso_27001": ["A.5.21"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-2.2": {
+    "title": "P7 Supply chain: Share the justification with end-users",
+    "note": "Evidence that the rationale for using weakly documented components is visible to end-users, for example on a published page. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-2.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-3": {
+    "title": "P7 Supply chain: Re-run evaluations on released models",
+    "note": "Evidence that evaluation reports exist from tests rerun on each externally released model before the organisation adopted it. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.29"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.3-4": {
+    "title": "P7 Supply chain: Advance notice of model updates",
+    "note": "Evidence that a notice went to end-users ahead of a model change, with a send date before the change date. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.3-4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-1": {
+    "title": "P8 Documentation: Audit trail of design and maintenance",
+    "note": "Evidence that design and maintenance documentation exists as a dated record and has been shared with downstream operators or data owners. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "iso_27001": ["A.5.37"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-1.1": {
+    "title": "P8 Documentation: Security-relevant detail in the record",
+    "note": "Recommended: evidence that the documentation records security-relevant facts, for instance where training data came from, intended scope, known limits, guardrails and likely failure modes. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-1.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 11"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-1.2": {
+    "title": "P8 Documentation: Hashes for released model components",
+    "note": "Evidence that a published hash or checksum list accompanies each model file shared with others. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.24"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-2": {
+    "title": "P8 Documentation: Provenance of public training data",
+    "note": "Evidence that provenance notes for web-sourced training data describe how it was gathered, where it originated and how the model uses it. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 11"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-2.1": {
+    "title": "P8 Documentation: Source and time of collected data",
+    "note": "Recommended: evidence that each public data source is logged with at least a locator such as a web address and a collection timestamp. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-2.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.4-3": {
+    "title": "P8 Documentation: Log of prompt and configuration changes",
+    "note": "Recommended: evidence that edits to system prompts and other behaviour-changing settings leave a change log, such as version control history. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.4-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "iso_27001": ["A.8.9", "A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-1": {
+    "title": "P9 Testing: Security assessment before release",
+    "note": "Evidence that security assessment reports exist for every model, application and system handed to operators or end-users before release. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_27001": ["A.8.29"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-2": {
+    "title": "P9 Testing: Operator testing before deployment",
+    "note": "Evidence that pre-go-live test reports prepared by the operator exist, with signs of developer assistance such as shared test plans. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.29"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-2.1": {
+    "title": "P9 Testing: Independent security testers",
+    "note": "Recommended: evidence that security testing was done by testers outside the build team who have relevant AI skills, such as a third-party test report. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-2.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.5.35", "A.8.29"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-3": {
+    "title": "P9 Testing: Share test findings with operators",
+    "note": "Recommended: evidence that the developer sent testing and evaluation results on to operators, for example a shared results pack. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-4": {
+    "title": "P9 Testing: Outputs do not expose model or data",
+    "note": "Recommended: evidence that probing for extraction of model internals or training records was run against outputs, with results. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.2.5-4.1": {
+    "title": "P9 Testing: Outputs give no unintended control",
+    "note": "Recommended: evidence that tests checked whether crafted inputs or outputs could steer the system beyond its intended behaviour, such as injection test results. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.2.5-4.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.3.1-1": {
+    "title": "P10 End-user comms: Tell end-users how data is used",
+    "note": "Evidence that a data-use statement shown to users explains where their data goes, who can view it and whether it is used to retrain the model; external developers gave operators the same facts. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.3.1-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "iso_27001": ["A.5.34"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.3.1-2": {
+    "title": "P10 End-user comms: Usage and configuration guidance",
+    "note": "Evidence that user guides or help content cover operating, connecting and configuring the system; where the developer is a separate company, it supplied operators with what they need. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.3.1-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.3.1-2.1": {
+    "title": "P10 End-user comms: Guidance on limits and failure modes",
+    "note": "Evidence that the user guide has a section on proper use, known limits and how the system can fail. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.3.1-2.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 13"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.3.1-2.2": {
+    "title": "P10 End-user comms: Announce security-relevant updates",
+    "note": "Evidence that notices or release notes reach users when security-relevant updates ship, written in plain terms. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.3.1-2.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.3.1-3": {
+    "title": "P10 End-user comms: Support users after an incident",
+    "note": "Recommended: evidence that a written procedure for assisting users and affected parties after a security incident is built into customer contracts. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.3.1-3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.24", "A.5.26"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.1-1": {
+    "title": "P11 Updates: Security updates and patches delivered",
+    "note": "Evidence that release notes and patch records show fixes were issued, operators were alerted and the fixes reached end-users. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.1-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.1-1.1": {
+    "title": "P11 Updates: Fallbacks when updates are impossible",
+    "note": "Evidence that a contingency plan describes the stopgap measures used when no patch can be delivered. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.1-1.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_27001": ["A.8.8"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.1-2": {
+    "title": "P11 Updates: Major updates re-tested like new models",
+    "note": "Recommended: evidence that a major version change triggered a fresh round of security tests, as a new model would, shown by test reports tied to the release. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.1-2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 43"],
+    "iso_27001": ["A.8.29", "A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.1-3": {
+    "title": "P11 Updates: Help operators evaluate model changes",
+    "note": "Recommended: evidence that operators can trial model changes early, for example through a beta programme or pinned API versions. Applies to: Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.1-3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.8.32"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.2-1": {
+    "title": "P12 Monitoring: Log system and user actions",
+    "note": "Evidence that retained logs of system events and user actions exist, with a stated purpose of supporting security checks, investigations and fixes. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.2-1"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 26"],
+    "iso_27001": ["A.8.15"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.2-2": {
+    "title": "P12 Monitoring: Analyse logs for anomalies and drift",
+    "note": "Recommended: evidence that log reviews or automated alerts look for odd behaviour, intrusions and output drift, with findings recorded. Applies to: System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.2-2"
+      }
+    ],
+    "eu_ai_act": ["Art. 26", "Art. 72"],
+    "iso_27001": ["A.8.15", "A.8.16"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.2-3": {
+    "title": "P12 Monitoring: Monitor internal states",
+    "note": "Recommended: evidence that internal model or system signals are captured and reviewed where useful for spotting threats, such as telemetry dashboards. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.2-3"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_27001": ["A.8.16"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.4.2-4": {
+    "title": "P12 Monitoring: Monitor model performance over time",
+    "note": "Recommended: evidence that performance metrics are tracked over time and shifts in them are flagged for security review. Applies to: System Operators; Developers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.4.2-4"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 72"],
+    "iso_27001": ["A.8.16"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.5.1-1": {
+    "title": "P13 Disposal: Dispose of assets on transfer",
+    "note": "Evidence that a disposal record exists for training data or model assets that were transferred or shared, showing data custodians took part. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.5.1-1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.14", "A.8.10"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ETSI_EN_304_223:5.5.1-2": {
+    "title": "P13 Disposal: Delete data and configuration at retirement",
+    "note": "Evidence that a deletion record covers the data and configuration details of a retired model or system, with data custodians involved in the sign-off. Applies to: Developers; System Operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ETSI_EN_304_223:5.5.1-2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.7.14", "A.8.10"],
+    "source": "ETSI EN 304 223 V2.1.1 (2025-12), clause 5 provision numbers and principle names as printed; the short provision headings are the project's own; EU AI Act and ISO 27001 links are the project's own judgement; the note is the project's own wording, not standard text",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

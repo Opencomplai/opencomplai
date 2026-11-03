@@ -21,8 +21,7 @@
     ],
     "obligation_ids": [
       "ai_literacy",
-      "deployer_high_risk",
-      "deployer_general"
+      "deployer_high_risk"
     ],
     "determination_path": [
       "gate:yes",
@@ -31,6 +30,20 @@
       "s1:in_scope",
       "s1:high_risk_exception",
       "e1:ai_literacy"
-    ]
+    ],
+    "obligation_basis": {
+      "ai_literacy": [
+        "e1_entity_type"
+      ],
+      "deployer_high_risk": [
+        "e1_entity_type",
+        "hr2_annex_iii",
+        "hr7_profiling",
+        "hr3_art_6_3",
+        "hr4_narrow_task",
+        "hr5_no_significant_risk",
+        "hr6_accessory"
+      ]
+    }
   }
 }

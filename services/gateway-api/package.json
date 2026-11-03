@@ -1,6 +1,6 @@
 {
   "name": "opencomplai-gateway-api",
-  "version": "0.13.2",
+  "version": "0.14.0",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
@@ -18,7 +18,7 @@
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
     "fastify": "^5.12.7",
-    "jose": "^6.2.13",
+    "jose": "^6.2.14",
     "zod": "^4.6.7"
   },
   "optionalDependencies": {
@@ -27,11 +27,11 @@
     "@opentelemetry/exporter-prometheus": "^0.300.0",
     "@opentelemetry/resources": "^3.0.0",
     "@opentelemetry/sdk-node": "^0.300.0",
-    "@opentelemetry/semantic-conventions": "^1.43.0"
+    "@opentelemetry/semantic-conventions": "^1.44.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^26.6.5",
+    "@types/node": "^26.6.6",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
     "@typescript-eslint/parser": "^8.72.0",
     "@vitest/coverage-v8": "^5.0.5",

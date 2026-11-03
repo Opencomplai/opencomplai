@@ -34,8 +34,24 @@ def test_all_packages_have_classifiers_and_urls():
             in classifiers
         ), pkg
         assert "Programming Language :: Python :: 3.11" in classifiers, pkg
+        assert "Intended Audience :: Developers" in classifiers, pkg
+        assert "Topic :: Security" in classifiers, pkg
+        keywords = project.get("keywords", [])
+        assert len(keywords) >= 3, pkg
+        assert "eu-ai-act" in keywords, pkg
+        assert "ai-governance" in keywords, pkg
         for key in ("Homepage", "Documentation", "Source", "Issues"):
             assert key in project.get("urls", {}), (pkg, key)
+
+
+def test_package_specific_classifiers():
+    for pkg in ("cli", "sdk-python"):
+        classifiers = _pyproject(pkg)["project"].get("classifiers", [])
+        assert "Environment :: Console" in classifiers, pkg
+
+    for pkg in ("core", "sdk-python"):
+        classifiers = _pyproject(pkg)["project"].get("classifiers", [])
+        assert "Typing :: Typed" in classifiers, pkg
 
 
 def test_smoke_script_covers_uv_tool_and_pipx():

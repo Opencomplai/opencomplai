@@ -6,11 +6,16 @@ output never drift out of sync.
 
 Run manually after editing either data file:
     python scripts/generate_principle_docs.py
+
+CI checks the page never goes stale with:
+    python scripts/generate_principle_docs.py --check
 """
 
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 from pathlib import Path
 
 from opencomplai_core.gap_report import SCAN_NO_VERDICT
@@ -87,12 +92,40 @@ def render() -> str:
     return "\n".join(lines)
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate docs/src/concepts/eu-ai-act-principles.md from the data files "
+            "in packages/core/src/opencomplai_core/data/."
+        )
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help=(
+            "Compare the committed file with freshly generated content and exit "
+            "non-zero when it is stale, without writing anything."
+        ),
+    )
+    args = parser.parse_args(argv)
+
     content = render()
+    if args.check:
+        if OUTPUT_PATH.exists() and OUTPUT_PATH.read_text(encoding="utf-8") == content:
+            print(f"OK: {OUTPUT_PATH} is up to date")
+            return 0
+        print(
+            f"FAIL: {OUTPUT_PATH} is stale; run "
+            "`python scripts/generate_principle_docs.py` to regenerate",
+            file=sys.stderr,
+        )
+        return 1
+
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(content, encoding="utf-8", newline="\n")
     print(f"Wrote {OUTPUT_PATH}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -216,3 +216,15 @@ def test_resolve_client_ip_uses_forwarded_header_when_trusted(monkeypatch) -> No
     )
     assert resp.status_code == 200
     assert seen_ips == ["203.0.113.7"]
+
+
+def test_rate_limiter_drops_keys_whose_window_has_expired(monkeypatch):
+    """Keys that stop sending requests must not stay in the store forever."""
+    now = [1_000.0]
+    monkeypatch.setattr(checker_routes.time, "time", lambda: now[0])
+    limiter = checker_routes._RateLimiter(window_seconds=60, max_requests=5)
+    for i in range(100):
+        assert limiter.check(f"10.0.0.{i}")
+    now[0] += 61
+    assert limiter.check("10.9.9.9")
+    assert set(limiter._hits) == {"10.9.9.9"}

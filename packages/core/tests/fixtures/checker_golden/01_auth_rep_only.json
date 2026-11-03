@@ -18,6 +18,11 @@
     "determination_path": [
       "gate:yes",
       "e1:authorised_rep"
-    ]
+    ],
+    "obligation_basis": {
+      "authorised_representative": [
+        "e1_entity_type"
+      ]
+    }
   }
 }

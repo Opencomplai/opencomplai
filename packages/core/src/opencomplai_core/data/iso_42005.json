@@ -1,0 +1,322 @@
+{
+  "ISO_IEC_42005:Clause 5.2": {
+    "title": "Documenting the process",
+    "note": "The organisation has a written AI system impact assessment process that people can find, follow and keep current.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:A.5.2", "ISO_IEC_42001:Clause 6.1.4"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.3": {
+    "title": "Integration with other organizational management processes",
+    "note": "The impact assessment process is wired into the organisation's existing risk, management-system and governance routines rather than running alone.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.4"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.4": {
+    "title": "Timing of AI system impact assessment",
+    "note": "The organisation has decided at which life-cycle stages, and after which changes, an AI system gets an impact assessment, and follows that rule.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.4", "ISO_IEC_42001:A.5.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.5": {
+    "title": "Scope of the AI system impact assessment",
+    "note": "Before each assessment starts, the AI system, its uses and the boundaries of what is being assessed are defined.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.5"
+      }
+    ],
+    "eu_ai_act": ["Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:A.5.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.6": {
+    "title": "Allocating responsibilities",
+    "note": "Named roles own carrying out, reviewing and signing off impact assessments, and have the authority to do so.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:Clause 5.3", "ISO_IEC_42001:A.3.2", "ISO_IEC_42001:A.10.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.7": {
+    "title": "Establishing thresholds for sensitive uses, restricted uses and impact scales",
+    "note": "The organisation has set its own thresholds for sensitive and restricted uses and a scale for rating impacts, and applies them consistently.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 5", "Art. 6"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:A.5.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.8": {
+    "title": "Performing the AI system impact assessment",
+    "note": "Impact assessments are actually carried out under the defined process, with the people and information they need.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.8"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.4", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.9": {
+    "title": "Analysing the results of the AI system impact assessment",
+    "note": "Assessment findings are analysed and turned into conclusions that decision-makers can act on.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.9"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.4", "ISO_IEC_42001:A.5.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.10": {
+    "title": "Recording and reporting",
+    "note": "Assessment results are recorded and passed on to the internal and external audiences the organisation has identified.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.10"
+      }
+    ],
+    "eu_ai_act": ["Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.5", "ISO_IEC_42001:A.5.3"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.11": {
+    "title": "Approval process",
+    "note": "A defined approval step exists for impact assessments, and the records show who signed off each one.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.11"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 5.3", "ISO_IEC_42001:A.5.2"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 5.12": {
+    "title": "Monitoring and review",
+    "note": "Assessments are revisited on a schedule and after relevant changes, and the process itself is reviewed to see whether it works.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 5.12"
+      }
+    ],
+    "eu_ai_act": ["Art. 26", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.4", "ISO_IEC_42001:Clause 9.1"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.2": {
+    "title": "Scope of the AI system impact assessment",
+    "note": "Each written assessment states which AI system, uses and period it covers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:A.5.3"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.3": {
+    "title": "AI system information",
+    "note": "Each written assessment describes the AI system: what it does, its purpose, and its intended and unintended uses.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.9.4"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.4": {
+    "title": "Data information and quality",
+    "note": "Each written assessment records what data the system relies on and holds evidence about the quality of that data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_42001": ["ISO_IEC_42001:A.4.3", "ISO_IEC_42001:A.7.4", "ISO_IEC_42001:A.7.5"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.5": {
+    "title": "Algorithm and model information",
+    "note": "Each written assessment records the algorithms and models in use and how they were developed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.5"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.6.2.7"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.6": {
+    "title": "Deployment environment",
+    "note": "Each written assessment records where and under what conditions the system is deployed, including regions, languages and constraints.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.6"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.5"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.7": {
+    "title": "Relevant interested parties",
+    "note": "Each written assessment identifies who is directly affected by the system and which other parties have a stake in it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.2", "ISO_IEC_42001:A.5.4"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.8.2": {
+    "title": "Benefits and harms",
+    "note": "Each written assessment records the benefits and harms the system can reasonably be expected to bring to individuals, groups and society.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.8.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.8.3": {
+    "title": "AI system failures and reasonably foreseeable misuse",
+    "note": "Each written assessment considers what follows when the system fails and when it is misused in ways that could be expected.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.8.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_42005:Clause 6.9": {
+    "title": "Measures to address harms and benefits",
+    "note": "Each written assessment lists the measures chosen to reduce harms and preserve benefits, and the organisation tracks them through.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42005:Clause 6.9"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:Clause 8.3"],
+    "source": "ISO/IEC 42005:2025 (clause id and title checked against the table of contents in the publisher-authorised ANSI webstore preview and the iTeh FDIS sample, Nov 2026; the note is the project's own wording, not standard text)",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

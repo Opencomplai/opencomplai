@@ -86,6 +86,7 @@ def test_shared_golden_vectors_match_oss_engine() -> None:
         )
         assert [i.id for i in result.obligations] == expected["obligation_ids"], name
         assert result.determination_path == expected["determination_path"], name
+        assert result.obligation_basis == expected["obligation_basis"], name
 
 
 def test_shared_golden_vectors_cover_required_categories() -> None:

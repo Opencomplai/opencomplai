@@ -22,6 +22,7 @@
       "e1:provider",
       "s1:in_scope",
       "r2:excluded"
-    ]
+    ],
+    "obligation_basis": {}
   }
 }

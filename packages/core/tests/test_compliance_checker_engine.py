@@ -12,7 +12,7 @@ from opencomplai_core.compliance_checker.models import CheckerSession, EntityTyp
 
 
 def test_checker_version_constant():
-    assert CHECKER_VERSION == "checker-2026-10-14"
+    assert CHECKER_VERSION == "checker-2026-10-26"
 
 
 def test_catalogs_load():
@@ -354,3 +354,78 @@ def test_fria_requires_annex_iii():
     )
     assert result.is_high_risk is True
     assert "fria" not in [o.id for o in result.obligations]
+
+
+# Consistency review 2026-10-26 (CF-01, CF-02, CF-04/06, CF-09, PC-07).
+
+
+def _ids(**answers) -> list[str]:
+    base = {"gate_is_ai_system": True, "s1_in_scope": True}
+    result = evaluate(CheckerSession(answers={**base, **answers}))
+    return [item.id for item in result.obligations]
+
+
+def test_product_manufacturer_keeps_its_obligation_after_modification():
+    ids = _ids(
+        e1_entity_type="product_manufacturer",
+        e3_product_integration="integrated",
+        e2_modifications=True,
+        hr1_annex_i=True,
+        hr8_conformity_assessment=True,
+    )
+    assert ids == ["ai_literacy", "provider_high_risk", "product_manufacturer"]
+
+
+def test_product_manufacturer_with_ai_built_in_gets_ai_literacy():
+    ids = _ids(
+        e1_entity_type="product_manufacturer", e3_product_integration="integrated"
+    )
+    assert ids == ["ai_literacy", "product_manufacturer"]
+
+
+def test_deployer_gets_one_art_26_entry_and_only_when_high_risk():
+    assert _ids(e1_entity_type="deployer") == ["ai_literacy"]
+    high = _ids(e1_entity_type="deployer", hr2_annex_iii=True, hr7_profiling=True)
+    assert high == ["ai_literacy", "deployer_high_risk"]
+
+
+def test_transparency_items_split_by_paragraph_and_role():
+    items = ["interaction", "synthetic_content", "emotion_biometric", "deepfake"]
+    answers = {"r4_transparency": True, "r4_transparency_items": items}
+    assert _ids(e1_entity_type="provider", **answers) == [
+        "ai_literacy",
+        "transparency_interaction",
+        "transparency_synthetic",
+    ]
+    assert _ids(e1_entity_type="deployer", **answers) == [
+        "ai_literacy",
+        "transparency_emotion_biometric",
+        "transparency_deepfake",
+    ]
+    assert _ids(e1_entity_type="distributor", **answers) == []
+
+
+def test_obligation_basis_names_the_answers_behind_each_obligation():
+    result = evaluate(
+        CheckerSession(
+            answers={
+                "gate_is_ai_system": True,
+                "e1_entity_type": "deployer",
+                "e2_modifications": True,
+                "hr2_annex_iii": True,
+                "hr7_profiling": True,
+                "s1_in_scope": True,
+                "s1_gpai": True,
+            }
+        )
+    )
+    assert result.obligation_basis == {
+        "ai_literacy": ["e1_entity_type", "e2_modifications"],
+        "gpai_provider": ["s1_gpai"],
+        "provider_high_risk": [
+            "e1_entity_type",
+            "e2_modifications",
+            "hr2_annex_iii",
+            "hr7_profiling",
+        ],
+    }

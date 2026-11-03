@@ -56,6 +56,16 @@ cd docs/checker-widget && npm ci && node build.mjs && node build-local-html.mjs
 
 CI verifies the committed file is up to date with the source.
 
+The generated EU AI Act principles page
+(`docs/src/concepts/eu-ai-act-principles.md`) is checked in CI so it can never go
+stale after an edit to
+`packages/core/src/opencomplai_core/data/eu_ai_act_principles.json` or
+`packages/core/src/opencomplai_core/data/gap_article_map.json`:
+
+```bash
+python scripts/generate_principle_docs.py --check
+```
+
 ## 6. Branch naming
 
 - `feature/<area>-<short-name>`, for example `feature/core-risk-classifier`
@@ -105,6 +115,13 @@ Python:
 
 ```bash
 pytest packages/
+```
+
+With coverage:
+
+```bash
+uv run pytest packages/core --cov=opencomplai_core --cov-report=term-missing
+uv run pytest packages/cli --cov=opencomplai_cli --cov-report=term-missing
 ```
 
 Node.js (in `services/gateway-api`):

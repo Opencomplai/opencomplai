@@ -117,6 +117,7 @@ def _build_result(
     is_prohibited: bool = False,
     effective_entity: EntityType | None = None,
     answers: dict[str, Any] | None = None,
+    obligation_basis: dict[str, list[str]] | None = None,
 ) -> ComplianceCheckerResult:
     return ComplianceCheckerResult(
         checker_version=CHECKER_VERSION,
@@ -130,6 +131,7 @@ def _build_result(
         is_prohibited=is_prohibited,
         effective_entity=effective_entity,
         answers=answers or {},
+        obligation_basis=obligation_basis or {},
     )
 
 
@@ -144,10 +146,10 @@ def _entity_obligations(
         if is_high_risk:
             obligation_ids.append("provider_high_risk")
     elif entity == EntityType.DEPLOYER:
+        # Art. 26 binds deployers of high-risk systems only: one entry. The
+        # catalogue keeps deployer_general for results from older versions.
         if is_high_risk:
-            obligation_ids.extend(["deployer_high_risk", "deployer_general"])
-        else:
-            obligation_ids.append("deployer_general")
+            obligation_ids.append("deployer_high_risk")
     elif entity == EntityType.DISTRIBUTOR:
         if is_high_risk:
             obligation_ids.append("distributor")
@@ -192,6 +194,7 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
             obligation_ids=["authorised_representative"],
             effective_entity=effective_entity,
             answers=answers,
+            obligation_basis={"authorised_representative": ["e1_entity_type"]},
         )
 
     if _answer_bool(answers, "e2_modifications"):
@@ -270,9 +273,16 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
             is_prohibited=True,
             effective_entity=effective_entity,
             answers=answers,
+            obligation_basis={"prohibited": ["r3_prohibited"]},
         )
 
-    if effective_entity in {EntityType.PROVIDER, EntityType.DEPLOYER}:
+    # A product manufacturer with an AI system built in is treated as its
+    # provider (Art. 25), so Art. 4 applies to it as to a provider.
+    if effective_entity in {
+        EntityType.PROVIDER,
+        EntityType.DEPLOYER,
+        EntityType.PRODUCT_MANUFACTURER,
+    }:
         obligation_ids.append("ai_literacy")
         path.append("e1:ai_literacy")
 
@@ -287,6 +297,10 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
     obligation_ids.extend(
         _entity_obligations(effective_entity, is_high_risk=is_high_risk)
     )
+    # A substantial modification moves a product manufacturer onto the provider
+    # route; its own Art. 25(1) obligation still applies.
+    if entity == EntityType.PRODUCT_MANUFACTURER and effective_entity != entity:
+        obligation_ids.append("product_manufacturer")
 
     if effective_entity == EntityType.PROVIDER and _relies_on_art_6_3_derogation(
         answers
@@ -294,18 +308,17 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
         obligation_ids.append("provider_art_6_4_registration")
         path.append("hr:derogation_registration")
 
-    if _answer_bool(answers, "r4_transparency"):
+    transparency_ids = _transparency_obligations(answers, entity, effective_entity)
+    if transparency_ids:
         # Art. 50 disclosure duties apply in addition to high-risk obligations,
-        # not instead of them, so the obligation itself is never gated on
-        # is_high_risk. Only the "transparency_only" status — which communicates
-        # that this is the sole obligation tier — stays high-risk-gated.
-        obligation_ids.append("transparency")
+        # not instead of them, so they are never gated on is_high_risk. Only the
+        # "transparency_only" status — which communicates that this is the sole
+        # obligation tier — stays high-risk-gated.
+        obligation_ids.extend(transparency_ids)
         path.append("r4:transparency")
         if not is_high_risk:
             non_literacy = [oid for oid in obligation_ids if oid != "ai_literacy"]
-            if obligation_ids == ["ai_literacy", "transparency"] or (
-                len(non_literacy) == 1 and non_literacy[0] == "transparency"
-            ):
+            if all(oid.startswith("transparency") for oid in non_literacy):
                 status_ids.append("transparency_only")
 
     if (
@@ -326,7 +339,85 @@ def evaluate(session: CheckerSession) -> ComplianceCheckerResult:
         is_high_risk=is_high_risk,
         effective_entity=effective_entity,
         answers=answers,
+        obligation_basis={
+            oid: _basis(oid, answers, entity, effective_entity)
+            for oid in obligation_ids
+        },
     )
+
+
+# Art. 50 items: answer value, obligation id, role that carries the duty.
+_TRANSPARENCY_ITEMS = (
+    ("interaction", "transparency_interaction", "provider"),
+    ("synthetic_content", "transparency_synthetic", "provider"),
+    ("emotion_biometric", "transparency_emotion_biometric", "deployer"),
+    ("deepfake", "transparency_deepfake", "deployer"),
+    ("public_interest_text", "transparency_public_text", "deployer"),
+)
+
+
+def _transparency_obligations(
+    answers: dict[str, Any], entity: EntityType, effective_entity: EntityType
+) -> list[str]:
+    """Art. 50 obligations, per item and role when r4_transparency_items is given."""
+    items = answers.get("r4_transparency_items")
+    if not isinstance(items, list):
+        return ["transparency"] if _answer_bool(answers, "r4_transparency") else []
+    is_provider = (
+        effective_entity == EntityType.PROVIDER
+        or entity == EntityType.PRODUCT_MANUFACTURER
+    )
+    is_deployer = entity == EntityType.DEPLOYER
+    return [
+        oid
+        for value, oid, role in _TRANSPARENCY_ITEMS
+        if value in items and (is_provider if role == "provider" else is_deployer)
+    ]
+
+
+_ART_6_3_KEYS = [
+    "hr3_art_6_3",
+    "hr4_narrow_task",
+    "hr5_no_significant_risk",
+    "hr6_accessory",
+]
+
+
+def _basis(
+    obligation_id: str,
+    answers: dict[str, Any],
+    entity: EntityType,
+    effective_entity: EntityType,
+) -> list[str]:
+    """Answer keys that made an obligation apply. Scope gates are left out."""
+    role = ["e1_entity_type"]
+    if effective_entity != entity:
+        role.append("e2_modifications")
+    if entity == EntityType.PRODUCT_MANUFACTURER:
+        role.append("e3_product_integration")
+    annex_i = _answer_bool(answers, "hr1_annex_i") and _answer_bool(
+        answers, "hr8_conformity_assessment"
+    )
+    high = ["hr1_annex_i", "hr8_conformity_assessment"] if annex_i else []
+    if _answer_bool(answers, "hr2_annex_iii"):
+        high += ["hr2_annex_iii", "hr7_profiling"]
+        if not annex_i and not _answer_bool(answers, "hr7_profiling"):
+            high += _ART_6_3_KEYS
+    if obligation_id == "gpai_provider":
+        return ["s1_gpai"]
+    if obligation_id == "gpai_systemic_risk":
+        return ["s1_gpai", "s1_gpai_systemic_risk"]
+    if obligation_id == "transparency":
+        return ["r4_transparency"]
+    if obligation_id.startswith("transparency_"):
+        return [*role, "r4_transparency_items"]
+    if obligation_id in {"ai_literacy", "product_manufacturer"}:
+        return role
+    if obligation_id == "provider_art_6_4_registration":
+        return [*role, "hr2_annex_iii", "hr7_profiling", *_ART_6_3_KEYS]
+    if obligation_id == "fria":
+        return [*role, *high, "r5_fria"]
+    return [*role, *high]
 
 
 def _dedupe_status_ids(status_ids: list[str]) -> list[str]:

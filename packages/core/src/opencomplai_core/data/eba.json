@@ -1,0 +1,402 @@
+{
+  "EBA:GL/2019/04 3.8": {
+    "title": "Payment service user relationship management",
+    "note": "Only this section (paras 92-98) survives EBA/GL/2025/02, which deleted 3.1-3.7 in favour of DORA Arts 5-16; evidence that payment service providers (credit, e-money and payment institutions) give users security guidance, optional controls (disable functions, adjust limits, alerts) and support.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/04 3.8"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": [],
+    "source": "EBA Guidelines on ICT and security risk management (EBA/GL/2019/04) as amended by EBA/GL/2025/02, consolidated version of 19 May 2026 (eba.europa.eu); section id and heading checked against that text; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 3": {
+    "title": "Outsourcing (Title II, assessment of arrangements)",
+    "note": "Evidence that third-party arrangements are tested against the outsourcing definition (a function performed on a recurrent or ongoing basis), including multi-function arrangements, and that the listed exclusions are applied consistently.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": [],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the title carries a short clarifier added by the project; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 4": {
+    "title": "Critical or important functions",
+    "note": "Evidence of a documented method for deciding whether an outsourced function is critical or important (authorisation, financial performance, continuity, core business lines, critical functions) and a record of each outcome.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": [],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 5": {
+    "title": "Sound governance arrangements and third-party risk",
+    "note": "Evidence that risks from all third-party arrangements, outsourcing or not, are identified, assessed and managed in an institution-wide risk and control framework, including GDPR compliance for those arrangements.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 5"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19", "A.5.34"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 6": {
+    "title": "Sound governance arrangements and outsourcing",
+    "note": "Evidence that the management body stays accountable for outsourced activities, that responsibility and resources for outsourcing are assigned, and that the institution keeps enough substance not to become an empty shell.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 6"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.2", "A.5.4"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 7": {
+    "title": "Outsourcing policy",
+    "note": "Evidence of a written outsourcing policy approved and regularly reviewed by the management body, covering the arrangement life cycle: roles, planning, risk assessment, due diligence, conflicts, continuity, oversight and exit.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 7"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.19"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 8": {
+    "title": "Conflicts of interests",
+    "note": "Evidence that conflicts of interest created by outsourcing, including with group or scheme entities, are identified, assessed and managed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 8"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": [],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 9": {
+    "title": "Business continuity plans",
+    "note": "Evidence of continuity plans that cover a critical or important outsourced function degrading or failing, including provider insolvency.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 9"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.29", "A.5.30"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 10": {
+    "title": "Internal audit function",
+    "note": "Evidence that internal audit reviews outsourced activities on a risk basis, covers critical or important arrangements in its plan, and checks the outsourcing framework and policy work in practice.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 10"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.35"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 11": {
+    "title": "Documentation requirements",
+    "note": "Evidence of an up-to-date register of all outsourcing arrangements, with extra fields for critical or important functions, producible for the supervisor on request, plus documented assessments, monitoring results and notices to the supervisor (for ICT services of DORA entities the DORA Art. 28(3) register applies).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 11"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.9"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 12.1": {
+    "title": "Supervisory conditions for outsourcing",
+    "note": "Evidence that functions needing authorisation (banking activities or payment services) go only to providers that are authorised, registered or otherwise allowed, and that third-country providers meet the supervision and cooperation conditions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 12.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": [],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 12.2": {
+    "title": "Risk assessment of outsourcing arrangements",
+    "note": "Evidence of a pre-outsourcing risk assessment with scenarios, weighing of benefits and costs, and attention to sub-outsourcing, concentration and data sensitivity, repeated during ongoing monitoring.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 12.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19", "A.5.21"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 12.3": {
+    "title": "Due diligence",
+    "note": "Evidence of due diligence showing the provider is suitable, with the reputation, capacity, expertise, controls and data protection measures needed, especially for critical or important functions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 12.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.19"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 13": {
+    "title": "Contractual phase",
+    "note": "Evidence that outsourcing agreements are in writing and, for critical or important functions, hold the required terms: function description, dates, law, locations, service levels, reporting, continuity, data access, insurance and authority cooperation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 13"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_27001": ["A.5.20"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 13.1": {
+    "title": "Sub-outsourcing of critical or important functions",
+    "note": "Evidence that the agreement states whether and how critical functions may be sub-outsourced, with conditions, exclusions, flow-down duties and a right to object to material changes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 13.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.5.21"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 13.2": {
+    "title": "Security of data and systems",
+    "note": "Evidence that agreements set data and system security requirements, provider compliance with IT security standards is monitored, and data location and transfer risks, including cloud and third-country processing, are assessed (ICT services of DORA entities: see DORA Art. 30).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 13.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.5.23"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 13.3": {
+    "title": "Access, information and audit rights",
+    "note": "Evidence that agreements guarantee access, information and audit rights for the institution, its auditors and authorities, and that audits are planned on a risk basis, with pooled audits or certifications used only where adequate.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 13.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20", "A.5.22"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 13.4": {
+    "title": "Termination rights",
+    "note": "Evidence that agreements allow termination in defined situations, such as breach, changed circumstances or loss of supervisory access, and support moving the function to another provider or back in-house.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 13.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.20"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 14": {
+    "title": "Oversight of outsourced functions",
+    "note": "Evidence of ongoing monitoring of provider performance, refreshed risk assessments, reporting to the management body, monitoring of concentration, and corrective action on shortcomings, focused on critical or important functions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 14"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.22"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2019/02 Section 15": {
+    "title": "Exit strategies",
+    "note": "Evidence of documented exit strategies and plans for critical or important functions covering termination, provider failure and service deterioration, with impact analysis, assigned resources and testing where appropriate.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2019/02 Section 15"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_27001": ["A.5.23", "A.5.30"],
+    "source": "EBA Guidelines on outsourcing arrangements (EBA/GL/2019/02, Final Report of 25 Feb 2019, applicable since 30 Sep 2019, still listed as Applicable on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2020/06 4.3": {
+    "title": "Credit risk policies and procedures",
+    "note": "Only the automated-decision parts count here: evidence that credit policies state where automated decision-making is allowed and put governance and model-risk management around automated models (paras 38(g), 41).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2020/06 4.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 6", "Art. 9"],
+    "iso_27001": [],
+    "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06, Final Report of 29 May 2020, applicable since 30 Jun 2021, in force on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2020/06 4.3.3": {
+    "title": "Technology-enabled innovation for credit granting",
+    "note": "Evidence that technology-enabled credit tools sit inside the risk framework, are understood by the management body, are traceable and fit for purpose, are checked for data quality and bias, and have output quality monitored with timely remediation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2020/06 4.3.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 10", "Art. 13", "Art. 14", "Art. 15"],
+    "iso_27001": [],
+    "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06, Final Report of 29 May 2020, applicable since 30 Jun 2021, in force on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2020/06 4.3.4": {
+    "title": "Models for creditworthiness assessment and credit decision-making",
+    "note": "Evidence that automated creditworthiness and credit decision models are understood and governed: bias and input-quality controls, traceable and robust inputs and outputs, regular output checks with backtesting, overrides and escalation, and model documentation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2020/06 4.3.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 6", "Art. 10", "Art. 11", "Art. 12", "Art. 14", "Art. 15"],
+    "iso_27001": [],
+    "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06, Final Report of 29 May 2020, applicable since 30 Jun 2021, in force on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2020/06 4.3.7": {
+    "title": "Data infrastructure",
+    "note": "Evidence of data infrastructure and procedures that keep exposure, borrower and collateral data continuous, intact and secure over the loan life, granular enough to audit the criteria applied, overrides and policy exceptions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2020/06 4.3.7"
+      }
+    ],
+    "eu_ai_act": ["Art. 10", "Art. 12"],
+    "iso_27001": ["A.5.33"],
+    "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06, Final Report of 29 May 2020, applicable since 30 Jun 2021, in force on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "EBA:GL/2020/06 5.1": {
+    "title": "Information and documentation",
+    "note": "Evidence that data used to judge creditworthiness is sufficient, accurate, current and verified where doubtful, collected within GDPR rules, and that the basis for each approval is documented and kept for the life of the loan.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "EBA:GL/2020/06 5.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_27001": ["A.5.33", "A.5.34"],
+    "source": "EBA Guidelines on loan origination and monitoring (EBA/GL/2020/06, Final Report of 29 May 2020, applicable since 30 Jun 2021, in force on eba.europa.eu on 3 Nov 2026); section id and heading as printed in the guidelines; the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

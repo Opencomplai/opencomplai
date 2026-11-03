@@ -302,7 +302,7 @@ def test_ci_python_defines_mypy_gate_and_coverage_steps() -> None:
     by_name = {s["name"]: s for s in steps if "name" in s}
 
     gate = by_name["Types / mypy baseline gate"]
-    cov = by_name["Coverage / core + sdk (report only)"]
+    cov = by_name["Coverage / core + cli + sdk (report only)"]
     assert names.index(gate["name"]) > after
     assert names.index(cov["name"]) > after
     for step in (gate, cov):
@@ -315,5 +315,10 @@ def test_ci_python_defines_mypy_gate_and_coverage_steps() -> None:
     assert f"--with mypy=={baseline['mypy_version']}" in gate["run"], (
         "CI must pin the mypy version the baseline was recorded with"
     )
-    assert "--cov-report" in cov["run"]
-    assert "--cov-fail-under" not in cov["run"]
+    assert "coverage report" in cov["run"]
+    assert "GITHUB_STEP_SUMMARY" in cov["run"]
+    assert "--fail-under" not in cov["run"]
+    # The test steps collect the data; the report step must not run a suite again.
+    assert "pytest" not in cov["run"]
+    for name in ("Test / core", "Test / cli", "Test / sdk-python"):
+        assert "--cov=" in by_name[name]["run"], name

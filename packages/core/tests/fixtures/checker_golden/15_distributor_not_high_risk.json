@@ -18,6 +18,7 @@
       "gate:yes",
       "e1:distributor",
       "s1:in_scope"
-    ]
+    ],
+    "obligation_basis": {}
   }
 }

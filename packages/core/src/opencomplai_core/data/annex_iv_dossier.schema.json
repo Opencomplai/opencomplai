@@ -387,6 +387,53 @@
       "title": "AgentTool",
       "type": "object"
     },
+    "AnnexIVCybersecurity": {
+      "description": "Cybersecurity measures (Annex IV point 2(h); Art. 15(5)) from ISO/IEC 27090.\n\nBuilt from the run's `ISO_IEC_27090` framework report and present on the\ndossier only when that framework is a target.",
+      "properties": {
+        "data_version": {
+          "description": "Short hash of the register the statuses came from",
+          "title": "Data Version",
+          "type": "string"
+        },
+        "entries": {
+          "items": {
+            "$ref": "#/$defs/CybersecurityEntry"
+          },
+          "title": "Entries",
+          "type": "array"
+        },
+        "excluded": {
+          "items": {
+            "$ref": "#/$defs/CybersecurityExclusion"
+          },
+          "title": "Excluded",
+          "type": "array"
+        },
+        "framework": {
+          "default": "ISO_IEC_27090",
+          "title": "Framework",
+          "type": "string"
+        },
+        "lead_in": {
+          "default": "Annex IV point 2(h) asks for the cybersecurity measures put in place, and Article 15(5) names AI-specific vulnerabilities such as data poisoning, adversarial examples and confidentiality attacks. This part is structured using ISO/IEC 27090 guidance, one entry per clause that asks for something. The guidance is not a certification and gives no presumption of conformity with the EU AI Act. A status records a provider attestation or an evaluator result; it does not show that the system is secure.",
+          "title": "Lead In",
+          "type": "string"
+        },
+        "status_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Entries per status (met, partial, missing, unverified)",
+          "title": "Status Counts",
+          "type": "object"
+        }
+      },
+      "required": [
+        "data_version"
+      ],
+      "title": "AnnexIVCybersecurity",
+      "type": "object"
+    },
     "AnnexIVSection1": {
       "description": "General description of the AI system (Annex IV, Section 1).",
       "properties": {
@@ -855,6 +902,21 @@
       "title": "AnnexIVSection9",
       "type": "object"
     },
+    "ArticleGapSource": {
+      "description": "Which subsystem produced an ArticleGapStatus row's evidence.",
+      "enum": [
+        "rule",
+        "obligation",
+        "scan",
+        "evaluator",
+        "artifact",
+        "attestation",
+        "crosswalk",
+        "manifest"
+      ],
+      "title": "ArticleGapSource",
+      "type": "string"
+    },
     "ArticleTwelveRecordKeeping": {
       "description": "Automatic logging and record-keeping (Article 12).\n\nWas previously emitted as \"Annex IV Section 4\", which conflated two\ndistinct obligations: Art. 12 requires high-risk systems to log\nautomatically over their lifetime, while Annex IV point 4 concerns the\nappropriateness of performance metrics.\n\nThe first three fields are provider declarations copied from the manifest;\nabsent means false (retention: absent, not null). `provider_supplied` says\nwhether the manifest declared the block at all. `ledger_root_hash` is\nmeasured, not declared.",
       "properties": {
@@ -909,6 +971,81 @@
         "NIST_AI_RMF"
       ],
       "title": "ComplianceTarget",
+      "type": "string"
+    },
+    "CybersecurityEntry": {
+      "description": "One ISO/IEC 27090 clause as it stood in the run's framework report.",
+      "properties": {
+        "clause_id": {
+          "description": "Requirement id, e.g. 'ISO_IEC_27090:5.5'",
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "evidence_ref": {
+          "description": "'attestation:<by>@<at>' for an attestation, the evidence hash for an evaluator, 'none' when nothing was recorded",
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "rationale": {
+          "default": "",
+          "description": "Attestation statement or 'EVALUATOR (ref): outcome.'",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ArticleGapSource"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        }
+      },
+      "required": [
+        "clause_id",
+        "heading",
+        "status",
+        "source",
+        "evidence_ref"
+      ],
+      "title": "CybersecurityEntry",
+      "type": "object"
+    },
+    "CybersecurityExclusion": {
+      "description": "A clause the manifest excluded, with the reason it gave.",
+      "properties": {
+        "clause_id": {
+          "title": "Clause Id",
+          "type": "string"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "clause_id",
+        "heading",
+        "reason"
+      ],
+      "title": "CybersecurityExclusion",
+      "type": "object"
+    },
+    "GapStatus": {
+      "description": "Per-article compliance status shown by `opencomplai gaps`.",
+      "enum": [
+        "met",
+        "partial",
+        "missing",
+        "unverified"
+      ],
+      "title": "GapStatus",
       "type": "string"
     },
     "HumanOversight": {
@@ -1030,7 +1167,7 @@
   },
   "$id": "https://schemas.opencomplai.dev/annex_iv_dossier/v1",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\n`agent_inventory` is the manifest's declared inventory, omitted when absent\nso a manifest without it yields the same bytes and checksum as before.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
+  "description": "Annex IV technical documentation dossier (EU AI Act Article 11).\n\nCovers all nine Annex IV points. Points 1-5 are derived from the manifest,\nrisk assessment, evaluators and scanner. Points 6-9 are provider\nattestations that cannot be inferred from a repository; they are emitted as\nexplicit, labelled placeholders with `provider_supplied=False` until the\nprovider fills them in. `annex_iv_complete` is False while any of them is\nstill a placeholder on a HIGH-risk system \u2014 a dossier is not \"complete\nAnnex IV\" merely because every field is present.\n\n`agent_inventory` is the manifest's declared inventory, omitted when absent\nso a manifest without it yields the same bytes and checksum as before.\n`cybersecurity` is the same for runs that do not target ISO_IEC_27090.\n\nThis is the output of the Documentation Generator (REQ-DOC-001).\nIn OSS mode: produced as a local bundle with a SHA-256 checksum.\nIn Pro/Enterprise mode: signing is mandatory for badge issuance.",
   "properties": {
     "agent_inventory": {
       "anyOf": [
@@ -1075,6 +1212,17 @@
     "compliance_target": {
       "$ref": "#/$defs/ComplianceTarget",
       "default": "EU_AI_ACT"
+    },
+    "cybersecurity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AnnexIVCybersecurity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "dossier_id": {
       "description": "UUID identifying this dossier",

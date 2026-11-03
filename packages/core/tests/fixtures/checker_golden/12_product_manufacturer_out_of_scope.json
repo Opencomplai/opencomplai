@@ -20,6 +20,7 @@
       "gate:yes",
       "e1:product_manufacturer",
       "e3:none"
-    ]
+    ],
+    "obligation_basis": {}
   }
 }

@@ -1,0 +1,1787 @@
+{
+  "ISO_IEC_27001:Clause 4.1": {
+    "title": "Understanding the organization and its context",
+    "note": "Evidence that a written analysis of the inside and outside factors shaping the security programme exists and is refreshed when circumstances change.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 4.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 4.2": {
+    "title": "Understanding the needs and expectations of interested parties",
+    "note": "Evidence that a register of stakeholders and their security, legal and contractual expectations exists, with an owner who keeps it current.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 4.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 4.3": {
+    "title": "Determining the scope of the information security management system",
+    "note": "Evidence that a signed scope statement names the sites, services, systems and interfaces the programme covers and says what is excluded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 4.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 4.4": {
+    "title": "Information security management system",
+    "note": "Evidence that the security programme runs as a defined set of processes with owners, and is reviewed and tuned over time.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 4.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 5.1": {
+    "title": "Leadership and commitment",
+    "note": "Evidence that senior leaders back the programme in practice: approved budget, minuted decisions, and security aims tied to business plans.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 5.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 5.2": {
+    "title": "Policy",
+    "note": "Evidence that a security policy signed by senior leaders exists, staff have received it, and outsiders can obtain it where relevant.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 5.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 5.3": {
+    "title": "Organizational roles, responsibilities and authorities",
+    "note": "Evidence that a RACI chart or role descriptions assign security duties to named roles, with a set route for reporting performance to senior leaders.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 5.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 6.1.1": {
+    "title": "General",
+    "note": "Evidence that a documented list of risks and opportunities to the programme exists, with planned actions and a way of checking whether they worked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 6.1.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 6.1.2": {
+    "title": "Information security risk assessment",
+    "note": "Evidence that a written risk method and criteria exist, and a risk register shows assessed risks, each with a scored rating and a named owner.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 6.1.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 6.1.3": {
+    "title": "Information security risk treatment",
+    "note": "Evidence that a risk treatment plan and Statement of Applicability exist, control choices are justified, and owners accepted residual risk in writing.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 6.1.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 6.2": {
+    "title": "Information security objectives and planning to achieve them",
+    "note": "Evidence that dated, measurable security targets exist with owners, resources and a schedule, plus a record of progress against them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 6.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 6.3": {
+    "title": "Planning of changes",
+    "note": "Evidence that proposed changes to the security programme go through a planning step, with a record of what changes and who approved it, before rollout.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 6.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 7.1": {
+    "title": "Resources",
+    "note": "Evidence that budgets, staffing and tooling for the programme are defined, approved and reviewed against what it needs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 7.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 7.2": {
+    "title": "Competence",
+    "note": "Evidence that the skills needed for security roles are defined, and training, qualification or experience records show each role holder meets them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 7.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 7.3": {
+    "title": "Awareness",
+    "note": "Evidence that staff can show they know the security policy and their part in it, for example through induction records, quizzes or sign-offs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 7.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 7.4": {
+    "title": "Communication",
+    "note": "Evidence that a communication plan sets out which security topics go to whom, when and by what channel, and that the messages were actually sent.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 7.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 7.5": {
+    "title": "Documented information",
+    "note": "Evidence that required documents sit in a controlled repository with versions, approvals, owners, access limits and retention rules.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 7.5"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 17"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 8.1": {
+    "title": "Operational planning and control",
+    "note": "Evidence that procedures and criteria for running risk treatment exist, outsourced work is controlled, and changes were reviewed before going live.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 8.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 8.2": {
+    "title": "Information security risk assessment",
+    "note": "Evidence that dated risk assessment reports exist for each planned cycle and after major change, and are kept as records.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 8.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 8.3": {
+    "title": "Information security risk treatment",
+    "note": "Evidence that the treatment plan is being carried out, shown by completed actions, implementation records and retained results.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 8.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 9.1": {
+    "title": "Monitoring, measurement, analysis and evaluation",
+    "note": "Evidence that a measurement plan names the metrics, methods, timing and owners, and that dated analyses of the results exist.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 9.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 9.2": {
+    "title": "Internal audit",
+    "note": "Evidence that an audit schedule, scope and criteria exist, audits were done by impartial auditors, and reports reached the relevant managers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 9.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 9.3": {
+    "title": "Management review",
+    "note": "Evidence that minutes of management reviews held on schedule show the standard inputs were covered and decisions on changes were recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 9.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 10.1": {
+    "title": "Continual improvement",
+    "note": "Evidence that improvement actions are tracked from review and audit findings through to completion, with a record of their measured effect.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 10.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:Clause 10.2": {
+    "title": "Nonconformity and corrective action",
+    "note": "Evidence that a corrective action log shows each nonconformity, its root cause, the fix, and a check that the fix worked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:Clause 10.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 incl. Amd 1:2024 (clause number and heading checked against the iTeh preview contents lists of the standard; 6.3 heading from the preview body); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.1": {
+    "title": "Policies for information security",
+    "note": "Evidence that approved security policies exist, dated and versioned, with staff acknowledgements and a log of the last review.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.2": {
+    "title": "Information security roles and responsibilities",
+    "note": "Evidence that a responsibility matrix or role descriptions give each security task a named owner.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.3": {
+    "title": "Segregation of duties",
+    "note": "Evidence that a conflicting-duties analysis exists, with role splits in system set-ups or compensating checks where a split is impossible.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.4": {
+    "title": "Management responsibilities",
+    "note": "Evidence that managers brief their teams on security rules and follow up on lapses, shown by briefing records, sign-offs or review actions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.5": {
+    "title": "Contact with authorities",
+    "note": "Evidence that a contact list for regulators, police and emergency services is maintained, with the date it was last checked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.6": {
+    "title": "Contact with special interest groups",
+    "note": "Evidence that security staff hold memberships of, or attend, named forums, and that what they learn is shared internally.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.7": {
+    "title": "Threat intelligence",
+    "note": "Evidence that threat feeds or advisories are collected, triaged by a named person, and traceably used in risk or control decisions.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.8": {
+    "title": "Information security in project management",
+    "note": "Evidence that project templates or gate checklists include security steps, with completed examples from recent projects.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.8"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.9": {
+    "title": "Inventory of information and other associated assets",
+    "note": "Evidence that an asset register lists information and the systems that hold it, each with a named owner and a review date.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.9"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.10": {
+    "title": "Acceptable use of information and other associated assets",
+    "note": "Evidence that written rules on permitted handling of company information and devices exist and users have signed to accept them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.10"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.11": {
+    "title": "Return of assets",
+    "note": "Evidence that leaver and mover checklists include handing back devices, badges and media, with completed returns on file.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.11"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.12": {
+    "title": "Classification of information",
+    "note": "Evidence that a scheme with defined sensitivity levels exists and that sampled records or systems carry a level.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.12"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.13": {
+    "title": "Labelling of information",
+    "note": "Evidence that a labelling guide exists and sampled documents or data stores visibly carry the markings it requires.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.13"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.14": {
+    "title": "Information transfer",
+    "note": "Evidence that transfer rules or agreements cover each channel in use (email, file share, courier, API) and sampled transfers follow them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.14"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.15": {
+    "title": "Access control",
+    "note": "Evidence that a written permissions policy and system permission settings show who may use what, justified by role or business need.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.15"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.16": {
+    "title": "Identity management",
+    "note": "Evidence that joiner, mover and leaver records show accounts being created, changed and removed through a managed lifecycle.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.16"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.17": {
+    "title": "Authentication information",
+    "note": "Evidence that credential issuance and reset follow a documented procedure, and password or key standards are enforced in system settings.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.17"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.18": {
+    "title": "Access rights",
+    "note": "Evidence that rights are granted on approved requests, periodically recertified, and removed on role change, shown by tickets and review sign-offs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.18"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.19": {
+    "title": "Information security in supplier relationships",
+    "note": "Evidence that supplier risk assessments and a supplier security policy exist, with suppliers tiered by the risk they bring.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.19"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.20": {
+    "title": "Addressing information security within supplier agreements",
+    "note": "Evidence that sampled supplier contracts contain security clauses fitted to what each supplier does for the organisation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.20"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.21": {
+    "title": "Managing information security in the ICT supply chain",
+    "note": "Evidence that upstream components and sub-suppliers, including AI models and libraries, are inventoried with pinned versions and checked for risk.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.21"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.22": {
+    "title": "Monitoring, review and change management of supplier services",
+    "note": "Evidence that supplier performance reviews, audit reports or certifications are checked on a schedule and service changes pass through approval.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.22"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.23": {
+    "title": "Information security for use of cloud services",
+    "note": "Evidence that a cloud policy and per-service assessments exist, covering data protection, shared responsibilities and how to exit.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.23"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.24": {
+    "title": "Information security incident management planning and preparation",
+    "note": "Evidence that an incident response plan names roles and steps, is approved, and has been exercised or used, with participants aware of it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.24"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.25": {
+    "title": "Assessment and decision on information security events",
+    "note": "Evidence that triage records show each reported event rated against set criteria, with the call on whether it is an incident written down.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.25"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.26": {
+    "title": "Response to information security incidents",
+    "note": "Evidence that closed incident tickets follow the documented steps from containment to recovery, with timestamps and responders.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.26"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.27": {
+    "title": "Learning from information security incidents",
+    "note": "Evidence that post-incident reviews exist and lead to tracked changes in controls, procedures or training.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.27"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.28": {
+    "title": "Collection of evidence",
+    "note": "Evidence that an evidence-handling procedure exists and case files show logs or disk images preserved with chain-of-custody notes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.28"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.29": {
+    "title": "Information security during disruption",
+    "note": "Evidence that continuity plans state which security measures must hold during a disruption, and exercises or real events confirmed it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.29"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.30": {
+    "title": "ICT readiness for business continuity",
+    "note": "Evidence that recovery objectives for ICT services are set and test reports show failover or restore results measured against them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.30"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.31": {
+    "title": "Legal, statutory, regulatory and contractual requirements",
+    "note": "Evidence that a register of legal and contractual obligations exists, has owners, and shows updates when laws or contracts change.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.31"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.32": {
+    "title": "Intellectual property rights",
+    "note": "Evidence that software licence records and a permitted-software list show licences match actual use, with rules on third-party material.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.32"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.33": {
+    "title": "Protection of records",
+    "note": "Evidence that a retention schedule and storage safeguards exist for records, with integrity and permission protections visible in the systems holding them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.33"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.34": {
+    "title": "Privacy and protection of PII",
+    "note": "Evidence that a privacy programme exists with a named lead, a record of personal data processing, and working procedures for legal duties.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.34"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.35": {
+    "title": "Independent review of information security",
+    "note": "Evidence that independent reviews, internal or external, are reported on a schedule and after major change, with actions followed up.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.35"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.36": {
+    "title": "Compliance with policies, rules and standards for information security",
+    "note": "Evidence that managers' periodic checks of their areas against policy are recorded, with findings and corrections.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.36"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.5.37": {
+    "title": "Documented operating procedures",
+    "note": "Evidence that run books or operating procedures exist for key systems, are version controlled, and are reachable by the people who use them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.5.37"
+      }
+    ],
+    "eu_ai_act": ["Art. 11", "Art. 17"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.1": {
+    "title": "Screening",
+    "note": "Evidence that screening records (identity, references, qualifications, checks the law permits) exist for sampled hires, scaled to role risk.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.2": {
+    "title": "Terms and conditions of employment",
+    "note": "Evidence that sampled employment contracts or policies signed at hiring state the person's security duties.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.3": {
+    "title": "Information security awareness, education and training",
+    "note": "Evidence that a training plan, course content and completion records show role-appropriate security awareness, repeated periodically.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.4": {
+    "title": "Disciplinary process",
+    "note": "Evidence that a documented disciplinary procedure covers security breaches and that staff were told about it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.5": {
+    "title": "Responsibilities after termination or change of employment",
+    "note": "Evidence that exit procedures remind leavers and movers of continuing duties such as confidentiality, with signed acknowledgements.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.6": {
+    "title": "Confidentiality or non-disclosure agreements",
+    "note": "Evidence that signed secrecy agreements are on file for staff and contractors, using a template that legal has reviewed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.7": {
+    "title": "Remote working",
+    "note": "Evidence that a remote-work policy and technical settings (VPN, encryption, device rules) apply to people working off-site.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.6.8": {
+    "title": "Information security event reporting",
+    "note": "Evidence that a reporting channel exists, staff know it, and logged reports show events being raised and passed to incident handling.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.6.8"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.1": {
+    "title": "Physical security perimeters",
+    "note": "Evidence that site plans or zone documents define secured areas, with physical barriers that match them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.2": {
+    "title": "Physical entry",
+    "note": "Evidence that badge, lock or visitor logs show entry to secured areas is restricted and recorded.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.3": {
+    "title": "Securing offices, rooms and facilities",
+    "note": "Evidence that site security design reviews or surveys cover rooms and offices holding sensitive assets, with fixes tracked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.4": {
+    "title": "Physical security monitoring",
+    "note": "Evidence that cameras, alarms or guard rounds cover sensitive areas, with retained footage or logs and reviewed alerts.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.5": {
+    "title": "Protecting against physical and environmental threats",
+    "note": "Evidence that a risk assessment of fire, flood, power and similar hazards exists for key sites, with protective measures installed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.6": {
+    "title": "Working in secure areas",
+    "note": "Evidence that written rules for working in secure areas exist and are displayed or briefed, such as escort or no-photography rules.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.7": {
+    "title": "Clear desk and clear screen",
+    "note": "Evidence that a clear-desk and screen-lock rule exists, enforced by settings, with spot-check results on file.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.8": {
+    "title": "Equipment siting and protection",
+    "note": "Evidence that equipment locations were chosen with hazards and onlookers in mind, shown by layouts or inspection records.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.8"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.9": {
+    "title": "Security of assets off-premises",
+    "note": "Evidence that rules and records cover devices taken off site, such as loan registers, encryption settings and travel guidance.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.9"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.10": {
+    "title": "Storage media",
+    "note": "Evidence that media are tracked from purchase to destruction, with handling rules by sensitivity level and logs of transport or destruction.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.10"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.11": {
+    "title": "Supporting utilities",
+    "note": "Evidence that UPS, generator, cooling and similar installations serve critical areas, with maintenance and test records.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.11"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.12": {
+    "title": "Cabling security",
+    "note": "Evidence that power and network cable runs are protected, shown by inspection records, labelling or ducting on critical routes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.12"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.13": {
+    "title": "Equipment maintenance",
+    "note": "Evidence that maintenance schedules and service records exist for key equipment, performed by approved people.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.13"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.7.14": {
+    "title": "Secure disposal or re-use of equipment",
+    "note": "Evidence that disposal and reuse records show data wiped or media destroyed, with certificates or checklists for each item.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.7.14"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.1": {
+    "title": "User endpoint devices",
+    "note": "Evidence that endpoint policy settings (encryption, patching, screen lock, remote wipe) are enforced and device management reports show coverage.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.2": {
+    "title": "Privileged access rights",
+    "note": "Evidence that a list of privileged accounts exists, approval for each is recorded, and elevated rights are reviewed and time-limited.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.3": {
+    "title": "Information access restriction",
+    "note": "Evidence that permission settings in applications and data stores match the written rules, shown by configuration exports or review samples.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.4": {
+    "title": "Access to source code",
+    "note": "Evidence that repository permissions show who can read or change source code, limited to those who need it, with review records.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.5": {
+    "title": "Secure authentication",
+    "note": "Evidence that login settings show strong sign-in, such as multi-factor, matched to the sensitivity of each system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.5"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.6": {
+    "title": "Capacity management",
+    "note": "Evidence that capacity reports, thresholds and growth forecasts exist, and actions follow when thresholds are neared.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.7": {
+    "title": "Protection against malware",
+    "note": "Evidence that endpoint and gateway anti-malware tools are deployed, updating and reporting, with awareness material for users.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.8": {
+    "title": "Management of technical vulnerabilities",
+    "note": "Evidence that scan results, patch records and exposure assessments show weaknesses found, rated and addressed within set timeframes.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.8"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.9": {
+    "title": "Configuration management",
+    "note": "Evidence that secure baselines exist, configuration is tracked in tooling or records, and drift from the baseline is detected and reviewed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.9"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.10": {
+    "title": "Information deletion",
+    "note": "Evidence that deletion rules, jobs or scripts exist and logs or certificates show data removed once its need ended.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.10"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.11": {
+    "title": "Data masking",
+    "note": "Evidence that masking, pseudonymisation or similar techniques are applied where needed, shown by configuration or sample data views.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.11"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.12": {
+    "title": "Data leakage prevention",
+    "note": "Evidence that leak-prevention tooling or equivalent rules watch key channels, with alerts handled and rules tuned.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.12"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.13": {
+    "title": "Information backup",
+    "note": "Evidence that a backup policy, job reports and restore test results exist, showing backups run and can actually be restored.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.13"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.14": {
+    "title": "Redundancy of information processing facilities",
+    "note": "Evidence that architecture documents or failover tests show critical services have duplicate components to meet availability targets.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.14"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.15": {
+    "title": "Logging",
+    "note": "Evidence that logging settings, sample logs and retention rules show key events recorded, protected from tampering and reviewed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.15"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 12"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.16": {
+    "title": "Monitoring activities",
+    "note": "Evidence that alerting rules, dashboards and triage records show unusual activity being detected and followed up.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.16"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 72"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.17": {
+    "title": "Clock synchronization",
+    "note": "Evidence that systems are set to sync with approved time sources, shown by configuration exports or drift checks.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.17"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.18": {
+    "title": "Use of privileged utility programs",
+    "note": "Evidence that powerful admin utilities are limited to approved people, with usage logged and reviewed.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.18"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.19": {
+    "title": "Installation of software on operational systems",
+    "note": "Evidence that an installation procedure and allow-list or approval records show only approved software reaches live systems.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.19"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.20": {
+    "title": "Networks security",
+    "note": "Evidence that network diagrams, device hardening standards and monitoring show networks are protected and administered by authorised people.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.20"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.21": {
+    "title": "Security of network services",
+    "note": "Evidence that requirements for network services, such as security features and service levels, are documented and checked against provider reports.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.21"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.22": {
+    "title": "Segregation of networks",
+    "note": "Evidence that network diagrams and firewall or VLAN rules show separate zones for different users, services and sensitivity levels.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.22"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.23": {
+    "title": "Web filtering",
+    "note": "Evidence that web filtering or proxy rules block risky categories, with block reports or policy exports on file.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.23"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.24": {
+    "title": "Use of cryptography",
+    "note": "Evidence that a cryptography standard and key lifecycle records exist, with sampled systems using the approved algorithms and key handling.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.24"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.25": {
+    "title": "Secure development life cycle",
+    "note": "Evidence that a written secure development lifecycle exists and sampled projects show its security activities done at each phase.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.25"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.26": {
+    "title": "Application security requirements",
+    "note": "Evidence that requirement documents for new or bought applications include security requirements, signed off before build or purchase.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.26"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.27": {
+    "title": "Secure system architecture and engineering principles",
+    "note": "Evidence that secure design principles are documented, and design or architecture reviews show them applied to systems.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.27"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.28": {
+    "title": "Secure coding",
+    "note": "Evidence that a written secure coding standard exists and code is checked against it, through reviews or automated analysis.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.28"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.29": {
+    "title": "Security testing in development and acceptance",
+    "note": "Evidence that security test plans and results (scans, penetration tests, acceptance sign-offs) exist for releases, with findings fixed or accepted.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.29"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.30": {
+    "title": "Outsourced development",
+    "note": "Evidence that contracts and oversight records for external developers cover security requirements, review or testing rights, and delivery checks.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.30"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.31": {
+    "title": "Separation of development, test and production environments",
+    "note": "Evidence that separate environments exist for build, test and live, with different credentials and restricted promotion paths between them.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.31"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.32": {
+    "title": "Change management",
+    "note": "Evidence that change tickets show request, risk review, approval, testing and rollback planning before changes reach live systems.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.32"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.33": {
+    "title": "Test information",
+    "note": "Evidence that test data is chosen or scrambled, protected, and removed afterwards, with rules against copying live personal data.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.33"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  },
+  "ISO_IEC_27001:A.8.34": {
+    "title": "Protection of information systems during audit testing",
+    "note": "Evidence that test plans for audits on live systems were agreed with system owners beforehand, with limits on scope and timing.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_27001:A.8.34"
+      }
+    ],
+    "eu_ai_act": [],
+    "source": "ISO/IEC 27001:2022 Annex A (control number and name checked against the contents list of ISO/IEC 27002:2022, which Annex A reuses, cross-checked with a public outline of the standard); the note is the project's own wording",
+    "confidence": "low",
+    "needs_founder_review": true
+  }
+}

@@ -43,6 +43,35 @@ def _union_by_id(lists: Sequence[Sequence]) -> list:
     return list(seen.values())
 
 
+def _drop_role_notes(
+    notes: list, roles: list[str], obligation_ids: set[str], in_scope: bool
+) -> list:
+    """Drop per-role notes that another selected role contradicts.
+
+    "You become a provider" says nothing to an organisation that also selected
+    Provider; the deployer high-risk exception says provider obligations may not
+    apply, which is wrong once the merged result carries them; and one role's
+    "out of scope" is wrong once another role is in scope.
+    """
+    drop = set()
+    if in_scope:
+        drop.add("out_of_scope")
+    if "provider" in roles:
+        drop.add("become_provider")
+    if "provider_high_risk" in obligation_ids:
+        drop.add("high_risk_exception")
+    return [n for n in notes if n.id not in drop]
+
+
+def _union_basis(bases: Sequence[dict[str, list[str]]]) -> dict[str, list[str]]:
+    merged: dict[str, list[str]] = {}
+    for basis in bases:
+        for oid, keys in basis.items():
+            seen = merged.setdefault(oid, [])
+            seen.extend(k for k in keys if k not in seen)
+    return merged
+
+
 def merge_role_results(
     items: Sequence[tuple[str, ComplianceCheckerResult]],
 ) -> MergedCheckerResult:
@@ -65,17 +94,24 @@ def merge_role_results(
         for role, res in per_role.items():
             path.append(f"role:{role}")
             path.extend(res.determination_path)
+        obligations = _union_by_id([r.obligations for r in results])
         merged = ComplianceCheckerResult(
             checker_version=first.checker_version,
             in_scope=any(r.in_scope for r in results),
-            status_changes=_union_by_id([r.status_changes for r in results]),
-            obligations=_union_by_id([r.obligations for r in results]),
+            status_changes=_drop_role_notes(
+                _union_by_id([r.status_changes for r in results]),
+                roles,
+                {o.id for o in obligations},
+                any(r.in_scope for r in results),
+            ),
+            obligations=obligations,
             determination_path=path,
             is_high_risk=any(r.is_high_risk for r in results),
             is_prohibited=any(r.is_prohibited for r in results),
             effective_entity=first.effective_entity,
             answers=dict(first.answers),
             session_id=None,
+            obligation_basis=_union_basis([r.obligation_basis for r in results]),
         )
     return MergedCheckerResult(
         result=merged,

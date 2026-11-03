@@ -244,3 +244,57 @@ def test_unknown_manifest_keys():
         "intended_purpse",
     ]
     assert unknown_manifest_keys(dict.fromkeys(SystemManifest.model_fields)) == []
+
+
+# --- framework_inputs.<FW>.scope ---------------------------------------------
+
+
+def test_framework_inputs_without_scope_serialise_as_before():
+    # The shape FrameworkInputs had before `scope` existed.
+    before = {
+        "NIST_AI_RMF": {
+            "excluded": {"NIST_AI_RMF:MAP 5.2": "No external deployment."},
+            "attested": {},
+        },
+        "FIXTURE": {"excluded": {}, "attested": {}},
+    }
+    manifest = SystemManifest(**_manifest_kwargs(framework_inputs=before))
+
+    assert json.dumps(manifest.model_dump(mode="json")["framework_inputs"]) == (
+        json.dumps(before)
+    )
+    assert "scope" not in manifest.framework_inputs["FIXTURE"].model_dump()
+    assert (
+        "scope"
+        not in json.loads(manifest.model_dump_json())["framework_inputs"]["FIXTURE"]
+    )
+
+
+def test_scope_round_trips_and_leaves_unanswered_questions_out():
+    manifest = SystemManifest(
+        **_manifest_kwargs(
+            framework_inputs={
+                "ISO_IEC_27090": {"scope": {"trains_models": False, "public_api": True}}
+            }
+        )
+    )
+
+    dumped = json.loads(manifest.model_dump_json())
+    assert dumped["framework_inputs"]["ISO_IEC_27090"]["scope"] == {
+        "trains_models": False,
+        "public_api": True,
+    }
+    assert SystemManifest.model_validate_json(manifest.model_dump_json()) == manifest
+    scope = manifest.framework_inputs["ISO_IEC_27090"].scope
+    assert scope.trains_models is False
+    assert scope.uses_retrieval is None
+
+
+@pytest.mark.parametrize(
+    "scope",
+    [{"trains_model": False}, {"trains_models": "maybe"}],
+    ids=["unknown-question", "not-a-boolean"],
+)
+def test_scope_rejects_unknown_questions_and_non_booleans(scope):
+    with pytest.raises(ValidationError):
+        FrameworkInputs.model_validate({"scope": scope})

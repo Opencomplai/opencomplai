@@ -16,11 +16,13 @@ import os
 import re
 import uuid
 import warnings
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 
 from opencomplai_core.dossier import (
     PROVIDER_SUPPLIED_PLACEHOLDER,
+    AnnexIVCybersecurity,
     AnnexIVDossier,
     AnnexIVSection1,
     AnnexIVSection2,
@@ -32,12 +34,16 @@ from opencomplai_core.dossier import (
     AnnexIVSection8,
     AnnexIVSection9,
     ArticleTwelveRecordKeeping,
+    CybersecurityEntry,
+    CybersecurityExclusion,
 )
+from opencomplai_core.frameworks import ISO_27090, requirement_title
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
     ConfidenceLabel,
     CorroborationReport,
+    FrameworkReport,
     GapStatus,
     HumanOversight,
     RiskResult,
@@ -416,6 +422,43 @@ def _build_section9(manifest: SystemManifest) -> AnnexIVSection9:
     )
 
 
+def _build_cybersecurity(
+    framework_reports: Mapping[str, FrameworkReport] | None,
+) -> AnnexIVCybersecurity | None:
+    """Annex IV pt.2(h) — one entry per ISO/IEC 27090 row, copied from its report.
+
+    None when the run did not target ISO_IEC_27090, so the dossier is left
+    exactly as it was. Rows the manifest excluded are listed apart with the
+    reason given; nothing is re-evaluated here.
+    """
+    framework_report = (framework_reports or {}).get(ISO_27090)
+    if framework_report is None:
+        return None
+    entries = [
+        CybersecurityEntry(
+            clause_id=row.article,
+            heading=requirement_title(row.article) or "",
+            status=row.status,
+            source=row.source,
+            evidence_ref=row.evidence_ref,
+            rationale=row.rationale,
+        )
+        for row in framework_report.report.articles
+    ]
+    return AnnexIVCybersecurity(
+        framework=ISO_27090,
+        data_version=framework_report.data_version,
+        status_counts={s.value: sum(e.status == s for e in entries) for s in GapStatus},
+        entries=entries,
+        excluded=[
+            CybersecurityExclusion(
+                clause_id=rid, heading=requirement_title(rid) or "", reason=reason
+            )
+            for rid, reason in framework_report.excluded.items()
+        ],
+    )
+
+
 def _performance_metrics_with_evals(
     base: dict[str, float], eval_report: object | None
 ) -> dict[str, float]:
@@ -436,6 +479,7 @@ def generate_dossier(
     provider_name: str = "Unknown Provider",
     eval_report: object | None = None,
     corroboration_report: CorroborationReport | None = None,
+    framework_reports: Mapping[str, FrameworkReport] | None = None,
 ) -> AnnexIVDossier:
     """
     Generate an Annex IV dossier from a system manifest and risk result.
@@ -450,6 +494,8 @@ def generate_dossier(
         evidence_hashes: SHA-256 hashes of evidence objects in the vault.
         ledger_root_hash: Current head hash of the evidence ledger's hash chain.
         provider_name: Name of the AI system provider.
+        framework_reports: The run's `evaluate_targets` output. Only its
+            `ISO_IEC_27090` entry is read, to fill `cybersecurity`.
 
     Returns:
         AnnexIVDossier with all sections populated and bundle_checksum set.
@@ -574,6 +620,7 @@ def generate_dossier(
         ),
         record_keeping=_declared_record_keeping(manifest, ledger_root_hash),
         agent_inventory=getattr(manifest, "agent_inventory", None),
+        cybersecurity=_build_cybersecurity(framework_reports),
         section6=_build_section6(manifest),
         section7=_build_section7(manifest),
         section8=_build_section8(manifest),

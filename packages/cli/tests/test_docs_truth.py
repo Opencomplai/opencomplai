@@ -9,7 +9,7 @@ from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[3]
 
-STANDING_LINE = "EU AI Act evaluated; NIST AI RMF derived (partial, unreviewed); ISO 42001 native pack, attestation-led (partial, unreviewed); DORA and EBA mapped only"
+STANDING_LINE = "EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed)"
 STANDING_LINE_FILES = ["README.md", "docs/src/index.md", "docs/src/frameworks/index.md"]
 
 RETIRED: list[tuple[str, str]] = [

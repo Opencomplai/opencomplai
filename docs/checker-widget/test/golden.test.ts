@@ -40,6 +40,7 @@ interface GoldenExpected {
   status_change_ids: string[];
   obligation_ids: string[];
   determination_path: string[];
+  obligation_basis: Record<string, string[]>;
 }
 
 interface GoldenFixture {
@@ -70,6 +71,7 @@ describe(`TS engine golden parity (${FIXTURES.length} vectors)`, () => {
       expect(result.status_changes.map((s) => s.id)).toEqual(exp.status_change_ids);
       expect(result.obligations.map((o) => o.id)).toEqual(exp.obligation_ids);
       expect(result.determination_path).toEqual(exp.determination_path);
+      expect(result.obligation_basis).toEqual(exp.obligation_basis);
     });
   }
 });

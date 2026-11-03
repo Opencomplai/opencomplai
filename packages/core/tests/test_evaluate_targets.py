@@ -37,6 +37,7 @@ from opencomplai_core.models import (
     EvalSampleSet,
     FrameworkInputs,
     FrameworkReport,
+    FrameworkScope,
     GapReport,
     GapStatus,
     ModelMetadata,
@@ -352,6 +353,15 @@ def test_nist_exclusion_moves_the_row():
     assert nist.excluded == {"NIST_AI_RMF:MAP 2.1": reason}
 
 
+def test_nist_attestation_covers_a_subcategory_without_eu_evidence():
+    rid = "NIST_AI_RMF:MANAGE 2.1"
+    manifest = _manifest(NIST_AI_RMF=FrameworkInputs(attested={rid: ATTESTATION}))
+    nist = evaluate_targets(manifest, ["NIST_AI_RMF"], commit_ref="abc")["NIST_AI_RMF"]
+    row = next(r for r in nist.report.articles if r.article == rid)
+    assert row.status == GapStatus.MET
+    assert row.source == ArticleGapSource.ATTESTATION
+
+
 # --- every ValueError path ---------------------------------------------------
 
 
@@ -383,7 +393,8 @@ def test_unknown_excluded_id_raises(fixture_pack):
     [
         ("FIXTURE", "FIXTURE:REQ-9"),  # not a requirement
         ("FIXTURE", "FIXTURE:REQ-1"),  # a requirement with no attestation source
-        ("NIST_AI_RMF", "NIST_AI_RMF:GOVERN 1.1"),  # derived packs take none
+        # a NIST subcategory decided by EU AI Act evidence
+        ("NIST_AI_RMF", "NIST_AI_RMF:GOVERN 1.1"),
     ],
 )
 def test_unknown_attested_id_raises(fixture_pack, framework: str, requirement_id: str):
@@ -398,6 +409,19 @@ def test_blank_exclusion_justification_raises(fixture_pack):
     manifest = _manifest(FIXTURE=FrameworkInputs(excluded={"FIXTURE:REQ-3": "   "}))
     with pytest.raises(ValueError, match="justification"):
         evaluate_targets(manifest, ["FIXTURE"], commit_ref="abc")
+
+
+def test_scope_for_a_framework_without_scope_out_rows_does_nothing(fixture_pack):
+    scope = FrameworkScope(trains_models=False, uses_retrieval=False, public_api=False)
+    manifest = _manifest(
+        FIXTURE=FrameworkInputs(scope=scope), NIST_AI_RMF=FrameworkInputs(scope=scope)
+    )
+    targets = ["FIXTURE", "NIST_AI_RMF"]
+    scoped = evaluate_targets(manifest, targets, commit_ref="abc")
+    plain = evaluate_targets(_manifest(), targets, commit_ref="abc")
+    for fw in targets:
+        assert scoped[fw].excluded == {}
+        assert scoped[fw].report.articles == plain[fw].report.articles
 
 
 def test_inputs_for_a_framework_that_is_not_a_target_are_ignored(fixture_pack):

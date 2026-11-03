@@ -26,6 +26,20 @@
       "hr:high_risk",
       "s1:in_scope",
       "e1:ai_literacy"
-    ]
+    ],
+    "obligation_basis": {
+      "ai_literacy": [
+        "e1_entity_type"
+      ],
+      "provider_high_risk": [
+        "e1_entity_type",
+        "hr2_annex_iii",
+        "hr7_profiling",
+        "hr3_art_6_3",
+        "hr4_narrow_task",
+        "hr5_no_significant_risk",
+        "hr6_accessory"
+      ]
+    }
   }
 }

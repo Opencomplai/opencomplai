@@ -1,48 +1,52 @@
 """Re-project a GapReport's per-article rows into NIST AI RMF 1.0
-subcategory verdicts via the framework crosswalk (CP-16, D-3c).
+subcategory verdicts (CP-16, D-3c; per-subcategory mapping since FWMAP).
 
 Pure re-projection of already-computed EU-AI-Act-native evidence
 (`gap_report.py`) -- this module adds NO new scanner, evaluator, or probe.
 It mirrors `principle_report.py`'s worst-case rollup pattern (same
-`STATUS_SEVERITY` ranking), but keyed by `framework_crosswalk.py` instead of
-a fixed principle map, and it additionally propagates the crosswalk row's
-own mapping confidence: a subcategory whose only crosswalk row is
+`STATUS_SEVERITY` ranking), keyed by each subcategory's own `eu_ai_act`
+list in `data/nist_ai_rmf_subcategories.json`, and it additionally
+propagates that mapping's confidence: a subcategory mapped only at
 `confidence="low"` is never reported as more confident than that, no matter
 how "measured" the underlying EU AI Act evidence is.
 
-The crosswalk maps at CATEGORY granularity (e.g. "GOVERN 2", not "GOVERN
-2.2"), so every subcategory under a mapped category gets the same
-re-projected verdict -- this is the honest consequence of the crosswalk's
-own resolution, not something this module invents. A subcategory whose
-category has no crosswalk row at all (as of CP-16, this is every MANAGE
-subcategory -- CP-5's crosswalk has zero MANAGE rows) is reported
-UNVERIFIED / not_assessed, never guessed.
+A subcategory whose `eu_ai_act` list is empty has no EU AI Act evidence to
+re-project. It reads UNVERIFIED / not_assessed until the provider records an
+attestation under `framework_inputs.NIST_AI_RMF.attested`, and Met /
+attested once they do. A subcategory that has EU AI Act evidence takes no
+attestation: its verdict comes from that evidence only.
 """
 
 from __future__ import annotations
 
-from opencomplai_core.framework_crosswalk import CrosswalkEntry, get_crosswalk
+from collections.abc import Mapping
+
 from opencomplai_core.gap_report import STATUS_SEVERITY
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
+    Attestation,
     ConfidenceLabel,
     GapReport,
     GapStatus,
     NistRmfReport,
+    RmfFunction,
     RmfSubcategoryStatus,
 )
 from opencomplai_core.nist_ai_rmf_subcategories import get_subcategories
 
 _CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
+_PREFIX = "NIST_AI_RMF:"
 
 
-def _rows_for_category(
-    category: str, crosswalk: dict[str, CrosswalkEntry]
-) -> list[CrosswalkEntry]:
-    return [
-        row for row in crosswalk.values() if row.nist_ai_rmf_subcategory == category
-    ]
+def attestable_subcategories() -> set[str]:
+    """Prefixed ids of the subcategories that take an attestation: those the
+    EU AI Act evidence holds nothing for."""
+    return {
+        f"{_PREFIX}{subcat_id}"
+        for subcat_id, entry in get_subcategories().items()
+        if not entry.eu_ai_act
+    }
 
 
 def _unassessed(
@@ -54,7 +58,7 @@ def _unassessed(
 ) -> RmfSubcategoryStatus:
     return RmfSubcategoryStatus(
         subcategory=subcat_id,
-        function=function,
+        function=RmfFunction(function),
         category=category,
         status=GapStatus.UNVERIFIED,
         mapping_confidence=None,
@@ -64,60 +68,75 @@ def _unassessed(
     )
 
 
-def build_nist_rmf_report(gap_report: GapReport) -> NistRmfReport:
+def build_nist_rmf_report(
+    gap_report: GapReport, attested: Mapping[str, Attestation] | None = None
+) -> NistRmfReport:
     """Re-project `gap_report.articles` into a per-subcategory NIST AI RMF
-    report using `data/framework_crosswalk.json` to key the two taxonomies.
+    report using each subcategory's `eu_ai_act` mapping.
 
-    Every row cites the exact EU AI Act article(s) (`source_eu_ai_act_articles`)
-    and crosswalk `mapping_confidence` it was derived from -- never a
-    fabricated or silently-upgraded verdict. A subcategory with no crosswalk
-    coverage, or whose crosswalk-mapped article(s) are absent from this run's
-    `gap_report`, is UNVERIFIED with `confidence_label=NOT_ASSESSED`.
+    Every re-projected row cites the exact EU AI Act article(s)
+    (`source_eu_ai_act_articles`) and the mapping confidence it was derived
+    from -- never a fabricated or silently-upgraded verdict. A subcategory
+    whose mapped articles are absent from this run's `gap_report` is
+    UNVERIFIED with `confidence_label=NOT_ASSESSED`. `attested` is the
+    manifest's `framework_inputs.NIST_AI_RMF.attested`; it is read only for
+    subcategories with no EU AI Act mapping.
     """
-    taxonomy = get_subcategories()
-    crosswalk = get_crosswalk()
+    attested = attested or {}
     status_by_article: dict[str, ArticleGapStatus] = {
         row.article: row for row in gap_report.articles
     }
 
     rows: list[RmfSubcategoryStatus] = []
-    for subcat_id, entry in taxonomy.items():
-        mapped_rows = _rows_for_category(entry.category, crosswalk)
-
-        if not mapped_rows:
-            rows.append(
-                _unassessed(
-                    subcat_id,
-                    entry.function,
-                    entry.category,
-                    (
-                        f"No row in data/framework_crosswalk.json maps any EU AI Act "
-                        f"article to {entry.category} -- there is no EU-AI-Act-native "
-                        "evidence to re-project onto this subcategory."
-                    ),
-                    [],
+    for subcat_id, entry in get_subcategories().items():
+        if not entry.eu_ai_act:
+            attestation = attested.get(f"{_PREFIX}{subcat_id}")
+            if attestation is None:
+                rows.append(
+                    _unassessed(
+                        subcat_id,
+                        entry.function,
+                        entry.category,
+                        (
+                            "The EU AI Act evidence holds nothing for this "
+                            "subcategory. Add an attestation under "
+                            "framework_inputs.NIST_AI_RMF.attested in the manifest."
+                        ),
+                        [],
+                    )
                 )
-            )
+            else:
+                rows.append(
+                    RmfSubcategoryStatus(
+                        subcategory=subcat_id,
+                        function=RmfFunction(entry.function),
+                        category=entry.category,
+                        status=GapStatus.MET,
+                        mapping_confidence=None,
+                        confidence_label=ConfidenceLabel.ATTESTED,
+                        rationale=attestation.statement,
+                    )
+                )
             continue
 
         present = [
-            (row.eu_ai_act_article, status_by_article[row.eu_ai_act_article], row)
-            for row in mapped_rows
-            if row.eu_ai_act_article in status_by_article
+            (article, status_by_article[article], confidence)
+            for article, confidence in entry.eu_ai_act
+            if article in status_by_article
         ]
 
         if not present:
-            mapped_articles = ", ".join(r.eu_ai_act_article for r in mapped_rows)
+            mapped = [article for article, _ in entry.eu_ai_act]
             rows.append(
                 _unassessed(
                     subcat_id,
                     entry.function,
                     entry.category,
                     (
-                        f"{entry.category} maps to {mapped_articles} via the crosswalk, "
-                        "but none of those articles are present in this gap report run."
+                        f"{subcat_id} maps to {', '.join(mapped)}, but none of "
+                        "those articles are present in this gap report run."
                     ),
-                    [r.eu_ai_act_article for r in mapped_rows],
+                    mapped,
                 )
             )
             continue
@@ -126,11 +145,10 @@ def build_nist_rmf_report(gap_report: GapReport) -> NistRmfReport:
             (status.status for _, status, _ in present),
             key=lambda s: STATUS_SEVERITY[s],
         )
-        # Never upgrade: take the lowest (worst) crosswalk mapping confidence
-        # among the contributing rows, exactly as CP-5's own confidence
-        # values were assigned -- conservative unless well-established.
+        # Never upgrade: take the lowest (worst) mapping confidence among the
+        # contributing articles -- conservative unless well-established.
         mapping_confidence = min(
-            (row.confidence for _, _, row in present),
+            (confidence for _, _, confidence in present),
             key=lambda c: _CONFIDENCE_RANK[c],
         )
         citations = "; ".join(
@@ -139,21 +157,21 @@ def build_nist_rmf_report(gap_report: GapReport) -> NistRmfReport:
             for article, status, _ in present
         )
         rationale = (
-            f"Re-projected via data/framework_crosswalk.json ({entry.category}, "
-            f"mapping confidence={mapping_confidence}) from existing EU AI Act "
+            f"Re-projected via data/nist_ai_rmf_subcategories.json (mapping "
+            f"confidence={mapping_confidence}) from existing EU AI Act "
             f"evidence: {citations}."
         )
 
         rows.append(
             RmfSubcategoryStatus(
                 subcategory=subcat_id,
-                function=entry.function,
+                function=RmfFunction(entry.function),
                 category=entry.category,
                 status=worst_status,
                 mapping_confidence=mapping_confidence,
-                # A crosswalk re-projection is a heuristic aid regardless of
-                # the underlying article evidence's own confidence label --
-                # it is never a legal determination.
+                # A re-projection is a heuristic aid regardless of the
+                # underlying article evidence's own confidence label -- it is
+                # never a legal determination.
                 confidence_label=ConfidenceLabel.HEURISTIC_ESTIMATE,
                 source_eu_ai_act_articles=[article for article, _, _ in present],
                 rationale=rationale,
@@ -168,30 +186,45 @@ def build_nist_rmf_report(gap_report: GapReport) -> NistRmfReport:
     )
 
 
-def nist_rmf_as_gap_report(gap_report: GapReport) -> GapReport:
+def nist_rmf_as_gap_report(
+    gap_report: GapReport, attested: Mapping[str, Attestation] | None = None
+) -> GapReport:
     """The NIST AI RMF re-projection as a GapReport, for side-by-side runs.
 
-    One row per subcategory, id prefixed "NIST_AI_RMF:", sourced CROSSWALK and
-    citing the EU AI Act articles it was derived from. Verdicts and labels come
-    unchanged from `build_nist_rmf_report`; a re-projection carries no numeric
-    confidence of its own.
+    One row per subcategory, id prefixed "NIST_AI_RMF:", sourced CROSSWALK
+    (ATTESTATION for attested rows) and citing the EU AI Act articles it was
+    derived from. Verdicts and labels come unchanged from
+    `build_nist_rmf_report`; a re-projection carries no numeric confidence.
     """
-    nist = build_nist_rmf_report(gap_report)
-    return GapReport(
-        system_id=nist.system_id,
-        commit_ref=nist.commit_ref,
-        generated_at=nist.generated_at,
-        articles=[
+    attested = attested or {}
+    nist = build_nist_rmf_report(gap_report, attested)
+    articles = []
+    for row in nist.subcategories:
+        rid = f"{_PREFIX}{row.subcategory}"
+        if row.confidence_label is ConfidenceLabel.ATTESTED:
+            attestation = attested[rid]
+            source = ArticleGapSource.ATTESTATION
+            evidence_ref = (
+                f"attestation:{attestation.attested_by}@{attestation.attested_at}"
+            )
+        else:
+            source = ArticleGapSource.CROSSWALK
+            evidence_ref = ", ".join(row.source_eu_ai_act_articles) or "none"
+        articles.append(
             ArticleGapStatus(
-                article=f"NIST_AI_RMF:{row.subcategory}",
+                article=rid,
                 status=row.status,
-                source=ArticleGapSource.CROSSWALK,
-                evidence_ref=", ".join(row.source_eu_ai_act_articles) or "none",
+                source=source,
+                evidence_ref=evidence_ref,
                 rationale=row.rationale,
                 confidence=None,
                 confidence_label=row.confidence_label,
                 disclaimer_ref="DISCLAIMER_V2",
             )
-            for row in nist.subcategories
-        ],
+        )
+    return GapReport(
+        system_id=nist.system_id,
+        commit_ref=nist.commit_ref,
+        generated_at=nist.generated_at,
+        articles=articles,
     )

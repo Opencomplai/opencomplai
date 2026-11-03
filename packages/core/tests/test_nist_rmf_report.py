@@ -1,10 +1,11 @@
 """Tests for the NIST AI RMF 1.0 subcategory re-projection (CP-16, D-3c).
 
 `build_nist_rmf_report` re-projects an existing `GapReport` (already-computed
-EU_AI_ACT evidence) into per-subcategory verdicts via
-`data/framework_crosswalk.json` -- no new scanner/evaluator involved. The four
-golden scenarios below (GOVERN/MAP/MEASURE/MANAGE) are this epic's required
-"at least one subcategory per RMF function" fixtures.
+EU_AI_ACT evidence) into per-subcategory verdicts via each subcategory's own
+`eu_ai_act` mapping in `data/nist_ai_rmf_subcategories.json` -- no new
+scanner/evaluator involved. Subcategories with no EU AI Act mapping take a
+provider attestation instead. The golden scenarios below cover at least one
+subcategory per RMF function.
 """
 
 from __future__ import annotations
@@ -12,11 +13,22 @@ from __future__ import annotations
 from opencomplai_core.models import (
     ArticleGapSource,
     ArticleGapStatus,
+    Attestation,
     ConfidenceLabel,
     GapReport,
     GapStatus,
 )
-from opencomplai_core.nist_rmf_report import build_nist_rmf_report
+from opencomplai_core.nist_rmf_report import (
+    attestable_subcategories,
+    build_nist_rmf_report,
+    nist_rmf_as_gap_report,
+)
+
+_ATTESTATION = Attestation(
+    statement="Resourcing and non-AI alternatives are reviewed each quarter.",
+    attested_by="cto@example.com",
+    attested_at="2026-11-02",
+)
 
 
 def _make_report(rows: list[ArticleGapStatus]) -> GapReport:
@@ -26,6 +38,20 @@ def _make_report(rows: list[ArticleGapStatus]) -> GapReport:
         generated_at="2026-09-18T00:00:00Z",
         articles=rows,
     )
+
+
+def _row(article: str, status: GapStatus, **extra) -> ArticleGapStatus:
+    return ArticleGapStatus(
+        article=article,
+        status=status,
+        source=extra.pop("source", ArticleGapSource.RULE),
+        evidence_ref=extra.pop("evidence_ref", f"ref-{article}"),
+        **extra,
+    )
+
+
+def _sub(report, subcategory: str):
+    return next(r for r in report.subcategories if r.subcategory == subcategory)
 
 
 class TestShape:
@@ -54,158 +80,125 @@ class TestShape:
 
 
 class TestGovernGoldenScenario:
-    """Art. 17 (Quality management system) crosswalks to GOVERN 1 at
-    confidence=medium -- the most direct mapping in framework_crosswalk.json."""
-
-    def test_govern_1_1_reprojects_art_17_missing(self):
+    def test_govern_1_2_reprojects_art_17_missing_at_low(self):
         report = build_nist_rmf_report(
             _make_report(
-                [
-                    ArticleGapStatus(
-                        article="Art. 17",
-                        status=GapStatus.MISSING,
-                        source=ArticleGapSource.OBLIGATION,
-                        evidence_ref="provider_qms",
-                    )
-                ]
+                [_row("Art. 17", GapStatus.MISSING, evidence_ref="provider_qms")]
             )
         )
-        row = next(r for r in report.subcategories if r.subcategory == "GOVERN 1.1")
+        row = _sub(report, "GOVERN 1.2")
         assert row.status == GapStatus.MISSING
-        assert row.mapping_confidence == "medium"
+        assert row.mapping_confidence == "low"
         assert row.confidence_label == ConfidenceLabel.HEURISTIC_ESTIMATE
-        assert "Art. 17" in row.source_eu_ai_act_articles
-        assert "Art. 17" in row.rationale
+        assert row.source_eu_ai_act_articles == ["Art. 17"]
         assert "provider_qms" in row.rationale
 
 
 class TestMapGoldenScenario:
-    """Art. 10 (Data and data governance) crosswalks to MAP 2 at
-    confidence=medium."""
-
-    def test_map_2_1_reprojects_art_10_met(self):
-        report = build_nist_rmf_report(
-            _make_report(
-                [
-                    ArticleGapStatus(
-                        article="Art. 10",
-                        status=GapStatus.MET,
-                        source=ArticleGapSource.RULE,
-                        evidence_ref="EU_AIA_ART10_DATA_GOVERNANCE",
-                    )
-                ]
-            )
-        )
-        row = next(r for r in report.subcategories if r.subcategory == "MAP 2.1")
+    def test_map_2_3_reprojects_art_10_met(self):
+        report = build_nist_rmf_report(_make_report([_row("Art. 10", GapStatus.MET)]))
+        row = _sub(report, "MAP 2.3")
         assert row.status == GapStatus.MET
         assert row.mapping_confidence == "medium"
         assert row.source_eu_ai_act_articles == ["Art. 10"]
 
-    def test_map_2_2_gets_the_same_reprojection_as_map_2_1(self):
-        """The crosswalk maps at category granularity ("MAP 2"), so every
-        subcategory under it shares the same re-projected verdict -- this is
-        the honest consequence of the crosswalk's own resolution."""
-        report = build_nist_rmf_report(
-            _make_report(
-                [
-                    ArticleGapStatus(
-                        article="Art. 10",
-                        status=GapStatus.MET,
-                        source=ArticleGapSource.RULE,
-                        evidence_ref="EU_AIA_ART10_DATA_GOVERNANCE",
-                    )
-                ]
-            )
-        )
-        row_1 = next(r for r in report.subcategories if r.subcategory == "MAP 2.1")
-        row_2 = next(r for r in report.subcategories if r.subcategory == "MAP 2.2")
-        assert row_1.status == row_2.status
-        assert row_1.mapping_confidence == row_2.mapping_confidence
+    def test_mapping_is_per_subcategory_not_per_category(self):
+        """MAP 2.1 maps to Art. 11, not Art. 10: evidence for one article no
+        longer spreads over every subcategory of a category."""
+        report = build_nist_rmf_report(_make_report([_row("Art. 10", GapStatus.MET)]))
+        row = _sub(report, "MAP 2.1")
+        assert row.status == GapStatus.UNVERIFIED
+        assert row.source_eu_ai_act_articles == ["Art. 11"]
+        assert "none of those articles are present" in row.rationale
 
 
 class TestMeasureGoldenScenario:
-    """Art. 15 (Accuracy, robustness and cybersecurity) crosswalks to
-    MEASURE 2 at confidence=low -- low confidence must survive, not upgrade."""
-
-    def test_measure_2_1_reprojects_art_15_partial_at_low_confidence(self):
+    def test_measure_2_5_keeps_low_confidence_over_measured_evidence(self):
         report = build_nist_rmf_report(
             _make_report(
                 [
-                    ArticleGapStatus(
-                        article="Art. 15",
-                        status=GapStatus.PARTIAL,
+                    _row(
+                        "Art. 15",
+                        GapStatus.PARTIAL,
                         source=ArticleGapSource.EVALUATOR,
                         evidence_ref="sha256:deadbeef",
-                        # A highly "measured" underlying signal...
                         confidence=0.95,
                         confidence_label=ConfidenceLabel.MEASURED,
                     )
                 ]
             )
         )
-        row = next(r for r in report.subcategories if r.subcategory == "MEASURE 2.1")
+        row = _sub(report, "MEASURE 2.5")
         assert row.status == GapStatus.PARTIAL
-        # ...must NOT upgrade the crosswalk's own "low" mapping confidence.
         assert row.mapping_confidence == "low"
         assert row.confidence_label == ConfidenceLabel.HEURISTIC_ESTIMATE
 
 
 class TestManageGoldenScenario:
-    """CP-5's crosswalk has zero rows mapping to MANAGE -- every MANAGE
-    subcategory must stay UNVERIFIED/not_assessed regardless of what the gap
-    report contains, never a fabricated verdict for an uncovered function."""
+    def test_manage_1_3_reprojects_art_9(self):
+        report = build_nist_rmf_report(_make_report([_row("Art. 9", GapStatus.MET)]))
+        row = _sub(report, "MANAGE 1.3")
+        assert row.status == GapStatus.MET
+        assert row.mapping_confidence == "medium"
 
-    def test_manage_1_1_is_unverified_even_with_unrelated_evidence_present(self):
-        report = build_nist_rmf_report(
-            _make_report(
-                [
-                    ArticleGapStatus(
-                        article="Art. 9",
-                        status=GapStatus.MET,
-                        source=ArticleGapSource.RULE,
-                        evidence_ref="EU_AIA_ART9_RISK_MGMT",
-                    )
-                ]
-            )
-        )
-        row = next(r for r in report.subcategories if r.subcategory == "MANAGE 1.1")
+    def test_manage_2_1_has_no_eu_evidence_and_asks_for_an_attestation(self):
+        report = build_nist_rmf_report(_make_report([_row("Art. 9", GapStatus.MET)]))
+        row = _sub(report, "MANAGE 2.1")
         assert row.status == GapStatus.UNVERIFIED
-        assert row.mapping_confidence is None
         assert row.confidence_label == ConfidenceLabel.NOT_ASSESSED
         assert row.source_eu_ai_act_articles == []
-        assert "no EU-AI-Act-native evidence" in row.rationale.lower() or (
-            "no eu-ai-act-native" in row.rationale.lower()
+        assert "framework_inputs.NIST_AI_RMF.attested" in row.rationale
+
+
+class TestAttestation:
+    def test_attestable_set_is_exactly_the_unmapped_subcategories(self):
+        assert "NIST_AI_RMF:MANAGE 2.1" in attestable_subcategories()
+        assert "NIST_AI_RMF:MANAGE 1.3" not in attestable_subcategories()
+
+    def test_attestation_makes_an_unmapped_subcategory_met(self):
+        report = build_nist_rmf_report(
+            _make_report([]), {"NIST_AI_RMF:MANAGE 2.1": _ATTESTATION}
         )
+        row = _sub(report, "MANAGE 2.1")
+        assert row.status == GapStatus.MET
+        assert row.confidence_label == ConfidenceLabel.ATTESTED
+        assert row.rationale == _ATTESTATION.statement
+
+    def test_attestation_is_ignored_where_eu_evidence_decides(self):
+        report = build_nist_rmf_report(
+            _make_report([_row("Art. 9", GapStatus.MISSING)]),
+            {"NIST_AI_RMF:MANAGE 1.3": _ATTESTATION},
+        )
+        assert _sub(report, "MANAGE 1.3").status == GapStatus.MISSING
+
+    def test_gap_report_view_marks_attested_rows(self):
+        report = nist_rmf_as_gap_report(
+            _make_report([]), {"NIST_AI_RMF:MANAGE 2.1": _ATTESTATION}
+        )
+        row = next(r for r in report.articles if r.article == "NIST_AI_RMF:MANAGE 2.1")
+        assert row.source == ArticleGapSource.ATTESTATION
+        assert row.evidence_ref == "attestation:cto@example.com@2026-11-02"
+        other = next(
+            r for r in report.articles if r.article == "NIST_AI_RMF:MANAGE 1.3"
+        )
+        assert other.source == ArticleGapSource.CROSSWALK
 
 
 class TestWorstCaseRollup:
-    """When a category maps to more than one article, the subcategory's
-    verdict is the worst (most severe) status among the present ones, and
-    the lowest (worst) crosswalk confidence -- mirroring principle_report's
-    STATUS_SEVERITY rollup."""
+    """When a subcategory maps to more than one article, its verdict is the
+    worst (most severe) status among the present ones, and the lowest mapping
+    confidence -- mirroring principle_report's STATUS_SEVERITY rollup."""
 
-    def test_govern_1_takes_the_missing_over_the_met(self):
-        # Art. 9 and Art. 17 both crosswalk to GOVERN 1 (medium each).
+    def test_govern_1_4_takes_the_missing_over_the_met(self):
+        # GOVERN 1.4 maps Art. 9 (medium) and Art. 17 (low).
         report = build_nist_rmf_report(
             _make_report(
-                [
-                    ArticleGapStatus(
-                        article="Art. 9",
-                        status=GapStatus.MET,
-                        source=ArticleGapSource.RULE,
-                        evidence_ref="EU_AIA_ART9_RISK_MGMT",
-                    ),
-                    ArticleGapStatus(
-                        article="Art. 17",
-                        status=GapStatus.MISSING,
-                        source=ArticleGapSource.OBLIGATION,
-                        evidence_ref="provider_qms",
-                    ),
-                ]
+                [_row("Art. 9", GapStatus.MET), _row("Art. 17", GapStatus.MISSING)]
             )
         )
-        row = next(r for r in report.subcategories if r.subcategory == "GOVERN 1.1")
+        row = _sub(report, "GOVERN 1.4")
         assert row.status == GapStatus.MISSING
+        assert row.mapping_confidence == "low"
         assert set(row.source_eu_ai_act_articles) == {"Art. 9", "Art. 17"}
 
 

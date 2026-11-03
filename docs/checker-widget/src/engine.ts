@@ -1,6 +1,6 @@
 /**
  * TypeScript port of packages/core/src/opencomplai_core/compliance_checker/engine.py
- * Deterministic compliance checker — checker version checker-2026-10-14.
+ * Deterministic compliance checker — checker version checker-2026-10-26.
  *
  * Must produce identical output to the Python evaluate() for all golden
  * vectors in packages/core/tests/fixtures/checker_golden_vectors_shared.json.
@@ -12,7 +12,7 @@ import {
   StatusChangeItem,
 } from "./catalog";
 
-export const CHECKER_VERSION = "checker-2026-10-14";
+export const CHECKER_VERSION = "checker-2026-10-26";
 
 export type EntityType =
   | "provider"
@@ -33,6 +33,8 @@ export interface CheckerResult {
   determination_path: string[];
   answers: Record<string, unknown>;
   session_id: string | null;
+  /** For each obligation id, the answer keys that made it apply. */
+  obligation_basis: Record<string, string[]>;
 }
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -131,6 +133,7 @@ function buildResult(opts: {
   is_prohibited?: boolean;
   effective_entity?: EntityType | null;
   answers: Record<string, unknown>;
+  obligation_basis?: Record<string, string[]>;
 }): CheckerResult {
   return {
     checker_version: CHECKER_VERSION,
@@ -147,6 +150,7 @@ function buildResult(opts: {
     determination_path: opts.path,
     answers: opts.answers,
     session_id: null,
+    obligation_basis: opts.obligation_basis ?? {},
   };
 }
 
@@ -158,8 +162,9 @@ function entityObligations(
   if (entity === "provider") {
     if (isHighRisk) ids.push("provider_high_risk");
   } else if (entity === "deployer") {
-    if (isHighRisk) ids.push("deployer_high_risk", "deployer_general");
-    else ids.push("deployer_general");
+    // Art. 26 binds deployers of high-risk systems only: one entry. The
+    // catalogue keeps deployer_general for results from older versions.
+    if (isHighRisk) ids.push("deployer_high_risk");
   } else if (entity === "distributor") {
     if (isHighRisk) ids.push("distributor");
   } else if (entity === "importer") {
@@ -204,6 +209,7 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
       obligationIds: ["authorised_representative"],
       effective_entity: effectiveEntity,
       answers,
+      obligation_basis: { authorised_representative: ["e1_entity_type"] },
     });
   }
 
@@ -297,11 +303,17 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
       is_prohibited: true,
       effective_entity: effectiveEntity,
       answers,
+      obligation_basis: { prohibited: ["r3_prohibited"] },
     });
   }
 
-  // AI literacy for provider + deployer
-  if (effectiveEntity === "provider" || effectiveEntity === "deployer") {
+  // AI literacy for provider + deployer. A product manufacturer with an AI
+  // system built in is treated as its provider (Art. 25), so Art. 4 applies.
+  if (
+    effectiveEntity === "provider" ||
+    effectiveEntity === "deployer" ||
+    effectiveEntity === "product_manufacturer"
+  ) {
     obligationIds.push("ai_literacy");
     path.push("e1:ai_literacy");
   }
@@ -319,6 +331,11 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
 
   // Entity-role obligations
   obligationIds.push(...entityObligations(effectiveEntity, isHighRisk));
+  // A substantial modification moves a product manufacturer onto the provider
+  // route; its own Art. 25(1) obligation still applies.
+  if (entity === "product_manufacturer" && effectiveEntity !== entity) {
+    obligationIds.push("product_manufacturer");
+  }
 
   if (effectiveEntity === "provider" && reliesOnArt63Derogation(answers)) {
     obligationIds.push("provider_art_6_4_registration");
@@ -326,20 +343,16 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
   }
 
   // Transparency — Art. 50 disclosure duties apply in addition to high-risk
-  // obligations, not instead of them, so the obligation is never gated on
-  // isHighRisk. Only the "transparency_only" status (sole obligation tier)
-  // stays high-risk-gated.
-  if (answerBool(answers, "r4_transparency")) {
-    obligationIds.push("transparency");
+  // obligations, not instead of them, so they are never gated on isHighRisk.
+  // Only the "transparency_only" status (sole obligation tier) stays
+  // high-risk-gated.
+  const transparencyIds = transparencyObligations(answers, entity, effectiveEntity);
+  if (transparencyIds.length) {
+    obligationIds.push(...transparencyIds);
     path.push("r4:transparency");
     if (!isHighRisk) {
       const nonLiteracy = obligationIds.filter((id) => id !== "ai_literacy");
-      if (
-        (obligationIds.length === 2 &&
-          obligationIds[0] === "ai_literacy" &&
-          obligationIds[1] === "transparency") ||
-        (nonLiteracy.length === 1 && nonLiteracy[0] === "transparency")
-      ) {
+      if (nonLiteracy.every((id) => id.startsWith("transparency"))) {
         statusIds.push("transparency_only");
       }
     }
@@ -365,5 +378,73 @@ export function evaluate(answers: Record<string, unknown>): CheckerResult {
     is_high_risk: isHighRisk,
     effective_entity: effectiveEntity,
     answers,
+    obligation_basis: Object.fromEntries(
+      obligationIds.map((id) => [id, basis(id, answers, entity, effectiveEntity)])
+    ),
   });
+}
+
+// Art. 50 items: answer value, obligation id, role that carries the duty.
+const TRANSPARENCY_ITEMS: [string, string, "provider" | "deployer"][] = [
+  ["interaction", "transparency_interaction", "provider"],
+  ["synthetic_content", "transparency_synthetic", "provider"],
+  ["emotion_biometric", "transparency_emotion_biometric", "deployer"],
+  ["deepfake", "transparency_deepfake", "deployer"],
+  ["public_interest_text", "transparency_public_text", "deployer"],
+];
+
+/** Art. 50 obligations, per item and role when r4_transparency_items is given. */
+function transparencyObligations(
+  answers: Record<string, unknown>,
+  entity: EntityType,
+  effectiveEntity: EntityType
+): string[] {
+  const items = answers["r4_transparency_items"];
+  if (!Array.isArray(items)) {
+    return answerBool(answers, "r4_transparency") ? ["transparency"] : [];
+  }
+  const isProvider =
+    effectiveEntity === "provider" || entity === "product_manufacturer";
+  const isDeployer = entity === "deployer";
+  return TRANSPARENCY_ITEMS.filter(
+    (item) =>
+      items.includes(item[0]) && (item[2] === "provider" ? isProvider : isDeployer)
+  ).map((item) => item[1]);
+}
+
+const ART_6_3_KEYS = [
+  "hr3_art_6_3",
+  "hr4_narrow_task",
+  "hr5_no_significant_risk",
+  "hr6_accessory",
+];
+
+/** Answer keys that made an obligation apply. Scope gates are left out. */
+function basis(
+  obligationId: string,
+  answers: Record<string, unknown>,
+  entity: EntityType,
+  effectiveEntity: EntityType
+): string[] {
+  const role = ["e1_entity_type"];
+  if (effectiveEntity !== entity) role.push("e2_modifications");
+  if (entity === "product_manufacturer") role.push("e3_product_integration");
+  const annexI =
+    answerBool(answers, "hr1_annex_i") &&
+    answerBool(answers, "hr8_conformity_assessment");
+  const high = annexI ? ["hr1_annex_i", "hr8_conformity_assessment"] : [];
+  if (answerBool(answers, "hr2_annex_iii")) {
+    high.push("hr2_annex_iii", "hr7_profiling");
+    if (!annexI && !answerBool(answers, "hr7_profiling")) high.push(...ART_6_3_KEYS);
+  }
+  if (obligationId === "gpai_provider") return ["s1_gpai"];
+  if (obligationId === "gpai_systemic_risk") return ["s1_gpai", "s1_gpai_systemic_risk"];
+  if (obligationId === "transparency") return ["r4_transparency"];
+  if (obligationId.startsWith("transparency_")) return [...role, "r4_transparency_items"];
+  if (obligationId === "ai_literacy" || obligationId === "product_manufacturer") return role;
+  if (obligationId === "provider_art_6_4_registration") {
+    return [...role, "hr2_annex_iii", "hr7_profiling", ...ART_6_3_KEYS];
+  }
+  if (obligationId === "fria") return [...role, ...high, "r5_fria"];
+  return [...role, ...high];
 }

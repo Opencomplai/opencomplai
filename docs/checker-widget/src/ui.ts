@@ -277,6 +277,21 @@ const QUESTIONS: Question[] = [
       !a["s1_in_scope"] || !!a["r2_excluded"] || !!a["r3_prohibited"],
   },
   {
+    key: "r4_transparency_items",
+    label: "Which of these does the system do? (Art. 50)",
+    type: "multi",
+    section: "Obligations",
+    options: [
+      { value: "interaction", label: "Interacts directly with people (for example a chatbot)" },
+      { value: "synthetic_content", label: "Generates synthetic audio, images, video or text" },
+      { value: "emotion_biometric", label: "Emotion recognition or biometric categorisation" },
+      { value: "deepfake", label: "Generates or manipulates deep fake image, audio or video" },
+      { value: "public_interest_text", label: "Generates text published to inform the public on matters of public interest" },
+    ],
+    skip: (a) =>
+      !a["s1_in_scope"] || !!a["r2_excluded"] || !!a["r3_prohibited"] || !a["r4_transparency"],
+  },
+  {
     key: "r5_fria",
     label:
       "Are you a body governed by public law, a private entity providing public services, or a deployer of an Annex III 5(b) or 5(c) system (credit scoring or life/health insurance pricing) (FRIA under Art 27)?",

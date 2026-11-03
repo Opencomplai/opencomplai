@@ -102,7 +102,7 @@ Health check for the gateway API process. The only endpoint that needs no creden
 {
   "status": "ok",
   "service": "gateway-api",
-  "version": "0.13.2"
+  "version": "0.14.0"
 }
 ```
 
@@ -135,7 +135,7 @@ Validate a system manifest against the `SystemManifest` schema and forward to th
 | `intended_purpose` | `string` | | — | Primary intended purpose. |
 | `compliance_target` | `string` | | `EU_AI_ACT` | Legacy single framework (`EU_AI_ACT` or `NIST_AI_RMF`). Ignored when `compliance_targets` is set. |
 | `compliance_targets` | `string[]` | | — | Frameworks to assess side by side, e.g. `["EU_AI_ACT", "NIST_AI_RMF"]`. Must be non-empty. |
-| `framework_inputs` | `object` | | `{}` | Per framework id: `excluded` (requirement id → reason) and `attested` (requirement id → `{statement, attested_by, attested_at}`). Requirement ids carry the framework prefix, e.g. `NIST_AI_RMF:GOVERN 1.1`. |
+| `framework_inputs` | `object` | | `{}` | Per framework id: `excluded` (requirement id → reason) and `attested` (requirement id → `{statement, attested_by, attested_at}`), and optionally `scope` (yes/no answers `trains_models`, `uses_retrieval`, `public_api` that exclude the rows they rule out). Requirement ids carry the framework prefix, e.g. `NIST_AI_RMF:GOVERN 1.1`. |
 | `high_risk_presumption` | `bool` | | `false` | Provider presumes high risk. |
 | `commit_ref` | `string` | | `HEAD` | Git commit reference. |
 
