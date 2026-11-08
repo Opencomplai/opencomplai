@@ -231,6 +231,77 @@
       "title": "ArtifactSummaries",
       "type": "object"
     },
+    "AttestationBundleRef": {
+      "additionalProperties": false,
+      "description": "The attestation bundle a scan was run with: its hash and signature, copied\nunchanged from the bundle. The bundle itself never enters the artifact.",
+      "properties": {
+        "count": {
+          "description": "Records in the bundle",
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "issued_at": {
+          "description": "ISO 8601 timestamp with a UTC offset",
+          "maxLength": 40,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+(Z|[+-][0-9]{2}:[0-9]{2})$",
+          "title": "Issued At",
+          "type": "string"
+        },
+        "key_id": {
+          "description": "Id of the signing key",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z0-9_.:-]{1,64}$",
+          "title": "Key Id",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "signature": {
+          "description": "Base64 Ed25519 signature",
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+          "title": "Signature",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sha256",
+        "signature",
+        "key_id",
+        "issued_at",
+        "count"
+      ],
+      "title": "AttestationBundleRef",
+      "type": "object"
+    },
+    "AttestationBundleUnavailable": {
+      "additionalProperties": false,
+      "description": "A bundle was asked for and could not be used.",
+      "properties": {
+        "reason": {
+          "description": "Short machine code, for example fetch_failed",
+          "pattern": "^[a-z0-9_]{1,64}$",
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "const": "unavailable",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "reason"
+      ],
+      "title": "AttestationBundleUnavailable",
+      "type": "object"
+    },
     "ConfidenceLabel": {
       "description": "Honesty label for gap / report surfaces (heuristic aid, not legal determination).",
       "enum": [
@@ -1247,6 +1318,22 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "description": "Machine-readable signed status artifact produced at the end of every scan.\nThis is the canonical output consumed by CI gates and the premium dashboard.",
   "properties": {
+    "attestation_bundle": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AttestationBundleRef"
+        },
+        {
+          "$ref": "#/$defs/AttestationBundleUnavailable"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The attestation bundle `check` was run with (hash and signature) or why none could be used; omitted when no bundle was configured",
+      "title": "Attestation Bundle"
+    },
     "cli_version": {
       "anyOf": [
         {

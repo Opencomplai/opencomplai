@@ -1,7 +1,8 @@
 {
   "Art. 4": {
+    "default_ttl_days": 365,
     "sources": [
-      { "kind": "obligation", "ref": "ai_literacy" }
+      { "kind": "attestation", "ref": "Art. 4" }
     ]
   },
   "Art. 5": {

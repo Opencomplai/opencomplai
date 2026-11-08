@@ -93,7 +93,7 @@ an attestation without deciding the row, mark the source:
 | Rule | Effect |
 |---|---|
 | The other sources resolve to Met | The row stays Met. The file the probe found is named in the rationale; `evidence_ref` is unchanged. |
-| The other sources resolve to Unverified and the probe found evidence | The row stays Unverified, so it never fails a gate. Its source is `artifact`, `evidence_ref` the file, and the rationale says the evidence was found, is not attested, and how to record an attestation. |
+| The other sources resolve to Unverified and the probe found evidence | The row stays Unverified. The probe does not move the gate: by default Unverified never fails, and with `fail_on: unverified` the row fails until it has a current attestation. Its source is `artifact`, `evidence_ref` the file, and the rationale says the evidence was found, is not attested, and how to record an attestation. |
 | The probe finds nothing, or a file without its content markers | Nothing changes. |
 | The other sources resolve to Missing or Partial | Nothing changes: a failing evaluator still reads Missing. |
 

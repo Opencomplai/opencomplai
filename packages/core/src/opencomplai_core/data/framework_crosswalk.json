@@ -20,7 +20,7 @@
     {
       "eu_ai_act_article": "Art. 4",
       "iso_42001_clause": "Clause 7.2 (Competence)",
-      "iso_42001_annex_a_control": "A.4.5 (Human resources for AI systems)",
+      "iso_42001_annex_a_control": "A.4.6 (Human resources)",
       "nist_ai_rmf_subcategory": "GOVERN 2",
       "source": "iso_42001; nist_ai_rmf",
       "confidence": "low",

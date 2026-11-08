@@ -295,7 +295,7 @@ def test_untagged_legacy_signatures_do_not_verify(tmp_path):
 
 def test_new_domain_values_are_ascii_and_unique():
     values = [d.value for d in SigningDomain]
-    assert len(values) == 11
+    assert len(values) == 12
     assert len(set(values)) == len(values)
     assert all(v.isascii() and "\x00" not in v for v in values)
 
@@ -393,3 +393,13 @@ def test_classification_acceptance_domain_is_exclusive(keypair: Path):
     for domain in SigningDomain:
         ok = verify_bundle_bytes(payload, sig, keypair / "signing.pub", domain)
         assert ok is (domain is SigningDomain.CLASSIFICATION_ACCEPTANCE)
+
+
+def test_attestation_bundle_domain_is_exclusive(keypair: Path):
+    payload = b"0" * 64  # the ASCII hex digest an attestation bundle signs
+    sig = sign_bundle_bytes(
+        payload, keypair / "signing.key", SigningDomain.ATTESTATION_BUNDLE
+    )
+    for domain in SigningDomain:
+        ok = verify_bundle_bytes(payload, sig, keypair / "signing.pub", domain)
+        assert ok is (domain is SigningDomain.ATTESTATION_BUNDLE)

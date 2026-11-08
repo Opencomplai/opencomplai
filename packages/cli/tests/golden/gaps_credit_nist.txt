@@ -25,8 +25,8 @@ See docs/src/concepts/nist-ai-rmf.md for the methodology; no new scanner or eval
 │              │            │               │                           │ the manifest.                                                                                                                │
 │ GOVERN 2.1   │ PARTIAL    │ low           │ Art. 17                   │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 ->   │
 │              │            │               │                           │ partial (source=artifact, evidence=docs/qms.md).                                                                             │
-│ GOVERN 2.2   │ UNVERIFIED │ medium        │ Art. 4                    │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 4 -> │
-│              │            │               │                           │ unverified (source=obligation, evidence=ai_literacy).                                                                        │
+│ GOVERN 2.2   │ UNVERIFIED │ —             │ —                         │ The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in │
+│              │            │               │                           │ the manifest.                                                                                                                │
 │ GOVERN 2.3   │ PARTIAL    │ low           │ Art. 17                   │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 ->   │
 │              │            │               │                           │ partial (source=artifact, evidence=docs/qms.md).                                                                             │
 │ GOVERN 3.1   │ UNVERIFIED │ —             │ —                         │ The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in │
@@ -77,8 +77,9 @@ See docs/src/concepts/nist-ai-rmf.md for the methodology; no new scanner or eval
 │              │            │               │                           │ partial (source=artifact, evidence=docs/risk_register.md).                                                                   │
 │ MAP 3.3      │ MISSING    │ low           │ Art. 6, Art. 13           │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 6 ->    │
 │              │            │               │                           │ missing (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 13 -> partial (source=artifact, evidence=INSTRUCTIONS.md).       │
-│ MAP 3.4      │ MISSING    │ low           │ Art. 4, Art. 26           │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 4 ->    │
-│              │            │               │                           │ unverified (source=obligation, evidence=ai_literacy); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).   │
+│ MAP 3.4      │ MISSING    │ low           │ Art. 26                   │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 26 ->   │
+│              │            │               │                           │ missing (source=artifact, evidence=deployer_use_records). Set aside, because an attestation decides it and is no evidence    │
+│              │            │               │                           │ for another framework: Art. 4.                                                                                               │
 │ MAP 3.5      │ MISSING    │ medium        │ Art. 14                   │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 14   │
 │              │            │               │                           │ -> missing (source=artifact, evidence=human_oversight_construct).                                                            │
 │ MAP 4.1      │ UNVERIFIED │ low           │ Art. 25, Art. 53          │ Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 25 ->   │

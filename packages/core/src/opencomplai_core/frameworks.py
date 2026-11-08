@@ -16,11 +16,12 @@ import hashlib
 import json
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, date, datetime
 from functools import cache
 from pathlib import Path
 from typing import Any
 
-from opencomplai_core.gap_report import build_gap_report
+from opencomplai_core.gap_report import build_gap_report, load_gap_article_map
 from opencomplai_core.models import (
     Attestation,
     CorroborationReport,
@@ -50,8 +51,11 @@ class FrameworkPack:
     disclaimer_ref: str = "DISCLAIMER_V2"
     # Exactly one of `requirements` (native) and `derive` (derived) is set.
     requirements: Path | None = None
-    # Called with the EU AI Act report and the pack's attestations.
-    derive: Callable[[GapReport, Mapping[str, Attestation]], GapReport] | None = None
+    # Called with the EU AI Act report, the pack's attestations and the date
+    # attestation expiry is judged on (None: today).
+    derive: (
+        Callable[[GapReport, Mapping[str, Attestation], date | None], GapReport] | None
+    ) = None
     # A derived pack's requirement ids that take an attestation.
     attestable: Callable[[], set[str]] | None = None
     # Data a pack reads besides its requirements map, for data_version.
@@ -128,9 +132,12 @@ FRAMEWORKS.update(
     }
 )
 
+# The statuses each level fails on. "unverified" also fails an Unverified row
+# that only an attestation can decide (see `gate_failures`).
 _FAIL_ON: dict[str, frozenset[GapStatus]] = {
     "missing": frozenset({GapStatus.MISSING}),
     "partial": frozenset({GapStatus.MISSING, GapStatus.PARTIAL}),
+    "unverified": frozenset({GapStatus.MISSING, GapStatus.PARTIAL}),
 }
 
 
@@ -236,6 +243,39 @@ def _scope_exclusions(
     return out
 
 
+def _attestable_ids(requirements: Mapping[str, Any]) -> set[str]:
+    """Ids of the rows that take an attestation: those with an attestation source."""
+    return {
+        rid
+        for rid, config in requirements.items()
+        if any(s["kind"] == "attestation" for s in config.get("sources", []))
+    }
+
+
+def attestable_ids(fw: str) -> frozenset[str]:
+    """Ids of `fw`'s rows that take an attestation: the keys
+    `framework_inputs.<fw>.attested` accepts. Empty for an unknown framework."""
+    pack = FRAMEWORKS.get(fw)
+    if pack is None:
+        return frozenset()
+    if pack.attestable is not None:
+        return frozenset(pack.attestable())
+    if pack.requirements is None:
+        return frozenset()
+    return frozenset(_attestable_ids(load_requirements_map(pack.requirements)))
+
+
+def _require_attestable(
+    fw: str, attested: Mapping[str, Attestation], attestable: set[str]
+) -> None:
+    for rid in attested:
+        if rid not in attestable:
+            raise ValueError(
+                f"framework_inputs.{fw}.attested: {rid!r} is not a {fw} "
+                "requirement that takes an attestation"
+            )
+
+
 def evaluate_targets(
     manifest: SystemManifest,
     targets: Sequence[str],
@@ -245,6 +285,7 @@ def evaluate_targets(
     corroboration_report: CorroborationReport | None = None,
     eval_report: EvalReport | None = None,
     repo_root: Path | None = None,
+    today: date | None = None,
 ) -> dict[str, FrameworkReport]:
     """One FrameworkReport per framework, the EU AI Act's always first.
 
@@ -253,17 +294,27 @@ def evaluate_targets(
     rows the manifest excludes, and rows a native pack's `scope_out` takes out
     given `framework_inputs.<FW>.scope`, move from `report.articles` to
     `excluded`; an explicit exclusion keeps its own reason over a generated one.
-    Raises ValueError on an unknown framework, EU AI Act framework_inputs,
+    `framework_inputs.EU_AI_ACT.attested` reaches the EU report for the
+    articles that take an attestation (Art. 4); the EU AI Act takes no
+    `excluded` and no `scope`.
+    Raises ValueError on an unknown framework, EU AI Act `excluded` or `scope`,
     an excluded/attested id the framework does not have, or a blank
-    exclusion justification.
+    exclusion justification. `today` (default: the current UTC date) is the
+    date an attestation's `valid_until` is compared with; it is resolved once
+    here, so one run never judges an expiry differently per framework.
     """
+    today = today or datetime.now(UTC).date()
     _require_known(targets, "compliance target")
     _require_known(list(manifest.framework_inputs), "framework in framework_inputs")
-    if EU_AI_ACT in manifest.framework_inputs:
+    eu_inputs = manifest.framework_inputs.get(EU_AI_ACT, FrameworkInputs())
+    if eu_inputs.excluded or eu_inputs.scope is not None:
         raise ValueError(
-            "framework_inputs.EU_AI_ACT is not supported: EU AI Act exclusions and "
-            "attestations are not part of the EU gap report"
+            "framework_inputs.EU_AI_ACT supports only `attested`: EU AI Act "
+            "exclusions and scope are not part of the EU gap report"
         )
+    _require_attestable(
+        EU_AI_ACT, eu_inputs.attested, _attestable_ids(load_gap_article_map())
+    )
 
     eu = build_gap_report(
         system_id=manifest.system_id,
@@ -272,8 +323,10 @@ def evaluate_targets(
         corroboration_report=corroboration_report,
         eval_report=eval_report,
         repo_root=repo_root,
+        attestations=eu_inputs.attested,
         manifest=manifest,
         checker_session=manifest.checker_session,
+        today=today,
     )
     eu_pack = FRAMEWORKS[EU_AI_ACT]
     reports = {
@@ -293,7 +346,7 @@ def evaluate_targets(
         inputs = manifest.framework_inputs.get(fw, FrameworkInputs())
         out_of_scope: dict[str, str] = {}
         if pack.derive is not None:
-            report = pack.derive(eu, inputs.attested)
+            report = pack.derive(eu, inputs.attested, today)
             attestable: set[str] = pack.attestable() if pack.attestable else set()
         else:
             requirements = load_requirements_map(pack.requirements)
@@ -308,12 +361,9 @@ def evaluate_targets(
                 attestations=inputs.attested,
                 manifest=manifest,
                 checker_session=manifest.checker_session,
+                today=today,
             )
-            attestable = {
-                rid
-                for rid, config in requirements.items()
-                if any(s["kind"] == "attestation" for s in config.get("sources", []))
-            }
+            attestable = _attestable_ids(requirements)
             out_of_scope = _scope_exclusions(fw, requirements, inputs)
 
         ids = {row.article for row in report.articles}
@@ -326,12 +376,7 @@ def evaluate_targets(
                 raise ValueError(
                     f"framework_inputs.{fw}.excluded: {rid!r} needs a justification"
                 )
-        for rid in inputs.attested:
-            if rid not in attestable:
-                raise ValueError(
-                    f"framework_inputs.{fw}.attested: {rid!r} is not a {fw} "
-                    "requirement that takes an attestation"
-                )
+        _require_attestable(fw, inputs.attested, attestable)
 
         excluded = {**out_of_scope, **inputs.excluded}
         kept = [
@@ -375,23 +420,57 @@ def validate_gate(
         )
 
 
+def attestation_only_ids(fw: str) -> frozenset[str]:
+    """Ids of the rows of a native pack that only an attestation can decide; the
+    rows an exclusion may apply to.
+
+    Every source that could give a verdict is an attestation; an artifact
+    marked "supporting" only points at a file and is ignored. A derived pack
+    (NIST AI RMF) has none, and neither does an unknown framework.
+    """
+    pack = FRAMEWORKS.get(fw)
+    if pack is None or pack.requirements is None:
+        return frozenset()
+    return frozenset(
+        rid
+        for rid, config in load_requirements_map(pack.requirements).items()
+        if {
+            s["kind"]
+            for s in config.get("sources", [])
+            if not (s["kind"] == "artifact" and s.get("role") == "supporting")
+        }
+        == {"attestation"}
+    )
+
+
 def gate_failures(
     reports: dict[str, FrameworkReport], frameworks: Sequence[str], fail_on: str
 ) -> list[str]:
     """Ids of gated rows that fail, in report order.
 
-    A row fails when it is Missing, or Missing/Partial with fail_on "partial".
-    Excluded rows are no longer in the report, and Unverified/Met never fail.
+    A row fails when it is Missing, or Missing/Partial with fail_on "partial" or
+    "unverified". With "unverified" a row that only an attestation can decide
+    also fails while it is Unverified, that is when it has no attestation or
+    the attestation has expired. Every other Unverified row, and every NIST AI
+    RMF row, never fails on being Unverified. Excluded rows are no longer in
+    the report, and Met never fails.
     """
     validate_gate(frameworks, fail_on, list(reports))
     failing = _FAIL_ON[fail_on]
-    return [
-        row.article
-        for fw, framework_report in reports.items()
-        if fw in frameworks
-        for row in framework_report.report.articles
-        if row.status in failing
-    ]
+    failed: list[str] = []
+    for fw, framework_report in reports.items():
+        if fw not in frameworks:
+            continue
+        unattested = (
+            attestation_only_ids(fw) if fail_on == "unverified" else frozenset()
+        )
+        failed.extend(
+            row.article
+            for row in framework_report.report.articles
+            if row.status in failing
+            or (row.status is GapStatus.UNVERIFIED and row.article in unattested)
+        )
+    return failed
 
 
 def acceptance_gate_failures(

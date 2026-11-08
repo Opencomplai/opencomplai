@@ -29,6 +29,7 @@ The `opencomplai` command comes from the `opencomplai-cli` package; each command
 - [serve](serve.md): start a tiny localhost dashboard.
 - [eval](eval.md): run the pipeline evaluators.
 - [push](push.md): publish a signed artifact to the Premium Dashboard.
+- [attestations](attestations.md): download the attestation bundle `check` can merge into `framework_inputs`.
 - [approve / resume](approve-resume.md): the human-in-the-loop hold.
 - [keys](keys.md): manage the local Ed25519 signing keypair.
 - [ai](ai.md): choose and inspect the backend used by the AI intent scan.

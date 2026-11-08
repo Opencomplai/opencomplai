@@ -63,7 +63,7 @@ after editing either data file.
 
 | Article | Source(s) |
 |---|---|
-| Art. 4 | `obligation:ai_literacy` |
+| Art. 4 | `attestation:Art. 4` |
 | Art. 9 | `artifact:risk_register`, `obligation:provider_high_risk` |
 | Art. 11 | `artifact:technical_documentation_dossier` |
 | Art. 14 | `artifact:human_oversight_construct`, `scan:agent_framework` (detection only, never Met), `scan:mcp_server` (detection only, never Met), `manifest:human_oversight_declaration`, `manifest:agent_declarations` |

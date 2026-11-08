@@ -65,6 +65,26 @@ def test_page_states_no_bridges_and_accepted_pass():
     assert "accept.md" in text
 
 
+def test_offline_line_names_the_one_upload_and_the_opt_in_download():
+    line = next(
+        ln
+        for ln in _read(PAGE).splitlines()
+        if ln.startswith("The CLI is offline by default.")
+    )
+    assert "`opencomplai push` is the only command that uploads anything" in line
+    assert "download an attestation bundle only when you opt in" in line
+    # Every way a bundle is downloaded: the flag, the config, and `attestations pull`.
+    for opt_in in (
+        "--attestations-remote",
+        "attestations: {source: remote}",
+        "opencomplai attestations pull",
+    ):
+        assert f"`{opt_in}`" in line, opt_in
+    # The page it links to documents the same opt-in.
+    section = _read(ROOT / "docs/src/frameworks/more-packs.md")
+    assert "Nothing is read or fetched unless you ask" in section
+
+
 def test_import_log_is_registered_under_agents():
     group = next(g for g in app.registered_groups if g.name == "agents")
     names = {

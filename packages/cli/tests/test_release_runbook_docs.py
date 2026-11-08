@@ -62,6 +62,22 @@ def test_installation_page_still_planned() -> None:
     assert "The tap is not yet published" in text
 
 
+def test_checklist_bumps_the_action_pin_after_the_github_release() -> None:
+    text = _read(_RUNBOOK)
+    start = text.index("## Release checklist")
+    end = text.find("\n## ", start + 1)
+    checklist = text[start:] if end == -1 else text[start:end]
+    release_at = checklist.index("Create a GitHub Release")
+    step_at = checklist.index("9. **Bump the GitHub Action.**")
+    assert release_at < step_at
+    step = checklist[step_at:]
+    assert step.count("scripts/bump-cli-version.sh") == 1
+    assert "Opencomplai/opencomplai-action" in step
+    lowered = step.lower()
+    for word in ("dashboard", "tenant", "saas"):
+        assert word not in lowered, word
+
+
 def test_runbook_has_no_key_material_or_dashboard_words() -> None:
     section = _section()
     assert "BEGIN " + "PRIVATE KEY" not in section

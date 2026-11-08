@@ -1,7 +1,8 @@
 # ADR: Framework Packs — Assessing One System Against Several Frameworks
 
-**Status:** Accepted (amended 2026-10, 2026-11, 2026-11b)  
-Amended in the 0.9.0 round (SU-GM2, E-13) and the 0.14.0 round (FWMAP).  
+**Status:** Accepted (amended 2026-10, 2026-11, 2026-11b, 2026-11c)  
+Amended in the 0.9.0 round (SU-GM2, E-13), the 0.14.0 round (FWMAP) and the
+organisation-evidence round.  
 **Date:** 2026-09-23
 
 ## Context
@@ -185,6 +186,66 @@ DORA and EBA stay mapped-only, in a separate data file owned by SU-32b and SU-32
 3. **Mapped-only citations stay.** `mapped_regimes.json` and `gaps --map-to DORA|EBA` are unchanged;
    the DORA and EBA packs sit beside them.
 4. **Not in `ComplianceTarget`.** As decision 2 requires.
+
+## Amendment 2026-11c (organisation evidence)
+
+The organisation's own evidence (policies, training, suppliers, incident plans) cannot be
+read from code, so it reaches a run as an attestation. This amendment widens where
+attestations may come from and what they may decide. In plain words:
+
+1. **Two declaration sources, not one.** Decision 5 said the manifest is the only place for
+   compliance declarations. There are now two: the manifest, and an attestation bundle. A
+   bundle is a signed document of attestations and exclusions that `check` can read from a
+   file, or fetch from the endpoint configured in `OPENCOMPLAI_DASHBOARD_URL` (opt-in; the
+   default run still makes no network call). It is merged into a copy of the manifest's
+   `framework_inputs` before the first evaluation, so every command that evaluates
+   frameworks sees it. The manifest wins on the same requirement id. An id the framework
+   does not have, or that does not take an attestation, is dropped with a warning, and an
+   exclusion applies only to a row that an attestation alone decides. `opencomplai.yaml`
+   still configures tool behaviour only.
+2. **What a bundle and an attestation carry.** A bundle is hashed in canonical form (keys
+   sorted, no whitespace, no signature), and its signature is Ed25519 over the hex SHA-256
+   under its own signing domain, `attestation-bundle`, so the artifact needs to record only
+   `{sha256, signature, key_id, issued_at, count}` for anyone to verify it later. An
+   attestation may also carry `valid_until` (the last day it counts; from the next day the
+   row reads Unverified again), pointers to its evidence (links, files, record ids; never
+   the content) and, when it came from a bundle, a `record_id` that is appended to the
+   row's `evidence_ref` as `#<record_id>`. `attested_by` is a display name, never an email
+   address, because it ends up in signed artifacts.
+3. **Exception to decision 4 for Art. 4.** Decision 4 left `gap_article_map.json` unchanged.
+   Art. 4 (AI literacy) is an organisational duty that no obligation catalogue entry can
+   decide: its old source could only ever read Unverified and, with worst-status-wins, would
+   have blocked Met for good. Its source is now an attestation whose `ref` is its own id,
+   `Art. 4`, so `framework_inputs.EU_AI_ACT.attested` accepts exactly the EU articles that have
+   an attestation source (Art. 4 today) and refuses any other EU id, and the EU AI Act still
+   takes no `excluded` and no `scope`. Art. 4 has no `applies_when_any`, so its applicability
+   is unchanged. Under decision 9 this changes the EU `data_version` once, and the golden
+   snapshots were regenerated with a reviewed diff. Art. 4 stays out of `--gate`, because the
+   EU AI Act cannot be gated.
+4. **Unverified can now fail, if asked to.** Decision 10 and point 7 of the 2026-11
+   amendment say Unverified never fails a gate. That stays true for `missing` and `partial`.
+   A third level, `fail_on: unverified`, is opt-in: Missing and Partial fail as with
+   `partial`, and a row that only an attestation can decide also fails while it is
+   Unverified, that is when it has no attestation or the attestation has expired. Only
+   native packs count, and a row counts when every source that could give a verdict is an
+   attestation (a supporting probe is ignored). A row that an evaluator or a plain artifact
+   can also decide is left to that source. NIST AI RMF rows never fail on being Unverified,
+   because otherwise every subcategory nothing could assess would fail the build, and the EU
+   AI Act still cannot be gated.
+5. **Links still compute no verdict.** Point 4 of the 2026-11 amendment stays as it is: a
+   link between rows of two frameworks never makes a row Met. Reusing an attestation for a
+   linked row creates an explicit record for that row, with its own statement, owner and
+   date, so no verdict comes from a mapping nobody reviewed.
+6. **NIST AI RMF does not inherit an attestation.** Point 2 of the 2026-11 amendment said the
+   attestable subcategories are those with an empty `eu_ai_act` list. The rule is now: a
+   subcategory whose mapped EU rows are all decided by an attestation takes an attestation
+   too. GOVERN 2.2 maps only to Art. 4, so it joins the attestable set. In every
+   re-projection an EU row that comes from an attestation counts as no evidence, so an
+   attested Art. 4 can never read as a Met NIST subcategory nobody attested. MAP 3.4 (Art. 4
+   and Art. 26) stays derived and is read from Art. 26 alone; its rationale names the row
+   that was set aside. This changes the NIST rows that cite Art. 4. The NIST `data_version`
+   does not move, because its data files are unchanged. NIST output also follows the EU map,
+   and the NIST `data_version` does not hash that map, so it does not move when the EU map does.
 
 ## Out of scope
 

@@ -52,7 +52,8 @@ Also available as command groups (`opencomplai <group> --help` for their own sub
 `keys` (signing-key rotation), `ai` (optional AI-intent plugin configuration), `controls`
 (control-register status), `fria` (fundamental rights impact assessment), `qms` (Art. 17 quality-management-system documents), `dashboard` (Premium Dashboard connection management),
 `incident` (incident records and deadline clocks),
-`agents` (declared agent inventory: list, cross-check against a scan, report; `agents attest` signs an agent mandate attestation)
+`agents` (declared agent inventory: list, cross-check against a scan, report; `agents attest` signs an agent mandate attestation),
+`attestations` (`attestations pull` writes the attestation bundle `check --attestations-file` reads)
 and `rules` (rule-set history: `opencomplai rules changelog`).
 Per-command pages are at <https://docs.opencomplai.com/cli/>.
 

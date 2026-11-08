@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import os
 import sys
+from datetime import date
 from pathlib import Path
 
 import typer
@@ -77,6 +78,7 @@ def apply_acceptance_gate(
     scan_mode: str,
     corroboration_report=None,
     sample_set=None,
+    today: date | None = None,
 ) -> tuple[ScanStatusArtifact, bool]:
     """Return (artifact, halt_suppressed); see the module docstring."""
     valid, approved = _acceptance_state(manifest, change_context, repo_root)
@@ -124,6 +126,7 @@ def apply_acceptance_gate(
             corroboration_report=corroboration_report,
             eval_report=eval_report,
             repo_root=repo_root.resolve(),
+            today=today,
         )
     except ValueError as exc:
         typer.echo(f"Error: {exc}", err=True)

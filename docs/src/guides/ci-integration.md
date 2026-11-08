@@ -4,7 +4,8 @@ OpenComplAI runs in GitHub Actions and GitLab CI via the CLI and connector scrip
 dashboard account required: `pip install opencomplai`, run `opencomplai init` to write a
 `system-manifest.json`, then copy the workflow file for your platform below as a CI step —
 it runs `opencomplai check` on every push/PR and fails the build on a control failure.
-The scan needs no key; `OPENCOMPLAI_API_KEY` is only needed to publish results to the dashboard.
+The scan needs no key; `OPENCOMPLAI_API_KEY` is only needed to publish results to the dashboard, or to
+fetch an attestation bundle from that same endpoint if you opt into that.
 
 > **Optional — hosted dashboard:** if you also use the dashboard, open **`/connect`** for
 > your project (**Projects → your project → Connect**) instead of copying the snippet by
@@ -14,6 +15,8 @@ The scan needs no key; `OPENCOMPLAI_API_KEY` is only needed to publish results t
 > `OPENCOMPLAI_DASHBOARD_URL`/`push` step and rely on the CLI's own exit code as the CI gate.
 
 Looking for a GitLab CI/CD component that calls `opencomplai check` directly, or an Azure Pipelines template? See [CI for GitLab and Azure Pipelines](ci-gitlab-azure.md).
+
+Prefer a packaged step over copying a workflow? The [GitHub Action](github-action.md) runs `opencomplai check` and posts the result as a pull request comment.
 
 ## GitHub Actions
 

@@ -21,9 +21,9 @@
       {
         "article": "Art. 4",
         "status": "unverified",
-        "source": "obligation",
-        "evidence_ref": "ai_literacy",
-        "rationale": "Obligation 'AI literacy' applies; no automated verification run.",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
         "confidence": null,
         "confidence_label": "not_assessed",
         "disclaimer_ref": "DISCLAIMER_V1"
@@ -376,12 +376,10 @@
         "function": "GOVERN",
         "category": "GOVERN 2",
         "status": "unverified",
-        "mapping_confidence": "medium",
-        "confidence_label": "heuristic_estimate",
-        "source_eu_ai_act_articles": [
-          "Art. 4"
-        ],
-        "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy).",
+        "mapping_confidence": null,
+        "confidence_label": "not_assessed",
+        "source_eu_ai_act_articles": [],
+        "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },
@@ -699,10 +697,9 @@
         "mapping_confidence": "low",
         "confidence_label": "heuristic_estimate",
         "source_eu_ai_act_articles": [
-          "Art. 4",
           "Art. 26"
         ],
-        "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 4 -> unverified (source=obligation, evidence=ai_literacy); Art. 26 -> missing (source=artifact, evidence=deployer_use_records).",
+        "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 26 -> missing (source=artifact, evidence=deployer_use_records). Set aside, because an attestation decides it and is no evidence for another framework: Art. 4.",
         "needs_founder_review": true,
         "disclaimer_ref": "DISCLAIMER_V1"
       },

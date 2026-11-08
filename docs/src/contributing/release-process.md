@@ -81,6 +81,14 @@ release never needs it done by hand.
    A manual `workflow_dispatch` run is a dry run: it builds, smoke tests
    and produces SBOMs, and publishes nothing.
 8. **Create a GitHub Release** from the tag with the CHANGELOG section as the body.
+9. **Bump the GitHub Action.** Once the four packages are on PyPI, in a checkout
+   of `Opencomplai/opencomplai-action` run `scripts/bump-cli-version.sh X.Y.Z`,
+   add a CHANGELOG entry, commit, publish a release `vMAJOR.MINOR.PATCH` with
+   "Publish this Release to the GitHub Marketplace" ticked, and move the `v1`
+   tag to it (that repository's `release.yml` does this once Actions run there).
+   Check that the new pin is live:
+   `curl -s https://raw.githubusercontent.com/Opencomplai/opencomplai-action/v1/action.yml | grep -A2 "^  version:"`
+   shows `X.Y.Z`.
 
 ---
 

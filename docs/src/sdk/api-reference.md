@@ -133,7 +133,7 @@ System-of-record description of the AI system. Created by `opencomplai init`.
 | `intended_purpose` | `str` | *(required)* | Primary intended purpose (maps to Annex III categories). |
 | `compliance_target` | `ComplianceTarget` | `EU_AI_ACT` | Legacy single target: `EU_AI_ACT` or `NIST_AI_RMF`. Used when `compliance_targets` is unset. |
 | `compliance_targets` | `list[str] \| None` | `None` | Framework keys to assess side by side, e.g. `["EU_AI_ACT", "NIST_AI_RMF"]`. Must be non-empty when set. |
-| `framework_inputs` | `dict[str, FrameworkInputs]` | `{}` | Per framework: `excluded` (requirement id → reason) and `attested` (requirement id → `Attestation(statement, attested_by, attested_at)`), and optionally `scope` (`FrameworkScope`: yes/no answers `trains_models`, `uses_retrieval`, `public_api`). |
+| `framework_inputs` | `dict[str, FrameworkInputs]` | `{}` | Per framework: `excluded` (requirement id → reason) and `attested` (requirement id → `Attestation(statement, attested_by, attested_at, valid_until, evidence, record_id)`; the last three are optional), and optionally `scope` (`FrameworkScope`: yes/no answers `trains_models`, `uses_retrieval`, `public_api`). |
 | `high_risk_presumption` | `bool` | `False` | Provider presumes high-risk pending classification. |
 | `commit_ref` | `str` | `HEAD` | Git commit reference. |
 
@@ -150,7 +150,7 @@ The frameworks to assess, in order and without duplicates: `cli_targets` when gi
 else `manifest.compliance_targets`, else `[manifest.compliance_target]`. Raises
 `ValueError` on a key that is not in `FRAMEWORKS`.
 
-### `evaluate_targets(manifest, targets, *, commit_ref, risk_result=None, corroboration_report=None, eval_report=None, repo_root=None) -> dict[str, FrameworkReport]`
+### `evaluate_targets(manifest, targets, *, commit_ref, risk_result=None, corroboration_report=None, eval_report=None, repo_root=None, today=None) -> dict[str, FrameworkReport]`
 
 One `FrameworkReport` per framework. The EU AI Act entry always comes first, even when
 it is not a target, because it is the evidence derived frameworks are built from; the
@@ -160,9 +160,11 @@ other targets follow in order. Each input resolves the rows that depend on it, a
 and `repo_root` the documentation probes. A row whose input is missing is
 **Unverified**. Requirements excluded in `manifest.framework_inputs`, and native rows
 that its `scope` answers rule out (see [ISO/IEC 27090](../concepts/iso-27090.md#scoping-rows-that-may-not-apply)),
-move to `FrameworkReport.excluded`. Raises `ValueError` on an unknown framework, on
-`framework_inputs` for `EU_AI_ACT`, on an excluded or attested id the framework does
-not accept, or on a blank exclusion reason.
+move to `FrameworkReport.excluded`. An attestation is Unverified once its `valid_until`
+is before `today` (default: the current UTC date). Raises `ValueError` on an unknown
+framework, on `excluded` or `scope` for `EU_AI_ACT` (it takes `attested` for Art. 4
+only), on an excluded or attested id the framework does not accept, or on a blank
+exclusion reason.
 
 ```python
 from pathlib import Path

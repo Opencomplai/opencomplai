@@ -84,9 +84,17 @@ class FrameworkScope(BaseModel):  # each answer: bool | None, None = not answere
 
 class Attestation(BaseModel):
     statement: str
-    attested_by: str
-    attested_at: str  # ISO 8601 date or timestamp
+    attested_by: str   # a display name; copied into signed artifacts
+    attested_at: str   # ISO 8601 date or timestamp
+    valid_until: date | None = None  # last day it counts; Unverified from the next day
+    evidence: list[AttestationEvidence] = []  # pointers (link | file | record), never content
+    record_id: str | None = None     # set when it comes from an attestation bundle
 ```
+
+An attestation comes from the manifest or from an attestation bundle (see
+[More framework packs](../frameworks/more-packs.md#attestation-bundles)). Fields left unset are
+dropped from the serialised form, so an attestation that uses none of the newer fields keeps its
+exact bytes.
 
 `compliance_targets` lists framework registry keys (`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`,
 `ISO_IEC_27090` and the further packs on [More framework packs](../frameworks/more-packs.md)); when
@@ -116,6 +124,7 @@ class ScanStatusArtifact(BaseModel):
     nist_rmf_report: NistRmfReport | None = None  # with --with-gaps, NIST_AI_RMF targeted
     controls: ControlsSummary | None = None
     framework_reports: dict[str, FrameworkReport] | None = None  # omitted when None
+    attestation_bundle: AttestationBundleRef | AttestationBundleUnavailable | None = None  # omitted when None
 ```
 
 `gap_report` and `nist_rmf_report` are permanent: every `check --with-gaps` writes them
@@ -123,7 +132,10 @@ exactly as earlier releases did, whatever else it adds. `framework_reports` is a
 beside them, one entry per target in target order, only when the targets are something
 other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF`. When it is `None` the key is
 left out of the JSON, so such an artifact serialises, and verifies against its
-signature, byte for byte as before the field existed.
+signature, byte for byte as before the field existed. `attestation_bundle` works the same
+way: it is present only when `check` was asked to read an attestation bundle, as
+`{sha256, signature, key_id, issued_at, count}` copied from the bundle, or
+`{status: "unavailable", reason}` when the bundle could not be fetched.
 
 #### What the signature covers
 

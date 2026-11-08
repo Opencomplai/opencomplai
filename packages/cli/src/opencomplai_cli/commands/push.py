@@ -30,6 +30,7 @@ from rich.console import Console
 from rich.markup import escape
 
 from opencomplai_cli.publish import (
+    LOCAL_HOSTNAMES,
     envelope_signature,
     prepare_dossier_envelope,
     prepare_scan_status_artifact,
@@ -43,8 +44,6 @@ err_console = Console(stderr=True)
 
 EXIT_OK = 0
 EXIT_PUBLISH_FAILED = 3
-
-_LOCAL_HOSTNAMES = {"localhost", "127.0.0.1"}
 
 
 def run_push(artifact_file: Path, *, env: dict[str, str] | None = None) -> int:
@@ -100,7 +99,7 @@ def run_push(artifact_file: Path, *, env: dict[str, str] | None = None) -> int:
         return EXIT_PUBLISH_FAILED
 
     parsed_url = urlparse(dashboard_url)
-    if parsed_url.scheme == "http" and parsed_url.hostname not in _LOCAL_HOSTNAMES:
+    if parsed_url.scheme == "http" and parsed_url.hostname not in LOCAL_HOSTNAMES:
         err_console.print(
             f"[yellow]Warning:[/yellow] OPENCOMPLAI_DASHBOARD_URL ({dashboard_url}) "
             "uses plain http -- the API key will be sent unencrypted over the network. "
@@ -217,7 +216,7 @@ def run_push_dossier(dossier_file: Path, *, env: dict[str, str] | None = None) -
         return EXIT_PUBLISH_FAILED
 
     parsed_url = urlparse(dashboard_url)
-    if parsed_url.scheme == "http" and parsed_url.hostname not in _LOCAL_HOSTNAMES:
+    if parsed_url.scheme == "http" and parsed_url.hostname not in LOCAL_HOSTNAMES:
         err_console.print(
             f"[yellow]Warning:[/yellow] OPENCOMPLAI_DASHBOARD_URL ({dashboard_url}) "
             "uses plain http -- the API key will be sent unencrypted over the network. "

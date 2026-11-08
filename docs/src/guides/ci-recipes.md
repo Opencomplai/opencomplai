@@ -11,7 +11,9 @@ log and an offline scoring run), and each has its own steps.
 
 The scan and the exit code need no key. Only `push` needs `OPENCOMPLAI_API_KEY` and
 `OPENCOMPLAI_DASHBOARD_URL` (your ingest base URL, for example
-`https://YOUR-DASHBOARD-HOST/api/ingest`). Store the key as a CI secret, never in the file.
+`https://YOUR-DASHBOARD-HOST/api/ingest`), unless you opt into fetching an attestation bundle from that
+endpoint (`attestations pull`, or `--attestations-remote` on `check`), which sends the key too. Store the
+key as a CI secret, never in the file.
 
 Each recipe runs the push before it fails the job, so a failing check still reaches the dashboard.
 The meaning of each exit code is in [Exit codes](../cli/exit-codes.md). GitHub Actions and GitLab CI
@@ -280,7 +282,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install OpenComplAI CLI
-        run: pip install "opencomplai==0.14.0"
+        run: pip install "opencomplai==0.15.0"
 
       - name: Check and attach the artifact
         env:

@@ -28,7 +28,6 @@ than guessed.
 | Art. 12 | Chapter III (ICT-related incident management) | |
 | Art. 15 | Chapter IV (resilience testing) | EBA/GL/2019/04 (ICT and security risk management) |
 | Art. 17 | Chapter II (ICT risk management) | |
-| Art. 24 | Chapter V (ICT third-party risk) | |
 | Art. 25 | Chapter V (ICT third-party risk) | EBA/GL/2019/02 (outsourcing arrangements) |
 
 ## Not covered

@@ -162,6 +162,7 @@ from opencomplai_cli.acceptance_gate import apply_acceptance_gate  # noqa: E402
 from opencomplai_cli.agent_inventory_payload import (  # noqa: E402
     agent_inventory_payload,
 )
+from opencomplai_cli.attestations import BundleStatus, load_for_run  # noqa: E402
 from opencomplai_cli.commands import (  # noqa: E402
     agents_attest,  # noqa: F401
     agents_runtime,  # noqa: F401
@@ -171,6 +172,9 @@ from opencomplai_cli.commands import (  # noqa: E402
 )
 from opencomplai_cli.commands.accept import accept_cmd  # noqa: E402
 from opencomplai_cli.commands.agents import app as agents_app  # noqa: E402
+from opencomplai_cli.commands.attestations import (  # noqa: E402
+    app as attestations_app,
+)
 from opencomplai_cli.commands.checker import (  # noqa: E402
     display_results,
     evaluate_roles,
@@ -229,6 +233,7 @@ app.add_typer(incident_app, name="incident")
 app.add_typer(agents_app, name="agents")
 app.add_typer(instructions_app, name="instructions")
 app.add_typer(deployer_pack_app, name="deployer-pack")
+app.add_typer(attestations_app, name="attestations")
 # HALT-WIRE: `approve`/`resume` are top-level commands (not a sub-typer),
 # implemented in commands/halt.py and registered here to avoid a circular
 # import (halt.py needs `console`/`_emit_event` from this module, lazily).
@@ -1476,6 +1481,24 @@ _GAP_STATUS_STYLE = {
 }
 
 
+_ATTESTATIONS_FILE_HELP = (
+    "Read an attestation bundle from this file and merge it into the manifest's "
+    "framework_inputs for this run (offline). `opencomplai attestations pull` "
+    "writes one. Replaces opencomplai.yaml's attestations."
+)
+_ATTESTATIONS_REMOTE_HELP = (
+    "Fetch the attestation bundle from the endpoint configured in "
+    "OPENCOMPLAI_DASHBOARD_URL (with OPENCOMPLAI_API_KEY, as `push` does) and "
+    "merge it into the manifest's framework_inputs for this run. Off by default; "
+    "if the fetch fails the run goes on with the manifest alone."
+)
+_WITHOUT_GAP_REPORT = " Only used when --gap-report is not supplied."
+_ONLY_WITH_ISO_27090 = (
+    " Local mode only, and only when the manifest's compliance_targets include "
+    "ISO_IEC_27090, the framework the dossier evaluates."
+)
+
+
 @app.command("gaps")
 def gaps_cmd(
     manifest_file: Path = typer.Option(
@@ -1533,6 +1556,12 @@ def gaps_cmd(
         "--strict",
         help="Exit 2 on unknown keys in the manifest instead of warning",
     ),
+    attestations_file: Path | None = typer.Option(
+        None, "--attestations-file", help=_ATTESTATIONS_FILE_HELP
+    ),
+    attestations_remote: bool = typer.Option(
+        False, "--attestations-remote", help=_ATTESTATIONS_REMOTE_HELP
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
     sort: SortOrder = typer.Option(
         SortOrder.article,
@@ -1567,6 +1596,15 @@ def gaps_cmd(
         sys.exit(2)
 
     targets = _resolve_targets_or_exit(manifest, target)
+    today = datetime.now(UTC).date()
+    manifest, _ = _with_attestations(
+        manifest,
+        targets,
+        file_flag=attestations_file,
+        remote_flag=attestations_remote,
+        repo_root=repo_root,
+        today=today,
+    )
     try:
         regimes = parse_map_to(map_to)
     except ValueError as e:
@@ -1609,6 +1647,7 @@ def gaps_cmd(
         corroboration_report=corroboration_report,
         eval_report=eval_report,
         repo_root=repo_root.resolve(),
+        today=today,
     )
 
     # D10 sidecars: keep the on-disk scan/eval reports the most recent ones,
@@ -1630,7 +1669,7 @@ def gaps_cmd(
     )
 
     nist_report = (
-        build_nist_rmf_report(report, _nist_attested(manifest))
+        build_nist_rmf_report(report, _nist_attested(manifest), today)
         if "NIST_AI_RMF" in targets
         else None
     )
@@ -1724,6 +1763,47 @@ def _resolve_gate(
     return frameworks, fail_on
 
 
+def _with_attestations(
+    manifest: SystemManifest,
+    targets: list[str],
+    *,
+    file_flag: Path | None,
+    remote_flag: bool,
+    repo_root: Path,
+    today: date,
+) -> tuple[SystemManifest, BundleStatus | None]:
+    """The manifest to evaluate, with the opted-in attestation bundle merged into a
+    copy, and what the artifact records of it. Called once per command, before the
+    first evaluation. With no flag and no `attestations` in opencomplai.yaml it makes
+    no network call and returns the manifest as it is. A bundle file that cannot be
+    used exits 2; an endpoint that cannot be used only warns."""
+    try:
+        return load_for_run(
+            manifest,
+            targets,
+            file_flag=file_flag,
+            remote_flag=remote_flag,
+            config=_project_config(repo_root),
+            today=today,
+            warn=lambda m: err_console.print(f"[yellow]WARN:[/yellow] {escape(m)}"),
+        )
+    except ValueError as e:  # includes AttestationError
+        err_console.print(f"[red]Error:[/red] attestations: {escape(str(e))}")
+        sys.exit(2)
+
+
+def _warn_attestations_unused(
+    file_flag: Path | None, remote_flag: bool, why: str
+) -> None:
+    """Say so when a bundle flag is given to a run that will not read a bundle,
+    rather than dropping it (and never validating the file) in silence."""
+    if file_flag is not None or remote_flag:
+        err_console.print(
+            "[yellow]WARN:[/yellow] --attestations-file/--attestations-remote "
+            f"ignored: {escape(why)}"
+        )
+
+
 def _nist_attested(manifest: SystemManifest) -> dict[str, Attestation] | None:
     """The manifest's NIST AI RMF attestations, validated by evaluate_targets."""
     inputs = manifest.framework_inputs.get("NIST_AI_RMF")
@@ -1744,7 +1824,10 @@ def _gate_note(config: ProjectConfig, framework: str) -> str | None:
     """How `check` gates `framework` per opencomplai.yaml; None when it does not."""
     if framework not in config.gate_frameworks:
         return None
-    rows = "Missing or Partial" if config.gate_fail_on == "partial" else "Missing"
+    rows = {
+        "partial": "Missing or Partial",
+        "unverified": "Missing, Partial or unattested",
+    }.get(config.gate_fail_on or "", "Missing")
     return (
         f"gated in CI: `opencomplai check` fails on its {rows} rows "
         "(opencomplai.yaml gate)"
@@ -1936,12 +2019,24 @@ def recommend_cmd(
         "--sort",
         help="Row order: article (default) or priority (deadline, severity, effort)",
     ),
+    attestations_file: Path | None = typer.Option(
+        None,
+        "--attestations-file",
+        help=_ATTESTATIONS_FILE_HELP + _WITHOUT_GAP_REPORT,
+    ),
+    attestations_remote: bool = typer.Option(
+        False,
+        "--attestations-remote",
+        help=_ATTESTATIONS_REMOTE_HELP + _WITHOUT_GAP_REPORT,
+    ),
 ) -> None:
     """
     Write copy-paste remediation templates for every Missing/Partial gap-report row.
 
     Templates are static content generation, mapped 1:1 to `opencomplai gaps` article
-    rows — no code execution, no network calls, no interaction with signing/evidence.
+    rows — no code execution, no interaction with signing/evidence, and no network
+    calls unless you opt in to fetching an attestation bundle (--attestations-remote
+    or `attestations: {source: remote}` in opencomplai.yaml).
     """
     if gap_report_file is not None:
         if not gap_report_file.exists():
@@ -1949,6 +2044,9 @@ def recommend_cmd(
                 f"[red]Error:[/red] gap report not found: {gap_report_file}"
             )
             sys.exit(2)
+        _warn_attestations_unused(
+            attestations_file, attestations_remote, "a gap report was supplied"
+        )
         report, framework_reports = _read_gap_report(gap_report_file)
     else:
         if not manifest_file.exists():
@@ -1967,6 +2065,16 @@ def recommend_cmd(
             err_console.print(f"[red]Validation error:[/red] {e}")
             sys.exit(2)
 
+        targets = _resolve_targets_or_exit(manifest, None)
+        today = datetime.now(UTC).date()
+        manifest, _ = _with_attestations(
+            manifest,
+            targets,
+            file_flag=attestations_file,
+            remote_flag=attestations_remote,
+            repo_root=repo_root,
+            today=today,
+        )
         assessment_input = AssessmentInput(
             model=ModelMetadata(
                 name=manifest.system_id,
@@ -1995,7 +2103,8 @@ def recommend_cmd(
 
         framework_reports = _evaluate_targets_or_exit(
             manifest,
-            _resolve_targets_or_exit(manifest, None),
+            targets,
+            today=today,
             commit_ref=commit_ref,
             risk_result=risk_result,
             corroboration_report=corroboration_report,
@@ -3350,9 +3459,18 @@ def check_cmd(
         None,
         "--gate-fail-on",
         help=(
-            "missing (default) or partial: which rows of a gated framework fail. "
-            "Replaces opencomplai.yaml's gate.fail_on."
+            "missing (default), partial or unverified: which rows of a gated "
+            "framework fail. unverified also fails a row only an attestation can "
+            "decide while it has no current attestation (none, or expired); NIST "
+            "AI RMF rows never fail on being Unverified. Replaces "
+            "opencomplai.yaml's gate.fail_on."
         ),
+    ),
+    attestations_file: Path | None = typer.Option(
+        None, "--attestations-file", help=_ATTESTATIONS_FILE_HELP
+    ),
+    attestations_remote: bool = typer.Option(
+        False, "--attestations-remote", help=_ATTESTATIONS_REMOTE_HELP
     ),
     require_exemption_record: bool = typer.Option(
         False,
@@ -3443,6 +3561,16 @@ def check_cmd(
     gate_frameworks, gate_fail_on = _resolve_gate(
         targets, gate, gate_fail_on, repo_root
     )
+    # One date for the whole run, so no framework judges an expiry differently.
+    today = datetime.now(UTC).date()
+    manifest, bundle_status = _with_attestations(
+        manifest,
+        targets,
+        file_flag=attestations_file,
+        remote_flag=attestations_remote,
+        repo_root=repo_root,
+        today=today,
+    )
 
     if manifest.checker_session is None:
         err_console.print(
@@ -3483,7 +3611,7 @@ def check_cmd(
             )
             sys.exit(2)
     if with_gaps or gate_frameworks:
-        _evaluate_targets_or_exit(manifest, targets, commit_ref=commit_ref)
+        _evaluate_targets_or_exit(manifest, targets, commit_ref=commit_ref, today=today)
 
     eval_summary, eval_failed, eval_hashes, eval_report = _run_pipeline_evals(
         manifest,
@@ -3583,6 +3711,8 @@ def check_cmd(
             scan_summary=scan_summary,
             change_context=change_context,
         )
+    if bundle_status is not None:
+        artifact = artifact.model_copy(update={"attestation_bundle": bundle_status})
 
     if scan_failed and artifact.result == ScanResult.PASS:
         artifact = artifact.model_copy(update={"result": ScanResult.CONTROL_FAIL})
@@ -3604,6 +3734,7 @@ def check_cmd(
         scan_mode=scan_mode,
         corroboration_report=scan_report,
         sample_set=sample_set,
+        today=today,
     )
     artifact = apply_exemption_gate(
         artifact, manifest, repo_root=repo_root, require=require_exemption_record
@@ -3647,6 +3778,7 @@ def check_cmd(
             corroboration_report=scan_report,
             eval_report=gap_eval_report,
             repo_root=repo_root.resolve(),
+            today=today,
         )
 
         # Opt-in gate, after HALT-WIRE and the checker verdict: failing rows
@@ -3688,7 +3820,7 @@ def check_cmd(
                 else None
             )
             nist_rmf_report = (
-                build_nist_rmf_report(gap_report, _nist_attested(manifest))
+                build_nist_rmf_report(gap_report, _nist_attested(manifest), today)
                 if "NIST_AI_RMF" in targets
                 else None
             )
@@ -4698,6 +4830,16 @@ def docs_generate_cmd(
             "unchanged."
         ),
     ),
+    attestations_file: Path | None = typer.Option(
+        None,
+        "--attestations-file",
+        help=_ATTESTATIONS_FILE_HELP + _ONLY_WITH_ISO_27090,
+    ),
+    attestations_remote: bool = typer.Option(
+        False,
+        "--attestations-remote",
+        help=_ATTESTATIONS_REMOTE_HELP + _ONLY_WITH_ISO_27090,
+    ),
 ) -> None:
     """Generate an Annex IV technical documentation dossier (REQ-DOC-001)."""
     bad_render = sorted(set(render) - {"md", "pdf"})
@@ -4851,6 +4993,12 @@ def docs_generate_cmd(
                 "[yellow]Warning:[/yellow] --render needs local mode (unset "
                 "OPENCOMPLAI_API_URL); no Markdown or PDF was written."
             )
+        _warn_attestations_unused(
+            attestations_file,
+            attestations_remote,
+            "OPENCOMPLAI_API_URL routes generation through the service (unset it "
+            "for local mode)",
+        )
         if loaded_manifest is not None and ISO_27090 in (
             loaded_manifest.compliance_targets or []
         ):
@@ -4895,18 +5043,32 @@ def docs_generate_cmd(
         )
         # The cybersecurity section is built from the ISO_IEC_27090 report, so
         # evaluate that target only when the manifest asks for it.
-        framework_reports = (
-            _evaluate_targets_or_exit(
+        framework_reports = None
+        if ISO_27090 in (manifest.compliance_targets or []):
+            today = datetime.now(UTC).date()
+            manifest, _ = _with_attestations(
+                manifest,
+                [ISO_27090],
+                file_flag=attestations_file,
+                remote_flag=attestations_remote,
+                repo_root=Path("."),
+                today=today,
+            )
+            framework_reports = _evaluate_targets_or_exit(
                 manifest,
                 [ISO_27090],
                 commit_ref=commit_ref,
                 risk_result=risk_result,
                 corroboration_report=scan_report,
                 eval_report=eval_report,
+                today=today,
             )
-            if ISO_27090 in (manifest.compliance_targets or [])
-            else None
-        )
+        else:
+            _warn_attestations_unused(
+                attestations_file,
+                attestations_remote,
+                f"the manifest's compliance_targets do not include {ISO_27090}",
+            )
         dossier = generate_dossier(
             manifest,
             risk_result,

@@ -41,10 +41,12 @@ confidence, not a guessed verdict.
 
 ## Subcategories the EU AI Act evidence does not cover
 
-14 subcategories have an empty `eu_ai_act` list, because nothing the tool gathers for
-the EU AI Act speaks to them: GOVERN 1.7, 3.1 and 4.1; MAP 1.2, 1.3, 1.4 and 3.1;
-MEASURE 2.2, 2.13, 3.2, 3.3, 4.1 and 4.2; and MANAGE 2.1. They read `Unverified` until
-the provider records an attestation:
+15 subcategories take an attestation. 14 have an empty `eu_ai_act` list, because nothing
+the tool gathers for the EU AI Act speaks to them: GOVERN 1.7, 3.1 and 4.1; MAP 1.2, 1.3,
+1.4 and 3.1; MEASURE 2.2, 2.13, 3.2, 3.3, 4.1 and 4.2; and MANAGE 2.1. The fifteenth,
+GOVERN 2.2, maps only to Art. 4, and Art. 4 is itself decided by an attestation, so no
+scan or check can speak to it either. They read `Unverified` until the provider records
+an attestation:
 
 ```json
 {
@@ -54,7 +56,7 @@ the provider records an attestation:
       "attested": {
         "NIST_AI_RMF:MANAGE 2.1": {
           "statement": "Resourcing and non-AI alternatives are reviewed each quarter.",
-          "attested_by": "jane.doe@example.com",
+          "attested_by": "Jane Doe",
           "attested_at": "2026-11-02"
         }
       }
@@ -67,6 +69,11 @@ An attested subcategory reads `Met` with confidence label `attested`; the statem
 recorded verbatim and nothing checks it. A subcategory that has EU AI Act evidence
 takes no attestation: `gaps` and `check` exit `2` if you record one, because closing
 the EU AI Act gap is what changes it.
+
+An attestation of EU AI Act Art. 4 does not carry over. An EU row that an attestation
+decides counts as no evidence for NIST, so GOVERN 2.2 stays `Unverified` until it has its
+own attestation, and MAP 3.4 (Art. 4 and Art. 26) holds at `Unverified` at best, because
+its Art. 4 part is never counted; its rationale says that Art. 4 was set aside.
 
 ## Reading a subcategory row
 

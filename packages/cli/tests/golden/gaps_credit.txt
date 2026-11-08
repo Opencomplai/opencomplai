@@ -3,69 +3,69 @@ Opencomplai Gap Report — golden-sys
 
 Statuses are heuristic estimates — not a legal determination.
 
-┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Article ┃ Mapped                                                        ┃ Status     ┃ Source     ┃ Evidence                          ┃ Rationale                                                    ┃
-┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ Art. 4  │ Clause 7.2 (Competence)                                       │ UNVERIFIED │ obligation │ ai_literacy                       │ Obligation 'AI literacy' applies; no automated verification  │
-│         │                                                               │            │            │                                   │ run.                                                         │
-│ Art. 5  │ Clause 5.2 (AI Policy)                                        │ UNVERIFIED │ obligation │ prohibited                        │ Obligation 'Prohibited AI practices' applies; no automated   │
-│         │                                                               │            │            │                                   │ verification run.                                            │
-│ Art. 6  │ Clause 6.1 (Actions to address risks and opportunities)       │ MISSING    │ rule       │ EU_AIA_ART6_HIGH_RISK             │ Use case 'credit scoring for loan applications' matches      │
-│         │                                                               │            │            │                                   │ Annex III categories: essential_services.                    │
-│ Art. 9  │ Clause 6.1 / Clause 8.2-8.3                                   │ PARTIAL    │ artifact   │ docs/risk_register.md             │ Found candidate artifact/signal for 'risk_register' (1       │
-│         │                                                               │            │            │                                   │ path(s), 0 code hint(s)) with content markers found (risk    │
-│         │                                                               │            │            │                                   │ identification + mitigation). Heuristic only — not a full    │
-│         │                                                               │            │            │                                   │ obligation assessment.                                       │
-│ Art. 10 │ Clause 8.1 (Operational planning and control)                 │ UNVERIFIED │ evaluator  │ none                              │ No source data supplied for this article in this run.        │
-│ Art. 11 │ Clause 7.5 (Documented information)                           │ MISSING    │ artifact   │ technical_documentation_dossier   │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'technical_documentation_dossier'. Add the expected file or  │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 12 │ Clause 9.1 (Monitoring, measurement, analysis and evaluation) │ MISSING    │ artifact   │ event_log_evidence                │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'event_log_evidence'. Add the expected file or construct,    │
-│         │                                                               │            │            │                                   │ then re-run gaps.                                            │
-│ Art. 13 │ Clause 7.4 (Communication)                                    │ PARTIAL    │ artifact   │ INSTRUCTIONS.md                   │ Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic        │
-│         │                                                               │            │            │                                   │ content markers — a bare or empty file is not a set of       │
-│         │                                                               │            │            │                                   │ instructions for use.                                        │
-│ Art. 14 │ Clause 8.1 (Operational planning and control)                 │ MISSING    │ artifact   │ human_oversight_construct         │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'human_oversight_construct'. Add the expected file or        │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 15 │ Clause 8.1 (Operational planning and control)                 │ UNVERIFIED │ evaluator  │ none                              │ No source data supplied for this article in this run.        │
-│ Art. 16 │ Clause 5 (Leadership)                                         │ MISSING    │ artifact   │ provider_qms_bundle               │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'provider_qms_bundle'. Add the expected file or construct,   │
-│         │                                                               │            │            │                                   │ then re-run gaps.                                            │
-│ Art. 17 │ Clauses 4-10 (the AI management system as a whole)            │ PARTIAL    │ artifact   │ docs/qms.md                       │ Found candidate artifact/signal for 'provider_qms' (1        │
-│         │                                                               │            │            │                                   │ path(s), 0 code hint(s)). Heuristic only — not a full        │
-│         │                                                               │            │            │                                   │ obligation assessment.                                       │
-│ Art. 24 │ Clause 8.1 (Operational planning and control)                 │ MISSING    │ artifact   │ distributor_conformity            │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'distributor_conformity'. Add the expected file or           │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 25 │ Clause 6.3 (Planning of changes)                              │ MET        │ rule       │ EU_AIA_ART25_MODIFICATION_TRAP    │ No substantial modification declared in assessment answers.  │
-│ Art. 26 │ Clause 8.1 (Operational planning and control)                 │ MISSING    │ artifact   │ deployer_use_records              │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'deployer_use_records'. Add the expected file or construct,  │
-│         │                                                               │            │            │                                   │ then re-run gaps.                                            │
-│ Art. 27 │ —                                                             │ MISSING    │ artifact   │ provider_fria                     │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'provider_fria'. Add the expected file or construct, then    │
-│         │                                                               │            │            │                                   │ re-run gaps.                                                 │
-│ Art. 43 │ Clause 9.2 (Internal audit)                                   │ MISSING    │ artifact   │ conformity_assessment_docs        │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'conformity_assessment_docs'. Add the expected file or       │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 49 │ Clause 7.5 (Documented information)                           │ MISSING    │ artifact   │ eu_database_registration_evidence │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'eu_database_registration_evidence'. Add the expected file   │
-│         │                                                               │            │            │                                   │ or construct, then re-run gaps.                              │
-│ Art. 50 │ Clause 7.4 (Communication)                                    │ MISSING    │ artifact   │ transparency_notice_evidence      │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'transparency_notice_evidence'. Add the expected file or     │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 53 │ Clause 7.5 (Documented information)                           │ UNVERIFIED │ obligation │ gpai_provider                     │ Obligation 'General-purpose AI model provider obligations'   │
-│         │                                                               │            │            │                                   │ applies; no automated verification run.                      │
-│ Art. 55 │ Clause 6.1 (Actions to address risks and opportunities)       │ UNVERIFIED │ obligation │ gpai_systemic_risk                │ Obligation 'GPAI model with systemic risk obligations'       │
-│         │                                                               │            │            │                                   │ applies; no automated verification run.                      │
-│ Art. 72 │ Clause 9.1 (Monitoring, measurement, analysis and evaluation) │ MISSING    │ artifact   │ post_market_monitoring_plan       │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'post_market_monitoring_plan'. Add the expected file or      │
-│         │                                                               │            │            │                                   │ construct, then re-run gaps.                                 │
-│ Art. 73 │ Clause 10.2 (Nonconformity and corrective action)             │ MISSING    │ artifact   │ serious_incident_log              │ No conventional documentation/code probe matched for         │
-│         │                                                               │            │            │                                   │ 'serious_incident_log'. Add the expected file or construct,  │
-│         │                                                               │            │            │                                   │ then re-run gaps.                                            │
-└─────────┴───────────────────────────────────────────────────────────────┴────────────┴────────────┴───────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Article ┃ Mapped                                                       ┃ Status     ┃ Source      ┃ Evidence                          ┃ Rationale                                                    ┃
+┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Art. 4  │ Clause 7.2 (Competence)                                      │ UNVERIFIED │ attestation │ none                              │ No attestation recorded. Add one under                       │
+│         │                                                              │            │             │                                   │ framework_inputs.EU_AI_ACT.attested in the manifest.         │
+│ Art. 5  │ Clause 5.2 (AI Policy)                                       │ UNVERIFIED │ obligation  │ prohibited                        │ Obligation 'Prohibited AI practices' applies; no automated   │
+│         │                                                              │            │             │                                   │ verification run.                                            │
+│ Art. 6  │ Clause 6.1 (Actions to address risks and opportunities)      │ MISSING    │ rule        │ EU_AIA_ART6_HIGH_RISK             │ Use case 'credit scoring for loan applications' matches      │
+│         │                                                              │            │             │                                   │ Annex III categories: essential_services.                    │
+│ Art. 9  │ Clause 6.1 / Clause 8.2-8.3                                  │ PARTIAL    │ artifact    │ docs/risk_register.md             │ Found candidate artifact/signal for 'risk_register' (1       │
+│         │                                                              │            │             │                                   │ path(s), 0 code hint(s)) with content markers found (risk    │
+│         │                                                              │            │             │                                   │ identification + mitigation). Heuristic only — not a full    │
+│         │                                                              │            │             │                                   │ obligation assessment.                                       │
+│ Art. 10 │ Clause 8.1 (Operational planning and control)                │ UNVERIFIED │ evaluator   │ none                              │ No source data supplied for this article in this run.        │
+│ Art. 11 │ Clause 7.5 (Documented information)                          │ MISSING    │ artifact    │ technical_documentation_dossier   │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'technical_documentation_dossier'. Add the expected file or  │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 12 │ Clause 9.1 (Monitoring, measurement, analysis and            │ MISSING    │ artifact    │ event_log_evidence                │ No conventional documentation/code probe matched for         │
+│         │ evaluation)                                                  │            │             │                                   │ 'event_log_evidence'. Add the expected file or construct,    │
+│         │                                                              │            │             │                                   │ then re-run gaps.                                            │
+│ Art. 13 │ Clause 7.4 (Communication)                                   │ PARTIAL    │ artifact    │ INSTRUCTIONS.md                   │ Found 'INSTRUCTIONS.md' but it lacks Art. 13(3) topic        │
+│         │                                                              │            │             │                                   │ content markers — a bare or empty file is not a set of       │
+│         │                                                              │            │             │                                   │ instructions for use.                                        │
+│ Art. 14 │ Clause 8.1 (Operational planning and control)                │ MISSING    │ artifact    │ human_oversight_construct         │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'human_oversight_construct'. Add the expected file or        │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 15 │ Clause 8.1 (Operational planning and control)                │ UNVERIFIED │ evaluator   │ none                              │ No source data supplied for this article in this run.        │
+│ Art. 16 │ Clause 5 (Leadership)                                        │ MISSING    │ artifact    │ provider_qms_bundle               │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'provider_qms_bundle'. Add the expected file or construct,   │
+│         │                                                              │            │             │                                   │ then re-run gaps.                                            │
+│ Art. 17 │ Clauses 4-10 (the AI management system as a whole)           │ PARTIAL    │ artifact    │ docs/qms.md                       │ Found candidate artifact/signal for 'provider_qms' (1        │
+│         │                                                              │            │             │                                   │ path(s), 0 code hint(s)). Heuristic only — not a full        │
+│         │                                                              │            │             │                                   │ obligation assessment.                                       │
+│ Art. 24 │ Clause 8.1 (Operational planning and control)                │ MISSING    │ artifact    │ distributor_conformity            │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'distributor_conformity'. Add the expected file or           │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 25 │ Clause 6.3 (Planning of changes)                             │ MET        │ rule        │ EU_AIA_ART25_MODIFICATION_TRAP    │ No substantial modification declared in assessment answers.  │
+│ Art. 26 │ Clause 8.1 (Operational planning and control)                │ MISSING    │ artifact    │ deployer_use_records              │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'deployer_use_records'. Add the expected file or construct,  │
+│         │                                                              │            │             │                                   │ then re-run gaps.                                            │
+│ Art. 27 │ —                                                            │ MISSING    │ artifact    │ provider_fria                     │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'provider_fria'. Add the expected file or construct, then    │
+│         │                                                              │            │             │                                   │ re-run gaps.                                                 │
+│ Art. 43 │ Clause 9.2 (Internal audit)                                  │ MISSING    │ artifact    │ conformity_assessment_docs        │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'conformity_assessment_docs'. Add the expected file or       │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 49 │ Clause 7.5 (Documented information)                          │ MISSING    │ artifact    │ eu_database_registration_evidence │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'eu_database_registration_evidence'. Add the expected file   │
+│         │                                                              │            │             │                                   │ or construct, then re-run gaps.                              │
+│ Art. 50 │ Clause 7.4 (Communication)                                   │ MISSING    │ artifact    │ transparency_notice_evidence      │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'transparency_notice_evidence'. Add the expected file or     │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 53 │ Clause 7.5 (Documented information)                          │ UNVERIFIED │ obligation  │ gpai_provider                     │ Obligation 'General-purpose AI model provider obligations'   │
+│         │                                                              │            │             │                                   │ applies; no automated verification run.                      │
+│ Art. 55 │ Clause 6.1 (Actions to address risks and opportunities)      │ UNVERIFIED │ obligation  │ gpai_systemic_risk                │ Obligation 'GPAI model with systemic risk obligations'       │
+│         │                                                              │            │             │                                   │ applies; no automated verification run.                      │
+│ Art. 72 │ Clause 9.1 (Monitoring, measurement, analysis and            │ MISSING    │ artifact    │ post_market_monitoring_plan       │ No conventional documentation/code probe matched for         │
+│         │ evaluation)                                                  │            │             │                                   │ 'post_market_monitoring_plan'. Add the expected file or      │
+│         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
+│ Art. 73 │ Clause 10.2 (Nonconformity and corrective action)            │ MISSING    │ artifact    │ serious_incident_log              │ No conventional documentation/code probe matched for         │
+│         │                                                              │            │             │                                   │ 'serious_incident_log'. Add the expected file or construct,  │
+│         │                                                              │            │             │                                   │ then re-run gaps.                                            │
+└─────────┴──────────────────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────┴──────────────────────────────────────────────────────────────┘
 Mapped: ISO/IEC 42001:2023 clause from the framework crosswalk (data/framework_crosswalk.json) — a citation, not a computed conformity verdict.
 
 Regulatory timeline

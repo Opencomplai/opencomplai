@@ -1,7 +1,8 @@
-"""The documented strict reading must equal the strict block of run.sh.
+"""The two CI guides' strict reading must equal the strict preset of the Action page.
 
-Pure file reads. The two CI guides and the GitHub Action script carry the same
-five-flag set; a change to one flag (or the fail-on value) without the others fails here.
+Pure file reads. The two CI guides and the strict preset block of the GitHub Action
+guide carry the same five-flag set; a change to one flag (or the fail-on value) without
+the others fails here.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ import shlex
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[3]
-_RUN_SH = _ROOT / "integrations" / "github-action" / "run.sh"
+_ACTION_PAGE = _ROOT / "docs" / "src" / "guides" / "github-action.md"
 _GITLAB_AZURE = _ROOT / "docs" / "src" / "guides" / "ci-gitlab-azure.md"
 _RECIPES = _ROOT / "docs" / "src" / "guides" / "ci-recipes.md"
 _HEADING = "## Strict reading"
@@ -30,16 +31,13 @@ def _flags(tokens: list[str]) -> dict[str, str | None]:
     return out
 
 
-def _run_sh_strict_flags() -> dict[str, str | None]:
-    src = _text(_RUN_SH)
-    m = re.search(
-        r'if \[ "\$\{OC_STRICT:-false\}" = true \]; then\n(.*?)\nfi\n', src, re.S
-    )
-    assert m, "OC_STRICT block not found in run.sh"
-    tokens: list[str] = []
-    for grp in re.findall(r"cmd\+=\(([^)]*)\)", m.group(1)):
-        tokens += shlex.split(grp)
-    return _flags(tokens)
+def _action_page_strict_flags() -> dict[str, str | None]:
+    page = _text(_ACTION_PAGE)
+    m = re.search(r"^## Strict preset\n(.*?)(?=^## |\Z)", page, re.M | re.S)
+    assert m, "'## Strict preset' section not found in github-action.md"
+    block = re.search(r"```text\n(.*?)```", m.group(1), re.S)
+    assert block, "no text block under '## Strict preset' in github-action.md"
+    return _flags(shlex.split(block.group(1)))
 
 
 def _section(page: str) -> str:
@@ -67,8 +65,8 @@ def _from_string(s: str) -> dict[str, str | None]:
     return _flags(shlex.split(s))
 
 
-def test_run_sh_strict_block_found_nontrivial() -> None:
-    flags = _run_sh_strict_flags()
+def test_action_page_strict_block_found_nontrivial() -> None:
+    flags = _action_page_strict_flags()
     assert {
         "--with-gaps",
         "--scan",
@@ -82,7 +80,7 @@ def test_run_sh_strict_block_found_nontrivial() -> None:
 def test_gitlab_azure_page_has_strict_reading_section() -> None:
     page = _text(_GITLAB_AZURE)
     assert _HEADING in page
-    assert _documented_flags(page) == _run_sh_strict_flags()
+    assert _documented_flags(page) == _action_page_strict_flags()
     section = _section(page)
     for needle in ("OPENCOMPLAI_CHECK_ARGS", "extra_args", ".ocignore"):
         assert needle in section
@@ -92,14 +90,14 @@ def test_recipes_page_has_strict_reading_section() -> None:
     page = _text(_RECIPES)
     assert _HEADING in page
     assert page.index(_HEADING) < page.index("## Jenkins")
-    assert _documented_flags(page) == _run_sh_strict_flags()
+    assert _documented_flags(page) == _action_page_strict_flags()
     assert "opencomplai==" not in _section(page)
 
 
-def test_documented_flag_set_equals_run_sh_strict_block() -> None:
+def test_documented_flag_set_equals_action_page_strict_block() -> None:
     a = _documented_flags(_text(_GITLAB_AZURE))
     b = _documented_flags(_text(_RECIPES))
-    assert a == b == _run_sh_strict_flags()
+    assert a == b == _action_page_strict_flags()
 
 
 def test_flag_set_comparison_detects_a_single_changed_flag() -> None:

@@ -6,7 +6,7 @@ OpenComplAI is a CI gate plus an evidence trail for the EU AI Act. It is a tripw
 
 Teams that build, fine-tune or substantially modify AI systems and need a per-release EU AI Act check in CI. A retrain, a purpose change or a capability extension can make you a provider: `opencomplai check --change-context` exits `4` for those cases (see [exit codes](../cli/exit-codes.md)).
 
-The CLI is offline by default. `opencomplai push` is the only command that uploads anything, and only when you run it.
+The CLI is offline by default. `opencomplai push` is the only command that uploads anything, and only when you run it. Commands that take `--attestations-remote` (or `attestations: {source: remote}` in `opencomplai.yaml`) and `opencomplai attestations pull` download an attestation bundle only when you opt in; see [Attestation bundles](../frameworks/more-packs.md#attestation-bundles).
 
 It is not for teams that only use an AI product and need a vendor-risk or procurement workflow.
 

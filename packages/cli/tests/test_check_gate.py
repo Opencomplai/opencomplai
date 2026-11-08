@@ -224,7 +224,7 @@ def test_trap_with_gate_stays_trap_detected_and_halts(check, tmp_path):
         ("", ("--gate", "EU_AI_ACT"), "EU_AI_ACT cannot be gated"),
         ("", ("--gate", "ISO_42001"), "unknown gated framework ISO_42001"),
         ("", ("--gate", "NIST_AI_RMF"), "not among the compliance targets"),
-        ("", ("--gate", "FIXTURE", "--gate-fail-on", "unverified"), "fail_on"),
+        ("", ("--gate", "FIXTURE", "--gate-fail-on", "everything"), "fail_on"),
         ("gate:\n  frameworks: [FIXTURE]\n  fail_on: always\n", (), "fail_on"),
         ("gate: [FIXTURE]\n", (), "opencomplai.yaml: gate must be a mapping"),
         ("gate:\n  frameworks: FIXTURE\n", (), "gate.frameworks must be a list"),

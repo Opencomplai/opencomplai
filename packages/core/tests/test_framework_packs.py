@@ -47,6 +47,8 @@ FIXTURE_PACK = FrameworkPack(
 ALL_PACKS = [*FRAMEWORKS.values(), FIXTURE_PACK]
 
 EU_ONLY_KINDS = {"rule", "obligation", "manifest", "record"}
+# The only EU AI Act articles that take an attestation (ADR-framework-packs 2026-11c).
+EU_ATTESTABLE = {"Art. 4"}
 NATIVE_KINDS = {"artifact", "attestation", "scan", "evaluator"}
 
 
@@ -116,7 +118,8 @@ def test_native_requirements_are_well_formed(pack: FrameworkPack):
             kind, ref = source["kind"], source["ref"]
             allowed = NATIVE_KINDS | EU_ONLY_KINDS if is_eu else NATIVE_KINDS
             assert kind in allowed, f"{rid}: kind {kind!r}"
-            assert not (is_eu and kind == "attestation")
+            if is_eu and kind == "attestation":
+                assert rid in EU_ATTESTABLE, rid
             if "role" in source:
                 # Supporting evidence: only an artifact probe, never the sole source.
                 assert (kind, source["role"]) == ("artifact", "supporting"), rid
@@ -126,6 +129,20 @@ def test_native_requirements_are_well_formed(pack: FrameworkPack):
                 assert ref == rid
             else:
                 assert ref in known[kind], f"{rid}: unknown {kind} ref {ref!r}"
+
+
+def test_the_eu_rows_that_take_an_attestation_are_exactly_the_listed_ones():
+    eu = load_requirements_map(FRAMEWORKS[EU_AI_ACT].requirements)
+    taking = {
+        rid
+        for rid, config in eu.items()
+        if any(s["kind"] == "attestation" for s in config["sources"])
+    }
+    assert taking == EU_ATTESTABLE
+    for rid in taking:
+        # Art. 4 is decided by an attestation alone, and goes stale after a year.
+        assert [s["kind"] for s in eu[rid]["sources"]] == ["attestation"]
+        assert eu[rid]["default_ttl_days"] == 365
 
 
 @pytest.mark.parametrize(
@@ -256,3 +273,28 @@ def test_resolve_targets_accepts_a_registered_fixture_pack(monkeypatch):
         EU_AI_ACT,
         "FIXTURE",
     ]
+
+
+# --- attestable_ids / attestation_only_ids -----------------------------------
+
+
+def test_attestable_ids_are_the_keys_framework_inputs_accepts():
+    from opencomplai_core.frameworks import attestable_ids
+
+    assert attestable_ids(EU_AI_ACT) == {"Art. 4"}
+    assert "NIST_AI_RMF:GOVERN 2.2" in attestable_ids("NIST_AI_RMF")
+    assert "NIST_AI_RMF:MAP 3.4" not in attestable_ids("NIST_AI_RMF")
+    assert "ISO_IEC_27001:A.6.3" in attestable_ids("ISO_IEC_27001")
+    assert attestable_ids("NOT_A_FRAMEWORK") == frozenset()
+
+
+def test_attestation_only_ids_are_a_subset_of_the_attestable_ones():
+    from opencomplai_core.frameworks import attestable_ids, attestation_only_ids
+
+    # ISO/IEC 27090:5.7 also has an evaluator, so an attestation does not decide it alone.
+    both = attestable_ids("ISO_IEC_27090")
+    only = attestation_only_ids("ISO_IEC_27090")
+    assert "ISO_IEC_27090:5.7" in both - only
+    assert only < both
+    assert attestation_only_ids("NIST_AI_RMF") == frozenset()
+    assert attestation_only_ids("NOT_A_FRAMEWORK") == frozenset()

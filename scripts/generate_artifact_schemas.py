@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the JSON Schemas for ScanStatusArtifact, GapReport and
-EvidencePackage into packages/core/src/opencomplai_core/data/.
+"""Generate the JSON Schemas for ScanStatusArtifact, GapReport,
+EvidencePackage and AttestationBundle into packages/core/src/opencomplai_core/data/.
 
-Run after editing ScanStatusArtifact, GapReport, EvidencePackage or any model
-they embed:
+Run after editing ScanStatusArtifact, GapReport, EvidencePackage,
+AttestationBundle or any model they embed:
     python scripts/generate_artifact_schemas.py
 
 packages/core/tests/test_artifact_schema_drift.py fails if the committed files
@@ -24,6 +24,7 @@ def main() -> None:
     sys.path.insert(0, str(REPO_ROOT / "packages" / "core" / "src"))
     from opencomplai_core.json_schemas import (
         build_artifact_schema,
+        build_attestation_bundle_schema,
         build_evidence_package_schema,
         build_gap_report_schema,
     )
@@ -32,6 +33,7 @@ def main() -> None:
         ("scan_status_artifact.schema.json", build_artifact_schema()),
         ("gap_report.schema.json", build_gap_report_schema()),
         ("evidence_package.schema.json", build_evidence_package_schema()),
+        ("attestation_bundle.schema.json", build_attestation_bundle_schema()),
     ):
         path = DATA_DIR / name
         path.write_text(

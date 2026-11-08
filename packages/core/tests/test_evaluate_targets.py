@@ -10,10 +10,11 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import pytest
+from opencomplai_core import frameworks as frameworks_module
 from opencomplai_core import gap_report as gap_report_module
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import run_evals
@@ -362,6 +363,37 @@ def test_nist_attestation_covers_a_subcategory_without_eu_evidence():
     assert row.source == ArticleGapSource.ATTESTATION
 
 
+# --- one evaluation date per run ---------------------------------------------
+
+
+def test_today_is_resolved_once_for_the_whole_run(monkeypatch):
+    class _Clock(datetime):
+        calls = 0
+
+        @classmethod
+        def now(cls, tz=None):
+            cls.calls += 1
+            return datetime(2026, 9, cls.calls, tzinfo=UTC)
+
+    seen: list[object] = []
+    real = frameworks_module.build_gap_report
+
+    def spy(*args, **kwargs):
+        seen.append(kwargs["today"])
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(frameworks_module, "datetime", _Clock)
+    monkeypatch.setattr(frameworks_module, "build_gap_report", spy)
+    evaluate_targets(
+        _manifest(),
+        [EU_AI_ACT, "ISO_IEC_27001", "ISO_IEC_42001", "NIST_AI_RMF"],
+        commit_ref="abc",
+    )
+    assert len(seen) == 3  # EU AI Act and the two native packs
+    assert set(seen) == {date(2026, 9, 1)}
+    assert _Clock.calls == 1
+
+
 # --- every ValueError path ---------------------------------------------------
 
 
@@ -508,7 +540,7 @@ def test_gate_ignores_excluded_rows(fixture_pack, tmp_path: Path):
 
 def test_gate_rejects_bad_fail_on_and_unassessed_frameworks():
     with pytest.raises(ValueError, match="fail_on"):
-        gate_failures(GATE_REPORTS, ["FIXTURE"], "unverified")
+        gate_failures(GATE_REPORTS, ["FIXTURE"], "everything")
     with pytest.raises(ValueError, match="ISO_42001"):
         gate_failures(GATE_REPORTS, ["ISO_42001"], "missing")
     with pytest.raises(ValueError, match="EU_AI_ACT"):
@@ -526,4 +558,4 @@ def test_validate_gate_needs_known_non_eu_targets(fixture_pack):
     with pytest.raises(ValueError, match="EU_AI_ACT cannot be gated"):
         validate_gate([EU_AI_ACT], "missing", targets)
     with pytest.raises(ValueError, match="fail_on"):
-        validate_gate([], "unverified", targets)
+        validate_gate([], "everything", targets)

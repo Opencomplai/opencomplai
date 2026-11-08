@@ -91,6 +91,9 @@ _OPENER = urllib.request.build_opener(_NoRedirectHandler)
 # are unaffected.
 urllib.request.install_opener(_OPENER)
 
+#: Hosts that are this machine: plain http to them keeps the API key off the network.
+LOCAL_HOSTNAMES = frozenset({"localhost", "127.0.0.1", "::1"})
+
 
 def _cli_version() -> str:
     """Installed ``opencomplai`` version, falling back to the bundled default.

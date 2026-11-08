@@ -1,357 +1,119 @@
-"""integrations/github-action: run.sh, comment.sh and action.yml, tested offline.
+"""The CLI side of the Marketplace Action (Opencomplai/opencomplai-action), tested offline.
 
-Every test calls the real shell scripts with shims on PATH: a fake ``uvx`` (the
-real-fixture test's shim runs this checkout's CLI, never real uvx) and a fake
-``gh`` (comment.sh never talks to GitHub). No network, no real home (T1, T7, T11).
+The Action lives in its own repository and its shell scripts are tested there. What
+stays here is the contract with this repo: `check` honours the exact flag set the
+Action's run.sh passes, the self-test workflow runs the pinned Action, and the docs
+snippets keep pinning it to a commit SHA. No network, no real home.
 """
 
 from __future__ import annotations
 
 import base64
 import json
-import os
 import re
-import shutil
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
 import yaml
+from opencomplai_cli import main
 from opencomplai_core.signing import generate_keypair
+from typer.testing import CliRunner
 
+from .test_gate_demo import demo as gate_demo  # noqa: F401  (fixture)
+
+runner = CliRunner()
 ROOT = Path(__file__).resolve().parents[3]
-ACTION = ROOT / "integrations" / "github-action"
-DEMOS = ROOT / "examples" / "gate-demo"
+ACTION_PAGE = ROOT / "docs" / "src" / "guides" / "github-action.md"
 SELFTEST = ROOT / ".github" / "workflows" / "action-selftest.yml"
-MARKER = "<!-- opencomplai-gate -->"
-BASH = shutil.which("bash")
-needs_bash = pytest.mark.skipif(BASH is None, reason="bash not found on PATH")
+ACTION_USES = re.compile(r"Opencomplai/opencomplai-action@[0-9a-f]{40}")
 
-# Drops uvx's own arguments up to the bare `opencomplai`, then runs this checkout's CLI.
-REAL_UVX = """#!/usr/bin/env bash
-while [ "$1" != opencomplai ]; do shift; done
-shift
-exec "$OC_TEST_PY" -c 'import sys; from opencomplai_cli.main import app; sys.argv[0]="opencomplai"; app()' "$@"
-"""
-
-# Writes the summary/SARIF files named on its command line and exits with FAKE_EXIT.
-FAKE_UVX = """#!/usr/bin/env bash
-prev=""
-for a in "$@"; do
-  if [ "$prev" = --summary-md ] && [ "${FAKE_WRITE_SUMMARY:-1}" = 1 ]; then printf '## fake summary\\n' >"$a"; fi
-  if [ "$prev" = --sarif-output ]; then printf '{}\\n' >"$a"; fi
-  if [ "$prev" = --output-dir ] && [ "${FAKE_WRITE_ARTIFACT:-1}" = 1 ]; then printf '{}\\n' >"$a/compliance-artifact.json"; fi
-  prev="$a"
-done
-echo "$@" >"$FAKE_ARGV"
-exit "${FAKE_EXIT:-0}"
-"""
-
-# Records argv; keeps the last posted body so a later list call can find the marker.
-FAKE_GH = """#!/usr/bin/env bash
-echo "$*" >>"$GH_LOG"
-body=""
-for a in "$@"; do case "$a" in body=@*) body="${a#body=@}";; esac; done
-case "$*" in
-  *--paginate*) if [ -f "$GH_STATE" ] && grep -q opencomplai-gate "$GH_STATE"; then echo 777; fi;;
-  *--method*) cp "$body" "$GH_STATE";;
-esac
-exit 0
-"""
+# Mirrors Opencomplai/opencomplai-action run.sh: `sign: "true"` adds --sign-if-available,
+# `with-gaps: "true"` adds --with-gaps, `strict: "true"` adds the five-flag strict preset.
+SIGN_FLAGS = ["--sign-if-available"]
+GAPS_FLAGS = ["--with-gaps"]
+STRICT_FLAGS = [
+    "--with-gaps",
+    "--scan",
+    "--fail-on",
+    "major",
+    "--require-exemption-record",
+    "--sign-if-available",
+]
 
 
-def _shim(directory: Path, name: str, text: str) -> None:
-    directory.mkdir(parents=True, exist_ok=True)
-    path = directory / name
-    path.write_text(text, encoding="utf-8", newline="\n")
-    path.chmod(0o755)
-
-
-def _env(tmp_path: Path, shims: Path, **extra: str) -> dict[str, str]:
-    home = tmp_path / "home"
-    home.mkdir(exist_ok=True)
-    env = dict(os.environ)
-    for var in (
-        "SIGNING_KEY_PRIVATE",
-        "OPENCOMPLAI_TRUSTED_KEY_IDS",
-        "OPENCOMPLAI_API_URL",
-        "GITHUB_SHA",
-        "CI_COMMIT_SHA",
-    ):
-        env.pop(var, None)
-    env.update(
-        HOME=str(home),
-        USERPROFILE=str(home),
-        OPENCOMPLAI_STATE_DIR=str(tmp_path / "state"),
-        PATH=f"{shims}{os.pathsep}{env.get('PATH', '')}",
-        OC_VERSION="0.9.0",
-        OC_OUT_DIR=str(tmp_path / "out"),
-        GITHUB_OUTPUT=str(tmp_path / "gh_output"),
-        **extra,
+def _action_check(demo_dir: Path, out: Path, *flags: str):
+    """Run `check` the way run.sh does; `--repo-root` is the caller's `args` input."""
+    out.mkdir()
+    return runner.invoke(
+        main.app,
+        [
+            "check",
+            "--manifest",
+            str(demo_dir / "system-manifest.json"),
+            "--output-dir",
+            str(out),
+            "--summary-md",
+            str(out / "summary.md"),
+            "--sarif-output",
+            str(out / "results.sarif"),
+            *flags,
+            "--repo-root",
+            str(demo_dir),
+        ],
     )
-    return env
 
 
-def _run_sh(tmp_path: Path, env: dict[str, str]) -> tuple[dict[str, str], Path]:
-    done = subprocess.run(
-        [BASH, (ACTION / "run.sh").as_posix()],
-        cwd=tmp_path,
-        env=env,
-        capture_output=True,
-        text=True,
-    )
-    assert done.returncode == 0, done.stdout + done.stderr  # run.sh never fails itself
-    lines = (tmp_path / "gh_output").read_text("utf-8").splitlines()
-    out = dict(line.split("=", 1) for line in lines)
-    return out, Path(out["summary-file"])
+@pytest.fixture
+def copy_demo(request: pytest.FixtureRequest):
+    """copy(name) -> demo dir under tmp_path, with the environment isolated."""
+    return request.getfixturevalue("gate_demo")
 
 
-@needs_bash
-def test_run_sh_passes_exit_code_through(tmp_path: Path) -> None:
-    for code in (0, 1, 3, 4):
-        run = tmp_path / str(code)
-        _shim(run / "shims", "uvx", FAKE_UVX)
-        env = _env(
-            run,
-            run / "shims",
-            FAKE_EXIT=str(code),
-            FAKE_ARGV=str(run / "argv"),
-            OC_MANIFEST="m.json",
-            OC_WITH="./a\n./b",
-            OC_ARGS="--change-context model_retrain",
-        )
-        out, summary = _run_sh(run, env)
-        assert out["exit-code"] == str(code)
-        assert summary.read_text("utf-8").startswith(MARKER + "\n## fake summary")
-        assert out["sarif-file"].endswith("results.sarif")
-        argv = (run / "argv").read_text("utf-8")
-        assert argv.startswith(
-            "--from opencomplai==0.9.0 --with ./a --with ./b opencomplai check"
-        )
-        assert "--manifest m.json" in argv
-        assert "--change-context model_retrain" in argv
-
-
-@needs_bash
-def test_run_sh_fallback_body_when_no_summary(tmp_path: Path) -> None:
-    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        FAKE_EXIT="2",
-        FAKE_WRITE_SUMMARY="0",
-        FAKE_ARGV=str(tmp_path / "argv"),
-    )
-    out, summary = _run_sh(tmp_path, env)
-    assert out["exit-code"] == "2"
-    body = summary.read_text("utf-8")
-    assert body.startswith(MARKER + "\n")
-    assert "exit code 2" in body
-
-
-@needs_bash
-@pytest.mark.parametrize(
-    ("name", "extra", "expected"),
-    [
-        ("prohibited", [], 3),
-        ("trap", ["--change-context", "model_retrain"], 4),
-        ("high-risk", [], 1),
-        # Acceptance clears Art. 6 only; the other EU obligations stay Missing (exit 1).
-        ("accepted", [], 1),
-        ("limited", [], 0),
-    ],
-)
-def test_run_sh_real_gate_demo_exit_codes(
-    tmp_path: Path, name: str, extra: list[str], expected: int
+@pytest.mark.parametrize("flags", [[], STRICT_FLAGS], ids=["plain", "strict"])
+@pytest.mark.parametrize(("name", "expected"), [("high-risk", 1), ("limited", 0)])
+def test_action_flag_set_exit_codes_and_files(
+    copy_demo, tmp_path: Path, name: str, expected: int, flags: list[str]
 ) -> None:
-    demo = tmp_path / "work" / name
-    shutil.copytree(DEMOS / name, demo)
-    shims = tmp_path / "shims"
-    _shim(shims, "uvx", REAL_UVX)
-    env = _env(
-        tmp_path,
-        shims,
-        OC_TEST_PY=Path(sys.executable).as_posix(),
-        OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
-        OC_ARGS=" ".join(["--repo-root", demo.as_posix(), *extra]),
-    )
-    if name == "accepted":
-        generate_keypair(tmp_path / "keys")
-        done = subprocess.run(
-            [
-                BASH,
-                (shims / "uvx").as_posix(),
-                "opencomplai",
-                "accept",
-                "-m",
-                (demo / "system-manifest.json").as_posix(),
-                "--accepted-by",
-                "demo-reviewer",
-                "--statement",
-                "Illustrative sandbox acceptance",
-                "--repo-root",
-                demo.as_posix(),
-                "--key",
-                (tmp_path / "keys" / "signing.key").as_posix(),
-            ],
-            cwd=tmp_path,
-            env=env,
-            capture_output=True,
-            text=True,
-        )
-        assert done.returncode == 0, done.stdout + done.stderr
-    out, summary = _run_sh(tmp_path, env)
-    assert out["exit-code"] == str(expected)
-    body = summary.read_text("utf-8")
-    assert body.startswith(MARKER + "\n")
-    assert len(body) > len(MARKER) + 1
-    if name == "accepted":
-        assert "EU_AIA_ART6_HIGH_RISK" not in body
+    out = tmp_path / "out"
+    result = _action_check(copy_demo(name), out, *flags)
+    assert result.exit_code == expected, result.output
+    for written in ("summary.md", "results.sarif", "compliance-artifact.json"):
+        assert (out / written).stat().st_size > 0, written
 
 
-@needs_bash
-def test_comment_sh_creates_then_updates_sticky_comment(tmp_path: Path) -> None:
-    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
-    _shim(tmp_path / "shims", "gh", FAKE_GH)
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        FAKE_ARGV=str(tmp_path / "argv"),
-        GH_LOG=str(tmp_path / "gh.log"),
-        GH_STATE=str(tmp_path / "gh.state"),
-        GH_TOKEN="fake-token",
-        GITHUB_REPOSITORY="o/r",
-        PR_NUMBER="5",
-    )
-    _, summary = _run_sh(tmp_path, env)
-    env["BODY_FILE"] = summary.as_posix()
-    for _ in range(2):
-        done = subprocess.run(
-            [BASH, (ACTION / "comment.sh").as_posix()],
-            cwd=tmp_path,
-            env=env,
-            capture_output=True,
-            text=True,
-        )
-        assert done.returncode == 0, done.stdout + done.stderr
-    calls = (tmp_path / "gh.log").read_text("utf-8").splitlines()
-    assert len(calls) == 4, calls
-    assert "--paginate repos/o/r/issues/5/comments" in calls[0]
-    assert "--method POST repos/o/r/issues/5/comments" in calls[1]
-    assert "--method PATCH repos/o/r/issues/comments/777" in calls[3]
-    assert not any("POST" in c for c in calls[2:])
-
-
-@needs_bash
-def test_comment_sh_noop_outside_pr(tmp_path: Path) -> None:
-    _shim(tmp_path / "shims", "gh", FAKE_GH)
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        GH_LOG=str(tmp_path / "gh.log"),
-        GH_STATE=str(tmp_path / "gh.state"),
-        GH_TOKEN="fake-token",
-        GITHUB_REPOSITORY="o/r",
-        PR_NUMBER="",
-        BODY_FILE=str(tmp_path / "missing.md"),
-    )
-    done = subprocess.run(
-        [BASH, (ACTION / "comment.sh").as_posix()],
-        cwd=tmp_path,
-        env=env,
-        capture_output=True,
-        text=True,
-    )
-    assert done.returncode == 0, done.stdout + done.stderr
-    assert "Not a pull request" in done.stdout
-    assert not (tmp_path / "gh.log").exists()
-
-
-NOTE = "\n\n_Summary truncated._\n"
-
-
-def _post_via_comment_sh(tmp_path: Path, body: bytes) -> bytes:
-    _shim(tmp_path / "shims", "gh", FAKE_GH)
-    body_file = tmp_path / "body.md"
-    body_file.write_bytes(body)
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        GH_LOG=str(tmp_path / "gh.log"),
-        GH_STATE=str(tmp_path / "gh.state"),
-        GH_TOKEN="fake-token",
-        GITHUB_REPOSITORY="o/r",
-        PR_NUMBER="5",
-        BODY_FILE=str(body_file),
-    )
-    done = subprocess.run(
-        [BASH, (ACTION / "comment.sh").as_posix()],
-        cwd=tmp_path,
-        env=env,
-        capture_output=True,
-    )
-    assert done.returncode == 0, done.stdout + done.stderr
-    return (tmp_path / "gh.state").read_bytes()
-
-
-@needs_bash
-@pytest.mark.parametrize(
-    "char", ["\u00e9", "\u20ac", "\U0001f600"], ids=["2-byte", "3-byte", "4-byte"]
-)
-def test_comment_sh_truncates_on_a_character_boundary(
-    tmp_path: Path, char: str
+def test_action_flag_set_signed_with_gaps(
+    copy_demo, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    k = len(char.encode())
-    prefix = MARKER + "\n"
-    pad = (60000 - len(prefix) - (k - 1)) % k
-    raw = (prefix + "a" * pad + char * (60000 // k + 100)).encode()
-    assert raw[60000] & 0xC0 == 0x80  # a byte cut would split the character
-    posted = _post_via_comment_sh(tmp_path, raw)
-    decoded = posted.decode("utf-8")
-    assert len(decoded) <= 65536
-    assert decoded.startswith(prefix)
-    assert decoded.endswith(NOTE)
-    assert posted[: -len(NOTE.encode())] == raw[: 60000 - (k - 1)]
+    generate_keypair(tmp_path / "keys")
+    key = base64.b64encode((tmp_path / "keys" / "signing.key").read_bytes()).decode()
+    monkeypatch.setenv("SIGNING_KEY_PRIVATE", key)
+    out = tmp_path / "out"
+    result = _action_check(copy_demo("limited"), out, *SIGN_FLAGS, *GAPS_FLAGS)
+    assert result.exit_code == 0, result.output
+    assert "Signed | `yes (key sha256:" in (out / "summary.md").read_text("utf-8")
+    artifact = json.loads((out / "compliance-artifact.json").read_text("utf-8"))
+    assert artifact["signature"]
 
 
-@needs_bash
-@pytest.mark.parametrize("size", [60000, 60001])
-def test_comment_sh_threshold_is_60000_bytes(tmp_path: Path, size: int) -> None:
-    prefix = MARKER + "\n"
-    raw = (prefix + "x" * (size - len(prefix))).encode()
-    assert len(raw) == size
-    posted = _post_via_comment_sh(tmp_path, raw)
-    assert posted == (raw if size == 60000 else raw[:60000] + NOTE.encode())
+_PINNED = re.compile(r"@(?:<40-hex commit SHA> # v1|[0-9a-f]{40} # v\S+)\s*$")
 
 
-def _action() -> dict:
-    return yaml.safe_load((ACTION / "action.yml").read_text("utf-8"))
-
-
-def test_action_yml_is_pinned_composite() -> None:
-    action = _action()
-    assert action["runs"]["using"] == "composite"
-    assert re.fullmatch(r"\d+\.\d+\.\d+", action["inputs"]["version"]["default"])
+def test_action_uses_lines_are_pinned_to_a_commit_sha() -> None:
+    files = [ROOT / "README.md", ACTION_PAGE]
+    files += [p for p in (ROOT / "examples").rglob("*") if p.is_file()]
     uses = [
-        ln.strip()
-        for ln in (ACTION / "action.yml").read_text("utf-8").splitlines()
-        if re.match(r"\s*(-\s+)?uses:", ln)
+        (p.relative_to(ROOT).as_posix(), ln.strip())
+        for p in files
+        for ln in p.read_text("utf-8", errors="ignore").splitlines()
+        if "uses: Opencomplai/opencomplai-action@" in ln
     ]
-    assert len(uses) >= 2, uses
-    for ln in uses:
-        assert re.search(r"@[0-9a-f]{40} # v\d", ln), ln
-    run_sh = (ACTION / "run.sh").read_text("utf-8")
-    assert 'from="opencomplai==${OC_VERSION}"' in run_sh
-    assert "latest" not in run_sh
-    assert "uvx --from" in run_sh
+    assert any(f == "docs/src/guides/github-action.md" for f, _ in uses)
+    bad = [(f, ln) for f, ln in uses if not _PINNED.search(ln)]
+    assert not bad, bad
 
 
-def test_action_yml_never_interpolates_inputs_in_run() -> None:
-    steps = _action()["runs"]["steps"]
-    runs = [s["run"] for s in steps if "run" in s]
-    assert runs
-    assert not [r for r in runs if "${{" in r], runs
+def test_docs_action_page_documents_strict_input() -> None:
+    assert re.search(r"^\| `strict` ", ACTION_PAGE.read_text("utf-8"), re.M)
 
 
 @pytest.mark.skipif(not SELFTEST.is_file(), reason="no self-test workflow in this tree")
@@ -372,7 +134,7 @@ def test_selftest_matrix_covers_all_five_demos() -> None:
     }
     assert "--change-context model_retrain" in cells["trap"]["args"]
     uses = [s.get("uses", "") for s in job["steps"]]
-    assert "./integrations/github-action" in uses
+    assert any(ACTION_USES.fullmatch(u) for u in uses), uses
 
 
 def test_bogus_compliance_gate_example_is_gone() -> None:
@@ -393,200 +155,6 @@ def test_bogus_compliance_gate_example_is_gone() -> None:
     assert not hits, hits
 
 
-def test_action_yml_declares_evidence_inputs_and_output() -> None:
-    action = _action()
-    inputs = action["inputs"]
-    assert inputs["upload-artifact"]["default"] == "true"
-    assert inputs["sign"]["default"] == "false"
-    assert inputs["with-gaps"]["default"] == "false"
-    assert "artifact-name" in inputs
-    assert "artifact-file" in action["outputs"]
-
-
-def test_action_yml_upload_step_is_sha_pinned_and_gated() -> None:
-    text = (ACTION / "action.yml").read_text("utf-8")
-    steps = [
-        s
-        for s in _action()["runs"]["steps"]
-        if str(s.get("uses", "")).startswith("actions/upload-artifact@")
-    ]
-    assert len(steps) == 1
-    (step,) = steps
-    assert re.fullmatch(r"actions/upload-artifact@[0-9a-f]{40}", step["uses"])
-    assert re.search(r"actions/upload-artifact@[0-9a-f]{40} # v\d", text)
-    assert "inputs.upload-artifact" in step["if"]
-    assert "artifact-file" in step["if"]
-    assert step["with"]["path"] == "${{ steps.check.outputs.artifact-file }}"
-
-
-def test_run_sh_has_no_eval_and_maps_sign_and_with_gaps() -> None:
-    run_sh = (ACTION / "run.sh").read_text("utf-8")
-    assert "eval " not in run_sh
-    assert "--sign-if-available" in run_sh
-    assert "--with-gaps" in run_sh
-
-
-@needs_bash
-@pytest.mark.parametrize(
-    ("sign", "gaps", "expect"),
-    [
-        ("true", "true", True),
-        ("false", "false", False),
-        (None, None, False),
-        ("true; rm -rf x", "TRUE", False),
-    ],
-)
-def test_run_sh_sign_and_with_gaps_flags_follow_inputs(
-    tmp_path: Path, sign: str | None, gaps: str | None, expect: bool
-) -> None:
-    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
-    extra = {}
-    if sign is not None:
-        extra["OC_SIGN"] = sign
-    if gaps is not None:
-        extra["OC_WITH_GAPS"] = gaps
-    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"), **extra)
-    _run_sh(tmp_path, env)
-    argv = (tmp_path / "argv").read_text("utf-8")
-    assert ("--sign-if-available" in argv) is expect
-    assert ("--with-gaps" in argv) is expect
-
-
-PRESET = [
-    "--with-gaps",
-    "--scan",
-    "--fail-on",
-    "--require-exemption-record",
-    "--sign-if-available",
-]
-
-
-def _strict_tokens(tmp_path: Path, **extra: str) -> list[str]:
-    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
-    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"), **extra)
-    _run_sh(tmp_path, env)
-    return (tmp_path / "argv").read_text("utf-8").split()
-
-
-@needs_bash
-def test_run_sh_strict_true_adds_the_preset_flags(tmp_path: Path) -> None:
-    tokens = _strict_tokens(
-        tmp_path, OC_STRICT="true", OC_ARGS="--change-context model_retrain"
-    )
-    for flag in PRESET:
-        assert tokens.count(flag) == 1, (flag, tokens)
-    i = tokens.index("--fail-on")
-    assert tokens[i + 1] == "major"
-    assert tokens[-2:] == ["--change-context", "model_retrain"]
-
-
-@needs_bash
-@pytest.mark.parametrize("value", [None, "false", "", "TRUE", "true; rm -rf x"])
-def test_run_sh_strict_off_adds_no_preset_flags(
-    tmp_path: Path, value: str | None
-) -> None:
-    extra = {} if value is None else {"OC_STRICT": value}
-    tokens = _strict_tokens(tmp_path, **extra)
-    for flag in PRESET:
-        assert flag not in tokens, (flag, tokens)
-
-
-@needs_bash
-def test_run_sh_strict_explicit_flags_win(tmp_path: Path) -> None:
-    (tmp_path / "a").mkdir()
-    tokens = _strict_tokens(
-        tmp_path / "a", OC_STRICT="true", OC_ARGS="--fail-on critical --no-sign"
-    )
-    assert tokens.count("--fail-on") == 1
-    assert tokens[tokens.index("--fail-on") + 1] == "critical"
-    assert "--sign-if-available" not in tokens
-    (tmp_path / "b").mkdir()
-    tokens = _strict_tokens(tmp_path / "b", OC_STRICT="true", OC_ARGS="--fail-on=none")
-    assert "--fail-on" not in tokens
-    assert tokens.count("--fail-on=none") == 1
-    (tmp_path / "c").mkdir()
-    tokens = _strict_tokens(tmp_path / "c", OC_STRICT="true", OC_SIGN="true")
-    assert tokens.count("--sign-if-available") == 1
-    (tmp_path / "d").mkdir()
-    tokens = _strict_tokens(tmp_path / "d", OC_STRICT="true", OC_WITH_GAPS="true")
-    assert tokens.count("--with-gaps") == 1
-
-
-def test_action_yml_declares_strict_input_and_docs_name_it() -> None:
-    action = _action()
-    assert action["inputs"]["strict"]["default"] == "false"
-    (check,) = [s for s in action["runs"]["steps"] if s.get("id") == "check"]
-    assert "OC_STRICT" in check["env"]
-    for page in (
-        ACTION / "README.md",
-        ROOT / "docs" / "src" / "guides" / "github-action.md",
-    ):
-        assert re.search(r"^\| `strict` ", page.read_text("utf-8"), re.M), page
-
-
-@needs_bash
-@pytest.mark.parametrize(
-    ("name", "strict_code"), [("high-risk", "1"), ("limited", "0")]
-)
-def test_run_sh_strict_real_gate_demo_exit_codes(
-    tmp_path: Path, name: str, strict_code: str
-) -> None:
-    codes = {}
-    for strict in ("false", "true"):
-        work = tmp_path / strict
-        work.mkdir()
-        demo = work / name
-        shutil.copytree(DEMOS / name, demo)
-        shims = work / "shims"
-        _shim(shims, "uvx", REAL_UVX)
-        env = _env(
-            work,
-            shims,
-            OC_TEST_PY=Path(sys.executable).as_posix(),
-            OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
-            OC_ARGS=f"--repo-root {demo.as_posix()}",
-            OC_STRICT=strict,
-        )
-        out, _ = _run_sh(work, env)
-        codes[strict] = out["exit-code"]
-    assert codes["false"] == strict_code  # defaults unchanged: 1 and 0
-    assert codes["true"] == strict_code
-
-
-@needs_bash
-def test_run_sh_reports_artifact_file(tmp_path: Path) -> None:
-    _shim(tmp_path / "shims", "uvx", FAKE_UVX)
-    env = _env(tmp_path, tmp_path / "shims", FAKE_ARGV=str(tmp_path / "argv"))
-    out, _ = _run_sh(tmp_path, env)
-    assert out["artifact-file"].endswith("compliance-artifact.json")
-    assert Path(out["artifact-file"]).is_file()
-
-    stale = tmp_path / "out" / "compliance-artifact.json"
-    stale.write_text("stale", encoding="utf-8")
-    env["FAKE_WRITE_ARTIFACT"] = "0"
-    out, _ = _run_sh(tmp_path, env)
-    assert out["artifact-file"] == ""
-    assert not stale.exists()
-
-
-@needs_bash
-def test_run_sh_real_gate_demo_writes_artifact_file(tmp_path: Path) -> None:
-    demo = tmp_path / "work" / "limited"
-    shutil.copytree(DEMOS / "limited", demo)
-    _shim(tmp_path / "shims", "uvx", REAL_UVX)
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        OC_TEST_PY=Path(sys.executable).as_posix(),
-        OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
-        OC_ARGS=f"--repo-root {demo.as_posix()}",
-    )
-    out, _ = _run_sh(tmp_path, env)
-    artifact = Path(out["artifact-file"])
-    assert artifact.name == "compliance-artifact.json"
-    assert artifact.stat().st_size > 0
-
-
 @pytest.mark.skipif(not SELFTEST.is_file(), reason="no self-test workflow in this tree")
 def test_selftest_asserts_artifact_file() -> None:
     text = SELFTEST.read_text("utf-8")
@@ -595,37 +163,11 @@ def test_selftest_asserts_artifact_file() -> None:
     assert 'upload-artifact: "true"' in text
 
 
-@needs_bash
-def test_run_sh_real_gate_demo_signed_with_gaps_summary(tmp_path: Path) -> None:
-    demo = tmp_path / "work" / "limited"
-    shutil.copytree(DEMOS / "limited", demo)
-    _shim(tmp_path / "shims", "uvx", REAL_UVX)
-    generate_keypair(tmp_path / "keys")
-    key = base64.b64encode((tmp_path / "keys" / "signing.key").read_bytes()).decode()
-    env = _env(
-        tmp_path,
-        tmp_path / "shims",
-        OC_TEST_PY=Path(sys.executable).as_posix(),
-        OC_MANIFEST=(demo / "system-manifest.json").as_posix(),
-        OC_ARGS=f"--repo-root {demo.as_posix()}",
-        OC_SIGN="true",
-        OC_WITH_GAPS="true",
-        SIGNING_KEY_PRIVATE=key,
-    )
-    out, summary = _run_sh(tmp_path, env)
-    assert out["exit-code"] == "0"
-    assert "Signed | `yes (key sha256:" in summary.read_text("utf-8")
-    artifact = json.loads(Path(out["artifact-file"]).read_text("utf-8"))
-    assert artifact["signature"]
-
-
 @pytest.mark.skipif(not SELFTEST.is_file(), reason="no self-test workflow in this tree")
 def test_selftest_covers_sign_and_with_gaps() -> None:
     text = SELFTEST.read_text("utf-8")
     job = yaml.safe_load(text)["jobs"]["signed-with-gaps"]
-    (step,) = [
-        s for s in job["steps"] if s.get("uses") == "./integrations/github-action"
-    ]
+    (step,) = [s for s in job["steps"] if ACTION_USES.fullmatch(str(s.get("uses", "")))]
     assert step["with"]["sign"] == "true"
     assert step["with"]["with-gaps"] == "true"
     # The workflow writes the backticks escaped inside double quotes so that

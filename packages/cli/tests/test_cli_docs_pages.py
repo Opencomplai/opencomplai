@@ -12,7 +12,6 @@ import re
 from pathlib import Path
 
 import typer.main
-import yaml
 
 # Importing main registers every command and every verify kind.
 from opencomplai_cli.main import app
@@ -209,8 +208,26 @@ def test_verify_kinds_table_lists_every_registered_kind():
 
 # --- Reverse guard: every real option of a documented command is named ---------
 
-_ACTION_YML = _ROOT / "integrations" / "github-action" / "action.yml"
 _ACTION_PAGE = _ROOT / "docs" / "src" / "guides" / "github-action.md"
+
+# from Opencomplai/opencomplai-action action.yml at v1.0.0 27eeae3
+_ACTION_INPUTS = (
+    "manifest",
+    "version",
+    "install-from",
+    "with",
+    "args",
+    "comment",
+    "upload-sarif",
+    "upload-artifact",
+    "artifact-name",
+    "sign",
+    "with-gaps",
+    "strict",
+    "fail-on-error",
+    "github-token",
+)
+_ACTION_OUTPUTS = ("exit-code", "summary-file", "sarif-file", "artifact-file")
 
 # For these the option must sit in the first cell of a table row, so deleting
 # its row fails. Every other command with a page only needs the name in a code
@@ -418,9 +435,7 @@ def test_check_args_variable_is_documented():
 
 
 def test_github_action_page_names_every_input_and_output():
-    spec = yaml.safe_load(_ACTION_YML.read_text(encoding="utf-8"))
-    wanted = [*spec["inputs"], *spec["outputs"]]
-    assert len(wanted) >= 10, "action.yml lost its inputs or outputs"
+    wanted = [*_ACTION_INPUTS, *_ACTION_OUTPUTS]
     cells = [
         m.group(1)
         for line in _ACTION_PAGE.read_text(encoding="utf-8").splitlines()

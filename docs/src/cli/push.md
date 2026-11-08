@@ -7,7 +7,7 @@ or an Annex IV dossier written by [`docs generate`](docs-generate.md), to the
 dashboard's ingest endpoint.
 
 **When:** as a separate step after `check` has already gated the build locally.
-`push` is deliberately not a flag on `check`, so a network failure can never
+`push` is deliberately not a flag on `check`, so a failed upload can never
 change a CI gate.
 
 **Requires:** two environment variables.

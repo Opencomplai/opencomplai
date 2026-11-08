@@ -10,6 +10,7 @@ lives in `data/gap_article_map.json`.
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from datetime import UTC, date, datetime
 from functools import lru_cache
 from pathlib import Path
@@ -239,14 +240,85 @@ def _evaluator_status(
     return None
 
 
+def attestation_evidence_ref(attestation: Attestation) -> str:
+    """The `evidence_ref` of a row decided by `attestation`.
+
+    A record id (set by a bundle merge) is appended as `#<record_id>`; without
+    one the string is what it always was.
+    """
+    ref = f"attestation:{attestation.attested_by}@{attestation.attested_at}"
+    return f"{ref}#{attestation.record_id}" if attestation.record_id else ref
+
+
+def attestation_expiry_text(
+    attestation: Attestation, framework: str, today: date
+) -> str | None:
+    """Why `attestation` no longer counts, or None while it is in date.
+
+    `valid_until` is the last good day, so an attestation is still current on it. An
+    attestation that carries a `record_id` came from a bundle, so it is renewed by
+    re-attesting the record, not by editing the manifest.
+    """
+    valid_until = attestation.valid_until
+    if valid_until is None or valid_until >= today:
+        return None
+    if attestation.record_id:  # from a bundle: there is no manifest entry to renew
+        return (
+            f"Attestation expired on {valid_until.isoformat()}. Re-attest the record "
+            "to renew it."
+        )
+    return (
+        f"Attestation expired on {valid_until.isoformat()}. Renew it under "
+        f"framework_inputs.{framework}.attested in the manifest."
+    )
+
+
+def stale_attestation_warnings(
+    attestations: Mapping[str, Attestation],
+    requirements: Mapping[str, Any],
+    today: date | None = None,
+) -> list[str]:
+    """Warnings for attestations that carry no `valid_until` and are older than
+    their row's `default_ttl_days`. Informational: no status changes.
+
+    An `attested_at` whose first ten characters are not an ISO date, a row the
+    map does not know and a row with no TTL are ignored. Sorted by requirement id.
+    """
+    effective_today = today if today is not None else datetime.now(UTC).date()
+    warnings: list[str] = []
+    for rid in sorted(attestations):
+        attestation = attestations[rid]
+        ttl = (requirements.get(rid) or {}).get("default_ttl_days")
+        if attestation.valid_until is not None or not isinstance(ttl, int):
+            continue
+        try:
+            attested_on = date.fromisoformat(attestation.attested_at[:10])
+        except ValueError:
+            continue
+        if (effective_today - attested_on).days > ttl:
+            advice = (
+                "Re-attest the record."
+                if attestation.record_id
+                else "Re-attest it, or set valid_until on the attestation."
+            )
+            warnings.append(
+                f"{rid}: attested on {attested_on.isoformat()}, more than {ttl} "
+                f"days ago. {advice}"
+            )
+    return warnings
+
+
 def _attestation_status(
-    ref: str, attestations: dict[str, Attestation]
+    ref: str, attestations: Mapping[str, Attestation], today: date
 ) -> ArticleGapStatus:
-    # `ref` is the requirement id itself ("<FW>:<id>"), which is also the key
-    # the manifest's framework_inputs.<FW>.attested uses.
+    # `ref` is the requirement id itself, which is also the key the manifest's
+    # framework_inputs.<FW>.attested uses. Pack ids are "<FW>:<id>"; an EU AI
+    # Act id ("Art. 4") carries no prefix.
+    framework, sep, _ = ref.partition(":")
+    if not sep:
+        framework = "EU_AI_ACT"
     attestation = attestations.get(ref)
     if attestation is None:
-        framework = ref.partition(":")[0]
         return _with_honesty(
             ArticleGapStatus(
                 article="",
@@ -261,18 +333,22 @@ def _attestation_status(
             confidence=None,
             label=ConfidenceLabel.NOT_ASSESSED,
         )
+    expired = attestation_expiry_text(attestation, framework, today)
+    # An expired attestation keeps its reference but no longer decides the row.
     return _with_honesty(
         ArticleGapStatus(
             article="",
-            status=GapStatus.MET,
+            status=GapStatus.MET if expired is None else GapStatus.UNVERIFIED,
             source=ArticleGapSource.ATTESTATION,
-            evidence_ref=(
-                f"attestation:{attestation.attested_by}@{attestation.attested_at}"
-            ),
-            rationale=attestation.statement,
+            evidence_ref=attestation_evidence_ref(attestation),
+            rationale=attestation.statement if expired is None else expired,
         ),
         confidence=None,
-        label=ConfidenceLabel.ATTESTED,
+        label=(
+            ConfidenceLabel.ATTESTED
+            if expired is None
+            else ConfidenceLabel.NOT_ASSESSED
+        ),
     )
 
 
@@ -394,7 +470,9 @@ def build_gap_report(
             elif kind == "record" and manifest is not None and repo_root is not None:
                 candidate = exemption_record_status(manifest, repo_root)
             elif kind == "attestation":
-                candidate = _attestation_status(ref, attestations or {})
+                candidate = _attestation_status(
+                    ref, attestations or {}, effective_today
+                )
             elif (
                 kind == "manifest" and ref == AGENT_SOURCE_REF and manifest is not None
             ):
@@ -454,7 +532,8 @@ def build_gap_report(
             found = ", ".join(f"{hit.evidence_ref} ({ref})" for ref, hit in supporting)
             if row is None or row.status == GapStatus.UNVERIFIED:
                 # Finding a file is not a verdict: the row stays Unverified (so it
-                # never fails a gate) and names the file and how to attest.
+                # fails a gate only under fail_on unverified, like any unattested
+                # row) and names the file and how to attest.
                 rest = f" {row.rationale}" if row is not None else ""
                 row = supporting[0][1].model_copy(
                     update={

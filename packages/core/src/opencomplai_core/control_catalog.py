@@ -49,6 +49,8 @@ _TTL_PLACEHOLDER_SOURCE = (
 CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
     "Art. 4": ControlCatalogEntry(
         title="AI literacy measures",
+        # Control freshness (180) differs on purpose from the 365-day review
+        # period of an Art. 4 attestation (gap_article_map.json).
         default_ttl_days=180,
     ),
     "Art. 5": ControlCatalogEntry(

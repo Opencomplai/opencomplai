@@ -11,7 +11,7 @@ Standing line: EU AI Act evaluated; NIST AI RMF derived per subcategory, atteste
 | Framework | Key | Status | How verdicts are produced |
 |---|---|---|---|
 | EU AI Act (Regulation (EU) 2024/1689) | `EU_AI_ACT` | **Evaluated** | Natively, per article: rules, obligations, the code scan, pipeline evaluators and documentation probes. The default target, and the only framework whose controls always gate `check`. |
-| NIST AI RMF 1.0 (NIST AI 100-1) | `NIST_AI_RMF` | **Derived, per subcategory** | Each of the 72 subcategories lists the EU AI Act articles whose evidence is re-projected onto it. There is no NIST scanner. 14 subcategories have nothing in the EU AI Act evidence; they read **Unverified** until you record an attestation under `framework_inputs`. Every mapping is flagged for founder review. See [NIST AI RMF](../concepts/nist-ai-rmf.md). |
+| NIST AI RMF 1.0 (NIST AI 100-1) | `NIST_AI_RMF` | **Derived, per subcategory** | Each of the 72 subcategories lists the EU AI Act articles whose evidence is re-projected onto it. There is no NIST scanner. 15 subcategories have nothing in the EU AI Act evidence; they read **Unverified** until you record an attestation under `framework_inputs`. Every mapping is flagged for founder review. See [NIST AI RMF](../concepts/nist-ai-rmf.md). |
 | ISO/IEC 42001:2023 | `ISO_IEC_42001` | **Attestation-led, partial** | Native rows per clause and Annex A control. Most rows are provider attestations that read **Unverified** until you record one under `framework_inputs`; four rows also look for a matching document, and the worse of the two wins. Nothing here certifies ISO/IEC 42001 conformity. Every row is flagged for founder review at low confidence. Each row links to the EU AI Act articles, NIST AI RMF subcategories and ISO/IEC 27090 clauses it relates to; see [Framework mappings](mappings.md). A clause is also still cited per EU AI Act article (the `Mapped` column of `opencomplai gaps`). |
 | ISO/IEC 27090:2026 | `ISO_IEC_27090` | **Attestation-led guidance** | Native rows for the 31 guidance clauses on security threats to AI systems: practices, threats and mitigations. Every row takes a provider attestation. Four rows also take an output evaluator (prompt injection, injected output, sensitive output, red teaming), which can overrule the attestation when you supply an eval. Eight rows also look for supporting evidence in the repository (an SBOM or model pins, rate-limit code, a threat model, a red-team report, an event log): it never lowers a row, and an unattested row with such evidence stays **Unverified** (and names the file) rather than reading Met or failing a gate. ISO/IEC 27090 is guidance, so nothing here is a certification. Every row is flagged for founder review at low confidence. See [ISO/IEC 27090](../concepts/iso-27090.md). |
 | ISO/IEC 27001:2022, SOC 2, NIS2, DORA, EBA guidelines, EIOPA AI Opinion, GDPR, Cyber Resilience Act, ETSI EN 304 223, ISO/IEC 42005:2025, ISO/IEC 23894:2023 | `ISO_IEC_27001`, `SOC_2`, `NIS2`, `DORA`, `EBA`, `EIOPA_AI`, `GDPR`, `CRA`, `ETSI_EN_304_223`, `ISO_IEC_42005`, `ISO_IEC_23894` | **Attestation-led** | Native rows per requirement, article, control or criterion. Every row takes a provider attestation and reads **Unverified** until you record one; a few also look for supporting evidence in the repository. Each row links to the EU AI Act articles and, for the security frameworks, the ISO/IEC 27001 Annex A controls it relates to. None of this is an audit, a certification or a legal assessment. Every row is flagged for founder review at low confidence. See [More framework packs](more-packs.md). |
@@ -118,11 +118,16 @@ the reason as the waiver rationale. Where a framework's rows depend on the syste
 "attested": {
   "<FW>:<id>": {
     "statement": "The governance policy was approved by the board on 2026-09-01.",
-    "attested_by": "jane.doe@example.com",
+    "attested_by": "Jane Doe",
     "attested_at": "2026-09-01"
   }
 }
 ```
+
+`attested_by` is a display name rather than an email address, because it is copied into signed
+artifacts. An attestation may also carry `valid_until` (the last day it counts; from the next day the
+row reads Unverified again), `evidence` (pointers to the documents behind it: a link, a file with its
+SHA-256, or a record id) and `record_id` (set when it comes from an attestation bundle).
 
 An attestation is recorded verbatim, and nothing checks it: it makes the requirement's
 attestation source **Met**, with source `attestation` and confidence label `attested`.
@@ -132,14 +137,18 @@ framework data takes an attestation accept one. `ISO_IEC_42001` and `ISO_IEC_270
 take attestations on their requirements, with ids such as `ISO_IEC_42001:Clause 5.2` and
 `ISO_IEC_27090:6.9`. `NIST_AI_RMF` takes attestations only on the subcategories the EU AI
 Act evidence holds nothing for (for example `NIST_AI_RMF:MANAGE 2.1`); the others are
-decided by that evidence alone.
+decided by that evidence alone. `EU_AI_ACT` takes attestations only for the articles no code can
+show, which is Art. 4 (AI literacy) today, under the unprefixed id `Art. 4`.
+
+Attestations can also come from an attestation bundle, merged in for the run; see
+[Attestation bundles](more-packs.md#attestation-bundles).
 
 `gaps`, and `check` when it assesses the targets (`--with-gaps` or a gate), exit `2`
 when `framework_inputs` names an unknown framework, an id is not a requirement of that
 framework, an exclusion reason is blank, an attestation is not accepted for that
-requirement, or `framework_inputs` names `EU_AI_ACT`, whose report takes no exclusions
-or attestations. An unknown field or an empty string inside a `framework_inputs` entry
-fails manifest validation (exit `2`) for every command.
+requirement, or `framework_inputs` names `EU_AI_ACT` with an `excluded` or `scope` entry
+or an attestation for any article other than Art. 4. An unknown field or an empty string
+inside a `framework_inputs` entry fails manifest validation (exit `2`) for every command.
 
 ## Gating CI on another framework
 
@@ -149,12 +158,13 @@ you opt in, in `opencomplai.yaml` or with `check --gate`:
 ```yaml
 gate:
   frameworks: [NIST_AI_RMF]
-  fail_on: missing   # or partial
+  fail_on: missing   # or partial, or unverified
 ```
 
 A Missing row of a gated framework (or, with `fail_on: partial`, a Missing or Partial
 row) adds its prefixed id to `failed_controls` and turns `PASS` into `CONTROL_FAIL`
-(exit `1`). Excluded, Unverified and Met rows never fail. Because NIST AI RMF rows are
+(exit `1`). Excluded, Unverified and Met rows never fail, except that `fail_on: unverified`
+also fails a row that only an attestation can decide while it has no current attestation. Because NIST AI RMF rows are
 re-projected from EU AI Act evidence, gating on it fails on the same underlying gaps,
 expressed per subcategory. See [Gating other frameworks](../cli/check.md#gating-other-frameworks)
 for the full rules.

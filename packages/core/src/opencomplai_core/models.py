@@ -9,7 +9,7 @@ elsewhere.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from datetime import datetime
+from datetime import date, datetime
 from enum import StrEnum
 from typing import Annotated, Any, Final, Literal
 
@@ -178,10 +178,40 @@ class RiskResult(BaseModel):
 _NonEmptyStr = Annotated[str, Field(min_length=1)]
 
 
+class AttestationEvidence(BaseModel):
+    """Where the evidence behind an attestation lives: a pointer, never the content."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: Literal["link", "file", "record"]
+    ref: _NonEmptyStr = Field(..., description="URL, path or record id")
+    sha256: str | None = Field(
+        None,
+        pattern=r"^[0-9a-f]{64}$",
+        description="SHA-256 of the referenced file, when there is one",
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_sha256(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), {"sha256": OMIT_NONE})
+
+
+# Add a row here to omit a new optional field when it is unset.
+_ATTESTATION_OMIT = {
+    "valid_until": OMIT_NONE,
+    "evidence": OMIT_EMPTY,
+    "record_id": OMIT_NONE,
+}
+
+
 class Attestation(BaseModel):
     """A provider's recorded statement that a framework requirement is met.
 
-    Recorded verbatim from the manifest; the engine never fabricates one.
+    Recorded verbatim from the manifest or from an attestation bundle; the engine
+    never fabricates one. `valid_until`, `evidence` and `record_id` are optional,
+    and an attestation that uses none of them serialises as it always did.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -189,6 +219,86 @@ class Attestation(BaseModel):
     statement: _NonEmptyStr
     attested_by: _NonEmptyStr
     attested_at: _NonEmptyStr = Field(..., description="ISO 8601 date or timestamp")
+    valid_until: date | None = Field(
+        None,
+        description=(
+            "Last day the attestation counts. From the next day the row reads "
+            "Unverified until it is renewed. Without it the attestation does not expire."
+        ),
+    )
+    evidence: list[AttestationEvidence] = Field(
+        default_factory=list,
+        description="Pointers to the evidence behind the statement",
+    )
+    record_id: str | None = Field(
+        None,
+        pattern=r"^[A-Za-z0-9_.:-]{1,128}$",
+        description=(
+            "Id of the record in an attestation bundle. A bundle merge sets it; a "
+            "manifest may carry it but nothing requires it."
+        ),
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_fields(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        # An attestation that never used the newer fields serialises as before.
+        return omit_by_table(self, handler(self), _ATTESTATION_OMIT)
+
+
+# Bundle fields are bounded strings, so a closed schema can carry them: no
+# free text.
+BundleTimestamp = Annotated[
+    str,
+    Field(
+        max_length=40,
+        pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+(Z|[+-][0-9]{2}:[0-9]{2})$",
+        description="ISO 8601 timestamp with a UTC offset",
+    ),
+]
+BundleSignature = Annotated[
+    str,
+    Field(
+        max_length=256,
+        pattern=r"^[A-Za-z0-9+/]+={0,2}$",
+        description="Base64 Ed25519 signature",
+    ),
+]
+BundleKeyId = Annotated[
+    str,
+    Field(
+        max_length=64,
+        pattern=r"^[A-Za-z0-9_.:-]{1,64}$",
+        description="Id of the signing key",
+    ),
+]
+
+
+class AttestationBundleRef(BaseModel):
+    """The attestation bundle a scan was run with: its hash and signature, copied
+    unchanged from the bundle. The bundle itself never enters the artifact."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    sha256: str = Field(..., pattern=r"^[0-9a-f]{64}$")
+    signature: BundleSignature
+    key_id: BundleKeyId
+    issued_at: BundleTimestamp
+    count: int = Field(..., ge=0, le=1_000_000, description="Records in the bundle")
+
+
+class AttestationBundleUnavailable(BaseModel):
+    """A bundle was asked for and could not be used."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["unavailable"]
+    reason: str = Field(
+        ...,
+        pattern=r"^[a-z0-9_]{1,64}$",
+        description="Short machine code, for example fetch_failed",
+    )
 
 
 class ImportedFieldEvidence(BaseModel):
@@ -676,6 +786,7 @@ _ARTIFACT_OMIT = {
     "tree_sha256": OMIT_NONE,
     "tree_dirty": OMIT_NONE,
     "summaries": OMIT_NONE,
+    "attestation_bundle": OMIT_NONE,
 }
 
 
@@ -756,6 +867,15 @@ class ScanStatusArtifact(BaseModel):
     )
     summaries: ArtifactSummaries | None = Field(
         None, description="Closed leaf-only summaries block; omitted when None"
+    )
+    attestation_bundle: AttestationBundleRef | AttestationBundleUnavailable | None = (
+        Field(
+            None,
+            description=(
+                "The attestation bundle `check` was run with (hash and signature) "
+                "or why none could be used; omitted when no bundle was configured"
+            ),
+        )
     )
 
     @model_serializer(mode="wrap")

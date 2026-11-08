@@ -47,10 +47,15 @@ is evidence you recorded, not something the tool infers.
     `needs_founder_review: true`. The article-to-obligation reading is an operator-role mapping, not a legal
     determination.
 
-## Why `framework_inputs.EU_AI_ACT` stays rejected
+## What `framework_inputs.EU_AI_ACT` takes
 
 The manifest's `framework_inputs` can exclude requirements of other frameworks (see
-[Frameworks](../frameworks/index.md)). It cannot name `EU_AI_ACT`: `gaps` and `check` exit `2`. A declared
-exclusion is a statement you typed; applicability is derived from a recorded checker session. Letting the
-first stand in for the second would let a manifest edit remove an obligation without the checker ever
-saying it did not apply, so the two stay separate.
+[Frameworks](../frameworks/index.md)). For `EU_AI_ACT` it takes `attested` and nothing
+else, and only for the articles that no code can show. That is Art. 4 (AI literacy)
+today: with an attestation under `framework_inputs.EU_AI_ACT.attested` its row reads
+Met, without one it reads Unverified, and an attestation past its `valid_until` reads
+Unverified again. An attestation for any other article, and any `excluded` or `scope`
+entry, makes `gaps` and `check` exit `2`. A declared exclusion is a statement you
+typed; applicability is derived from a recorded checker session. Letting the first
+stand in for the second would let a manifest edit remove an obligation without the
+checker ever saying it did not apply, so the two stay separate.

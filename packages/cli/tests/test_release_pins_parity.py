@@ -2,6 +2,9 @@
 
 CL-R1 stamps all of these sites in one commit at release time; this test is the gate
 that stops one of them from drifting.
+
+The GitHub Action pin is not listed: it lives in Opencomplai/opencomplai-action and is
+bumped by the release checklist.
 """
 
 from __future__ import annotations
@@ -14,7 +17,6 @@ import yaml
 
 _ROOT = Path(__file__).resolve().parents[3]
 _PKG = "packages/cli/pyproject.toml"
-_ACTION = "integrations/github-action/action.yml"
 _COMPONENT = "templates/opencomplai.yml"
 _AZURE = "docs/ci/azure-pipelines.yml"
 _FORMULA = "packaging/homebrew/opencomplai.rb"
@@ -39,10 +41,8 @@ def _cli_version() -> str:
 
 def _pins() -> dict[str, str]:
     """Surface path -> pinned version, one entry per place a release stamps."""
-    action = yaml.safe_load(_text(_ACTION))
     component = list(yaml.safe_load_all(_text(_COMPONENT)))
     return {
-        _ACTION: str(action["inputs"]["version"]["default"]),
         _COMPONENT: str(component[0]["spec"]["inputs"]["version"]["default"]),
         _AZURE: _search(rf"opencomplai=={_VERSION_RE}", _AZURE),
         _FORMULA: _search(rf"opencomplai-{_VERSION_RE}\.tar\.gz", _FORMULA),

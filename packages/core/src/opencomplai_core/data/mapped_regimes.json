@@ -57,16 +57,6 @@
       "notes": "Unverified identifier from general knowledge, not checked against the primary text."
     },
     {
-      "eu_ai_act_article": "Art. 24",
-      "regime": "DORA",
-      "citation": "DORA Chapter V (Arts 28-44)",
-      "topic": "ICT third-party risk",
-      "source": "Regulation (EU) 2022/2554 (DORA)",
-      "confidence": "low",
-      "needs_founder_review": true,
-      "notes": "Unverified identifier from general knowledge, not checked against the primary text."
-    },
-    {
       "eu_ai_act_article": "Art. 25",
       "regime": "DORA",
       "citation": "DORA Chapter V (Arts 28-44)",

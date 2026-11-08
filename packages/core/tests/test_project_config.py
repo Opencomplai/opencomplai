@@ -110,6 +110,54 @@ def test_gate_defaults_to_nothing_gated():
     assert config.gate_fail_on is None
 
 
+def test_gate_fail_on_can_be_unverified(tmp_path):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text("gate:\n  fail_on: unverified\n", encoding="utf-8")
+    assert load_project_config(config_file).gate_fail_on == "unverified"
+
+
+def test_attestations_default_to_no_bundle():
+    config = ProjectConfig()
+    assert config.attestations_source is None
+    assert config.attestations_path is None
+
+
+def test_attestations_remote_names_no_path(tmp_path):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text("attestations:\n  source: remote\n", encoding="utf-8")
+    config = load_project_config(config_file)
+    assert config.attestations_source == "remote"
+    assert config.attestations_path is None
+
+
+def test_attestations_file_path_is_relative_to_the_config(tmp_path):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(
+        "attestations:\n  source: file\n  path: bundles/b.json\n", encoding="utf-8"
+    )
+    config = load_project_config(config_file)
+    assert config.attestations_source == "file"
+    assert config.attestations_path == tmp_path / "bundles" / "b.json"
+
+
+@pytest.mark.parametrize(
+    ("text", "message"),
+    [
+        ("attestations:\n  source: cloud\n", "source must be remote or file"),
+        ("attestations:\n  source: file\n", "path is required"),
+        ("attestations:\n  source: file\n  path: 3\n", "path is required"),
+        ("attestations:\n  source: remote\n  path: b.json\n", "only to source: file"),
+        ("attestations:\n  path: b.json\n", "only to source: file"),
+        ("attestations: yes\n", "attestations must be a mapping"),
+    ],
+)
+def test_a_bad_attestations_section_is_refused(tmp_path, text, message):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError, match=message):
+        load_project_config(config_file)
+
+
 @pytest.mark.parametrize(
     ("text", "message"),
     [
@@ -118,7 +166,10 @@ def test_gate_defaults_to_nothing_gated():
         ("gate: [NIST_AI_RMF]\n", "opencomplai.yaml: gate must be a mapping"),
         ("scan: major\n", "opencomplai.yaml: scan must be a mapping"),
         ("gate:\n  frameworks: NIST_AI_RMF\n", "gate.frameworks must be a list"),
-        ("gate:\n  fail_on: [partial]\n", "gate.fail_on must be missing or"),
+        (
+            "gate:\n  fail_on: [partial]\n",
+            "gate.fail_on must be missing, partial or unverified",
+        ),
     ],
 )
 def test_load_project_config_rejects_malformed_files(tmp_path, text, message):

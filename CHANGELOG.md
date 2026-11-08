@@ -9,6 +9,77 @@ project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-11-08
+
+### Added
+
+- Attestation bundles. `check`, `gaps`, `recommend` and `docs generate` can merge a signed bundle of an
+  organisation's attestations and exclusions into `framework_inputs` for one run, so the people who own
+  policies, training and supplier records can attest without editing the manifest. The bundle comes from a
+  file (`--attestations-file`), from the endpoint `push` uploads to (`--attestations-remote`), or from an
+  `attestations` section in `opencomplai.yaml`. Nothing is read or fetched unless you ask. `check` reads and
+  records the bundle even when it evaluates no framework; `gaps` now reads `opencomplai.yaml` first, and so do
+  `recommend` (without `--gap-report`) and `docs generate` (with an `ISO_IEC_27090` target), so a malformed
+  file exits `2` there; a bundle flag a run will not use prints a warning. The manifest wins on
+  the same requirement id and a warning names each bundle record it shadows, ids a framework does not have are
+  dropped with a warning, and a row attested from a bundle names its record in `evidence_ref` as
+  `#<record_id>`. An expired or old bundle record says to re-attest the record, where a manifest entry says
+  to renew it in the manifest. A bundle file that cannot be used exits `2`; an
+  endpoint that cannot be used (not configured, plain `http` to a remote host, unreachable, invalid, too large)
+  warns, the run goes on with the manifest alone, and the artifact records
+  `attestation_bundle: {status: unavailable, reason}`. With a bundle the artifact records the bundle's
+  `sha256`, `signature`, `key_id`, `issued_at` and `count`; without one the artifact has no `attestation_bundle` field. See
+  [Attestation bundles](docs/src/frameworks/more-packs.md#attestation-bundles).
+- `opencomplai attestations pull -o FILE [--system-id ID]` writes the bundle to a file, so a CI job can keep it
+  and replay it offline with `check --attestations-file`.
+- `check --gate-fail-on unverified`, or `gate: {fail_on: unverified}` in `opencomplai.yaml`: besides Missing
+  and Partial rows, a native pack row that only an attestation can decide also fails while it has no current
+  attestation, because none is recorded or the one recorded has expired. NIST AI RMF and the EU AI Act are
+  never failed for being Unverified.
+- Attestations can carry `valid_until` (the last day they count), `evidence` (pointers to documents: a link, a
+  file with its SHA-256, or a record id) and `record_id`. An attestation past `valid_until` reads Unverified
+  until it is renewed. `gaps` and `check` print a warning for an undated attestation older than its row's
+  review period.
+- A published JSON schema for the bundle, `attestation_bundle.schema.json`.
+- The `gateway-api` container image has a `HEALTHCHECK` that probes `/health`, as the other four service
+  images do, so a container runtime or an orchestrator can tell when it is ready. Thanks to
+  @hamid-digitalmarketer (#160).
+- An OpenSSF Scorecard workflow publishes the repository's supply-chain score weekly and on every push to
+  `main`, and the README shows its badge. Thanks to @jdotc1 (#172).
+
+### Changed
+
+- EU AI Act Art. 4 (AI literacy) takes an attestation under `framework_inputs.EU_AI_ACT.attested` and reads
+  Met with one; before, its row could only ever read Unverified. No other EU article takes an attestation, and
+  `framework_inputs.EU_AI_ACT` still refuses `excluded` and `scope`. The EU AI Act `data_version` changes
+  because of this.
+- NIST AI RMF GOVERN 2.2, which maps only to Art. 4, takes an attestation of its own. An attested Art. 4 is
+  never counted as evidence for NIST rows, so no NIST subcategory reads Met on an attestation nobody made for
+  it. MAP 3.4 (Art. 4 and Art. 26) holds at Unverified at best, because its Art. 4 part is never counted.
+- `push` no longer warns about plain `http` to `::1`, which is this machine, as it already did not for
+  `localhost` and `127.0.0.1`.
+- Examples in the docs use a display name, not an email address, for `attested_by`: it is copied into signed
+  artifacts.
+
+### Removed
+
+- `integrations/github-action` is gone from this repository. The Action lives in
+  [Opencomplai/opencomplai-action](https://github.com/Opencomplai/opencomplai-action) and is listed on the
+  [GitHub Marketplace](https://github.com/marketplace/actions/opencomplai-check). Replace
+  `uses: Opencomplai/opencomplai/integrations/github-action@<sha>` with
+  `uses: Opencomplai/opencomplai-action@<sha> # v1`. A workflow pinned to an older commit or tag of this
+  repository keeps working.
+
+### Fixed
+
+- `gaps --map-to DORA` no longer points EU AI Act Art. 24 (the distributors' article) at DORA Chapter V, which
+  covers ICT third-party risk. The pointer was wrong; Art. 25 keeps its Chapter V pointer.
+- The EU AI Act to ISO/IEC 42001 crosswalk now points Art. 4 (AI literacy) at Annex A control A.4.6 (Human
+  resources), where it pointed at A.4.5, which is about system and computing resources. This corrects the
+  data file only: no report, dossier or `gaps` column reads the Annex A control, so no command output changes.
+- `CHANGELOG.md` had no link definitions for 0.4.0, 0.5.0, 0.6.0 and 0.7.0, so those version headings did
+  not link to their releases. Thanks to @vortsghost2025 (#171).
+
 ## [0.14.0] — 2026-11-03
 
 ### Added
@@ -1439,6 +1510,7 @@ pip install -e packages/core -e packages/cli -e packages/sdk-python
 See [Contributing — Release Process](docs/src/contributing/release-process.md) for the
 release/publish workflow.
 
+[0.15.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.15.0
 [0.14.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.14.0
 [0.13.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.2
 [0.13.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.13.1
@@ -1452,6 +1524,10 @@ release/publish workflow.
 [0.9.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.9.0
 [0.8.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.8.0
 [0.7.1]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.7.1
+[0.7.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.7.0
+[0.6.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.6.0
+[0.5.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.5.0
+[0.4.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.3.0
 [0.1.2]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.2
 [0.1.0]: https://github.com/Opencomplai/opencomplai/releases/tag/v0.1.0

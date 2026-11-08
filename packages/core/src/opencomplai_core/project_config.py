@@ -5,8 +5,9 @@ Governs tool *behavior* only (scan defaults, thresholds, allowlists, CI gating) 
 never a source of compliance *declarations*. It must never become a second, competing
 source of truth against the manifest for compliance posture; `SystemManifest` remains
 the sole authority for what a system is declared to do. Gating decides which
-frameworks' gaps fail CI; it declares nothing about the system. Additive to (not
-replacing) `.ocignore` and explicit CLI flags — explicit CLI flags always override
+frameworks' gaps fail CI; it declares nothing about the system. `attestations` says
+only where an attestation bundle is read from, never what it contains. Additive to
+(not replacing) `.ocignore` and explicit CLI flags — explicit CLI flags always override
 values from this file.
 """
 
@@ -35,6 +36,10 @@ class ProjectConfig:
     # Non-EU frameworks whose Missing (or Partial) rows fail `check`.
     gate_frameworks: list[str] = field(default_factory=list)
     gate_fail_on: str | None = None
+    # Where `check` reads an attestation bundle from: "remote", or "file" with
+    # `attestations_path` (a relative path is relative to this file). None: no bundle.
+    attestations_source: str | None = None
+    attestations_path: Path | None = None
 
 
 def find_project_config(start_dir: Path) -> Path | None:
@@ -72,7 +77,20 @@ def load_project_config(path: Path) -> ProjectConfig:
         raise ValueError(f"{path.name}: gate.frameworks must be a list of frameworks")
     gate_fail_on = gate_section.get("fail_on")
     if gate_fail_on is not None and not isinstance(gate_fail_on, str):
-        raise ValueError(f"{path.name}: gate.fail_on must be missing or partial")
+        raise ValueError(
+            f"{path.name}: gate.fail_on must be missing, partial or unverified"
+        )
+    attestations_section = _section(raw, "attestations", path)
+    attestations_source = attestations_section.get("source")
+    attestations_path = attestations_section.get("path")
+    if attestations_source not in (None, "remote", "file"):
+        raise ValueError(f"{path.name}: attestations.source must be remote or file")
+    if attestations_source == "file" and not (
+        isinstance(attestations_path, str) and attestations_path
+    ):
+        raise ValueError(f"{path.name}: attestations.path is required for source: file")
+    if attestations_source != "file" and attestations_path is not None:
+        raise ValueError(f"{path.name}: attestations.path applies only to source: file")
 
     scan_fail_on = scan_section.get("fail_on")
     if scan_fail_on is not None and scan_fail_on not in FAIL_ON_LEVELS:
@@ -105,6 +123,10 @@ def load_project_config(path: Path) -> ProjectConfig:
         allowlisted_categories=list(allowlisted),
         gate_frameworks=gate_frameworks,
         gate_fail_on=gate_fail_on,
+        attestations_source=attestations_source,
+        attestations_path=path.parent / str(attestations_path)
+        if attestations_source == "file"
+        else None,
     )
 
 

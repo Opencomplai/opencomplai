@@ -470,7 +470,7 @@ def create_app() -> FastAPI:
             "Append-only hash-chained event ledger and content-addressable evidence store. "
             "Implements PRD requirements REQ-EV-001, REQ-EV-002, REQ-EV-003."
         ),
-        version="0.14.0",
+        version="0.15.0",
         lifespan=lifespan,
     )
 

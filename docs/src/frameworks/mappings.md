@@ -6,9 +6,12 @@ packs and their links to the EU AI Act, ISO/IEC 27001 and ISO/IEC 42001. This pa
 generated from the data files in `packages/core/src/opencomplai_core/data/`; do not edit
 it by hand.
 
-- **NIST AI RMF:** the EU AI Act column decides the verdict. The evidence of those
-  articles is re-projected onto the subcategory (worst status, lowest confidence). A
-  subcategory with no article takes a provider attestation instead.
+- **NIST AI RMF:** the EU AI Act column decides the verdict, except for an article that
+  an attestation decides (today Art. 4), which counts as no NIST evidence and is set
+  aside. The evidence of the other articles is re-projected onto the subcategory (worst
+  status, lowest confidence). A subcategory with no article, or only a set-aside one
+  (GOVERN 2.2), takes a provider attestation instead; MAP 3.4 (Art. 4 and Art. 26) holds
+  at Unverified at best.
 - **NIST AI RMF to ISO/IEC 42001** links come from NIST's own crosswalk ("NIST AI RMF to
   ISO/IEC FDIS 42001 AI Management System Crosswalk"). Its Annex B guidance numbers are
   read as the Annex A controls, and sub-clauses 7.5.x, 9.2.x and 9.3.x as their parent rows.

@@ -12,7 +12,9 @@ templates; see below for other frameworks.
 review — each `.py` template carries an AGPL notice on purpose.
 
 !!! tip "Deterministic, offline, no model calls"
-    `recommend` is static content generation only. Safe for air-gapped environments.
+    `recommend` is static content generation only. Safe for air-gapped environments: it fetches
+    nothing unless you opt in to an attestation bundle with `--attestations-remote` (or
+    `attestations: {source: remote}` in `opencomplai.yaml`).
 
 ## Two ways to run it
 
@@ -59,6 +61,8 @@ Reuse a gap report you already generated (avoids re-running the rule engine/scan
 | `--repo-root` | `.` | Repo root for artifact path probes (Arts. 9/13/14/16/17/24/43), including the Art. 17 per-clause QMS breakdown |
 | `--output` / `-o` | `./fixes` | Directory to write remediation templates to |
 | `--sort` | `article` | `article` or `priority`, the order of [`gaps --sort`](gaps.md). Changes only the order in which rows are processed and the written paths are listed; the same files are written |
+| `--attestations-file` | *(none)* | Only used when `--gap-report` is not supplied (otherwise ignored, with a warning). Read an attestation bundle from this file and merge it into the manifest's `framework_inputs` for this run. Offline. [`attestations pull`](attestations.md) writes one. Replaces `attestations` in `opencomplai.yaml`. See [Attestation bundles](../frameworks/more-packs.md#attestation-bundles). |
+| `--attestations-remote` | off | Only used when `--gap-report` is not supplied (otherwise ignored, with a warning). Fetch the attestation bundle from the endpoint configured in `OPENCOMPLAI_DASHBOARD_URL`, with `OPENCOMPLAI_API_KEY`, and merge it the same way. Without this flag, `--attestations-file` or an `attestations` section in `opencomplai.yaml`, no bundle is read and nothing is fetched. If the fetch fails the run goes on with the manifest alone and prints a warning. Passing it with `--attestations-file` exits `2`. |
 
 ## What gets written
 

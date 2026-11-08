@@ -193,6 +193,7 @@ nav:
     - serve: cli/serve.md
     - eval: cli/eval.md
     - push: cli/push.md
+    - attestations: cli/attestations.md
     - approve / resume: cli/approve-resume.md
     - keys: cli/keys.md
     - ai: cli/ai.md

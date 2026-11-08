@@ -4,7 +4,7 @@
 
 OpenComplAI brings AI compliance directly into your CI/CD pipeline, turning fragmented legal mandates into automated, machine-readable "Pre-Ship Checks." The EU AI Act is evaluated natively; NIST AI RMF 1.0 is derived from the same evidence.
 
-[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 24+](https://img.shields.io/badge/node-24%2B-339933)](https://nodejs.org/)
+[![CI (Python)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-python.yml) [![CI (Node)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml/badge.svg?branch=main)](https://github.com/Opencomplai/opencomplai/actions/workflows/ci-node.yml) [![PyPI](https://img.shields.io/pypi/v/opencomplai)](https://pypi.org/project/opencomplai/) [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-OpenComplAI%20check-blue?logo=github)](https://github.com/marketplace/actions/opencomplai-check) [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE) [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/) [![Node.js 24+](https://img.shields.io/badge/node-24%2B-339933)](https://nodejs.org/) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Opencomplai/opencomplai/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Opencomplai/opencomplai)
 
 ### Demo
 
@@ -28,7 +28,7 @@ Traditional GRC tools are disconnected dashboards that create "velocity tax." We
 ## Who it is for
 
 Teams that build, fine-tune or substantially modify AI systems and need a per-release EU AI Act check in CI.
-It is not a GRC platform or an eval tool; it runs beside them and stays offline unless you run `opencomplai push`.
+It is not a GRC platform or an eval tool; it runs beside them and stays offline unless you run `opencomplai push` or opt in to fetching an attestation bundle.
 See [Works alongside other tools](docs/src/guides/works-alongside.md).
 
 ## How It Works (The 3-Minute Setup)

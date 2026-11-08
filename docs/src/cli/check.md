@@ -53,7 +53,9 @@ does not clear anything.
 | `--change-context` | *(none)* | Declared reason for this deployment's change, such as `model_retrain`, `purpose_change` or `capability_extension`. A recognised value trips the Article 25 substantial-modification trap (exit `4`) and freezes deployment pending review. See [Exit codes](exit-codes.md). |
 | `--target` | manifest | Framework `--with-gaps` and `--gate` assess; repeat for several. Replaces the manifest's `compliance_targets`, else its `compliance_target`. `NIST_AI_RMF` attaches `nist_rmf_report`. Any set other than exactly `EU_AI_ACT` or exactly `NIST_AI_RMF` also attaches `framework_reports`, one report per target. |
 | `--gate` | `opencomplai.yaml` | Target framework other than the EU AI Act whose failing rows fail the check; repeat for several. Replaces `gate.frameworks` from `opencomplai.yaml`. See [Gating other frameworks](#gating-other-frameworks). |
-| `--gate-fail-on` | `missing` | `missing` or `partial`: which rows of a gated framework fail. Replaces `gate.fail_on` from `opencomplai.yaml`. |
+| `--gate-fail-on` | `missing` | `missing`, `partial` or `unverified`: which rows of a gated framework fail. `unverified` also fails a row that only an attestation can decide while it has no current attestation. Replaces `gate.fail_on` from `opencomplai.yaml`. |
+| `--attestations-file` | *(none)* | Read an attestation bundle from this file and merge it into the manifest's `framework_inputs` for this run. Offline. [`attestations pull`](attestations.md) writes one. Replaces `attestations` in `opencomplai.yaml`. See [Attestation bundles](../frameworks/more-packs.md#attestation-bundles). |
+| `--attestations-remote` | off | Fetch the attestation bundle from the endpoint configured in `OPENCOMPLAI_DASHBOARD_URL`, with `OPENCOMPLAI_API_KEY`, and merge it the same way. Without this flag, `--attestations-file` or an `attestations` section in `opencomplai.yaml`, no bundle is read and nothing is fetched. If the fetch fails the run goes on with the manifest alone and the artifact records `attestation_bundle: unavailable`. Passing it with `--attestations-file` exits `2`. |
 | `--require-exemption-record` | off | Opt-in. When the manifest's checker session relies on the Art. 6(3) derogation (it lists `provider_art_6_4_registration`) and the repository holds no valid signed `art_6_3_exemption` record, `check` fails with `EU_AIA_ART6_3_EXEMPTION_RECORD` (exit `1`). A record that is absent, unsigned, tampered, untrusted or stale (the manifest or its grounds changed after signing) counts as missing. Without the flag the exit code is unchanged and the `--with-gaps` Art. 49 row only reports the record. Write the record with [`accept --exemption`](accept.md). The record is the provider's own declaration of the grounds; the check does not assess whether the exemption is valid. Wording is product design, flagged `needs_founder_review`. |
 | `--oversight-log` | state directory | Oversight log to summarise into the artifact. Default: the oversight log in the OpenComplAI state directory. |
 | `--agent-log` | `agent-log.jsonl` | Agent decision log to summarise into the artifact. |
@@ -335,13 +337,17 @@ fail CI as well, list it under `gate` in `opencomplai.yaml` (read from
 ```yaml
 gate:
   frameworks: [NIST_AI_RMF]
-  fail_on: missing   # or partial
+  fail_on: missing   # or partial, or unverified
 ```
 
 `check` then assesses the targets even without `--with-gaps`. A row of a gated
 framework fails when it is **Missing**, or **Missing** or **Partial** with
-`fail_on: partial`. Rows excluded in the manifest's `framework_inputs` never
-fail, and neither do **Unverified** or **Met** rows. Failing ids, prefixed
+`fail_on: partial` or `unverified`. Rows excluded in the manifest's `framework_inputs` never
+fail, and neither do **Unverified** or **Met** rows, except with `fail_on: unverified`:
+there a row that only an attestation can decide also fails while it is **Unverified**, that
+is while it has no attestation or the one recorded has expired (see
+[Attestation bundles](../frameworks/more-packs.md#failing-a-build-on-unattested-rows)).
+NIST AI RMF rows never fail on being Unverified. Failing ids, prefixed
 `<FW>:` (e.g. `NIST_AI_RMF:GOVERN 1.1`), follow the EU AI Act ids in
 `failed_controls`. The only result a gate changes is `PASS`, which becomes
 `CONTROL_FAIL` (exit `1`); a gate never halts the system. With `--with-gaps`,
@@ -349,7 +355,7 @@ each gated framework's entry in `framework_reports` has `gated: true`.
 
 A bad gate exits `2` before anything is written: the EU AI Act listed (its
 controls already gate), an unknown framework, a framework that is not among
-the targets, or a `fail_on` other than `missing` or `partial`.
+the targets, or a `fail_on` other than `missing`, `partial` or `unverified`.
 
 ## High-risk acceptance
 
