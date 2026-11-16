@@ -1,0 +1,51 @@
+{
+  "default": "applies",
+  "questions": [
+    {
+      "key": "processes_personal_data",
+      "text": "Does the system process data about identifiable people?",
+      "false_means": "no personal data"
+    },
+    {
+      "key": "eu_establishment_or_subjects",
+      "text": "Is the organisation established in the EU, or does it offer to or monitor people in the EU?",
+      "false_means": "outside the territorial reach"
+    },
+    {
+      "key": "acts_as_controller",
+      "text": "Does the organisation decide why and how the data is processed?",
+      "false_means": "processor only"
+    },
+    {
+      "key": "automated_decisions",
+      "text": "Are decisions with legal or similar effect taken without a person involved?",
+      "false_means": "no solely automated decisions"
+    },
+    {
+      "key": "special_categories",
+      "text": "Is health, biometric or other special-category data processed?",
+      "false_means": "no special categories"
+    },
+    {
+      "key": "transfers_outside_eea",
+      "text": "Is personal data sent outside the EEA?",
+      "false_means": "no transfers outside the EEA"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {
+        "processes_personal_data": false
+      },
+      "outcome": "not_applicable",
+      "reason": "The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser."
+    },
+    {
+      "when": {
+        "eu_establishment_or_subjects": false
+      },
+      "outcome": "not_applicable",
+      "reason": "The organisation sits outside the territorial reach of Art. 3. Confirm with your adviser."
+    }
+  ]
+}

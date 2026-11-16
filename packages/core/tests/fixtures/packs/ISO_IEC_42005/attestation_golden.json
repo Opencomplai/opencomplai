@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "ISO_IEC_42005": [
+      "ISO_IEC_42005:Clause 5.3",
+      "ISO_IEC_42005:Clause 5.8",
+      "ISO_IEC_42005:Clause 5.9"
+    ]
+  },
+  "mixed_attestable": {
+    "ISO_IEC_42005": [
+      "ISO_IEC_42005:Clause 5.10",
+      "ISO_IEC_42005:Clause 5.11",
+      "ISO_IEC_42005:Clause 5.12",
+      "ISO_IEC_42005:Clause 5.2",
+      "ISO_IEC_42005:Clause 5.4",
+      "ISO_IEC_42005:Clause 5.5",
+      "ISO_IEC_42005:Clause 5.6",
+      "ISO_IEC_42005:Clause 5.7",
+      "ISO_IEC_42005:Clause 6.2",
+      "ISO_IEC_42005:Clause 6.3",
+      "ISO_IEC_42005:Clause 6.4",
+      "ISO_IEC_42005:Clause 6.5",
+      "ISO_IEC_42005:Clause 6.6",
+      "ISO_IEC_42005:Clause 6.7",
+      "ISO_IEC_42005:Clause 6.8.2",
+      "ISO_IEC_42005:Clause 6.8.3",
+      "ISO_IEC_42005:Clause 6.9"
+    ]
+  },
+  "records": [],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": []
+}

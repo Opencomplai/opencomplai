@@ -1,0 +1,33 @@
+{
+  "framework": "ISO_IEC_23894",
+  "outcome": "not_applicable",
+  "reason": "The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+  "scope": {
+    "develops_or_uses_ai": false
+  },
+  "scoped_out": {
+    "ISO_IEC_23894:Clause 4": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.3": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.4.1": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.4.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.4.3": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.4.4": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.4.5": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.5": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.6": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.7.1": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 5.7.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.3.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.3.3": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.3.4": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.4.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.4.3": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.4.4": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.5.2": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.5.3": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.6": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser.",
+    "ISO_IEC_23894:Clause 6.7": "Not applicable: The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser."
+  }
+}

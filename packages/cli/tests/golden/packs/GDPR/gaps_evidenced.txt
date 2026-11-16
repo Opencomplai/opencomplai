@@ -1,0 +1,84 @@
+
+GDPR Regulation (EU) 2016/679, duties relevant to AI systems (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement     ┃ Title                                                       ┃ Status     ┃ Source      ┃ Evidence                   ┃ Rationale                                                    ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ GDPR:Art. 5     │ Principles relating to processing of personal data          │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 6     │ Lawfulness of processing                                    │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 9     │ Processing of special categories of personal data           │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' with clause 'special-categories' holding     │
+│                 │                                                             │            │             │                            │ content markers (Special categories of data). Heuristic only │
+│                 │                                                             │            │             │                            │ — not a full obligation assessment.                          │
+│ GDPR:Art. 12    │ Transparent information and modalities for exercising data  │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found candidate artifact/signal for                          │
+│                 │ subject rights                                              │            │             │                            │ 'data_subject_request_procedure' (1 path(s), 0 code hint(s)) │
+│                 │                                                             │            │             │                            │ with content markers found (a request type, a response time  │
+│                 │                                                             │            │             │                            │ and an identity check). Heuristic only — not a full          │
+│                 │                                                             │            │             │                            │ obligation assessment.                                       │
+│ GDPR:Art. 13    │ Information to be provided where data are collected from    │ PARTIAL    │ artifact    │ PRIVACY.md                 │ Found candidate artifact/signal for 'privacy_notice' (1      │
+│                 │ the data subject                                            │            │             │                            │ path(s), 0 code hint(s)) with content markers found (a       │
+│                 │                                                             │            │             │                            │ controller or contact, a purpose or legal basis and rights). │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 14    │ Information where data have not been obtained from the data │ PARTIAL    │ artifact    │ PRIVACY.md                 │ Found candidate artifact/signal for 'privacy_notice' (1      │
+│                 │ subject                                                     │            │             │                            │ path(s), 0 code hint(s)) with content markers found (a       │
+│                 │                                                             │            │             │                            │ controller or contact, a purpose or legal basis and rights). │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 15    │ Right of access by the data subject                         │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found candidate artifact/signal for                          │
+│                 │                                                             │            │             │                            │ 'data_subject_request_procedure' (1 path(s), 0 code hint(s)) │
+│                 │                                                             │            │             │                            │ with content markers found (a request type, a response time  │
+│                 │                                                             │            │             │                            │ and an identity check). Heuristic only — not a full          │
+│                 │                                                             │            │             │                            │ obligation assessment.                                       │
+│ GDPR:Art. 17    │ Right to erasure ('right to be forgotten')                  │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found candidate artifact/signal for                          │
+│                 │                                                             │            │             │                            │ 'data_subject_request_procedure' (1 path(s), 0 code hint(s)) │
+│                 │                                                             │            │             │                            │ with content markers found (a request type, a response time  │
+│                 │                                                             │            │             │                            │ and an identity check). Heuristic only — not a full          │
+│                 │                                                             │            │             │                            │ obligation assessment.                                       │
+│ GDPR:Art. 21    │ Right to object                                             │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found candidate artifact/signal for                          │
+│                 │                                                             │            │             │                            │ 'data_subject_request_procedure' (1 path(s), 0 code hint(s)) │
+│                 │                                                             │            │             │                            │ with content markers found (a request type, a response time  │
+│                 │                                                             │            │             │                            │ and an identity check). Heuristic only — not a full          │
+│                 │                                                             │            │             │                            │ obligation assessment.                                       │
+│ GDPR:Art. 22    │ Automated individual decision-making, including profiling   │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' with clause 'automated-decisions' holding    │
+│                 │                                                             │            │             │                            │ content markers (Automated decisions and profiling).         │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 24    │ Responsibility of the controller                            │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 25    │ Data protection by design and by default                    │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' with clause 'measures' holding content       │
+│                 │                                                             │            │             │                            │ markers (Safeguards and measures). Heuristic only — not a    │
+│                 │                                                             │            │             │                            │ full obligation assessment.                                  │
+│ GDPR:Art. 28    │ Processor                                                   │ PARTIAL    │ artifact    │ docs/processor-register.md │ Found candidate artifact/signal for 'processor_register' (1  │
+│                 │                                                             │            │             │                            │ path(s), 0 code hint(s)) with content markers found (a       │
+│                 │                                                             │            │             │                            │ processor, an agreement and a location or transfer).         │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 30    │ Records of processing activities                            │ PARTIAL    │ artifact    │ docs/ropa.md               │ Found candidate artifact/signal for 'record_of_processing'   │
+│                 │                                                             │            │             │                            │ (1 path(s), 0 code hint(s)) with content markers found (a    │
+│                 │                                                             │            │             │                            │ purpose, data categories and recipients or retention).       │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 32    │ Security of processing                                      │ PARTIAL    │ artifact    │ SECURITY.md                │ Found candidate artifact/signal for 'security_policy_file'   │
+│                 │                                                             │            │             │                            │ (1 path(s), 0 code hint(s)) with content markers found (a    │
+│                 │                                                             │            │             │                            │ how-to-report section and a contact or advisory link).       │
+│                 │                                                             │            │             │                            │ Heuristic only — not a full obligation assessment.           │
+│ GDPR:Art. 33    │ Notification of a personal data breach to the supervisory   │ PARTIAL    │ artifact    │ docs/breach-register.md    │ Found candidate artifact/signal for 'breach_register' (1     │
+│                 │ authority                                                   │            │             │                            │ path(s), 0 code hint(s)) with content markers found (a       │
+│                 │                                                             │            │             │                            │ breach entry, a detection date and notification). Heuristic  │
+│                 │                                                             │            │             │                            │ only — not a full obligation assessment.                     │
+│ GDPR:Art. 34    │ Communication of a personal data breach to the data subject │ PARTIAL    │ artifact    │ docs/breach-register.md    │ Found candidate artifact/signal for 'breach_register' (1     │
+│                 │                                                             │            │             │                            │ path(s), 0 code hint(s)) with content markers found (a       │
+│                 │                                                             │            │             │                            │ breach entry, a detection date and notification). Heuristic  │
+│                 │                                                             │            │             │                            │ only — not a full obligation assessment.                     │
+│ GDPR:Art. 35    │ Data protection impact assessment                           │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' with clause 'risks' holding content markers  │
+│                 │                                                             │            │             │                            │ (Risks to people). Heuristic only — not a full obligation    │
+│                 │                                                             │            │             │                            │ assessment.                                                  │
+│ GDPR:Art. 36    │ Prior consultation                                          │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' with clause 'consultation' holding content   │
+│                 │                                                             │            │             │                            │ markers (Consultation or reason not consulted). Heuristic    │
+│                 │                                                             │            │             │                            │ only — not a full obligation assessment.                     │
+│ GDPR:Art. 37-39 │ Designation, position and tasks of the data protection      │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │ officer                                                     │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+└─────────────────┴─────────────────────────────────────────────────────────────┴────────────┴─────────────┴────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+Excluded
+  GDPR:Chapter V: Not applicable: the manifest's scope says the system no transfers outside the EEA (framework_inputs.GDPR.scope.transfers_outside_eea = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

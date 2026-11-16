@@ -1,0 +1,32 @@
+{
+  "framework": "NIS2",
+  "outcome": "not_applicable",
+  "reason": "The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+  "scope": {
+    "annex_sector": false,
+    "supplier_to_in_scope_entity": false
+  },
+  "scoped_out": {
+    "NIS2:Art. 20(1)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 20(2)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(1)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(a)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(b)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(c)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(d)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(e)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(f)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(g)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(h)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(i)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(2)(j)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(3)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 21(4)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(1)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(2)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(4)(a)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(4)(b)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(4)(c)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser.",
+    "NIS2:Art. 23(4)(d)": "Not applicable: The sector is not listed in the Directive's annexes. Confirm with your adviser."
+  }
+}

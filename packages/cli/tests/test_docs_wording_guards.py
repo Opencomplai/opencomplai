@@ -89,10 +89,8 @@ _LEDGER_SOURCES = [
 ]
 _CUSTOMER_CI_SNIPPETS = [
     "docs/ci/github-actions.yml",
-    "dashboard-saas/docs/ci/github-actions.yml",
     "docs/src/guides/ci-integration.md",
     "docs/src/guides/ci-recipes.md",
-    "dashboard-saas/services/web/src/lib/ciSnippets.ts",
     "docs/src/examples/basic-usage.md",
     "docs/src/examples/integrations.md",
     "docs/src/getting-started/first-project.md",
@@ -141,7 +139,7 @@ def test_customer_ci_snippets_pin_checkout_v7() -> None:
             seen += 1
             if not line.strip().endswith("actions/checkout@v7"):
                 bad.append(f"{rel}:{n}: {line.strip()}")
-    assert seen >= 6, f"expected at least six checkout lines, saw {seen}"
+    assert seen >= 9, f"expected at least nine checkout lines, saw {seen}"
     assert not bad, "customer snippets must pin actions/checkout@v7: " + "; ".join(bad)
 
 

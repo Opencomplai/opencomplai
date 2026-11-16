@@ -1,0 +1,3 @@
+# Static analysis workflow
+# Name the static-analysis tool (for example semgrep or codeql) and its checks: _fill in_
+name: _fill in_

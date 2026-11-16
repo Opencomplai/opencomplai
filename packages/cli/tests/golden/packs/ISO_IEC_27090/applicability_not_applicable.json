@@ -1,0 +1,41 @@
+{
+  "framework": "ISO_IEC_27090",
+  "outcome": "not_applicable",
+  "reason": "The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+  "scope": {
+    "builds_or_operates_ai": false
+  },
+  "scoped_out": {
+    "ISO_IEC_27090:5.1": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.2": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.3": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.4": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.5": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.6": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:5.7": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.2": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.3": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.4": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.5": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.6": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.7": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.8": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.9": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.10": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:6.11": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.2": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.3": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.4": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.5": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.6": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.7": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.8": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:7.9": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.2": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.3": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.4": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.5": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.6": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser.",
+    "ISO_IEC_27090:B.7": "Not applicable: The guidance addresses those who build or operate AI systems. Confirm with your adviser."
+  }
+}

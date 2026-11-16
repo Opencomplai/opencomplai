@@ -1,0 +1,6 @@
+# Gate example for CRA.
+# A framework row that is Missing fails `opencomplai check` with exit 1.
+# Copy this file to the repository root as opencomplai.yaml.
+gate:
+  frameworks: [CRA]
+  fail_on: missing

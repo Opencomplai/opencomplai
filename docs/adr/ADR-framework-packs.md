@@ -114,9 +114,9 @@ DORA and EBA stay mapped-only, in a separate data file owned by SU-32b and SU-32
 3. **ISO/IEC 27090 is a native pack.** Registry key `ISO_IEC_27090`, data in
    `data/iso_27090.json`, `DISCLAIMER_V2`. Its 31 rows are the guidance clauses of
    ISO/IEC 27090:2026 that ask for something, each with its table-of-contents heading and
-   a one-line note in the project's own words. Every row takes an attestation; four also
-   take an output evaluator, and eight a supporting probe (point 7). It is guidance, so
-   the label says it certifies nothing.
+   a one-line note in the project's own words. Every row takes an attestation; three also
+   take an output evaluator (5.7, 6.8 and 6.9, after the mapping review below), and eight a
+   supporting probe (point 7). It is guidance, so the label says it certifies nothing.
 4. **Cross-framework links are data.** NIST entries carry `iso_42001` and `iso_27090`
    id lists; ISO/IEC 42001 and ISO/IEC 27090 rows carry `eu_ai_act`, `nist_ai_rmf` and the
    other ISO list; ISO/IEC 27090 rows also carry `iso_27001` (Annex A ids) and `soc2`
@@ -247,7 +247,106 @@ attestations may come from and what they may decide. In plain words:
    does not move, because its data files are unchanged. NIST output also follows the EU map,
    and the NIST `data_version` does not hash that map, so it does not move when the EU map does.
 
+## Amendment 2026-11d (mapping review)
+
+The reviewer's notes on the NIST AI RMF, ISO/IEC 42001 and ISO/IEC 27090 mappings change how
+the derived NIST pack reads. Native packs are untouched. In plain words:
+
+- **A low link cannot fail a subcategory.** The worst-status rule of the 2026-11 amendment
+  stays, with one condition: an article linked at `low` confidence whose row is Missing or
+  Partial counts as Unverified in the rollup. Only a medium-or-better link can make a
+  subcategory Missing or Partial. The citations keep the article's real status, the rationale
+  names the capped articles, and `mapping_confidence` is still the lowest link. Met and
+  Unverified results are never capped. Most NIST-to-EU links are this project's own mapping at
+  low confidence, so without the cap one wrong link could fail a customer's `--gate`.
+- **A row whose articles do not apply takes an attestation.** The rule of point 6 above is
+  widened. An EU article that does not apply (a checker session did not record the duty it
+  depends on; `GapReport.not_applicable`) gives no evidence, and a subcategory whose mapped
+  articles are all not applicable or decided by an attestation reads Unverified until
+  attested, never Met by default. The attestable set is now every subcategory whose mapped
+  articles are each attestation-only or conditional, which is a static superset: whether an
+  attestation counts is decided in the run, and one on a row that evidence decides is not
+  used and the rationale says so. Only a subcategory mapped to an always-applicable article
+  still refuses an attestation. Making not applicable follow manifest roles without a checker
+  session is out of scope.
+- **Art. 20 is an attestation-led EU row.** From 0.16.0 the EU AI Act pack has a
+  second article that no code can show, Art. 20 (corrective actions and the duty of
+  information). It follows the pattern of Art. 4: its only source is the provider's own
+  attestation, so it reads Unverified until one is recorded, and Met while it is in date.
+  Unlike Art. 4 it carries `applies_when_any` for the provider high-risk obligation, so a
+  recorded checker session without that obligation makes it not applicable. It is listed in
+  the "Monitoring and incidents" control group. The cross-framework crosswalk gains one row
+  for it (ISO/IEC 42001 Clause 10.2 and NIST MANAGE 2), and the next bullet adds its links
+  in the NIST and ISO/IEC 42001 data.
+- **The reviewed link changes are applied.** Four NIST rows lose their EU link and take an
+  attestation, because the one article they had binds only some systems or roles, or is no
+  proof of the outcome: GOVERN 1.6 (registration), MEASURE 1.3 (conformity by internal
+  control), MEASURE 2.12 and MANAGE 3.2 (duties of general-purpose model providers).
+  GOVERN 6.1 drops Art. 24, and MANAGE 2.3 and MANAGE 2.4 gain Art. 20 at low confidence.
+  Art. 20 is decided by an attestation, so while it applies those two rows hold at
+  Unverified at best, as MAP 3.4 does. Eight ISO/IEC 42001 rows gain or change
+  whole-article EU links, and Clause 4.3 and Clause 10.1 gain informational ones. In
+  ISO/IEC 27090, 6.9 is decided by the adversarial evaluator alone and 6.10 is
+  attestation-only; rows 5.6 and 7.4 take their own anchors instead of the threat-intelligence
+  and incident-management ones; and Annex B ids B.2 to B.7 carry "(provisional numbering)"
+  in their titles, because the numbers come from an outline of the standard. The links still
+  compute no verdict on the ISO side, and every row stays flagged for founder review.
+
+## Amendment 2026-11 (source kinds and roles)
+
+This amends decision 4. The engine loop already resolves every source kind for any
+pack; the limit sat in the conformance test and in this record. In plain words:
+
+- **Open kinds.** Every native pack may use the source kinds `artifact`, `attestation`,
+  `scan`, `evaluator`, `manifest` and `record`. A `manifest` ref is a manifest-field
+  source and a `record` ref is the signed exemption record; both resolve only when the
+  run supplies a manifest or a repository root, and read Unverified otherwise.
+- **EU-only kinds.** `rule` and `obligation` stay EU-only, because they come from the risk
+  tier and the obligation catalogue. Risk-tier rules and exit codes 3 and 4 stay EU-only
+  too; a gated row of any other pack fails the gate with exit code 1.
+- **Roles.** A source may carry `role`: `supporting`, `corroborating` or none. `supporting`
+  is valid on `artifact` only and never lowers a row; it names evidence it found.
+  `corroborating` is valid on `artifact`, `evaluator` and `scan` only, and a row that has
+  one always keeps a source without a role beside it.
+- **Composition rule.** On a row with corroborating sources, a valid attestation decides
+  and the probes only lift or hold it. With evidence found the row is Met and
+  `corroborated` is true. With a probe that ran but found nothing the row is Partial and
+  `corroborated` is false, never Missing. With no probe run the attestation reads as it
+  does alone. Without a valid attestation the worst probe that ran decides. No pack adds
+  a status word.
+- **Evidence class.** A requirement may carry `evidence_class`: `machine` (a source other
+  than an attestation can decide it), `hybrid` (a probe corroborates an attestation) or
+  `organisational` (attestation by nature). `build_gap_report` copies it from the pack
+  data onto the row, and the serialised row leaves it out when the data has none, so a
+  report that never used it keeps its bytes. A `machine` or `hybrid` row has a source that
+  is neither an attestation nor `supporting`.
+- **One shared test.** `test_pack_verdict_semantics.py` runs over every native pack other
+  than the EU AI Act: with no attestation and no repository root no row is Met; with every
+  attestable row attested and no repository root no row is Missing; `corroborated` is true
+  only on Met rows decided by an attestation; and each row carries the evidence class of
+  its data.
+
 ## Out of scope
 
 Colorado and other framework packs; a document registry; per-framework
 vault columns.
+
+## Amendment: NIST AI RMF is a hybrid native pack
+
+This amends decision 9 and the NIST AI RMF part of decision 1. In plain words:
+
+- **Hybrid kind.** `pack.json` may say `kind: hybrid`. A hybrid pack has a requirements
+  file and runs on the native path of `evaluate_targets`. Each of its rows has a
+  `crosswalk` source: the row of the EU re-projection (`nist_rmf_as_gap_report`) with the
+  same id decides alongside the row's other sources. Its `derived_from` stays `EU_AI_ACT`
+  and the ids that take an attestation stay those of the subcategories file.
+- **Same statuses.** The status of every NIST AI RMF row is unchanged; the committed floor
+  file in the CLI tests pins it.
+- **A NIST-only run is no longer frozen.** `legacy` is true only for the target list
+  `[EU_AI_ACT]`. A run with the single target `NIST_AI_RMF` still writes `nist_rmf_report`
+  as before and also gets the `frameworks` block and `framework_reports` of every other
+  target set. The four NIST golden files and `nist_freeze.sha256` were regenerated for
+  this once; the EU files and `eu_freeze.sha256` did not change.
+- **Registry baseline.** The baseline fixture keeps the label and data version of the EU
+  AI Act only; for the other packs it pins key order and `disclaimer_ref`, because pack
+  data and labels change under their own cards.

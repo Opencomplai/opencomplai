@@ -1,0 +1,1044 @@
+{
+  "schema_version": "1.0",
+  "tool_name": "opencomplai",
+  "tool_version": "<VERSION>",
+  "disclaimer": "OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.",
+  "generated_at": "<TIMESTAMP>",
+  "scan_errors": [],
+  "payload": {
+    "system_id": "example-ltd-cra",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'smart thermostat with companion app sold to consumers' does not match any Annex III high-risk categories.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "risk_register",
+        "rationale": "No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_instructions",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "human_oversight_construct",
+        "rationale": "No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": {
+      "principles": [
+        {
+          "principle_id": "technical_robustness_safety",
+          "title": "Technical Robustness and Safety",
+          "status": "missing",
+          "articles": [
+            "Art. 15",
+            "Art. 25",
+            "Art. 72"
+          ]
+        },
+        {
+          "principle_id": "privacy_data_governance",
+          "title": "Privacy and Data Governance",
+          "status": "unverified",
+          "articles": [
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "transparency",
+          "title": "Transparency",
+          "status": "missing",
+          "articles": [
+            "Art. 12",
+            "Art. 13",
+            "Art. 49",
+            "Art. 50"
+          ]
+        },
+        {
+          "principle_id": "diversity_non_discrimination_fairness",
+          "title": "Diversity, Non-discrimination and Fairness",
+          "status": "unverified",
+          "articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "societal_environmental_wellbeing",
+          "title": "Societal and Environmental Wellbeing",
+          "status": "unverified",
+          "articles": [
+            "Art. 5"
+          ]
+        },
+        {
+          "principle_id": "accountability",
+          "title": "Accountability",
+          "status": "missing",
+          "articles": [
+            "Art. 4",
+            "Art. 9",
+            "Art. 11",
+            "Art. 14",
+            "Art. 16",
+            "Art. 17",
+            "Art. 20",
+            "Art. 24",
+            "Art. 26",
+            "Art. 43",
+            "Art. 53",
+            "Art. 55",
+            "Art. 73"
+          ]
+        }
+      ]
+    },
+    "frameworks": {
+      "CRA": {
+        "framework": "CRA",
+        "label": "Cyber Resilience Act Regulation (EU) 2024/2847 (evaluated, not an audit, certification or legal assessment)",
+        "data_version": "d564389f1bff",
+        "derived_from": null,
+        "disclaimer_ref": "DISCLAIMER_V2",
+        "gated": false,
+        "excluded": {},
+        "applicability": {
+          "outcome": "applies",
+          "reason": ""
+        },
+        "report": {
+          "system_id": "example-ltd-cra",
+          "commit_ref": "HEAD",
+          "generated_at": "<TIMESTAMP>",
+          "articles": [
+            {
+              "article": "CRA:Art. 13(2)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "ai_threat_model",
+              "rationale": "No conventional documentation/code probe matched for 'ai_threat_model'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(3)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '3' holding content markers (Cybersecurity risk assessment). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(5)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "sbom.json",
+              "rationale": "Found candidate artifact/signal for 'sbom_file' (1 path(s), 0 code hint(s)) with content markers found (an SPDX or CycloneDX header key). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(6)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/vulnerability-handling.md",
+              "rationale": "Found candidate artifact/signal for 'vulnerability_handling_policy' (1 path(s), 0 code hint(s)) with content markers found (triage or severity, fix or patch, and a time limit). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(7)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '2' holding content markers (Design, development and vulnerability handling). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(8)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "SUPPORT.md",
+              "rationale": "Found candidate artifact/signal for 'cra.support_period_statement' (1 path(s), 0 code hint(s)) with content markers found (a support period, an end date or duration and security updates). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(9)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "UPDATES.md",
+              "rationale": "Found candidate artifact/signal for 'update_mechanism_note' (1 path(s), 0 code hint(s)) with content markers found (update or patch, how users get it, and a support period). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(12)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(13)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(14)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(15)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(16)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(17)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "SECURITY.md",
+              "rationale": "Found candidate artifact/signal for 'security_policy_file' (1 path(s), 0 code hint(s)) with content markers found (a how-to-report section and a contact or advisory link). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(18)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '8' holding content markers (Secure use from set-up to decommissioning). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(19)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "SUPPORT.md",
+              "rationale": "Found candidate artifact/signal for 'cra.support_period_statement' (1 path(s), 0 code hint(s)) with content markers found (a support period, an end date or duration and security updates). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 13(20)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(21)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(22)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 13(23)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 14(1)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "cra.vulnerability_notification_record#early-warning",
+              "rationale": "No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#early-warning'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 14(3)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "cra.vulnerability_notification_record#notification",
+              "rationale": "No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#notification'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 14(8)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "cra.vulnerability_notification_record#user-information",
+              "rationale": "No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#user-information'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Art. 28",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Art. 30",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Annex I Part I (1)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "ai_threat_model",
+              "rationale": "No conventional documentation/code probe matched for 'ai_threat_model'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(a)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/sast.yml",
+              "rationale": "Found candidate artifact/signal for 'sast_config' (1 path(s), 0 code hint(s)) with content markers found (a static-analysis tool name). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(b)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "HARDENING.md",
+              "rationale": "Found candidate artifact/signal for 'secure_defaults_config' (1 path(s), 0 code hint(s)) with content markers found (a default and what is off or required out of the box). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(c)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "UPDATES.md",
+              "rationale": "Found candidate artifact/signal for 'update_mechanism_note' (1 path(s), 0 code hint(s)) with content markers found (update or patch, how users get it, and a support period). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(d)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/access-control.md",
+              "rationale": "Found candidate artifact/signal for 'policy_access_control' (1 path(s), 0 code hint(s)) with content markers found (an access control, least privilege or authorisation term). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(e)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/cryptography.md",
+              "rationale": "Found candidate artifact/signal for 'policy_cryptography' (1 path(s), 0 code hint(s)) with content markers found (an encryption or key management term). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(f)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/release.yml",
+              "rationale": "Found candidate artifact/signal for 'signed_release_config' (1 path(s), 0 code hint(s)) with content markers found (a signing or provenance step). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(g)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(h)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "rate_limiting_config",
+              "rationale": "No conventional documentation/code probe matched for 'rate_limiting_config'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(i)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(j)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "deploy/Dockerfile",
+              "rationale": "Found candidate artifact/signal for 'iac_definitions' (1 path(s), 0 code hint(s)) with content markers found (a resource, base image, service or API version line). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(k)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/sast.yml",
+              "rationale": "Found candidate artifact/signal for 'sast_config' (1 path(s), 0 code hint(s)) with content markers found (a static-analysis tool name). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(l)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "event_log_evidence",
+              "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part I (2)(m)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.CRA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "CRA:Annex I Part II (1)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "sbom.json",
+              "rationale": "Found candidate artifact/signal for 'ai_supply_chain_pins' (1 path(s), 0 code hint(s)) with content markers found (an SBOM header, a hash pin or a hub revision pinned to a commit). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (2)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/vulnerability-handling.md",
+              "rationale": "Found candidate artifact/signal for 'vulnerability_handling_policy' (1 path(s), 0 code hint(s)) with content markers found (triage or severity, fix or patch, and a time limit). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (3)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/ci.yml",
+              "rationale": "Found candidate artifact/signal for 'ci_test_workflow' (1 path(s), 0 code hint(s)) with content markers found (a test runner command). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (4)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/vulnerability-handling.md",
+              "rationale": "Found candidate artifact/signal for 'vulnerability_handling_policy' (1 path(s), 0 code hint(s)) with content markers found (triage or severity, fix or patch, and a time limit). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (5)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/vulnerability-handling.md",
+              "rationale": "Found candidate artifact/signal for 'vulnerability_handling_policy' (1 path(s), 0 code hint(s)) with content markers found (triage or severity, fix or patch, and a time limit). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (6)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "SECURITY.md",
+              "rationale": "Found candidate artifact/signal for 'security_policy_file' (1 path(s), 0 code hint(s)) with content markers found (a how-to-report section and a contact or advisory link). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (7)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/release.yml",
+              "rationale": "Found candidate artifact/signal for 'signed_release_config' (1 path(s), 0 code hint(s)) with content markers found (a signing or provenance step). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex I Part II (8)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "UPDATES.md",
+              "rationale": "Found candidate artifact/signal for 'update_mechanism_note' (1 path(s), 0 code hint(s)) with content markers found (update or patch, how users get it, and a support period). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (1)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '1' holding content markers (Manufacturer identity and contact). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (2)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '2' holding content markers (Contact point for vulnerability reports). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (3)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '3' holding content markers (Product identification). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (4)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '4' holding content markers (Intended purpose). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (5)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '5' holding content markers (Known risks and misuse). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (6)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '6' holding content markers (Where the declaration of conformity can be found). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (7)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '7' holding content markers (Support and end date). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (8)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '8' holding content markers (Secure use from set-up to decommissioning). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex II (9)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/security-information.md",
+              "rationale": "Found 'docs/security-information.md' with clause '9' holding content markers (Location of the bill of materials). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (1)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '1' holding content markers (General description of the product). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (2)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '2' holding content markers (Design, development and vulnerability handling). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (3)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '3' holding content markers (Cybersecurity risk assessment). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (4)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '4' holding content markers (Basis for the support period). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (5)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '5' holding content markers (Standards and solutions applied). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (6)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '6' holding content markers (Test reports). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (7)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '7' holding content markers (Copy of the declaration of conformity). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "CRA:Annex VII (8)",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "CRA_TECHNICAL_DOCUMENTATION.md",
+              "rationale": "Found 'CRA_TECHNICAL_DOCUMENTATION.md' with clause '8' holding content markers (Software bill of materials). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            }
+          ],
+          "evidence_hashes": [],
+          "principle_summary": null
+        }
+      }
+    }
+  }
+}

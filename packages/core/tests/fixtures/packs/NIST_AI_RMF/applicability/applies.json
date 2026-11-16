@@ -1,0 +1,19 @@
+{
+  "system_id": "pack-golden-sys",
+  "intended_purpose": "ticket ranking for the Example Ltd service desk",
+  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": [
+    "NIST_AI_RMF"
+  ],
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "NIST_AI_RMF": {
+      "scope": {
+        "develops_or_deploys_ai": true,
+        "uses_third_party_models": false,
+        "contract_commitment": true
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "GDPR:Art. 5": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 9": {
+    "template_id": "gdpr_dpia_section",
+    "kind": "markdown",
+    "file": "dpia_section.md"
+  },
+  "GDPR:Art. 12": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 13": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 14": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 15": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 17": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 21": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 22": {
+    "template_id": "gdpr_dpia_section",
+    "kind": "markdown",
+    "file": "dpia_section.md"
+  },
+  "GDPR:Art. 25": {
+    "template_id": "gdpr_dpia_section",
+    "kind": "markdown",
+    "file": "dpia_section.md"
+  },
+  "GDPR:Art. 28": {
+    "template_id": "gdpr_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "GDPR:Art. 30": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  },
+  "GDPR:Art. 32": {
+    "template_id": "gdpr_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "GDPR:Art. 33": {
+    "template_id": "gdpr_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "GDPR:Art. 34": {
+    "template_id": "gdpr_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "GDPR:Art. 35": {
+    "template_id": "gdpr_dpia_section",
+    "kind": "markdown",
+    "file": "dpia_section.md"
+  },
+  "GDPR:Art. 36": {
+    "template_id": "gdpr_dpia_section",
+    "kind": "markdown",
+    "file": "dpia_section.md"
+  },
+  "GDPR:Chapter V": {
+    "template_id": "gdpr_privacy_record",
+    "kind": "markdown",
+    "file": "privacy_record.md"
+  }
+}

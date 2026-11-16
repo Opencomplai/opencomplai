@@ -1,0 +1,14 @@
+{
+  "incident_notification": {
+    "title": "Incident notification record",
+    "target": "docs/security/incident-notification.md",
+    "probe": "nis2.incident_notification_record",
+    "file": "incident_notification.md"
+  },
+  "risk_management_measures": {
+    "title": "Information security policy",
+    "target": "docs/policies/information-security.md",
+    "probe": "policy_information_security",
+    "file": "risk_management_measures.md"
+  }
+}

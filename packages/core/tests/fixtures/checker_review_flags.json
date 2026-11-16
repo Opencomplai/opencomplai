@@ -27,13 +27,13 @@
     "source": "Regulation (EU) 2024/1689, Art. 5(1), points (ba) and (bb) and Art. 5(1a), (1b) as inserted by Regulation (EU) 2026/1744 (Digital Omnibus), Art. 1(7); date from Art. 113(a) as amended by Art. 1(40)(a)",
     "confidence": "medium",
     "needs_founder_review": true,
-    "note": "'social scoring by public authorities' changed to 'social scoring of natural persons'; points (ba) and (bb) and their 2 December 2026 date follow the Official Journal text; the plain-English wording is draft and listed in PLAN/SUMMIT-HANDOFF/09-timeline-for-lawyer.md"
+    "note": "'social scoring by public authorities' changed to 'social scoring of natural persons'; points (ba) and (bb) and their 2 December 2026 date follow the Official Journal text; the plain-English wording is draft"
   },
   "obligations.ai_literacy": {
     "source": "Regulation (EU) 2024/1689, Art. 4 as replaced by Regulation (EU) 2026/1744, Art. 1(5)",
     "confidence": "medium",
     "needs_founder_review": true,
-    "note": "body follows the replacement Art. 4(1) from the Official Journal; the plain-English wording is draft and listed in PLAN/SUMMIT-HANDOFF/09-timeline-for-lawyer.md"
+    "note": "body follows the replacement Art. 4(1) from the Official Journal; the plain-English wording is draft"
   },
   "obligations.provider_art_6_4_registration": {
     "source": "Regulation (EU) 2024/1689, Art. 6(4) and Art. 49(2)",

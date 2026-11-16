@@ -8,7 +8,7 @@ The compliance engine at the heart of [Opencomplai](https://opencomplai.com).
 `opencomplai-core` turns a declared `system-manifest.json` and your source tree into a
 deterministic, rule-based EU AI Act risk classification and gap report — no LLM calls,
 no network access, fully reproducible. The same evidence also yields a NIST AI RMF 1.0
-view, re-projected per subcategory rather than measured separately. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
+view, re-projected per subcategory rather than measured separately. 15 frameworks by status, evaluated: EU AI Act, NIST AI RMF 1.0, ISO/IEC 42001:2023 AI management system, ISO/IEC 27090:2026 AI security guidance, ISO/IEC 27001:2022 information security management, SOC 2 Trust Services Criteria (not a SOC 2 report), NIS2 Directive (EU) 2022/2555 cybersecurity measures, DORA Regulation (EU) 2022/2554 digital operational resilience, EBA Guidelines on ICT, outsourcing and loan origination, EIOPA Opinion on AI governance and risk management, GDPR Regulation (EU) 2016/679, duties relevant to AI systems, Cyber Resilience Act Regulation (EU) 2024/2847, ETSI EN 304 223 baseline cyber security for AI, ISO/IEC 42005:2025 AI system impact assessment, ISO/IEC 23894:2023 AI risk management guidance.
 
 It powers risk classification (`UnacceptableRiskRule`, `AnnexIIIClassifierRule`,
 `ProfilingDetectionRule`, `SubstantialModificationRule`) and the code-corroboration scan
@@ -88,7 +88,7 @@ for framework, report in reports.items():
     print(FRAMEWORKS[framework].label, len(report.report.articles), "requirements")
 ```
 
-`FRAMEWORKS` lists what this release can assess. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed). See
+`FRAMEWORKS` lists what this release can assess. 15 frameworks by status, evaluated: EU AI Act, NIST AI RMF 1.0, ISO/IEC 42001:2023 AI management system, ISO/IEC 27090:2026 AI security guidance, ISO/IEC 27001:2022 information security management, SOC 2 Trust Services Criteria (not a SOC 2 report), NIS2 Directive (EU) 2022/2555 cybersecurity measures, DORA Regulation (EU) 2022/2554 digital operational resilience, EBA Guidelines on ICT, outsourcing and loan origination, EIOPA Opinion on AI governance and risk management, GDPR Regulation (EU) 2016/679, duties relevant to AI systems, Cyber Resilience Act Regulation (EU) 2024/2847, ETSI EN 304 223 baseline cyber security for AI, ISO/IEC 42005:2025 AI system impact assessment, ISO/IEC 23894:2023 AI risk management guidance. See
 [Frameworks](https://docs.opencomplai.com/frameworks/).
 
 ## What you get

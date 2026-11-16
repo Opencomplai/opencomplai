@@ -3,7 +3,8 @@
 `check` calls `with_summaries` right before signing, so the signature covers the
 summaries and `push` forwards them unchanged. Metadata only (E-5): counts, enums,
 `YYYY-MM-DD` days and log heads. Never a name, description, note, rationale, tool
-or agent id. No clock (E-14): every date comes from a log entry or the register.
+or agent id. No clock is read (E-14): every date comes from a log entry, the register,
+the manifest's mandate expiry days or the artifact's own timestamp.
 
 Each builder returns `(model | None, anchors)`; `anchors` are `sha256:`-prefixed
 log heads destined for `evidence_hashes`. A source that cannot be read becomes a
@@ -13,12 +14,18 @@ warning and an omitted sub-object, never a failed `check`.
 from __future__ import annotations
 
 from collections.abc import Callable
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 from opencomplai_core.agent_inventory import AgentInventory
 from opencomplai_core.agent_log_verify import verify_agent_log
-from opencomplai_core.agent_sources import cross_check, detected
+from opencomplai_core.agent_sources import (
+    cross_check,
+    detected,
+    expiring_mandates,
+    mandate_expiry_day,
+)
 from opencomplai_core.gap_probes import INCIDENT_LOG_PATH, qms_clause_results
 from opencomplai_core.incident import PartyKind, load_register, parse_ts
 from opencomplai_core.models import ScanStatusArtifact, SystemManifest
@@ -50,6 +57,16 @@ _PARTY_ORDER = (
 
 def _day(ts: str) -> str:
     return parse_ts(ts).date().isoformat()
+
+
+def _as_of(timestamp: str | None) -> date | None:
+    """The artifact's own stamp day, the reference for `expiring_soon`."""
+    if not timestamp:
+        return None
+    try:
+        return parse_ts(timestamp).date()
+    except ValueError:
+        return None
 
 
 def _leaf(head: str) -> str:
@@ -93,9 +110,16 @@ def build_oversight(
 
 
 def build_agents(
-    manifest: SystemManifest, agent_log: Path | None, scan_report: Any
+    manifest: SystemManifest,
+    agent_log: Path | None,
+    scan_report: Any,
+    as_of: date | None = None,
 ) -> tuple[AgentsSummary | None, list[str]]:
-    """None without a declared inventory: the required counts would be invented."""
+    """None without a declared inventory: the required counts would be invented.
+
+    `as_of` is the reference day for `expiring_soon`; without it that count is
+    omitted. `earliest_mandate_expiry` needs no reference day.
+    """
     inventory: AgentInventory | None = manifest.agent_inventory
     if inventory is None:
         return None, []
@@ -104,6 +128,16 @@ def build_agents(
         "with_mandate": sum(a.mandate is not None for a in inventory.agents),
         "with_guardrails": sum(bool(a.guardrails) for a in inventory.agents),
     }
+    days = [
+        d
+        for a in inventory.agents
+        if a.mandate is not None and a.mandate.expires_at is not None
+        if (d := mandate_expiry_day(a.mandate.expires_at)) is not None
+    ]
+    if days:
+        fields["earliest_mandate_expiry"] = min(days).isoformat()
+        if as_of is not None:
+            fields["expiring_soon"] = len(expiring_mandates(manifest, as_of))
     if scan_report is not None:
         fields["undeclared"] = len(
             cross_check(inventory, detected(scan_report)).undeclared
@@ -186,6 +220,7 @@ def with_summaries(
     text, which could echo log content.
     """
     sid = manifest.system_id
+    as_of = _as_of(artifact.timestamp)
     oversight_log = oversight_log or log_path()
     agent_log = agent_log or Path(_DEFAULT_AGENT_LOG)
     incident_register = incident_register or Path(_DEFAULT_REGISTER)
@@ -193,7 +228,7 @@ def with_summaries(
     anchors: list[str] = []
     sources = {
         "oversight": lambda: build_oversight(oversight_log, sid),
-        "agents": lambda: build_agents(manifest, agent_log, scan_report),
+        "agents": lambda: build_agents(manifest, agent_log, scan_report, as_of),
         "qms": lambda: (build_qms(repo_root, manifest), []),
         "incidents": lambda: build_incidents(incident_register, sid),
     }

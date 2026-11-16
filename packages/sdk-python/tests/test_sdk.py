@@ -63,6 +63,7 @@ def test_sdk_exports_and_pep561():
         "RiskLevel",
         "RiskResult",
         "RuleResult",
+        "RuntimeReporter",
         "ScanResult",
         "ScanStatusArtifact",
         "SystemManifest",

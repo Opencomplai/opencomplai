@@ -1,0 +1,113 @@
+{
+  "family": "third_parties",
+  "probes": {
+    "vendor_register": {
+      "patterns": [
+        "**/vendor-register*",
+        "**/vendor_register*",
+        "**/supplier-register*",
+        "**/supplier_register*",
+        "**/register-of-information*",
+        "**/register_of_information*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:provider|vendor|supplier)s?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:service|function)s?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bcriticality\\b|\\bcritical\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "provider, service and criticality entries",
+        "lacks_label": "provider, service or function, and criticality",
+        "noun": "vendor register",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general third-party risk practice, by topic words only",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "contract_checklist": {
+      "patterns": [
+        "docs/**/contract-checklist*",
+        "docs/**/contract_checklist*",
+        "**/supplier-contract*",
+        "**/supplier_contract*",
+        "**/vendor-contract*",
+        "**/vendor_contract*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\baudit\\b|\\baccess\\s+rights?\\b|\\bright\\s+of\\s+access\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\btermination\\b|\\bexit\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bsecurity\\b|\\bservice[\\s_-]*levels?\\b|\\bsla\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "audit or access, termination and security or service-level terms",
+        "lacks_label": "audit or access right, termination or exit, and security or service level",
+        "noun": "contract checklist",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general third-party risk practice, by topic words only",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "exit_plan": {
+      "patterns": [
+        "docs/**/exit-plan*",
+        "docs/**/exit_plan*",
+        "**/exit-strategy*",
+        "**/exit_strategy*",
+        "**/vendor-exit*",
+        "**/vendor_exit*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bexit\\b|\\btransition\\b|\\bmigrat(?:e|ion)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\balternative\\b|\\breplacement\\b|\\bsubstitute\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\btrigger(?:s|ed)?\\b|\\btimeline\\b|\\btimescale\\b|\\bwithin\\s+\\d+\\s+(?:days|weeks|months)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "exit, alternative and trigger or timeline entries",
+        "lacks_label": "exit or transition, alternative or replacement, and trigger or timeline",
+        "noun": "exit plan",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general third-party risk practice, by topic words only",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

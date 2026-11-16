@@ -80,14 +80,14 @@ class TestShape:
 
 
 class TestGovernGoldenScenario:
-    def test_govern_1_2_reprojects_art_17_missing_at_low(self):
+    def test_govern_1_2_caps_art_17_missing_at_low_to_unverified(self):
         report = build_nist_rmf_report(
             _make_report(
                 [_row("Art. 17", GapStatus.MISSING, evidence_ref="provider_qms")]
             )
         )
         row = _sub(report, "GOVERN 1.2")
-        assert row.status == GapStatus.MISSING
+        assert row.status == GapStatus.UNVERIFIED
         assert row.mapping_confidence == "low"
         assert row.confidence_label == ConfidenceLabel.HEURISTIC_ESTIMATE
         assert row.source_eu_ai_act_articles == ["Art. 17"]
@@ -114,6 +114,8 @@ class TestMapGoldenScenario:
 
 class TestMeasureGoldenScenario:
     def test_measure_2_5_keeps_low_confidence_over_measured_evidence(self):
+        # A low link cannot make the row Partial, but the label and the
+        # mapping confidence still say how weak the link is.
         report = build_nist_rmf_report(
             _make_report(
                 [
@@ -129,7 +131,7 @@ class TestMeasureGoldenScenario:
             )
         )
         row = _sub(report, "MEASURE 2.5")
-        assert row.status == GapStatus.PARTIAL
+        assert row.status == GapStatus.UNVERIFIED
         assert row.mapping_confidence == "low"
         assert row.confidence_label == ConfidenceLabel.HEURISTIC_ESTIMATE
 
@@ -151,9 +153,10 @@ class TestManageGoldenScenario:
 
 
 class TestAttestation:
-    def test_attestable_set_is_exactly_the_unmapped_subcategories(self):
+    def test_attestable_set_is_the_rows_no_always_applicable_article_decides(self):
         assert "NIST_AI_RMF:MANAGE 2.1" in attestable_subcategories()
-        assert "NIST_AI_RMF:MANAGE 1.3" not in attestable_subcategories()
+        assert "NIST_AI_RMF:MANAGE 1.3" in attestable_subcategories()
+        assert "NIST_AI_RMF:GOVERN 1.1" not in attestable_subcategories()
 
     def test_attestation_makes_an_unmapped_subcategory_met(self):
         report = build_nist_rmf_report(
@@ -189,7 +192,7 @@ class TestWorstCaseRollup:
     worst (most severe) status among the present ones, and the lowest mapping
     confidence -- mirroring principle_report's STATUS_SEVERITY rollup."""
 
-    def test_govern_1_4_takes_the_missing_over_the_met(self):
+    def test_govern_1_4_reads_unverified_when_only_the_low_link_is_missing(self):
         # GOVERN 1.4 maps Art. 9 (medium) and Art. 17 (low).
         report = build_nist_rmf_report(
             _make_report(
@@ -197,7 +200,7 @@ class TestWorstCaseRollup:
             )
         )
         row = _sub(report, "GOVERN 1.4")
-        assert row.status == GapStatus.MISSING
+        assert row.status == GapStatus.UNVERIFIED
         assert row.mapping_confidence == "low"
         assert set(row.source_eu_ai_act_articles) == {"Art. 9", "Art. 17"}
 

@@ -11,6 +11,7 @@ from __future__ import annotations
 import functools
 import os
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import NamedTuple
@@ -20,6 +21,13 @@ from opencomplai_core.models import (
     ArticleGapStatus,
     ConfidenceLabel,
     GapStatus,
+)
+from opencomplai_core.probe_registry import (
+    ProbeDef,
+    flags_to_int,
+    flags_to_letters,
+    iter_probe_files,
+    parse_probe_file,
 )
 
 # Placeholder evidence slots, reserved so a real probe can later replace a stub
@@ -38,102 +46,8 @@ STUB_SOURCE_REFS: dict[str, frozenset[str]] = {
 # source/confidence/needs_founder_review for the probes added with real sources
 # and for evaluator refs (E-15). New probes add their own entries.
 PROBE_PROVENANCE: dict[str, dict] = {
-    "technical_documentation_dossier": {
-        "source": "Reg. (EU) 2024/1689 Art. 11 and Annex IV (text unverified here); "
-        "dossier_<id>.json written by the CLI dossier command",
-        "confidence": "medium",
-        "needs_founder_review": True,
-    },
-    "transparency_notice_evidence": {
-        "source": "Reg. (EU) 2024/1689 Art. 50 (text unverified here); "
-        "file names written by `recommend` plus common disclosure names",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "eu_database_registration_evidence": {
-        "source": "Reg. (EU) 2024/1689 Art. 49 (text unverified here); "
-        "file-name convention only",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "deployer_use_records": {
-        "source": "Reg. (EU) 2024/1689 Art. 26 (text unverified here); "
-        "file-name convention only",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "post_market_monitoring_plan": {
-        "source": "Reg. (EU) 2024/1689 Art. 72 (text unverified here); "
-        "file-name convention plus heuristic content keywords",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "serious_incident_log": {
-        "source": "Reg. (EU) 2024/1689 Art. 73 (text unverified here); "
-        "root incident-log.json with a signed-log line (heuristic marker)",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "deployer_instructions": {
-        "source": "heuristic (no legal source): Art. 13(3) topic keywords in the "
-        "instructions file",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "event_log_evidence": {
-        "source": "Regulation (EU) 2024/1689 Art. 12; presence of a chained log "
-        "file (oversight log or agent decision log), contents not verified by "
-        "the probe",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    # The four ISO/IEC 27090 probes below are supporting evidence only (see
-    # `supporting_gap_status`); the clause ids are the only part taken from the standard.
-    "ai_supply_chain_pins": {
-        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 5.5 and "
-        "B.3 (ids and headings only); SBOM header, hash pin or hub model pinned "
-        "to a commit hash",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "rate_limiting_config": {
-        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 6.5, 7.8 "
-        "and B.2 (ids and headings only); rate-limit library imports and nginx or "
-        "Envoy directives, by name",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "ai_threat_model": {
-        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.6 (id "
-        "and heading only); file-name convention plus AI-attack keywords",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "ai_red_team_report": {
-        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.7 (id "
-        "and heading only); file-name convention plus AI-attack and test-result "
-        "keywords",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "gpai_model_documentation": {
-        "source": "Reg. (EU) 2024/1689 Art. 53 and Annex XI (text unverified "
-        "here); file-name convention only",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "gpai_downstream_information": {
-        "source": "Reg. (EU) 2024/1689 Art. 53 and Annex XII (text unverified "
-        "here); file-name convention only",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
-    "gpai_systemic_risk_evaluation": {
-        "source": "Reg. (EU) 2024/1689 Art. 55 and Annex XI Section 2 (text "
-        "unverified here); file-name convention only",
-        "confidence": "low",
-        "needs_founder_review": True,
-    },
+    # Provenance-only evaluator ref: upper case with no patterns, which the
+    # shared-file format does not take, so it stays here.
     "EVAL_ADVERSARIAL_V1": {
         "source": "heuristic (no legal source): deterministic lexical signature "
         "match; the evaluator's own reference is NIST AI RMF MEASURE 2.7 / EU AI "
@@ -148,222 +62,7 @@ PROBE_PROVENANCE: dict[str, dict] = {
 INCIDENT_LOG_PATH = "incident-log.json"
 
 # Relative path globs (fnmatch-style via Path.rglob / name match)
-_PROBE_PATTERNS: dict[str, tuple[str, ...]] = {
-    # `**/` so a dossier in the repo root and one in a subfolder both match.
-    "technical_documentation_dossier": ("**/dossier_*.json",),
-    # Not transparency_notice* (the Art. 13 file) and not bare "transparency".
-    "transparency_notice_evidence": (
-        "**/art50-transparency_middleware*",
-        "**/ai-disclosure*",
-        "AI_DISCLOSURE.md",
-    ),
-    "eu_database_registration_evidence": (
-        "**/eu-database*",
-        "**/eu_database*",
-        "EU_DATABASE_REGISTRATION.md",
-        "**/art49-registration*",
-    ),
-    "deployer_use_records": (
-        "**/deployer-use-log*",
-        "**/deployer_use_log*",
-        "**/use-records*",
-        "DEPLOYER_USE_RECORDS.md",
-    ),
-    "risk_register": (
-        "risk_register.json",
-        "risk-register.json",
-        "docs/risk*",
-        "docs/**/risk*",
-    ),
-    "deployer_instructions": (
-        "docs/instructions*",
-        "docs/**/instructions*",
-        "INSTRUCTIONS.md",
-        "DEPLOYER.md",
-    ),
-    "human_oversight_construct": (
-        "**/human_oversight*",
-        "**/oversight*",
-        "docs/**/oversight*",
-    ),
-    "provider_qms_bundle": (
-        "docs/provider-obligations*",
-        "docs/**/provider*",
-        "PROVIDER_OBLIGATIONS.md",
-        "docs/**/technical-documentation*",
-    ),
-    "provider_qms": (
-        "docs/qms*",
-        "docs/qms/**",
-        "docs/**/quality*",
-        "QMS.md",
-        "QUALITY_MANAGEMENT.md",
-        "docs/**/quality-management*",
-    ),
-    # GPAI documentation conventions (Art. 53 / Art. 55). Stems do not
-    # overlap, so one probe never matches another's file.
-    "gpai_model_documentation": (  # Annex XI
-        "docs/gpai/model-documentation*",
-        "docs/**/gpai-model-documentation*",
-        "GPAI_MODEL_DOCUMENTATION.md",
-    ),
-    "gpai_downstream_information": (  # Annex XII
-        "docs/gpai/downstream-information*",
-        "docs/**/downstream-provider-information*",
-        "GPAI_DOWNSTREAM_INFORMATION.md",
-    ),
-    "gpai_systemic_risk_evaluation": (  # Annex XI Section 2 / Art. 55
-        "docs/gpai/systemic-risk*",
-        "docs/**/adversarial-testing*",
-        "GPAI_SYSTEMIC_RISK.md",
-    ),
-    "provider_fria": (
-        "docs/fria*",
-        "docs/**/fria*",
-        "FRIA.md",
-    ),
-    "distributor_conformity": (
-        "docs/conformity*",
-        "CONFORMITY*",
-        "CE_MARKING*",
-        "docs/**/distributor*",
-    ),
-    "conformity_assessment_docs": (
-        "docs/conformity*",
-        "CONFORMITY*",
-        "docs/**/assessment*",
-    ),
-    # Art. 72 / Art. 73 evidence.
-    "post_market_monitoring_plan": (
-        "docs/post-market-monitoring-plan*",
-        "docs/qms/post-market-monitoring*",
-        "docs/**/post-market-monitoring*",
-        "POST_MARKET_MONITORING_PLAN.md",
-        "POST_MARKET_MONITORING.md",
-    ),
-    "serious_incident_log": (INCIDENT_LOG_PATH,),
-    # Art. 12: the oversight log `approve`/`resume` write. Found only when
-    # it sits inside the repo, e.g. OPENCOMPLAI_STATE_DIR=.opencomplai in CI or a
-    # committed exported copy. File presence only: Partial at most, never Met.
-    "event_log_evidence": ("**/oversight-log.json", "**/agent-log.jsonl"),
-    # ISO/IEC 27090 supporting probes. The two that read code match on content
-    # (`select`), so their `**/*.py`-style globs are only candidates.
-    "ai_supply_chain_pins": (
-        "**/*.spdx.json",
-        "**/*.cdx.json",
-        "**/sbom*.json",
-        "**/bom.json",
-        "**/dvc.lock",  # DVC pins data and model files by hash
-        "**/*.dvc",
-        "**/models.lock*",
-        "**/datasets.lock*",
-        "**/model-pins*",
-        "**/dataset-pins*",
-        "**/*.py",  # a hub model pinned to a commit
-    ),
-    "rate_limiting_config": (
-        "**/*.py",
-        "**/*.js",
-        "**/*.mjs",
-        "**/*.cjs",
-        "**/*.ts",
-        "**/*.conf*",  # nginx
-        "**/*.yaml",  # Envoy
-        "**/*.yml",
-    ),
-    "ai_threat_model": (
-        "**/threat-model*",
-        "**/threat_model*",
-        "**/threat-model/**",
-        "docs/**/threat*model*",
-    ),
-    "ai_red_team_report": (
-        "**/red-team*",
-        "**/red_team*",
-        "**/red-team/**",
-        "docs/**/adversarial-testing*",
-    ),
-    # Art. 17(1)(a)-(m) per-clause probes. `provider_qms` above stays as the
-    # whole-article convenience probe; these are narrower, clause-appropriate
-    # glob sets so a partially-documented QMS shows which sub-points are
-    # actually covered instead of one pass/fail for the whole article.
-    "provider_qms_17_1_a": (  # (a) regulatory-compliance strategy
-        "docs/qms/regulatory-compliance-strategy*",
-        "docs/**/regulatory-compliance*",
-        "docs/**/compliance-strategy*",
-        "REGULATORY_COMPLIANCE_STRATEGY.md",
-    ),
-    "provider_qms_17_1_b": (  # (b) design and design-control procedures
-        "docs/qms/design-control*",
-        "docs/**/design-control*",
-        "docs/**/design-verification*",
-        "DESIGN_CONTROL.md",
-    ),
-    "provider_qms_17_1_c": (  # (c) development, QC and QA procedures
-        "docs/qms/quality-management-procedures*",
-        "docs/**/quality-assurance*",
-        "docs/**/quality-control*",
-        "QUALITY_MANAGEMENT_PROCEDURES.md",
-    ),
-    "provider_qms_17_1_d": (  # (d) examination, test and validation procedures
-        "docs/qms/testing-validation*",
-        "docs/**/test-validation*",
-        "docs/**/validation-procedures*",
-        "TESTING_VALIDATION.md",
-    ),
-    "provider_qms_17_1_e": (  # (e) technical specifications / harmonised standards
-        "docs/qms/technical-documentation*",
-        "docs/**/technical-specifications*",
-        "docs/**/harmonised-standards*",
-        "TECHNICAL_DOCUMENTATION.md",
-    ),
-    "provider_qms_17_1_f": (  # (f) data-management systems and procedures
-        "docs/qms/data-governance*",
-        "docs/**/data-governance*",
-        "docs/**/data-management*",
-        "DATA_GOVERNANCE.md",
-    ),
-    "provider_qms_17_1_g": (  # (g) risk-management system (Art. 9)
-        "docs/qms/risk-management-system*",
-        "docs/**/risk-management-system*",
-        "RISK_MANAGEMENT_SYSTEM.md",
-    ),
-    "provider_qms_17_1_h": (  # (h) post-market monitoring system (Art. 72)
-        "docs/qms/post-market-monitoring*",
-        "docs/**/post-market-monitoring*",
-        "POST_MARKET_MONITORING.md",
-        INCIDENT_LOG_PATH,
-    ),
-    "provider_qms_17_1_i": (  # (i) serious-incident reporting (Art. 73)
-        "docs/qms/serious-incident-reporting*",
-        "docs/**/incident-reporting*",
-        "docs/**/serious-incident*",
-        "INCIDENT_REPORTING.md",
-        INCIDENT_LOG_PATH,
-    ),
-    "provider_qms_17_1_j": (  # (j) communication with competent authorities/actors
-        "docs/qms/regulatory-communication*",
-        "docs/**/regulatory-communication*",
-        "docs/**/transparency*",
-        "TRANSPARENCY.md",
-    ),
-    "provider_qms_17_1_k": (  # (k) record-keeping of documentation/communication
-        "docs/qms/record-keeping*",
-        "docs/**/record-keeping*",
-        "RECORD_KEEPING.md",
-    ),
-    "provider_qms_17_1_l": (  # (l) resource management, incl. security of supply
-        "docs/qms/resource-management*",
-        "docs/**/resource-management*",
-        "docs/**/security-of-supply*",
-        "RESOURCE_MANAGEMENT.md",
-    ),
-    "provider_qms_17_1_m": (  # (m) accountability framework
-        "docs/qms/accountability-framework*",
-        "docs/**/accountability*",
-        "ACCOUNTABILITY_FRAMEWORK.md",
-    ),
-}
+_PROBE_PATTERNS: dict[str, tuple[str, ...]] = {}
 
 # Art. 17(1)(a)-(m), in article order — (clause letter, probe ref, short title).
 # Both the qms_outline.md template renderer and the CLI reuse this single
@@ -384,12 +83,7 @@ QMS_17_1_CLAUSES: tuple[tuple[str, str, str], ...] = (
     ("m", "provider_qms_17_1_m", "Accountability framework"),
 )
 
-_CODE_HINTS: dict[str, re.Pattern[str]] = {
-    "human_oversight_construct": re.compile(
-        r"\b(human_in_the_loop|require_approval|hitl|human_oversight)\b",
-        re.I,
-    ),
-}
+_CODE_HINTS: dict[str, re.Pattern[str]] = {}
 
 # Public: the literal the QMS scaffold files carry in every cell the author
 # still has to fill. A clause file that still contains it is never content-bearing.
@@ -437,158 +131,139 @@ class _ContentSpec:
     select: bool = False
 
 
-# Raw-text marker of a signed-log line (never JSON-parsed here).
-_CHAIN_LINE = r'"prev_hash"\s*:\s*"sha256:'
+_CONTENT_MARKERS: dict[str, _ContentSpec] = {}
 
-# Art. 17(1)(a)-(m) clause keywords. source: heuristic (no legal source);
-# confidence: low; needs_founder_review: true (E-15). One case-insensitive
-# pattern per clause; the founder may want different words. (h) and (i) also
-# accept a signed-log line so the root incident log is content-bearing for both.
-_QMS_CLAUSE_KEYWORDS: dict[str, str] = {
-    "a": r"compliance|conformity|regulat",
-    "b": r"design",
-    "c": r"quality\s+(control|assurance)|\bQA\b|\bQC\b|development",
-    "d": r"test|validat|examination",
-    "e": r"specification|standard",
-    "f": r"data\s+(management|governance|quality|collection)|training\s+data",
-    "g": r"risk",
-    "h": r"post[\s-]*market|monitor|" + _CHAIN_LINE,
-    "i": r"incident|" + _CHAIN_LINE,
-    "j": r"authorit|regulator|communicat",
-    "k": r"record|log|retain|retention",
-    "l": r"resource|supply|staff|budget",
-    "m": r"accountab|responsib|owner",
-}
 
-# Minimal content markers for refs where bare file existence is not enough to
-# count as content-bearing evidence.
-_CONTENT_MARKERS: dict[str, _ContentSpec] = {
-    "risk_register": _ContentSpec(
-        patterns=(
-            re.compile(
-                r"risk[\s_-]*(identification|analysis|assessment)|identified\s+risks|hazard",
-                re.I,
-            ),
-            re.compile(r"mitigat|control\s+measure|treatment|residual\s+risk", re.I),
-        ),
-        found_label="risk identification + mitigation",
-        lacks_label="risk-identification and mitigation",
-        noun="risk register",
-    ),
-    # Heuristic keywords for Art. 13(3) topics. source: heuristic (no legal
-    # source); confidence: low; needs_founder_review: true (E-15).
-    "deployer_instructions": _ContentSpec(
-        patterns=(
-            re.compile(r"intended\s+purpose|instructions\s+for\s+use", re.I),
-            re.compile(
-                r"oversight|misuse|limitation|accuracy|maintenance|contact", re.I
-            ),
-        ),
-        found_label="Art. 13(3) topic markers",
-        lacks_label="Art. 13(3) topic",
-        noun="set of instructions for use",
-    ),
-    "technical_documentation_dossier": _ContentSpec(
-        patterns=(re.compile(r'"dossier_id"'), re.compile(r'"bundle_checksum"')),
-        found_label="dossier_id + bundle_checksum",
-        lacks_label="dossier_id and bundle_checksum",
-        noun="dossier",
-        note=(
-            " Presence of a dossier is not a conformity assessment; "
-            "Art. 11 is never reported Met by this probe."
-        ),
-    ),
-}
-for _letter, _ref, _title in QMS_17_1_CLAUSES:
-    _CONTENT_MARKERS[_ref] = _ContentSpec(
-        patterns=(re.compile(_QMS_CLAUSE_KEYWORDS[_letter], re.I),),
-        found_label=f"clause keyword in body text, {_title}",
-        lacks_label="clause-specific keyword and minimum body length",
-        noun="QMS clause document",
-        body_only=True,
-        forbid_scaffold=True,
+@dataclass(frozen=True)
+class _ClauseDocument:
+    """A clause-document probe: one document, one section per clause."""
+
+    noun: str
+    # clause id -> (title, marker regexes); every marker has to match the section.
+    clauses: dict[str, tuple[str, tuple[re.Pattern[str], ...]]]
+
+
+# Filled by _register_probe_files(); keyed by probe ref.
+_CLAUSE_DOCUMENTS: dict[str, _ClauseDocument] = {}
+
+# The probe definitions live in probes/eu_ai_act.json and probes/ai_security.json,
+# read by _register_probe_files(). Notes that sat on the literals:
+# - provenance entries marked heuristic: no legal source, low confidence, needs
+#   founder review (E-15); the Art. 17(1)(a)-(m) clause words are one
+#   case-insensitive pattern per clause, (h) and (i) also accept a signed-log line;
+# - the raw-text marker of a signed-log line is never JSON-parsed here;
+# - one plan file satisfies both the Art. 72 row and QMS clause (h);
+# - the ISO/IEC 27090 attack terms mirror the pack's threat headings, with
+#   "evasion" and "backdoor" needing a second word;
+# - library names are matched where used (import, directive), never as bare words;
+# - supply-chain pins: SBOM header, hash written as a key, or a hub revision
+#   pinned to a commit hash.
+
+
+def _register_probe_files(
+    files: Iterable[tuple[Path, str | None]] | None = None,
+) -> None:
+    """Add the probes declared in JSON files to the four tables.
+
+    A ref that is already registered is an error, never an override. The
+    default source is every shared and pack-local file."""
+    for path, prefix in iter_probe_files() if files is None else files:
+        parsed = parse_probe_file(path, prefix)
+        for ref in parsed:
+            if (
+                ref in _PROBE_PATTERNS
+                or ref in _CONTENT_MARKERS
+                or ref in _CODE_HINTS
+                or ref in PROBE_PROVENANCE
+                or ref in _CLAUSE_DOCUMENTS
+            ):
+                raise ValueError(f"{path}: probe ref {ref!r} is already registered")
+        for probe in parsed.values():
+            _add_probe(probe)
+
+
+def _add_probe(probe: ProbeDef) -> None:
+    _PROBE_PATTERNS[probe.ref] = probe.patterns
+    if probe.markers is not None:
+        m = probe.markers
+        _CONTENT_MARKERS[probe.ref] = _ContentSpec(
+            patterns=tuple(re.compile(p, flags_to_int(f)) for p, f in m["all"]),
+            found_label=m["found_label"],
+            lacks_label=m["lacks_label"],
+            noun=m["noun"],
+            body_only=m["body_only"],
+            forbid_scaffold=m["forbid_scaffold"],
+            note=m["note"],
+            select=m["select"],
+        )
+    if probe.code_hint is not None:
+        pattern, flags = probe.code_hint
+        _CODE_HINTS[probe.ref] = re.compile(pattern, flags_to_int(flags))
+    if probe.provenance is not None:
+        PROBE_PROVENANCE[probe.ref] = dict(probe.provenance)
+    if probe.clauses is not None:
+        _CLAUSE_DOCUMENTS[probe.ref] = _ClauseDocument(
+            noun=probe.noun or "",
+            clauses={
+                clause: (
+                    body["title"],
+                    tuple(re.compile(p, flags_to_int(f)) for p, f in body["markers"]),
+                )
+                for clause, body in probe.clauses.items()
+            },
+        )
+
+
+_register_probe_files()
+
+
+def registry_snapshot() -> dict:
+    """Every registered ref with its patterns, marker regexes as
+    [pattern, flags], the other content-spec fields, code hint and provenance."""
+    refs = (
+        set(_PROBE_PATTERNS)
+        | set(_CONTENT_MARKERS)
+        | set(_CODE_HINTS)
+        | set(PROBE_PROVENANCE)
+        | set(_CLAUSE_DOCUMENTS)
     )
-# One plan file satisfies both the Art. 72 row and QMS clause (h).
-_CONTENT_MARKERS["post_market_monitoring_plan"] = _CONTENT_MARKERS[
-    "provider_qms_17_1_h"
-]
-_CONTENT_MARKERS["serious_incident_log"] = _ContentSpec(
-    patterns=(re.compile(_CHAIN_LINE),),
-    found_label="a signed-log entry",
-    lacks_label="signed-log entry",
-    noun="incident log",
-)
+    out: dict[str, dict] = {}
+    for ref in sorted(refs):
+        spec = _CONTENT_MARKERS.get(ref)
+        hint = _CODE_HINTS.get(ref)
+        provenance = PROBE_PROVENANCE.get(ref)
+        out[ref] = {
+            "patterns": list(_PROBE_PATTERNS.get(ref, ())),
+            "markers": None
+            if spec is None
+            else {
+                "all": [[p.pattern, flags_to_letters(p.flags)] for p in spec.patterns],
+                "found_label": spec.found_label,
+                "lacks_label": spec.lacks_label,
+                "noun": spec.noun,
+                "body_only": spec.body_only,
+                "forbid_scaffold": spec.forbid_scaffold,
+                "select": spec.select,
+                "note": spec.note,
+            },
+            "code_hint": None
+            if hint is None
+            else [hint.pattern, flags_to_letters(hint.flags)],
+            "provenance": None if provenance is None else dict(provenance),
+        }
+        doc = _CLAUSE_DOCUMENTS.get(ref)
+        if doc is not None:
+            out[ref]["type"] = "clause_document"
+            out[ref]["noun"] = doc.noun
+            out[ref]["clauses"] = {
+                clause: {
+                    "title": title,
+                    "markers": [[p.pattern, flags_to_letters(p.flags)] for p in pats],
+                }
+                for clause, (title, pats) in doc.clauses.items()
+            }
+    return out
 
-# ISO/IEC 27090 supporting probes. source: heuristic (no legal source);
-# confidence: low; needs_founder_review: true (E-15). The words mirror the pack's
-# own threat headings; "evasion" and "backdoor" are ambiguous alone, so they need
-# a second word.
-_AI_ATTACK_TERMS = re.compile(
-    r"prompt[\s_-]*injection|jailbreak|(?:data|model)[\s_-]*poisoning"
-    r"|evasion\s+attack|adversarial\s+(?:example|input|prompt)"
-    r"|membership[\s_-]*inference|model[\s_-]*(?:inversion|extraction|exfiltration)"
-    r"|backdoor\s+attack|model\s+backdoor",
-    re.I,
-)
-_CONTENT_MARKERS["ai_threat_model"] = _ContentSpec(
-    patterns=(_AI_ATTACK_TERMS,),
-    found_label="an AI-specific attack term",
-    lacks_label="AI-specific attack term and minimum body length",
-    noun="threat model",
-    body_only=True,
-)
-_CONTENT_MARKERS["ai_red_team_report"] = _ContentSpec(
-    patterns=(
-        _AI_ATTACK_TERMS,
-        re.compile(
-            r"\b(?:findings?|results?|outcomes?|success\s+rate|vulnerabilit(?:y|ies)"
-            r"|bypass(?:ed|es)?|passed|failed)\b",
-            re.I,
-        ),
-    ),
-    found_label="an AI-specific attack term and a test-result marker",
-    lacks_label="AI-specific attack term, test-result marker and minimum body length",
-    noun="red-team report",
-    body_only=True,
-)
-# Library names are matched where they are used (an import, a directive), never as
-# bare words, so a README, a lock file or a vendored copy that merely names one does
-# not count.
-_CONTENT_MARKERS["rate_limiting_config"] = _ContentSpec(
-    patterns=(
-        re.compile(
-            r"\b(?:from|import)\s+(?:slowapi|fastapi_limiter|flask_limiter"
-            r"|django_ratelimit)\b"
-            r"|\b(?:require\s*\(|import\s*\(?|from)\s*[\"']"
-            r"(?:express-rate-limit|@fastify/rate-limit|rate-limiter-flexible)[\"']"
-            r"|^[ \t]*limit_(?:req|conn)(?:_zone)?[ \t]+(?:zone=|\$)"
-            r"|\benvoy\.filters\.http\.(?:local_)?ratelimit\b"
-            r"|\bDEFAULT_THROTTLE_RATES\b",
-            re.I | re.M,
-        ),
-    ),
-    found_label="a rate-limit library import or directive",
-    lacks_label="rate-limit library import or directive",
-    noun="rate-limit configuration",
-    select=True,
-)
-# SBOM header, a hash written as a key (DVC files, lock files), or a hub model
-# pinned to a commit hash. `revision="main"` or a tag is not a pin.
-_CONTENT_MARKERS["ai_supply_chain_pins"] = _ContentSpec(
-    patterns=(
-        re.compile(
-            r"\"(?:spdxVersion|bomFormat)\""
-            r"|\b(?:md5|sha1|sha256)\b[\"']?\s*[:=]\s*[\"']?[0-9a-f]{32,64}\b"
-            r"|\b(?:from_pretrained|hf_hub_download|snapshot_download)\([^)]*"
-            r"\brevision\s*=\s*[\"'][0-9a-f]{7,40}[\"']",
-            re.I,
-        ),
-    ),
-    found_label="an SBOM header, a hash pin or a hub revision pinned to a commit",
-    lacks_label="SBOM header, hash pin or pinned hub revision",
-    noun="supply-chain pin",
-    select=True,
-)
 
 # Never selected from: a Python environment's installed packages (its name varies).
 _VENDORED_DIR = "site-packages"
@@ -792,7 +467,238 @@ def _content_markers_met(
     return met, scaffold_hits
 
 
+_CLAUSE_ANCHOR = re.compile(r"^[ \t]*<!--\s*clause:\s*(.*?)\s*-->[ \t]*$")
+
+
+def split_clause_ref(ref: str) -> tuple[str, str | None]:
+    """(probe ref, clause id or None) of ``<ref>`` or ``<ref>#<clause>``.
+
+    A ``#`` on a ref that is not a clause document, or a clause the document
+    does not declare, raises ValueError."""
+    base, sep, clause = ref.partition("#")
+    if not sep:
+        return ref, None
+    doc = _CLAUSE_DOCUMENTS.get(base)
+    if doc is None:
+        raise ValueError(f"probe {base!r} is not a clause document: {ref!r}")
+    if clause not in doc.clauses:
+        raise ValueError(f"probe {base!r} has no clause {clause!r}")
+    return base, clause
+
+
+def probe_exists(ref: str) -> bool:
+    """True for a registered ref, and for ``<ref>#<clause>`` of a declared clause."""
+    try:
+        base, _ = split_clause_ref(ref)
+    except ValueError:
+        return False
+    return (
+        base in _PROBE_PATTERNS
+        or base in _CONTENT_MARKERS
+        or base in _CODE_HINTS
+        or base in PROBE_PROVENANCE
+        or base in _CLAUSE_DOCUMENTS
+    )
+
+
+@dataclass(frozen=True)
+class ClauseResult:
+    clause: str
+    title: str
+    state: str  # present | unfilled | missing | unverified
+    row: ArticleGapStatus
+
+
+def _clause_sections(text: str) -> dict[str, str]:
+    """Clause id -> section text (anchor line excluded); the first anchor of a
+    clause wins."""
+    sections: dict[str, list[str]] = {}
+    current: list[str] | None = None
+    for line in text.splitlines():
+        m = _CLAUSE_ANCHOR.match(line)
+        if m:
+            clause = m.group(1)
+            if clause in sections:
+                current = None
+            else:
+                current = sections[clause] = []
+            continue
+        if current is not None:
+            current.append(line)
+    return {clause: "\n".join(lines) for clause, lines in sections.items()}
+
+
+def _clause_state(
+    doc: _ClauseDocument, clause: str, sections: dict[str, str]
+) -> tuple[str, int]:
+    """(state, scaffold placeholders seen) of one clause."""
+    section = sections.get(clause)
+    if section is None:
+        return "missing", 0
+    placeholders = section.count(SCAFFOLD_PLACEHOLDER)
+    if placeholders:
+        return "unfilled", placeholders
+    if len(_body_text(section).split()) < _MIN_BODY_WORDS:
+        return "unfilled", 0
+    if all(marker.search(section) for marker in doc.clauses[clause][1]):
+        return "present", 0
+    return "unfilled", 0
+
+
+def _clause_document_path(ref: str, repo_root: Path) -> str | None:
+    paths = _match_patterns(repo_root, _PROBE_PATTERNS.get(ref, ()))
+    return sorted(paths)[0] if paths else None
+
+
+def _read_document(repo_root: Path, rel: str) -> str:
+    try:
+        candidate = repo_root / rel
+        if candidate.stat().st_size > 1_048_576:
+            return ""
+        return candidate.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+
+
+def _unverified_row(ref: str) -> ArticleGapStatus:
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.UNVERIFIED,
+        source=ArticleGapSource.ARTIFACT,
+        evidence_ref=ref,
+        rationale=(
+            f"Artifact probe '{ref}' not run (no repo root supplied). "
+            "Pass --repo-root to evaluate documentation/code conventions."
+        ),
+        confidence=None,
+        confidence_label=ConfidenceLabel.NOT_ASSESSED,
+    )
+
+
+def _missing_row(ref: str) -> ArticleGapStatus:
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.MISSING,
+        source=ArticleGapSource.ARTIFACT,
+        evidence_ref=ref,
+        rationale=(
+            f"No conventional documentation/code probe matched for '{ref}'. "
+            "Add the expected file or construct, then re-run gaps."
+        ),
+        confidence=0.4,
+        confidence_label=ConfidenceLabel.HEURISTIC_ESTIMATE,
+    )
+
+
+def _clause_row(
+    ref: str, clause: str, state: str, path: str, placeholders: int
+) -> ArticleGapStatus:
+    doc = _CLAUSE_DOCUMENTS[ref]
+    if state == "present":
+        rationale = (
+            f"Found '{path}' with clause '{clause}' holding content markers "
+            f"({doc.clauses[clause][0]}). "
+            "Heuristic only — not a full obligation assessment."
+        )
+        confidence = 0.6
+    elif state == "unfilled":
+        if placeholders:
+            rationale = (
+                f"Found '{path}' but clause '{clause}' still contains "
+                f"{placeholders} unfilled scaffold placeholder(s) "
+                f"('{SCAFFOLD_PLACEHOLDER}') — a scaffold is not a filled {doc.noun}."
+            )
+        else:
+            rationale = (
+                f"Found '{path}' but clause '{clause}' lacks content markers "
+                f"or body text — a bare or empty section is not a {doc.noun}."
+            )
+        confidence = 0.35
+    else:
+        rationale = (
+            f"Found '{path}' but it has no section for clause '{clause}' "
+            f"(expected a '<!-- clause: {clause} -->' line)."
+        )
+        confidence = 0.35
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.PARTIAL,
+        source=ArticleGapSource.ARTIFACT,
+        evidence_ref=path,
+        rationale=rationale,
+        confidence=confidence,
+        confidence_label=ConfidenceLabel.HEURISTIC_ESTIMATE,
+    )
+
+
+def _clause_row_for(
+    ref: str, clause: str, repo_root: Path | None
+) -> tuple[ArticleGapStatus, str]:
+    """(row, state) of one ``<ref>#<clause>``."""
+    full = f"{ref}#{clause}"
+    if repo_root is None:
+        return _unverified_row(full), "unverified"
+    rel = _clause_document_path(ref, repo_root)
+    if rel is None:
+        return _missing_row(full), "missing"
+    sections = _clause_sections(_read_document(repo_root, rel))
+    state, placeholders = _clause_state(_CLAUSE_DOCUMENTS[ref], clause, sections)
+    return _clause_row(ref, clause, state, rel, placeholders), state
+
+
+def clause_document_results(ref: str, repo_root: Path | None) -> list[ClauseResult]:
+    """One result per clause of a clause-document probe, in declared order."""
+    doc = _CLAUSE_DOCUMENTS.get(ref)
+    if doc is None:
+        raise ValueError(f"probe {ref!r} is not a clause document")
+    out = []
+    for clause, (title, _) in doc.clauses.items():
+        row, state = _clause_row_for(ref, clause, repo_root)
+        out.append(ClauseResult(clause, title, state, row))
+    return out
+
+
+def _bare_clause_row(ref: str, repo_root: Path | None) -> ArticleGapStatus:
+    if repo_root is None:
+        return _unverified_row(ref)
+    rel = _clause_document_path(ref, repo_root)
+    if rel is None:
+        return _missing_row(ref)
+    doc = _CLAUSE_DOCUMENTS[ref]
+    sections = _clause_sections(_read_document(repo_root, rel))
+    states = [_clause_state(doc, c, sections)[0] for c in doc.clauses]
+    present = states.count("present")
+    return ArticleGapStatus(
+        article="",
+        status=GapStatus.PARTIAL,
+        source=ArticleGapSource.ARTIFACT,
+        evidence_ref=rel,
+        rationale=(
+            f"Found candidate artifact '{rel}' for '{ref}'. "
+            "Heuristic only — not a full obligation assessment. "
+            f"Per-clause: {present} present / {states.count('unfilled')} unfilled / "
+            f"{states.count('missing')} missing (of {len(states)})."
+        ),
+        confidence=0.6 if present else 0.35,
+        confidence_label=ConfidenceLabel.HEURISTIC_ESTIMATE,
+    )
+
+
 def run_artifact_probe(ref: str, repo_root: Path | None) -> ProbeResult:
+    base, clause = split_clause_ref(ref)
+    if base in _CLAUSE_DOCUMENTS:
+        rel = None if repo_root is None else _clause_document_path(base, repo_root)
+        if repo_root is None or rel is None:
+            return ProbeResult(found_paths=[])
+        if clause is None:
+            return ProbeResult(found_paths=[rel])
+        sections = _clause_sections(_read_document(repo_root, rel))
+        state, placeholders = _clause_state(_CLAUSE_DOCUMENTS[base], clause, sections)
+        return ProbeResult(
+            found_paths=[rel],
+            content_markers_met=state == "present",
+            scaffold_hits=placeholders,
+        )
     patterns = _PROBE_PATTERNS.get(ref, ())
     if repo_root is None or not patterns:
         return ProbeResult(found_paths=[])
@@ -817,6 +723,11 @@ def _probe_row(
     ref: str, repo_root: Path | None, result: ProbeResult | None = None
 ) -> ArticleGapStatus:
     """Map a probe ref to an honest gap row (reuses ``result`` when given)."""
+    base, clause = split_clause_ref(ref)
+    if base in _CLAUSE_DOCUMENTS:
+        if clause is None:
+            return _bare_clause_row(ref, repo_root)
+        return _clause_row_for(base, clause, repo_root)[0]
     if repo_root is None:
         return ArticleGapStatus(
             article="",
@@ -997,14 +908,37 @@ def supporting_gap_status(ref: str, repo_root: Path | None) -> ArticleGapStatus 
     nothing, or only an empty or off-topic file, must change nothing; `build_gap_report`
     applies the row.
     """
+    base, clause = split_clause_ref(ref)
     if repo_root is None:
         return None
     result = run_artifact_probe(ref, repo_root)
+    if base in _CLAUSE_DOCUMENTS:
+        if not result.found_paths:
+            return None
+        if clause is not None and not result.content_markers_met:
+            return None
+        return _probe_row(ref, repo_root, result)
     if not (result.found_paths or result.code_hits):
         return None
     if result.content_markers_met is False:
         return None
     return _probe_row(ref, repo_root, result)
+
+
+def corroboration_status(
+    ref: str, repo_root: Path | None
+) -> tuple[ArticleGapStatus, bool] | None:
+    """The probe's row for a ``"role": "corroborating"`` artifact source.
+
+    Returns ``(row, evidenced)``; `evidenced` is true when the content markers
+    hold. None without a repo root (the probe did not run). `ref` may be
+    ``<ref>#<clause>``. `build_gap_report` composes the row with an attestation.
+    """
+    if repo_root is None:
+        return None
+    result = run_artifact_probe(ref, repo_root)
+    row = _probe_row(ref, repo_root, result)
+    return row, result.content_markers_met is True
 
 
 def qms_article_17_clause_statuses(

@@ -1,0 +1,6 @@
+# Gate example for NIS2.
+# A framework row that is Missing fails `opencomplai check` with exit 1.
+# Copy this file to the repository root as opencomplai.yaml.
+gate:
+  frameworks: [NIS2]
+  fail_on: missing

@@ -1,0 +1,55 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "EBA": [
+      "EBA:GL/2019/02 Section 10",
+      "EBA:GL/2019/02 Section 12.1",
+      "EBA:GL/2019/02 Section 12.2",
+      "EBA:GL/2019/02 Section 12.3",
+      "EBA:GL/2019/02 Section 13.1",
+      "EBA:GL/2019/02 Section 13.2",
+      "EBA:GL/2019/02 Section 14",
+      "EBA:GL/2019/02 Section 3",
+      "EBA:GL/2019/02 Section 4",
+      "EBA:GL/2019/02 Section 5",
+      "EBA:GL/2019/02 Section 6",
+      "EBA:GL/2019/02 Section 7",
+      "EBA:GL/2019/02 Section 8",
+      "EBA:GL/2019/02 Section 9",
+      "EBA:GL/2019/04 3.8",
+      "EBA:GL/2020/06 4.3",
+      "EBA:GL/2020/06 4.3.3",
+      "EBA:GL/2020/06 5.1"
+    ]
+  },
+  "mixed_attestable": {
+    "EBA": [
+      "EBA:GL/2019/02 Section 11",
+      "EBA:GL/2019/02 Section 13",
+      "EBA:GL/2019/02 Section 13.3",
+      "EBA:GL/2019/02 Section 13.4",
+      "EBA:GL/2019/02 Section 15",
+      "EBA:GL/2020/06 4.3.4",
+      "EBA:GL/2020/06 4.3.7"
+    ]
+  },
+  "records": [],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": []
+}

@@ -1,0 +1,37 @@
+{
+  "default": "applies",
+  "questions": [
+    {
+      "key": "supervised_institution",
+      "text": "Is the organisation a credit institution, investment firm, payment or e-money institution in the EU?",
+      "false_means": "not a supervised institution"
+    },
+    {
+      "key": "supplier_to_supervised_institution",
+      "text": "Does it supply services to such an institution?",
+      "false_means": "no supervised customers"
+    },
+    {
+      "key": "grants_credit",
+      "text": "Does it grant or assess credit?",
+      "false_means": "no lending"
+    },
+    {
+      "key": "provides_payment_services",
+      "text": "Does it provide payment services?",
+      "false_means": "no payment services"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "supervised_institution": false, "supplier_to_supervised_institution": true },
+      "outcome": "voluntary",
+      "reason": "Institutions pass outsourcing terms on to their providers."
+    },
+    {
+      "when": { "supervised_institution": false },
+      "outcome": "not_applicable",
+      "reason": "The guidelines address supervised institutions. Confirm with your adviser."
+    }
+  ]
+}

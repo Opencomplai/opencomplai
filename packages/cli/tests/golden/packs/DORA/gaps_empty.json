@@ -1,0 +1,749 @@
+{
+  "schema_version": "1.0",
+  "tool_name": "opencomplai",
+  "tool_version": "<VERSION>",
+  "disclaimer": "OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.",
+  "generated_at": "<TIMESTAMP>",
+  "scan_errors": [],
+  "payload": {
+    "system_id": "pack-golden-sys",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'payment processing for Example Ltd customers' does not match any Annex III high-risk categories.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "risk_register",
+        "rationale": "No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_instructions",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "human_oversight_construct",
+        "rationale": "No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": {
+      "principles": [
+        {
+          "principle_id": "technical_robustness_safety",
+          "title": "Technical Robustness and Safety",
+          "status": "missing",
+          "articles": [
+            "Art. 15",
+            "Art. 25",
+            "Art. 72"
+          ]
+        },
+        {
+          "principle_id": "privacy_data_governance",
+          "title": "Privacy and Data Governance",
+          "status": "unverified",
+          "articles": [
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "transparency",
+          "title": "Transparency",
+          "status": "missing",
+          "articles": [
+            "Art. 12",
+            "Art. 13",
+            "Art. 49",
+            "Art. 50"
+          ]
+        },
+        {
+          "principle_id": "diversity_non_discrimination_fairness",
+          "title": "Diversity, Non-discrimination and Fairness",
+          "status": "unverified",
+          "articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "societal_environmental_wellbeing",
+          "title": "Societal and Environmental Wellbeing",
+          "status": "unverified",
+          "articles": [
+            "Art. 5"
+          ]
+        },
+        {
+          "principle_id": "accountability",
+          "title": "Accountability",
+          "status": "missing",
+          "articles": [
+            "Art. 4",
+            "Art. 9",
+            "Art. 11",
+            "Art. 14",
+            "Art. 16",
+            "Art. 17",
+            "Art. 20",
+            "Art. 24",
+            "Art. 26",
+            "Art. 43",
+            "Art. 53",
+            "Art. 55",
+            "Art. 73"
+          ]
+        }
+      ]
+    },
+    "frameworks": {
+      "DORA": {
+        "framework": "DORA",
+        "label": "DORA Regulation (EU) 2022/2554 digital operational resilience (evaluated, not an audit, certification or legal assessment)",
+        "data_version": "902b68f502ca",
+        "derived_from": null,
+        "disclaimer_ref": "DISCLAIMER_V2",
+        "gated": false,
+        "excluded": {
+          "DORA:Art. 16": "Not applicable: the manifest's scope says the system full framework applies (framework_inputs.DORA.scope.simplified_regime = false)."
+        },
+        "applicability": {
+          "outcome": "applies",
+          "reason": ""
+        },
+        "report": {
+          "system_id": "pack-golden-sys",
+          "commit_ref": "HEAD",
+          "generated_at": "<TIMESTAMP>",
+          "articles": [
+            {
+              "article": "DORA:Art. 5(1)-(2)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 5(3)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 5(4)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 6(1)-(3)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "policy_information_security",
+              "rationale": "No conventional documentation/code probe matched for 'policy_information_security'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 6(4)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 6(5)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "management_review_minutes",
+              "rationale": "No conventional documentation/code probe matched for 'management_review_minutes'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 6(6)-(7)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "internal_audit_report",
+              "rationale": "No conventional documentation/code probe matched for 'internal_audit_report'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 6(8)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 7",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 8",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 9",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "policy_access_control",
+              "rationale": "No conventional documentation/code probe matched for 'policy_access_control'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 10",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "event_log_evidence",
+              "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 11",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "continuity_plan",
+              "rationale": "No conventional documentation/code probe matched for 'continuity_plan'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 12",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "policy_backup",
+              "rationale": "No conventional documentation/code probe matched for 'policy_backup'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 13",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "corrective_action_log",
+              "rationale": "No conventional documentation/code probe matched for 'corrective_action_log'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 14",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "incident_notification_template",
+              "rationale": "No conventional documentation/code probe matched for 'incident_notification_template'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 17",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "incident_response_plan",
+              "rationale": "No conventional documentation/code probe matched for 'incident_response_plan'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 18",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "dora.incident_report#classification",
+              "rationale": "No conventional documentation/code probe matched for 'dora.incident_report#classification'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 19(1), (4)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "dora.incident_report#initial-notification",
+              "rationale": "No conventional documentation/code probe matched for 'dora.incident_report#initial-notification'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 19(3)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "dora.incident_report#client-information",
+              "rationale": "No conventional documentation/code probe matched for 'dora.incident_report#client-information'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 24",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "ai_red_team_report",
+              "rationale": "No conventional documentation/code probe matched for 'ai_red_team_report'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 25",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "ai_red_team_report",
+              "rationale": "No conventional documentation/code probe matched for 'ai_red_team_report'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 26",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 27",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 28(1)",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 28(2)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "policy_supplier",
+              "rationale": "No conventional documentation/code probe matched for 'policy_supplier'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(3)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "dora.register_of_information",
+              "rationale": "No conventional documentation/code probe matched for 'dora.register_of_information'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(4)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "vendor_register",
+              "rationale": "No conventional documentation/code probe matched for 'vendor_register'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(5)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "contract_checklist",
+              "rationale": "No conventional documentation/code probe matched for 'contract_checklist'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(6)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "contract_checklist",
+              "rationale": "No conventional documentation/code probe matched for 'contract_checklist'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(7)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "contract_checklist",
+              "rationale": "No conventional documentation/code probe matched for 'contract_checklist'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 28(8)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "exit_plan",
+              "rationale": "No conventional documentation/code probe matched for 'exit_plan'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 29",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "DORA:Art. 30(1)-(2)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "contract_checklist",
+              "rationale": "No conventional documentation/code probe matched for 'contract_checklist'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 30(3)",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "contract_checklist",
+              "rationale": "No conventional documentation/code probe matched for 'contract_checklist'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "DORA:Art. 45",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.DORA.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            }
+          ],
+          "evidence_hashes": [],
+          "principle_summary": null
+        }
+      }
+    }
+  }
+}

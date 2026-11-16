@@ -1,0 +1,221 @@
+
+Cyber Resilience Act Regulation (EU) 2024/2847 (evaluated, not an audit, certification or legal assessment) — example-ltd-cra
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement               ┃ Title                                         ┃ Status     ┃ Source      ┃ Evidence                                      ┃ Rationale                                     ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CRA:Art. 13(2)            │ Cybersecurity risk assessment                 │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(3)            │ Documented, updated risk assessment           │ MISSING    │ artifact    │ cra.technical_documentation#3                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#3'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 13(5)            │ Due diligence on third-party components       │ MISSING    │ artifact    │ sbom_file                                     │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'sbom_file'. Add the expected     │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Art. 13(6)            │ Component flaws reported upstream and fixed   │ MISSING    │ artifact    │ vulnerability_handling_policy                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'vulnerability_handling_policy'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 13(7)            │ Systematic cybersecurity documentation        │ MISSING    │ artifact    │ cra.technical_documentation#2                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#2'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 13(8)            │ Support period and vulnerability handling     │ MISSING    │ artifact    │ cra.support_period_statement                  │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.support_period_statement'.   │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 13(9)            │ Security updates kept available               │ MISSING    │ artifact    │ update_mechanism_note                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'update_mechanism_note'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(12)           │ Documentation, assessment, declaration and CE │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │ mark                                          │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(13)           │ Documentation kept for 10 years               │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(14)           │ Conformity across series production           │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(15)           │ Product identification number                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(16)           │ Manufacturer contact details on product       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(17)           │ Single point of contact                       │ MISSING    │ artifact    │ security_policy_file                          │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'security_policy_file'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(18)           │ User information and instructions supplied    │ MISSING    │ artifact    │ cra.user_information#8                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#8'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(19)           │ Support period end date stated                │ MISSING    │ artifact    │ cra.support_period_statement                  │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.support_period_statement'.   │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 13(20)           │ Declaration of conformity supplied            │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(21)           │ Corrective action, withdrawal or recall       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(22)           │ Cooperation with market surveillance          │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(23)           │ Notice before ceasing operations              │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 14(1)            │ Actively exploited vulnerability reporting    │ MISSING    │ artifact    │ cra.vulnerability_notification_record#early-… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#early… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(3)            │ Severe incident reporting                     │ MISSING    │ artifact    │ cra.vulnerability_notification_record#notifi… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#notif… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(8)            │ Users informed of exploited flaws and         │ MISSING    │ artifact    │ cra.vulnerability_notification_record#user-i… │ No conventional documentation/code probe      │
+│                           │ incidents                                     │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#user-… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 28               │ EU declaration of conformity                  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 30               │ CE marking                                    │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (1)    │ Risk-based level of cybersecurity by design   │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(a) │ No known exploitable vulnerabilities at       │ MISSING    │ artifact    │ sast_config                                   │ No conventional documentation/code probe      │
+│                           │ release                                       │            │             │                                               │ matched for 'sast_config'. Add the expected   │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Annex I Part I (2)(b) │ Secure by default configuration               │ MISSING    │ artifact    │ secure_defaults_config                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'secure_defaults_config'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(c) │ Vulnerabilities fixable by security updates   │ MISSING    │ artifact    │ update_mechanism_note                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'update_mechanism_note'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(d) │ Protection from unauthorised access           │ MISSING    │ artifact    │ policy_access_control                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'policy_access_control'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(e) │ Confidentiality of data                       │ MISSING    │ artifact    │ policy_cryptography                           │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'policy_cryptography'. Add the    │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(f) │ Integrity of data, commands and programs      │ MISSING    │ artifact    │ signed_release_config                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'signed_release_config'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(g) │ Data minimisation                             │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(h) │ Availability of essential functions           │ MISSING    │ artifact    │ rate_limiting_config                          │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'rate_limiting_config'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(i) │ Limited impact on other devices and networks  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(j) │ Limited attack surface                        │ MISSING    │ artifact    │ iac_definitions                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'iac_definitions'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(k) │ Exploitation mitigation                       │ MISSING    │ artifact    │ sast_config                                   │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'sast_config'. Add the expected   │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Annex I Part I (2)(l) │ Security logging and monitoring               │ MISSING    │ artifact    │ event_log_evidence                            │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'event_log_evidence'. Add the     │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(m) │ Secure permanent data removal                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part II (1)   │ Vulnerabilities and components documented,    │ MISSING    │ artifact    │ ai_supply_chain_pins                          │ No conventional documentation/code probe      │
+│                           │ SBOM                                          │            │             │                                               │ matched for 'ai_supply_chain_pins'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (2)   │ Vulnerabilities remediated without delay      │ MISSING    │ artifact    │ vulnerability_handling_policy                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'vulnerability_handling_policy'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex I Part II (3)   │ Regular security tests and reviews            │ MISSING    │ artifact    │ ci_test_workflow                              │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ci_test_workflow'. Add the       │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (4)   │ Public disclosure of fixed vulnerabilities    │ MISSING    │ artifact    │ vulnerability_handling_policy                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'vulnerability_handling_policy'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex I Part II (5)   │ Coordinated vulnerability disclosure policy   │ MISSING    │ artifact    │ vulnerability_handling_policy                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'vulnerability_handling_policy'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex I Part II (6)   │ Vulnerability information sharing and contact │ MISSING    │ artifact    │ security_policy_file                          │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'security_policy_file'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (7)   │ Secure distribution of updates                │ MISSING    │ artifact    │ signed_release_config                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'signed_release_config'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (8)   │ Updates disseminated without delay            │ MISSING    │ artifact    │ update_mechanism_note                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'update_mechanism_note'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (1)          │ Manufacturer identity and contact             │ MISSING    │ artifact    │ cra.user_information#1                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#1'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (2)          │ Vulnerability reporting contact               │ MISSING    │ artifact    │ cra.user_information#2                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#2'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (3)          │ Product identification                        │ MISSING    │ artifact    │ cra.user_information#3                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#3'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (4)          │ Intended purpose and security properties      │ MISSING    │ artifact    │ cra.user_information#4                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#4'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (5)          │ Known risk circumstances and foreseeable      │ MISSING    │ artifact    │ cra.user_information#5                        │ No conventional documentation/code probe      │
+│                           │ misuse                                        │            │             │                                               │ matched for 'cra.user_information#5'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (6)          │ Web address of declaration of conformity      │ MISSING    │ artifact    │ cra.user_information#6                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#6'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (7)          │ Security support offered and end date         │ MISSING    │ artifact    │ cra.user_information#7                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#7'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (8)          │ Instructions for secure use through to        │ MISSING    │ artifact    │ cra.user_information#8                        │ No conventional documentation/code probe      │
+│                           │ decommissioning                               │            │             │                                               │ matched for 'cra.user_information#8'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex II (9)          │ Location of the SBOM if offered               │ MISSING    │ artifact    │ cra.user_information#9                        │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.user_information#9'. Add the │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex VII (1)         │ General description of the product            │ MISSING    │ artifact    │ cra.technical_documentation#1                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#1'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (2)         │ Design, development, production,              │ MISSING    │ artifact    │ cra.technical_documentation#2                 │ No conventional documentation/code probe      │
+│                           │ vulnerability handling                        │            │             │                                               │ matched for 'cra.technical_documentation#2'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (3)         │ Cybersecurity risk assessment in the file     │ MISSING    │ artifact    │ cra.technical_documentation#3                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#3'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (4)         │ Basis for the support period                  │ MISSING    │ artifact    │ cra.technical_documentation#4                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#4'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (5)         │ Standards and solutions applied               │ MISSING    │ artifact    │ cra.technical_documentation#5                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#5'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (6)         │ Test reports                                  │ MISSING    │ artifact    │ cra.technical_documentation#6                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#6'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (7)         │ Copy of the declaration of conformity         │ MISSING    │ artifact    │ cra.technical_documentation#7                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#7'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Annex VII (8)         │ SBOM available on authority request           │ MISSING    │ artifact    │ cra.technical_documentation#8                 │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'cra.technical_documentation#8'.  │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+└───────────────────────────┴───────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────────────┴───────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

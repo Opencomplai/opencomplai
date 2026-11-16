@@ -171,7 +171,7 @@ Framework glue (`APIRouter`, `ASGITransport`, `Depends`, `TestClient`) and other
 
 ### Scan scope
 
-For production assessments, point `--repo-root` at your deployed service (for example `dashboard-saas/`) rather than the entire monorepo. Add demo paths such as `examples/` to [`.ocignore`](#ocignore) so sample fixtures do not affect your system's results. Set `intended_purpose` in `system-manifest.json` to describe **your** system — not a sample credit-scoring manifest.
+For production assessments, point `--repo-root` at your deployed service (for example `services/api/`) rather than the entire monorepo. Add demo paths such as `examples/` to [`.ocignore`](#ocignore) so sample fixtures do not affect your system's results. Set `intended_purpose` in `system-manifest.json` to describe **your** system — not a sample credit-scoring manifest.
 
 A file's scope is decided by whole tokens of its path, split on `/`, `_`, `-` and `.`. A path
 with a token such as `tests`, `test`, `docs`, `dev`, `vendor` or `generated` is non-production, so
@@ -184,7 +184,7 @@ findings for the same input can differ from earlier versions.
 
 | Flag | Effect |
 |---|---|
-| `--ai-intent` | Gated EU AI Act scan (default v2 behavior) |
+| `--ai-intent` | Gated EU AI Act scan (off unless passed; from 0.16.0 uses `codebert-onnx` unless `--ai-model` or a saved default says otherwise) |
 | `--ai-verbose` | Show detailed per-callsite appendix in Section 1 |
 | `--ai-deep` | Skip file-level pre-filter; callsite gate still applies |
 | `--ai-legacy` | Restore pre-v2 behavior: all callsites + old `AI Intent Analysis` block |
@@ -262,7 +262,7 @@ These three dimensions are combined into a per-callsite `eu_obligation` list. Fo
 | `mistral-7b` | 4.1 GB | Apache-2.0 | llama-cpp | `[deep]` |
 | `saas` | — | — | http | — |
 
-The default model is `qwen2.5-coder-1.5b` (GGUF, requires `[deep]` and a one-time model download); without `[deep]`, `--ai-intent` prints `AI intent skipped` and the scan continues without it. `codebert-onnx` is a deterministic code-signal matcher, not a neural model: it classifies callsites by matching them against the built-in Annex III, prohibited-practice and limited-risk signal lists, so it runs on any CPU with the base install, no llama-cpp, no download and no ONNX Runtime. The `codebert-onnx` id is kept for compatibility with existing configs and annotations; no CodeBERT model is loaded. To use it:
+From 0.16.0 the default model is `codebert-onnx` (0.15.0 and earlier default to `qwen2.5-coder-1.5b`). It is a deterministic code-signal matcher, not a neural model: it classifies callsites by matching them against the built-in Annex III, prohibited-practice and limited-risk signal lists, so it runs on any CPU with the base install, no llama-cpp, no download and no ONNX Runtime. The `codebert-onnx` id is kept for compatibility with existing configs and annotations; no CodeBERT model is loaded. The GGUF models, such as `qwen2.5-coder-1.5b`, are opt-in through `--ai-model` or `opencomplai ai configure`; they need `[deep]` and a one-time model download, and without `[deep]` those scans print `AI intent skipped` and continue without the intent analysis. A model you saved with `opencomplai ai configure` still wins over the default. To save the deterministic matcher as your default on any release:
 
 === "macOS / Linux"
     ```bash

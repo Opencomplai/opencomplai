@@ -1,0 +1,14 @@
+{
+  "system_description": {
+    "title": "System description",
+    "target": "docs/assurance/system-description.md",
+    "probe": "soc_2.system_description",
+    "file": "system_description.md"
+  },
+  "control_matrix": {
+    "title": "Control matrix",
+    "target": "docs/assurance/control-matrix.md",
+    "probe": "soc_2.control_matrix",
+    "file": "control_matrix.md"
+  }
+}

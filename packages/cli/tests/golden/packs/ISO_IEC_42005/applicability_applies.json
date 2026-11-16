@@ -1,0 +1,9 @@
+{
+  "framework": "ISO_IEC_42005",
+  "outcome": "applies",
+  "reason": "A contract or policy commits the organisation to this framework.",
+  "scope": {
+    "contract_commitment": true
+  },
+  "scoped_out": {}
+}

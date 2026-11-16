@@ -1,0 +1,9 @@
+{
+  "entries": [
+    {
+      "id": "INC-1",
+      "summary": "Ranking tool returned stale scores for one hour",
+      "prev_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}

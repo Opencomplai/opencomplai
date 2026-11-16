@@ -29,6 +29,7 @@ from opencomplai_core.agent_attestation import (
     key_id_for_public_pem,
     public_pem_for_private_pem,
 )
+from opencomplai_core.frameworks import EU_AI_ACT
 from opencomplai_core.models import (
     ArticleGapSource,
     ConfidenceLabel,
@@ -60,6 +61,7 @@ _CSV_HEADER = (
     "signed",
     "verdict",
 )
+_CSV_PACK_COLUMNS = ("framework", "evidence_class", "corroborated")
 SIGNED_NOTE = (
     "The public key must come from the signer, never from this package. "
     "The package is signed in package_signature; the embedded artifact carries "
@@ -101,6 +103,23 @@ class PackageArticle(_Strict):
     evidence_ref: str
     confidence: float | None
     confidence_label: ConfidenceLabel
+
+
+class PackageFrameworkRow(_Strict):
+    id: str
+    status: GapStatus
+    source: ArticleGapSource
+    evidence_ref: str
+    evidence_class: Literal["machine", "hybrid", "organisational"] | None
+    corroborated: bool | None
+
+
+class PackageFramework(_Strict):
+    framework: str
+    label: str
+    data_version: str
+    rows: list[PackageFrameworkRow]
+    excluded: dict[str, str]
 
 
 class PackageVerification(_Strict):
@@ -146,6 +165,9 @@ class EvidencePackage(_Strict):
     # False when the artifact had no gap report (``articles`` is then empty).
     # Omitted from the serialised package when True, so absent means True.
     gaps_included: bool = True
+    # One entry per non-EU framework in the artifact; omitted when None, so an
+    # EU-only package keeps its old bytes (and its signature).
+    frameworks: list[PackageFramework] | None = None
     evidence_hashes: list[str]
     verification: PackageVerification
     artifact: dict[str, Any]
@@ -160,13 +182,42 @@ class EvidencePackage(_Strict):
         return omit_by_table(
             self,
             handler(self),
-            {"gaps_included": OMIT_DEFAULT, "package_signature": OMIT_NONE},
+            {
+                "gaps_included": OMIT_DEFAULT,
+                "frameworks": OMIT_NONE,
+                "package_signature": OMIT_NONE,
+            },
         )
 
 
 def _opt(raw: dict[str, Any], key: str, kind: type) -> Any:
     value = raw.get(key)
     return value if isinstance(value, kind) else None
+
+
+def _package_frameworks(model: ScanStatusArtifact) -> list[PackageFramework] | None:
+    found = [
+        PackageFramework(
+            framework=fr.framework,
+            label=fr.label,
+            data_version=fr.data_version,
+            rows=[
+                PackageFrameworkRow(
+                    id=row.article,
+                    status=row.status,
+                    source=row.source,
+                    evidence_ref=row.evidence_ref,
+                    evidence_class=row.evidence_class,
+                    corroborated=row.corroborated,
+                )
+                for row in fr.report.articles
+            ],
+            excluded=dict(fr.excluded),
+        )
+        for key, fr in (model.framework_reports or {}).items()
+        if key != EU_AI_ACT
+    ]
+    return found or None
 
 
 def build_evidence_package(artifact: dict[str, Any]) -> EvidencePackage:
@@ -215,6 +266,7 @@ def build_evidence_package(artifact: dict[str, Any]) -> EvidencePackage:
             for a in (gaps.articles if gaps is not None else [])
         ],
         gaps_included=gaps is not None,
+        frameworks=_package_frameworks(model),
         evidence_hashes=list(model.evidence_hashes),
         verification=PackageVerification(signed=bool(model.signature)),
         artifact=copy.deepcopy(artifact),
@@ -296,10 +348,13 @@ def _cell(value: object) -> str:
 
 
 def package_to_csv(pkg: EvidencePackage) -> str:
-    """One row per article, LF line endings, formula-guarded cells."""
+    """One row per article, LF line endings, formula-guarded cells. A package
+    with framework rows adds the columns framework, evidence_class and
+    corroborated, and one row per pack row."""
     buf = io.StringIO()
     writer = csv.writer(buf, lineterminator="\n")
-    writer.writerow(_CSV_HEADER)
+    extra = pkg.frameworks is not None
+    writer.writerow(_CSV_HEADER + (_CSV_PACK_COLUMNS if extra else ()))
     for a in pkg.articles:
         writer.writerow(
             _cell(v)
@@ -317,6 +372,30 @@ def package_to_csv(pkg: EvidencePackage) -> str:
                 pkg.identity.tree_dirty,
                 pkg.verification.signed,
                 pkg.verdict.result,
+                *(("", "", "") if extra else ()),
             )
         )
+    for fw in pkg.frameworks or []:
+        for r in fw.rows:
+            writer.writerow(
+                _cell(v)
+                for v in (
+                    pkg.identity.system_id,
+                    pkg.identity.commit_ref,
+                    pkg.provenance.rule_set_version,
+                    r.id,
+                    r.status,
+                    r.source,
+                    r.evidence_ref,
+                    None,
+                    None,
+                    pkg.identity.tree_sha256,
+                    pkg.identity.tree_dirty,
+                    pkg.verification.signed,
+                    pkg.verdict.result,
+                    fw.framework,
+                    r.evidence_class,
+                    r.corroborated,
+                )
+            )
     return buf.getvalue()

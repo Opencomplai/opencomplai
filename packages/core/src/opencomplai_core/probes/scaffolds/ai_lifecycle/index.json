@@ -1,0 +1,18 @@
+{
+  "model_card": {
+    "title": "Model card",
+    "target": "MODEL_CARD.md"
+  },
+  "data_provenance_sheet": {
+    "title": "Data provenance sheet",
+    "target": "docs/data-provenance.md"
+  },
+  "evaluation_evidence": {
+    "title": "Evaluation report",
+    "target": "docs/evaluation-report.md"
+  },
+  "ai_impact_assessment": {
+    "title": "AI impact assessment",
+    "target": "AI_IMPACT_ASSESSMENT.md"
+  }
+}

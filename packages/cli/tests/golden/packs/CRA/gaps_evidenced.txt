@@ -1,0 +1,290 @@
+
+Cyber Resilience Act Regulation (EU) 2024/2847 (evaluated, not an audit, certification or legal assessment) — example-ltd-cra
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement               ┃ Title                                         ┃ Status     ┃ Source      ┃ Evidence                                      ┃ Rationale                                     ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CRA:Art. 13(2)            │ Cybersecurity risk assessment                 │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(3)            │ Documented, updated risk assessment           │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '3' holding content markers            │
+│                           │                                               │            │             │                                               │ (Cybersecurity risk assessment). Heuristic    │
+│                           │                                               │            │             │                                               │ only — not a full obligation assessment.      │
+│ CRA:Art. 13(5)            │ Due diligence on third-party components       │ PARTIAL    │ artifact    │ sbom.json                                     │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'sbom_file' (1 path(s), 0 code hint(s)) with  │
+│                           │                                               │            │             │                                               │ content markers found (an SPDX or CycloneDX   │
+│                           │                                               │            │             │                                               │ header key). Heuristic only — not a full      │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Art. 13(6)            │ Component flaws reported upstream and fixed   │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'vulnerability_handling_policy' (1 path(s), 0 │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found      │
+│                           │                                               │            │             │                                               │ (triage or severity, fix or patch, and a time │
+│                           │                                               │            │             │                                               │ limit). Heuristic only — not a full           │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Art. 13(7)            │ Systematic cybersecurity documentation        │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '2' holding content markers (Design,   │
+│                           │                                               │            │             │                                               │ development and vulnerability handling).      │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Art. 13(8)            │ Support period and vulnerability handling     │ PARTIAL    │ artifact    │ SUPPORT.md                                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'cra.support_period_statement' (1 path(s), 0  │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found (a   │
+│                           │                                               │            │             │                                               │ support period, an end date or duration and   │
+│                           │                                               │            │             │                                               │ security updates). Heuristic only — not a     │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+│ CRA:Art. 13(9)            │ Security updates kept available               │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'update_mechanism_note' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (update   │
+│                           │                                               │            │             │                                               │ or patch, how users get it, and a support     │
+│                           │                                               │            │             │                                               │ period). Heuristic only — not a full          │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Art. 13(12)           │ Documentation, assessment, declaration and CE │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │ mark                                          │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(13)           │ Documentation kept for 10 years               │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(14)           │ Conformity across series production           │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(15)           │ Product identification number                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(16)           │ Manufacturer contact details on product       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(17)           │ Single point of contact                       │ PARTIAL    │ artifact    │ SECURITY.md                                   │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'security_policy_file' (1 path(s), 0 code     │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a        │
+│                           │                                               │            │             │                                               │ how-to-report section and a contact or        │
+│                           │                                               │            │             │                                               │ advisory link). Heuristic only — not a full   │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Art. 13(18)           │ User information and instructions supplied    │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '8' holding content markers (Secure    │
+│                           │                                               │            │             │                                               │ use from set-up to decommissioning).          │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Art. 13(19)           │ Support period end date stated                │ PARTIAL    │ artifact    │ SUPPORT.md                                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'cra.support_period_statement' (1 path(s), 0  │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found (a   │
+│                           │                                               │            │             │                                               │ support period, an end date or duration and   │
+│                           │                                               │            │             │                                               │ security updates). Heuristic only — not a     │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+│ CRA:Art. 13(20)           │ Declaration of conformity supplied            │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(21)           │ Corrective action, withdrawal or recall       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(22)           │ Cooperation with market surveillance          │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(23)           │ Notice before ceasing operations              │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 14(1)            │ Actively exploited vulnerability reporting    │ MISSING    │ artifact    │ cra.vulnerability_notification_record#early-… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#early… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(3)            │ Severe incident reporting                     │ MISSING    │ artifact    │ cra.vulnerability_notification_record#notifi… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#notif… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(8)            │ Users informed of exploited flaws and         │ MISSING    │ artifact    │ cra.vulnerability_notification_record#user-i… │ No conventional documentation/code probe      │
+│                           │ incidents                                     │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#user-… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 28               │ EU declaration of conformity                  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 30               │ CE marking                                    │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (1)    │ Risk-based level of cybersecurity by design   │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(a) │ No known exploitable vulnerabilities at       │ PARTIAL    │ artifact    │ .github/workflows/sast.yml                    │ Found candidate artifact/signal for           │
+│                           │ release                                       │            │             │                                               │ 'sast_config' (1 path(s), 0 code hint(s))     │
+│                           │                                               │            │             │                                               │ with content markers found (a static-analysis │
+│                           │                                               │            │             │                                               │ tool name). Heuristic only — not a full       │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part I (2)(b) │ Secure by default configuration               │ PARTIAL    │ artifact    │ HARDENING.md                                  │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'secure_defaults_config' (1 path(s), 0 code   │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a        │
+│                           │                                               │            │             │                                               │ default and what is off or required out of    │
+│                           │                                               │            │             │                                               │ the box). Heuristic only — not a full         │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part I (2)(c) │ Vulnerabilities fixable by security updates   │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'update_mechanism_note' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (update   │
+│                           │                                               │            │             │                                               │ or patch, how users get it, and a support     │
+│                           │                                               │            │             │                                               │ period). Heuristic only — not a full          │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part I (2)(d) │ Protection from unauthorised access           │ PARTIAL    │ artifact    │ docs/policies/access-control.md               │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'policy_access_control' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (an       │
+│                           │                                               │            │             │                                               │ access control, least privilege or            │
+│                           │                                               │            │             │                                               │ authorisation term). Heuristic only — not a   │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+│ CRA:Annex I Part I (2)(e) │ Confidentiality of data                       │ PARTIAL    │ artifact    │ docs/policies/cryptography.md                 │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'policy_cryptography' (1 path(s), 0 code      │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (an       │
+│                           │                                               │            │             │                                               │ encryption or key management term). Heuristic │
+│                           │                                               │            │             │                                               │ only — not a full obligation assessment.      │
+│ CRA:Annex I Part I (2)(f) │ Integrity of data, commands and programs      │ PARTIAL    │ artifact    │ .github/workflows/release.yml                 │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'signed_release_config' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a        │
+│                           │                                               │            │             │                                               │ signing or provenance step). Heuristic only — │
+│                           │                                               │            │             │                                               │ not a full obligation assessment.             │
+│ CRA:Annex I Part I (2)(g) │ Data minimisation                             │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(h) │ Availability of essential functions           │ MISSING    │ artifact    │ rate_limiting_config                          │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'rate_limiting_config'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(i) │ Limited impact on other devices and networks  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(j) │ Limited attack surface                        │ PARTIAL    │ artifact    │ deploy/Dockerfile                             │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'iac_definitions' (1 path(s), 0 code hint(s)) │
+│                           │                                               │            │             │                                               │ with content markers found (a resource, base  │
+│                           │                                               │            │             │                                               │ image, service or API version line).          │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Annex I Part I (2)(k) │ Exploitation mitigation                       │ PARTIAL    │ artifact    │ .github/workflows/sast.yml                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'sast_config' (1 path(s), 0 code hint(s))     │
+│                           │                                               │            │             │                                               │ with content markers found (a static-analysis │
+│                           │                                               │            │             │                                               │ tool name). Heuristic only — not a full       │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part I (2)(l) │ Security logging and monitoring               │ MISSING    │ artifact    │ event_log_evidence                            │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'event_log_evidence'. Add the     │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(m) │ Secure permanent data removal                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part II (1)   │ Vulnerabilities and components documented,    │ PARTIAL    │ artifact    │ sbom.json                                     │ Found candidate artifact/signal for           │
+│                           │ SBOM                                          │            │             │                                               │ 'ai_supply_chain_pins' (1 path(s), 0 code     │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (an SBOM  │
+│                           │                                               │            │             │                                               │ header, a hash pin or a hub revision pinned   │
+│                           │                                               │            │             │                                               │ to a commit). Heuristic only — not a full     │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (2)   │ Vulnerabilities remediated without delay      │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'vulnerability_handling_policy' (1 path(s), 0 │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found      │
+│                           │                                               │            │             │                                               │ (triage or severity, fix or patch, and a time │
+│                           │                                               │            │             │                                               │ limit). Heuristic only — not a full           │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (3)   │ Regular security tests and reviews            │ PARTIAL    │ artifact    │ .github/workflows/ci.yml                      │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'ci_test_workflow' (1 path(s), 0 code         │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a test   │
+│                           │                                               │            │             │                                               │ runner command). Heuristic only — not a full  │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (4)   │ Public disclosure of fixed vulnerabilities    │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'vulnerability_handling_policy' (1 path(s), 0 │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found      │
+│                           │                                               │            │             │                                               │ (triage or severity, fix or patch, and a time │
+│                           │                                               │            │             │                                               │ limit). Heuristic only — not a full           │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (5)   │ Coordinated vulnerability disclosure policy   │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'vulnerability_handling_policy' (1 path(s), 0 │
+│                           │                                               │            │             │                                               │ code hint(s)) with content markers found      │
+│                           │                                               │            │             │                                               │ (triage or severity, fix or patch, and a time │
+│                           │                                               │            │             │                                               │ limit). Heuristic only — not a full           │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (6)   │ Vulnerability information sharing and contact │ PARTIAL    │ artifact    │ SECURITY.md                                   │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'security_policy_file' (1 path(s), 0 code     │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a        │
+│                           │                                               │            │             │                                               │ how-to-report section and a contact or        │
+│                           │                                               │            │             │                                               │ advisory link). Heuristic only — not a full   │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex I Part II (7)   │ Secure distribution of updates                │ PARTIAL    │ artifact    │ .github/workflows/release.yml                 │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'signed_release_config' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (a        │
+│                           │                                               │            │             │                                               │ signing or provenance step). Heuristic only — │
+│                           │                                               │            │             │                                               │ not a full obligation assessment.             │
+│ CRA:Annex I Part II (8)   │ Updates disseminated without delay            │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found candidate artifact/signal for           │
+│                           │                                               │            │             │                                               │ 'update_mechanism_note' (1 path(s), 0 code    │
+│                           │                                               │            │             │                                               │ hint(s)) with content markers found (update   │
+│                           │                                               │            │             │                                               │ or patch, how users get it, and a support     │
+│                           │                                               │            │             │                                               │ period). Heuristic only — not a full          │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex II (1)          │ Manufacturer identity and contact             │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '1' holding content markers            │
+│                           │                                               │            │             │                                               │ (Manufacturer identity and contact).          │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Annex II (2)          │ Vulnerability reporting contact               │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '2' holding content markers (Contact   │
+│                           │                                               │            │             │                                               │ point for vulnerability reports). Heuristic   │
+│                           │                                               │            │             │                                               │ only — not a full obligation assessment.      │
+│ CRA:Annex II (3)          │ Product identification                        │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '3' holding content markers (Product   │
+│                           │                                               │            │             │                                               │ identification). Heuristic only — not a full  │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex II (4)          │ Intended purpose and security properties      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '4' holding content markers (Intended  │
+│                           │                                               │            │             │                                               │ purpose). Heuristic only — not a full         │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex II (5)          │ Known risk circumstances and foreseeable      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │ misuse                                        │            │             │                                               │ clause '5' holding content markers (Known     │
+│                           │                                               │            │             │                                               │ risks and misuse). Heuristic only — not a     │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+│ CRA:Annex II (6)          │ Web address of declaration of conformity      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '6' holding content markers (Where the │
+│                           │                                               │            │             │                                               │ declaration of conformity can be found).      │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Annex II (7)          │ Security support offered and end date         │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '7' holding content markers (Support   │
+│                           │                                               │            │             │                                               │ and end date). Heuristic only — not a full    │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex II (8)          │ Instructions for secure use through to        │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │ decommissioning                               │            │             │                                               │ clause '8' holding content markers (Secure    │
+│                           │                                               │            │             │                                               │ use from set-up to decommissioning).          │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Annex II (9)          │ Location of the SBOM if offered               │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' with     │
+│                           │                                               │            │             │                                               │ clause '9' holding content markers (Location  │
+│                           │                                               │            │             │                                               │ of the bill of materials). Heuristic only —   │
+│                           │                                               │            │             │                                               │ not a full obligation assessment.             │
+│ CRA:Annex VII (1)         │ General description of the product            │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '1' holding content markers (General   │
+│                           │                                               │            │             │                                               │ description of the product). Heuristic only — │
+│                           │                                               │            │             │                                               │ not a full obligation assessment.             │
+│ CRA:Annex VII (2)         │ Design, development, production,              │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │ vulnerability handling                        │            │             │                                               │ clause '2' holding content markers (Design,   │
+│                           │                                               │            │             │                                               │ development and vulnerability handling).      │
+│                           │                                               │            │             │                                               │ Heuristic only — not a full obligation        │
+│                           │                                               │            │             │                                               │ assessment.                                   │
+│ CRA:Annex VII (3)         │ Cybersecurity risk assessment in the file     │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '3' holding content markers            │
+│                           │                                               │            │             │                                               │ (Cybersecurity risk assessment). Heuristic    │
+│                           │                                               │            │             │                                               │ only — not a full obligation assessment.      │
+│ CRA:Annex VII (4)         │ Basis for the support period                  │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '4' holding content markers (Basis for │
+│                           │                                               │            │             │                                               │ the support period). Heuristic only — not a   │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+│ CRA:Annex VII (5)         │ Standards and solutions applied               │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '5' holding content markers (Standards │
+│                           │                                               │            │             │                                               │ and solutions applied). Heuristic only — not  │
+│                           │                                               │            │             │                                               │ a full obligation assessment.                 │
+│ CRA:Annex VII (6)         │ Test reports                                  │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '6' holding content markers (Test      │
+│                           │                                               │            │             │                                               │ reports). Heuristic only — not a full         │
+│                           │                                               │            │             │                                               │ obligation assessment.                        │
+│ CRA:Annex VII (7)         │ Copy of the declaration of conformity         │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '7' holding content markers (Copy of   │
+│                           │                                               │            │             │                                               │ the declaration of conformity). Heuristic     │
+│                           │                                               │            │             │                                               │ only — not a full obligation assessment.      │
+│ CRA:Annex VII (8)         │ SBOM available on authority request           │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' with   │
+│                           │                                               │            │             │                                               │ clause '8' holding content markers (Software  │
+│                           │                                               │            │             │                                               │ bill of materials). Heuristic only — not a    │
+│                           │                                               │            │             │                                               │ full obligation assessment.                   │
+└───────────────────────────┴───────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────────────┴───────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

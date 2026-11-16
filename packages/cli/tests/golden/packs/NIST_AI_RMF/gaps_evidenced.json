@@ -1,0 +1,2094 @@
+{
+  "schema_version": "1.0",
+  "tool_name": "opencomplai",
+  "tool_version": "<VERSION>",
+  "disclaimer": "OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.",
+  "generated_at": "<TIMESTAMP>",
+  "scan_errors": [],
+  "payload": {
+    "system_id": "pack-golden-sys",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'ticket ranking for the Example Ltd service desk' does not match any Annex III high-risk categories.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/risk-register.md",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "dossier_example.json",
+        "rationale": "Found candidate artifact/signal for 'technical_documentation_dossier' (1 path(s), 0 code hint(s)) with content markers found (dossier_id + bundle_checksum). Heuristic only — not a full obligation assessment. Presence of a dossier is not a conformity assessment; Art. 11 is never reported Met by this probe.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/instructions-for-use.md",
+        "rationale": "Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)) with content markers found (Art. 13(3) topic markers). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "human_oversight_construct",
+        "rationale": "No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/post-market-monitoring-plan.md",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps. Per-clause: 2 present / 0 unfilled / 11 missing (of 13).",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/post-market-monitoring-plan.md",
+        "rationale": "Found candidate artifact/signal for 'post_market_monitoring_plan' (1 path(s), 0 code hint(s)) with content markers found (clause keyword in body text, Post-market monitoring system (Art. 72)). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "incident-log.json",
+        "rationale": "Found candidate artifact/signal for 'serious_incident_log' (1 path(s), 0 code hint(s)) with content markers found (a signed-log entry). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": {
+      "principles": [
+        {
+          "principle_id": "technical_robustness_safety",
+          "title": "Technical Robustness and Safety",
+          "status": "partial",
+          "articles": [
+            "Art. 15",
+            "Art. 25",
+            "Art. 72"
+          ]
+        },
+        {
+          "principle_id": "privacy_data_governance",
+          "title": "Privacy and Data Governance",
+          "status": "unverified",
+          "articles": [
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "transparency",
+          "title": "Transparency",
+          "status": "missing",
+          "articles": [
+            "Art. 12",
+            "Art. 13",
+            "Art. 49",
+            "Art. 50"
+          ]
+        },
+        {
+          "principle_id": "diversity_non_discrimination_fairness",
+          "title": "Diversity, Non-discrimination and Fairness",
+          "status": "unverified",
+          "articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "societal_environmental_wellbeing",
+          "title": "Societal and Environmental Wellbeing",
+          "status": "unverified",
+          "articles": [
+            "Art. 5"
+          ]
+        },
+        {
+          "principle_id": "accountability",
+          "title": "Accountability",
+          "status": "missing",
+          "articles": [
+            "Art. 4",
+            "Art. 9",
+            "Art. 11",
+            "Art. 14",
+            "Art. 16",
+            "Art. 17",
+            "Art. 20",
+            "Art. 24",
+            "Art. 26",
+            "Art. 43",
+            "Art. 53",
+            "Art. 55",
+            "Art. 73"
+          ]
+        }
+      ]
+    },
+    "nist_rmf_report": {
+      "system_id": "pack-golden-sys",
+      "commit_ref": "HEAD",
+      "generated_at": "<TIMESTAMP>",
+      "subcategories": [
+        {
+          "subcategory": "GOVERN 1.1",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 16"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 16.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.2",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 17"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.3",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.4",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "partial",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 17"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.5",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.6",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 1.7",
+          "function": "GOVERN",
+          "category": "GOVERN 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 2.1",
+          "function": "GOVERN",
+          "category": "GOVERN 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 17"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 2.2",
+          "function": "GOVERN",
+          "category": "GOVERN 2",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 2.3",
+          "function": "GOVERN",
+          "category": "GOVERN 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 17"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 3.1",
+          "function": "GOVERN",
+          "category": "GOVERN 3",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 3.2",
+          "function": "GOVERN",
+          "category": "GOVERN 3",
+          "status": "missing",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 14",
+            "Art. 26"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct); Art. 26 -> missing (source=artifact, evidence=deployer_use_records). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 26.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 4.1",
+          "function": "GOVERN",
+          "category": "GOVERN 4",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 4.2",
+          "function": "GOVERN",
+          "category": "GOVERN 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 13",
+            "Art. 27"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 27 -> missing (source=artifact, evidence=provider_fria). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 13, Art. 27.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 4.3",
+          "function": "GOVERN",
+          "category": "GOVERN 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 73"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 73.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 5.1",
+          "function": "GOVERN",
+          "category": "GOVERN 5",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 5.2",
+          "function": "GOVERN",
+          "category": "GOVERN 5",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 6.1",
+          "function": "GOVERN",
+          "category": "GOVERN 6",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 25",
+            "Art. 53"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP); Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "GOVERN 6.2",
+          "function": "GOVERN",
+          "category": "GOVERN 6",
+          "status": "met",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 25"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.1",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 6",
+            "Art. 11",
+            "Art. 13"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 11 -> partial (source=artifact, evidence=dossier_example.json); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 11, Art. 13.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.2",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.3",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.4",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.5",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 1.6",
+          "function": "MAP",
+          "category": "MAP 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 17"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 2.1",
+          "function": "MAP",
+          "category": "MAP 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 11"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 11 -> partial (source=artifact, evidence=dossier_example.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 11.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 2.2",
+          "function": "MAP",
+          "category": "MAP 2",
+          "status": "partial",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 13",
+            "Art. 14"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 14.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 2.3",
+          "function": "MAP",
+          "category": "MAP 2",
+          "status": "unverified",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 10"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 3.1",
+          "function": "MAP",
+          "category": "MAP 3",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 3.2",
+          "function": "MAP",
+          "category": "MAP 3",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 3.3",
+          "function": "MAP",
+          "category": "MAP 3",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 6",
+            "Art. 13"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 3.4",
+          "function": "MAP",
+          "category": "MAP 3",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 26"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 26 -> missing (source=artifact, evidence=deployer_use_records). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 26. Set aside, because an attestation decides it and is no evidence for another framework: Art. 4.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 3.5",
+          "function": "MAP",
+          "category": "MAP 3",
+          "status": "missing",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 14"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 4.1",
+          "function": "MAP",
+          "category": "MAP 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 25",
+            "Art. 53"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP); Art. 53 -> unverified (source=obligation, evidence=gpai_provider).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 4.2",
+          "function": "MAP",
+          "category": "MAP 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 25"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 5.1",
+          "function": "MAP",
+          "category": "MAP 5",
+          "status": "partial",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 27"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 27 -> missing (source=artifact, evidence=provider_fria). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 27.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MAP 5.2",
+          "function": "MAP",
+          "category": "MAP 5",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 1.1",
+          "function": "MEASURE",
+          "category": "MEASURE 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 15"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 1.2",
+          "function": "MEASURE",
+          "category": "MEASURE 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 1.3",
+          "function": "MEASURE",
+          "category": "MEASURE 1",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.1",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 11"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 11 -> partial (source=artifact, evidence=dossier_example.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 11.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.2",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.3",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 15"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.4",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "partial",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 12",
+            "Art. 26",
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 12 -> missing (source=artifact, evidence=event_log_evidence); Art. 26 -> missing (source=artifact, evidence=deployer_use_records); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 12, Art. 26.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.5",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 13",
+            "Art. 15"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.6",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 15"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.7",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 15",
+            "Art. 55"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.8",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 13",
+            "Art. 50"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 50 -> missing (source=artifact, evidence=transparency_notice_evidence). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13, Art. 50.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.9",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 13",
+            "Art. 14"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13, Art. 14.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.10",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 10"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.11",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 10"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.12",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 2.13",
+          "function": "MEASURE",
+          "category": "MEASURE 2",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 3.1",
+          "function": "MEASURE",
+          "category": "MEASURE 3",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 12",
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 12 -> missing (source=artifact, evidence=event_log_evidence); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 12, Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 3.2",
+          "function": "MEASURE",
+          "category": "MEASURE 3",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 3.3",
+          "function": "MEASURE",
+          "category": "MEASURE 3",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 4.1",
+          "function": "MEASURE",
+          "category": "MEASURE 4",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 4.2",
+          "function": "MEASURE",
+          "category": "MEASURE 4",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MEASURE 4.3",
+          "function": "MEASURE",
+          "category": "MEASURE 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 1.1",
+          "function": "MANAGE",
+          "category": "MANAGE 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 43"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 43.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 1.2",
+          "function": "MANAGE",
+          "category": "MANAGE 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 1.3",
+          "function": "MANAGE",
+          "category": "MANAGE 1",
+          "status": "partial",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 1.4",
+          "function": "MANAGE",
+          "category": "MANAGE 1",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 9",
+            "Art. 13"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 13.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 2.1",
+          "function": "MANAGE",
+          "category": "MANAGE 2",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 2.2",
+          "function": "MANAGE",
+          "category": "MANAGE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 2.3",
+          "function": "MANAGE",
+          "category": "MANAGE 2",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72",
+            "Art. 73"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72, Art. 73. Set aside, because an attestation decides it and is no evidence for another framework: Art. 20.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 2.4",
+          "function": "MANAGE",
+          "category": "MANAGE 2",
+          "status": "missing",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 14"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Set aside, because an attestation decides it and is no evidence for another framework: Art. 20.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 3.1",
+          "function": "MANAGE",
+          "category": "MANAGE 3",
+          "status": "met",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 25"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 25 -> met (source=rule, evidence=EU_AIA_ART25_MODIFICATION_TRAP).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 3.2",
+          "function": "MANAGE",
+          "category": "MANAGE 3",
+          "status": "unverified",
+          "mapping_confidence": null,
+          "confidence_label": "not_assessed",
+          "source_eu_ai_act_articles": [],
+          "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 4.1",
+          "function": "MANAGE",
+          "category": "MANAGE 4",
+          "status": "partial",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 72",
+            "Art. 73"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 73.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 4.2",
+          "function": "MANAGE",
+          "category": "MANAGE 4",
+          "status": "unverified",
+          "mapping_confidence": "low",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 17",
+            "Art. 72"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17, Art. 72.",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        },
+        {
+          "subcategory": "MANAGE 4.3",
+          "function": "MANAGE",
+          "category": "MANAGE 4",
+          "status": "partial",
+          "mapping_confidence": "medium",
+          "confidence_label": "heuristic_estimate",
+          "source_eu_ai_act_articles": [
+            "Art. 73"
+          ],
+          "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 73 -> partial (source=artifact, evidence=incident-log.json).",
+          "needs_founder_review": true,
+          "disclaimer_ref": "DISCLAIMER_V1"
+        }
+      ]
+    },
+    "frameworks": {
+      "NIST_AI_RMF": {
+        "framework": "NIST_AI_RMF",
+        "label": "NIST AI RMF 1.0 (evaluated, own evidence plus EU AI Act evidence, not a certification)",
+        "data_version": "fceb8d396983",
+        "derived_from": "EU_AI_ACT",
+        "disclaimer_ref": "DISCLAIMER_V2",
+        "gated": false,
+        "excluded": {
+          "NIST_AI_RMF:GOVERN 6.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+          "NIST_AI_RMF:GOVERN 6.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+          "NIST_AI_RMF:MAP 4.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+          "NIST_AI_RMF:MAP 4.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+          "NIST_AI_RMF:MANAGE 3.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+          "NIST_AI_RMF:MANAGE 3.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false)."
+        },
+        "applicability": {
+          "outcome": "voluntary",
+          "reason": ""
+        },
+        "report": {
+          "system_id": "pack-golden-sys",
+          "commit_ref": "HEAD",
+          "generated_at": "<TIMESTAMP>",
+          "articles": [
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 5, Art. 6, Art. 16",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 5 -> unverified (source=obligation, evidence=prohibited); Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 16 -> missing (source=artifact, evidence=provider_qms_bundle). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 16.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/ai-policy.md",
+              "rationale": "Evidence found in docs/policies/ai-policy.md (policy_ai), not attested. Found candidate artifact/signal for 'policy_ai' (1 path(s), 0 code hint(s)) with content markers found (an AI system or responsible AI term). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.3",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Evidence found in docs/risk-register.md (risk_register), not attested. Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.4",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9, Art. 17",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.5",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/management-review.md",
+              "rationale": "Evidence found in docs/management-review.md (management_review_minutes), not attested. Found candidate artifact/signal for 'management_review_minutes' (1 path(s), 0 code hint(s)) with content markers found (a management review with decisions or actions and attendees or a date). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 72.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.6",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 1.7",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 2.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 17",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 2.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/training-record.md",
+              "rationale": "Evidence found in docs/training-record.md (competence_training_record), not attested. Found candidate artifact/signal for 'competence_training_record' (1 path(s), 0 code hint(s)) with content markers found (training or competence with a completion date and a role or attendee). Heuristic only — not a full obligation assessment. The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 2.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 17",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 3.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 3.2",
+              "status": "missing",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 14, Art. 26",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct); Art. 26 -> missing (source=artifact, evidence=deployer_use_records). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 26.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 4.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 4.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "AI_IMPACT_ASSESSMENT.md",
+              "rationale": "Evidence found in AI_IMPACT_ASSESSMENT.md (ai_impact_assessment#impacts), not attested. Found 'AI_IMPACT_ASSESSMENT.md' with clause 'impacts' holding content markers (Impacts). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 27 -> missing (source=artifact, evidence=provider_fria). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 13, Art. 27.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 4.3",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "incident-log.json",
+              "rationale": "Evidence found in incident-log.json (serious_incident_log), not attested. Found candidate artifact/signal for 'serious_incident_log' (1 path(s), 0 code hint(s)) with content markers found (a signed-log entry). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 73.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 5.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 72",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:GOVERN 5.2",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 72",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.1",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "AI_IMPACT_ASSESSMENT.md",
+              "rationale": "Evidence found in AI_IMPACT_ASSESSMENT.md (ai_impact_assessment#purpose), not attested. Found 'AI_IMPACT_ASSESSMENT.md' with clause 'purpose' holding content markers (Purpose). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 11 -> partial (source=artifact, evidence=dossier_example.json); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 11, Art. 13.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.2",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.4",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.5",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Evidence found in docs/risk-register.md (risk_register), not attested. Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 1.6",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "dossier_example.json",
+              "rationale": "Evidence found in dossier_example.json (technical_documentation_dossier), not attested. Found candidate artifact/signal for 'technical_documentation_dossier' (1 path(s), 0 code hint(s)) with content markers found (dossier_id + bundle_checksum). Heuristic only — not a full obligation assessment. Presence of a dossier is not a conformity assessment; Art. 11 is never reported Met by this probe. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 2.1",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "MODEL_CARD.md",
+              "rationale": "Evidence found in MODEL_CARD.md (model_card), not attested. Found candidate artifact/signal for 'model_card' (1 path(s), 0 code hint(s)) with content markers found (intended use, limitations and evaluation sections). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 11 -> partial (source=artifact, evidence=dossier_example.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 11.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 2.2",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 13, Art. 14",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 14.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 2.3",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/evaluation-report.md",
+              "rationale": "Evidence found in docs/evaluation-report.md (evaluation_evidence), not attested. Found candidate artifact/signal for 'evaluation_evidence' (1 path(s), 0 code hint(s)) with content markers found (a metric, a dataset or benchmark, and a result). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 3.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 3.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "AI_IMPACT_ASSESSMENT.md",
+              "rationale": "Evidence found in AI_IMPACT_ASSESSMENT.md (ai_impact_assessment#impacts), not attested. Found 'AI_IMPACT_ASSESSMENT.md' with clause 'impacts' holding content markers (Impacts). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 3.3",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/instructions-for-use.md",
+              "rationale": "Evidence found in docs/instructions-for-use.md (deployer_instructions), not attested. Found candidate artifact/signal for 'deployer_instructions' (1 path(s), 0 code hint(s)) with content markers found (Art. 13(3) topic markers). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 6 -> met (source=rule, evidence=EU_AIA_ART6_HIGH_RISK); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 3.4",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 26",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 26 -> missing (source=artifact, evidence=deployer_use_records). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 26. Set aside, because an attestation decides it and is no evidence for another framework: Art. 4.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 3.5",
+              "status": "missing",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 14",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct).",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 5.1",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9, Art. 27",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 27 -> missing (source=artifact, evidence=provider_fria). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 27.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MAP 5.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "AI_IMPACT_ASSESSMENT.md",
+              "rationale": "Evidence found in AI_IMPACT_ASSESSMENT.md (ai_impact_assessment#affected parties), not attested. Found 'AI_IMPACT_ASSESSMENT.md' with clause 'affected parties' holding content markers (Affected parties). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 1.1",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/evaluation-report.md",
+              "rationale": "Evidence found in docs/evaluation-report.md (evaluation_evidence), not attested. Found candidate artifact/signal for 'evaluation_evidence' (1 path(s), 0 code hint(s)) with content markers found (a metric, a dataset or benchmark, and a result). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 1.2",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9, Art. 72",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 72.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 1.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.1",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/evaluation-report.md",
+              "rationale": "Evidence found in docs/evaluation-report.md (evaluation_evidence), not attested. Found candidate artifact/signal for 'evaluation_evidence' (1 path(s), 0 code hint(s)) with content markers found (a metric, a dataset or benchmark, and a result). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 11 -> partial (source=artifact, evidence=dossier_example.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 11.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.2",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 15",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none).",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.4",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/post-market-monitoring-plan.md",
+              "rationale": "Found candidate artifact/signal for 'post_market_monitoring_plan' (1 path(s), 0 code hint(s)) with content markers found (clause keyword in body text, Post-market monitoring system (Art. 72)). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.5",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/evaluation-report.md",
+              "rationale": "Evidence found in docs/evaluation-report.md (evaluation_evidence), not attested. Found candidate artifact/signal for 'evaluation_evidence' (1 path(s), 0 code hint(s)) with content markers found (a metric, a dataset or benchmark, and a result). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.6",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9, Art. 15",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 15 -> unverified (source=evaluator, evidence=none). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.7",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/red-team-report.md",
+              "rationale": "Evidence found in docs/red-team-report.md (ai_red_team_report), not attested. Found candidate artifact/signal for 'ai_red_team_report' (1 path(s), 0 code hint(s)) with content markers found (an AI-specific attack term and a test-result marker). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 15 -> unverified (source=evaluator, evidence=none); Art. 55 -> unverified (source=obligation, evidence=gpai_systemic_risk).",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.8",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "MODEL_CARD.md",
+              "rationale": "Evidence found in MODEL_CARD.md (model_card), not attested. Found candidate artifact/signal for 'model_card' (1 path(s), 0 code hint(s)) with content markers found (intended use, limitations and evaluation sections). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 50 -> missing (source=artifact, evidence=transparency_notice_evidence). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13, Art. 50.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.9",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "MODEL_CARD.md",
+              "rationale": "Evidence found in MODEL_CARD.md (model_card), not attested. Found candidate artifact/signal for 'model_card' (1 path(s), 0 code hint(s)) with content markers found (intended use, limitations and evaluation sections). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md); Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 13, Art. 14.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.10",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "DPIA.md",
+              "rationale": "Evidence found in DPIA.md (dpia_document), not attested. Found candidate artifact/signal for 'dpia_document' (1 path(s), 0 code hint(s)) with content markers found (a necessity statement, risks to individuals and measures). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.11",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 10",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 10 -> unverified (source=evaluator, evidence=none).",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.12",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 2.13",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 3.1",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Evidence found in docs/risk-register.md (risk_register), not attested. Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 12 -> missing (source=artifact, evidence=event_log_evidence); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 12, Art. 72.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 3.2",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 3.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 4.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 4.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/evaluation-report.md",
+              "rationale": "Evidence found in docs/evaluation-report.md (evaluation_evidence), not attested. Found candidate artifact/signal for 'evaluation_evidence' (1 path(s), 0 code hint(s)) with content markers found (a metric, a dataset or benchmark, and a result). Heuristic only — not a full obligation assessment. The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "NIST_AI_RMF:MEASURE 4.3",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 72",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 1.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9, Art. 43",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 43 -> missing (source=artifact, evidence=conformity_assessment_docs). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 43.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 1.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Evidence found in docs/risk-register.md (risk_register), not attested. Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 1.3",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 9",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md).",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 1.4",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Evidence found in docs/risk-register.md (risk_register), not attested. Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 9 -> partial (source=artifact, evidence=docs/risk-register.md); Art. 13 -> partial (source=artifact, evidence=docs/instructions-for-use.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 9, Art. 13.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 2.1",
+              "status": "unverified",
+              "source": "crosswalk",
+              "evidence_ref": "none",
+              "rationale": "The EU AI Act evidence holds nothing for this subcategory. Add an attestation under framework_inputs.NIST_AI_RMF.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 2.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/post-market-monitoring-plan.md",
+              "rationale": "Evidence found in docs/post-market-monitoring-plan.md (post_market_monitoring_plan), not attested. Found candidate artifact/signal for 'post_market_monitoring_plan' (1 path(s), 0 code hint(s)) with content markers found (clause keyword in body text, Post-market monitoring system (Art. 72)). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 2.3",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "INCIDENT_RESPONSE.md",
+              "rationale": "Evidence found in INCIDENT_RESPONSE.md (incident_response_plan), not attested. Found candidate artifact/signal for 'incident_response_plan' (1 path(s), 0 code hint(s)) with content markers found (detection, containment and roles or escalation topics). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 72, Art. 73. Set aside, because an attestation decides it and is no evidence for another framework: Art. 20.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 2.4",
+              "status": "missing",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 14",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 14 -> missing (source=artifact, evidence=human_oversight_construct). Set aside, because an attestation decides it and is no evidence for another framework: Art. 20.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 4.1",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 72, Art. 73",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 73 -> partial (source=artifact, evidence=incident-log.json). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 73.",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 4.2",
+              "status": "unverified",
+              "source": "artifact",
+              "evidence_ref": "docs/corrective-action-log.md",
+              "rationale": "Evidence found in docs/corrective-action-log.md (corrective_action_log), not attested. Found candidate artifact/signal for 'corrective_action_log' (1 path(s), 0 code hint(s)) with content markers found (a nonconformity with its root cause and corrective action). Heuristic only — not a full obligation assessment. Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=low) from existing EU AI Act evidence: Art. 17 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md); Art. 72 -> partial (source=artifact, evidence=docs/post-market-monitoring-plan.md). Capped at Unverified, because a low-confidence link cannot make a subcategory Missing or Partial: Art. 17, Art. 72.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            },
+            {
+              "article": "NIST_AI_RMF:MANAGE 4.3",
+              "status": "partial",
+              "source": "crosswalk",
+              "evidence_ref": "Art. 73",
+              "rationale": "Re-projected via data/nist_ai_rmf_subcategories.json (mapping confidence=medium) from existing EU AI Act evidence: Art. 73 -> partial (source=artifact, evidence=incident-log.json).",
+              "confidence": null,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "machine"
+            }
+          ],
+          "evidence_hashes": [],
+          "principle_summary": null
+        }
+      }
+    }
+  }
+}

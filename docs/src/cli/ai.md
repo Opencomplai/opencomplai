@@ -27,15 +27,16 @@ exit `1`.
 
 | Model id | Runtime | License | Size | Needs |
 |---|---|---|---|---|
-| `codebert-onnx` | deterministic | AGPL-3.0-only | none | base install |
+| `codebert-onnx` (default from 0.16.0) | deterministic | AGPL-3.0-only | none | base install |
 | `qwen2.5-coder-0.5b` | llama-cpp | Apache-2.0 | ~400 MB | `[deep]` and a one-time download |
-| `qwen2.5-coder-1.5b` (default) | llama-cpp | Apache-2.0 | ~1000 MB | `[deep]` and a one-time download |
+| `qwen2.5-coder-1.5b` | llama-cpp | Apache-2.0 | ~1000 MB | `[deep]` and a one-time download |
 | `smollm2-1.7b` | llama-cpp | Apache-2.0 | ~1100 MB | `[deep]` and a one-time download |
 | `phi-3.5-mini` | llama-cpp | MIT | ~2200 MB | `[deep]` and a one-time download |
 | `mistral-7b` | llama-cpp | Apache-2.0 | ~4100 MB | `[deep]` and a one-time download |
 | `saas` | http | none listed | none | consent to data egress |
 
-`codebert-onnx` is a deterministic code-signal matcher. It loads no model,
+From 0.16.0 `codebert-onnx` is the default model (0.15.0 and earlier
+default to `qwen2.5-coder-1.5b`). It is a deterministic code-signal matcher. It loads no model,
 creates no ONNX Runtime session and has no download: the id is kept only
 because existing configs and annotations use it. It matches each callsite
 against the built-in Annex III, prohibited-practice and limited-risk signal

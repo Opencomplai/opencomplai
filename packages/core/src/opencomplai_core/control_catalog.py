@@ -37,7 +37,7 @@ class ControlCatalogEntry:
     needs_founder_review: bool = False
 
 
-# The TTLs of Art. 26, 49, 72 and 73 are placeholders; those rows carry their
+# The TTLs of Art. 20, 26, 49, 72 and 73 are placeholders; those rows carry their
 # own provenance fields (source, confidence, review flag) set from this text.
 _TTL_PLACEHOLDER_SOURCE = (
     "heuristic (no legal source): placeholder evidence freshness window, unverified"
@@ -96,6 +96,13 @@ CONTROL_CATALOG: dict[str, ControlCatalogEntry] = {
     "Art. 17": ControlCatalogEntry(
         title="Quality management system",
         default_ttl_days=180,
+    ),
+    "Art. 20": ControlCatalogEntry(
+        title="Corrective actions and duty of information",
+        default_ttl_days=365,
+        source=_TTL_PLACEHOLDER_SOURCE,
+        confidence="low",
+        needs_founder_review=True,
     ),
     "Art. 24": ControlCatalogEntry(
         title="Distributor conformity obligations",

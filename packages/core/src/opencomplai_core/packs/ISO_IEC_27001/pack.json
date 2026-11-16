@@ -1,0 +1,19 @@
+{
+  "id": "ISO_IEC_27001",
+  "order": 5,
+  "kind": "native",
+  "name": "ISO/IEC 27001:2022 information security management",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "ISO/IEC 27001",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "iso_27001.json",
+  "data_files": ["applicability.json", "probes.json"],
+  "copyright": "restricted",
+  "row_count": 118,
+  "target_machine_share": 34,
+  "timeline": "none",
+  "timeline_reason": "a standard without legal application dates",
+  "catalogue": true
+}

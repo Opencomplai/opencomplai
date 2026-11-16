@@ -143,6 +143,24 @@ if got != digest:
     die("download", f"sdist hashes to {got} but the index publishes {digest}")
 ok("download")
 
+# brew audit wants the hashed "Source" URL from the PyPI downloads page, which the release
+# JSON carries as "url"; the short /source/ form is only the fallback.
+final_url = str(entry.get("url") or canon_url)
+if final_url != canon_url and not re.fullmatch(
+    r"https://files\.pythonhosted\.org/packages/[0-9a-f]{2}/[0-9a-f]{2}/[0-9a-f]+/" + re.escape(name),
+    final_url,
+):
+    die("index", f"the sdist url in the release JSON is not a PyPI files URL for {name}")
+# PyPI's path is the file's blake2b_256 digest split 2/2/60, so when the JSON carries that
+# digest the url has to agree with it: a url for another file cannot slip in.
+b2 = str((entry.get("digests") or {}).get("blake2b_256") or "")
+if (
+    final_url != canon_url
+    and b2
+    and not final_url.endswith(f"/packages/{b2[:2]}/{b2[2:4]}/{b2[4:]}/{name}")
+):
+    die("index", "the sdist url does not match the blake2b_256 digest in the release JSON")
+
 out = []
 for ln in lines:
     bare = ln.rstrip("\r\n")
@@ -151,7 +169,7 @@ for ln in lines:
         continue
     m = URL_RE.match(bare)
     if m:
-        ln = f"{m.group(1)}{canon_url}{m.group(2)}{end}"
+        ln = f"{m.group(1)}{final_url}{m.group(2)}{end}"
     m = SHA_RE.match(bare)
     if m:
         ln = f"{m.group(1)}{digest}{m.group(2)}{end}"

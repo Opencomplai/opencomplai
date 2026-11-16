@@ -1,0 +1,18 @@
+{
+  "security_policy_file": {
+    "title": "Security policy",
+    "target": "SECURITY.md"
+  },
+  "vulnerability_handling_policy": {
+    "title": "Vulnerability handling policy",
+    "target": "docs/vulnerability-handling.md"
+  },
+  "update_mechanism_note": {
+    "title": "Update mechanism note",
+    "target": "UPDATES.md"
+  },
+  "secure_defaults_config": {
+    "title": "Secure defaults",
+    "target": "HARDENING.md"
+  }
+}

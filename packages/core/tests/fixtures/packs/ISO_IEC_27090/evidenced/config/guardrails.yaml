@@ -1,0 +1,4 @@
+input:
+  max_length: 4000
+  blocklist:
+    - ignore previous instructions

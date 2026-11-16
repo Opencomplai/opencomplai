@@ -1,0 +1,314 @@
+
+ETSI EN 304 223 baseline cyber security for AI (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement               ┃ Title                                              ┃ Status     ┃ Source      ┃ Evidence                            ┃ Rationale                                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ETSI_EN_304_223:5.1.1-1   │ P1 Awareness: AI content in security training      │ PARTIAL    │ artifact    │ docs/training-record.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'competence_training_record' (1 path(s), 0 code    │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (training or   │
+│                           │                                                    │            │             │                                     │ competence with a completion date and a role or    │
+│                           │                                                    │            │             │                                     │ attendee). Heuristic only — not a full obligation  │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.1-1.1 │ P1 Awareness: Training matched to each role        │ PARTIAL    │ artifact    │ docs/training-record.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'competence_training_record' (1 path(s), 0 code    │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (training or   │
+│                           │                                                    │            │             │                                     │ competence with a completion date and a role or    │
+│                           │                                                    │            │             │                                     │ attendee). Heuristic only — not a full obligation  │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.1-2   │ P1 Awareness: Staff stay current on AI threats     │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.1-2.1 │ P1 Awareness: Threat updates via several channels  │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.1-2.2 │ P1 Awareness: Secure AI coding training for        │ PARTIAL    │ artifact    │ docs/training-record.md             │ Found candidate artifact/signal for                │
+│                           │ developers                                         │            │             │                                     │ 'competence_training_record' (1 path(s), 0 code    │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (training or   │
+│                           │                                                    │            │             │                                     │ competence with a completion date and a role or    │
+│                           │                                                    │            │             │                                     │ attendee). Heuristic only — not a full obligation  │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.2-1   │ P2 Secure design: Assess need and risk before      │ PARTIAL    │ artifact    │ docs/risk-register.md               │ Found candidate artifact/signal for                │
+│                           │ building                                           │            │             │                                     │ 'risk_register' (1 path(s), 0 code hint(s)) with   │
+│                           │                                                    │            │             │                                     │ content markers found (risk identification +       │
+│                           │                                                    │            │             │                                     │ mitigation). Heuristic only — not a full           │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.1.2-1.1 │ P2 Secure design: Data owner joins requirements    │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ talks                                              │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.2-2   │ P2 Secure design: Withstands attacks and failures  │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.2-3   │ P2 Secure design: Audit trail of models, data and  │ PARTIAL    │ artifact    │ docs/ai-asset-inventory.md          │ Found 'docs/ai-asset-inventory.md' but it lacks    │
+│                           │ prompts                                            │            │             │                                     │ model entry, dataset or prompt entry, owner or     │
+│                           │                                                    │            │             │                                     │ version, and minimum body length content markers — │
+│                           │                                                    │            │             │                                     │ a bare or empty file is not a AI asset inventory.  │
+│ ETSI_EN_304_223:5.1.2-4   │ P2 Secure design: Risk assessment of external      │ PARTIAL    │ artifact    │ sbom.json                           │ Found candidate artifact/signal for                │
+│                           │ components                                         │            │             │                                     │ 'ai_supply_chain_pins' (2 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (an SBOM header, a hash │
+│                           │                                                    │            │             │                                     │ pin or a hub revision pinned to a commit).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.1.2-5   │ P2 Secure design: Use fits data sensitivity        │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.2-5.1 │ P2 Secure design: Staff encouraged to flag AI      │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ risks                                              │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.2-6   │ P2 Secure design: Least privilege on connected     │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ systems                                            │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.2-7   │ P2 Secure design: Due diligence on external        │ PARTIAL    │ artifact    │ docs/vendor-register.md             │ Found candidate artifact/signal for                │
+│                           │ providers                                          │            │             │                                     │ 'vendor_register' (1 path(s), 0 code hint(s)) with │
+│                           │                                                    │            │             │                                     │ content markers found (provider, service and       │
+│                           │                                                    │            │             │                                     │ criticality entries). Heuristic only — not a full  │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.1.3-1   │ P3 Threats and risks: Threat modelling and risk    │ PARTIAL    │ artifact    │ docs/threat-model.md                │ Found candidate artifact/signal for                │
+│                           │ management                                         │            │             │                                     │ 'ai_threat_model' (1 path(s), 0 code hint(s)) with │
+│                           │                                                    │            │             │                                     │ content markers found (an AI-specific attack       │
+│                           │                                                    │            │             │                                     │ term). Heuristic only — not a full obligation      │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.3-1.1 │ P3 Threats and risks: Repeat when settings change  │ PARTIAL    │ artifact    │ docs/threat-model.md                │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_threat_model' (1 path(s), 0 code hint(s)) with │
+│                           │                                                    │            │             │                                     │ content markers found (an AI-specific attack       │
+│                           │                                                    │            │             │                                     │ term). Heuristic only — not a full obligation      │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.3-1.2 │ P3 Threats and risks: Risk from surplus model      │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ capability                                         │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.3-1.3 │ P3 Threats and risks: Controls chosen against risk │ PARTIAL    │ artifact    │ docs/risk-register.md               │ Found candidate artifact/signal for                │
+│                           │ tolerance                                          │            │             │                                     │ 'risk_register' (1 path(s), 0 code hint(s)) with   │
+│                           │                                                    │            │             │                                     │ content markers found (risk identification +       │
+│                           │                                                    │            │             │                                     │ mitigation). Heuristic only — not a full           │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.1.3-2   │ P3 Threats and risks: Unresolved threats passed    │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ down the chain                                     │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.3-3   │ P3 Threats and risks: Assurance from external risk │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ owners                                             │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.3-4   │ P3 Threats and risks: Ongoing review against risk  │ PARTIAL    │ artifact    │ docs/risk-register.md               │ Found candidate artifact/signal for                │
+│                           │ appetite                                           │            │             │                                     │ 'risk_register' (1 path(s), 0 code hint(s)) with   │
+│                           │                                                    │            │             │                                     │ content markers found (risk identification +       │
+│                           │                                                    │            │             │                                     │ mitigation). Heuristic only — not a full           │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.1.4-1   │ P4 Human responsibility: Human oversight           │ PARTIAL    │ artifact    │ oversight-log.json                  │ Found candidate artifact/signal for                │
+│                           │ capability                                         │            │             │                                     │ 'human_oversight_construct' (1 path(s), 0 code     │
+│                           │                                                    │            │             │                                     │ hint(s)). Heuristic only — not a full obligation   │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.4-2   │ P4 Human responsibility: Outputs easy for humans   │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ to judge                                           │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.4-3   │ P4 Human responsibility: Technical measures behind │ PARTIAL    │ artifact    │ oversight-log.json                  │ Found candidate artifact/signal for                │
+│                           │ oversight                                          │            │             │                                     │ 'human_oversight_construct' (1 path(s), 0 code     │
+│                           │                                                    │            │             │                                     │ hint(s)). Heuristic only — not a full obligation   │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.1.4-4   │ P4 Human responsibility: Check data owner's        │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ controls were built in                             │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.1.4-5   │ P4 Human responsibility: End-users told of         │ PARTIAL    │ artifact    │ docs/instructions-for-use.md        │ Found candidate artifact/signal for                │
+│                           │ prohibited uses                                    │            │             │                                     │ 'deployer_instructions' (1 path(s), 0 code         │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (Art. 13(3)    │
+│                           │                                                    │            │             │                                     │ topic markers). Heuristic only — not a full        │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.2.1-1   │ P5 Assets: Asset inventory with dependencies       │ PARTIAL    │ artifact    │ docs/ai-asset-inventory.md          │ Found 'docs/ai-asset-inventory.md' but it lacks    │
+│                           │                                                    │            │             │                                     │ model entry, dataset or prompt entry, owner or     │
+│                           │                                                    │            │             │                                     │ version, and minimum body length content markers — │
+│                           │                                                    │            │             │                                     │ a bare or empty file is not a AI asset inventory.  │
+│ ETSI_EN_304_223:5.2.1-2   │ P5 Assets: Track, authenticate and version assets  │ PARTIAL    │ artifact    │ sbom.json                           │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_supply_chain_pins' (2 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (an SBOM header, a hash │
+│                           │                                                    │            │             │                                     │ pin or a hub revision pinned to a commit).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.1-3   │ P5 Assets: Recovery plans cover AI attacks         │ PARTIAL    │ artifact    │ docs/business-continuity.md         │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'continuity_plan' (1 path(s), 0 code hint(s)) with │
+│                           │                                                    │            │             │                                     │ content markers found (recovery objectives,        │
+│                           │                                                    │            │             │                                     │ critical services and tests or exercises).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.1-3.1 │ P5 Assets: Restorable known-good state             │ PARTIAL    │ artifact    │ docs/restore-test.md                │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'restore_test_report' (1 path(s), 0 code hint(s))  │
+│                           │                                                    │            │             │                                     │ with content markers found (a restore, a result or │
+│                           │                                                    │            │             │                                     │ duration and a date). Heuristic only — not a full  │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.2.1-4.1 │ P5 Assets: Check and sanitise data and inputs      │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.1-4.2 │ P5 Assets: Protect confidential data and weights   │ PARTIAL    │ artifact    │ .pre-commit-config.yaml             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'secret_scanning_config' (1 path(s), 0 code        │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (a             │
+│                           │                                                    │            │             │                                     │ secret-scanning tool name). Heuristic only — not a │
+│                           │                                                    │            │             │                                     │ full obligation assessment.                        │
+│ ETSI_EN_304_223:5.2.2-1   │ P6 Infrastructure: Access control for APIs, models │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ and data                                           │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.2-2   │ P6 Infrastructure: Controls on externally offered  │ PARTIAL    │ artifact    │ app/limits.py                       │ Found candidate artifact/signal for                │
+│                           │ APIs                                               │            │             │                                     │ 'rate_limiting_config' (1 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (a rate-limit library   │
+│                           │                                                    │            │             │                                     │ import or directive). Heuristic only — not a full  │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.2.2-3   │ P6 Infrastructure: Separate development and tuning │ PARTIAL    │ artifact    │ deploy/Dockerfile                   │ Found candidate artifact/signal for                │
+│                           │ environments                                       │            │             │                                     │ 'iac_definitions' (1 path(s), 0 code hint(s)) with │
+│                           │                                                    │            │             │                                     │ content markers found (a resource, base image,     │
+│                           │                                                    │            │             │                                     │ service or API version line). Heuristic only — not │
+│                           │                                                    │            │             │                                     │ a full obligation assessment.                      │
+│ ETSI_EN_304_223:5.2.2-4   │ P6 Infrastructure: Published vulnerability         │ PARTIAL    │ artifact    │ SECURITY.md                         │ Found candidate artifact/signal for                │
+│                           │ disclosure policy                                  │            │             │                                     │ 'security_policy_file' (1 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (a how-to-report        │
+│                           │                                                    │            │             │                                     │ section and a contact or advisory link). Heuristic │
+│                           │                                                    │            │             │                                     │ only — not a full obligation assessment.           │
+│ ETSI_EN_304_223:5.2.2-5   │ P6 Infrastructure: Tested incident and recovery    │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                │ Found candidate artifact/signal for                │
+│                           │ plans                                              │            │             │                                     │ 'incident_response_plan' (1 path(s), 0 code        │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (detection,    │
+│                           │                                                    │            │             │                                     │ containment and roles or escalation topics).       │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.2-6   │ P6 Infrastructure: Cloud contracts back these      │ PARTIAL    │ artifact    │ docs/contract-checklist.md          │ Found candidate artifact/signal for                │
+│                           │ requirements                                       │            │             │                                     │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (audit or access,       │
+│                           │                                                    │            │             │                                     │ termination and security or service-level terms).  │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.3-1   │ P7 Supply chain: Secure software supply-chain      │ PARTIAL    │ artifact    │ sbom.json                           │ Found candidate artifact/signal for                │
+│                           │ process                                            │            │             │                                     │ 'ai_supply_chain_pins' (2 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (an SBOM header, a hash │
+│                           │                                                    │            │             │                                     │ pin or a hub revision pinned to a commit).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.3-2   │ P7 Supply chain: Justify weakly documented         │ PARTIAL    │ artifact    │ sbom.json                           │ Found candidate artifact/signal for                │
+│                           │ components                                         │            │             │                                     │ 'ai_supply_chain_pins' (2 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (an SBOM header, a hash │
+│                           │                                                    │            │             │                                     │ pin or a hub revision pinned to a commit).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.3-2.1 │ P7 Supply chain: Mitigations for such components   │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.3-2.2 │ P7 Supply chain: Share the justification with      │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ end-users                                          │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.3-3   │ P7 Supply chain: Re-run evaluations on released    │ PARTIAL    │ artifact    │ docs/evaluation-report.md           │ Found candidate artifact/signal for                │
+│                           │ models                                             │            │             │                                     │ 'evaluation_evidence' (1 path(s), 0 code hint(s))  │
+│                           │                                                    │            │             │                                     │ with content markers found (a metric, a dataset or │
+│                           │                                                    │            │             │                                     │ benchmark, and a result). Heuristic only — not a   │
+│                           │                                                    │            │             │                                     │ full obligation assessment.                        │
+│ ETSI_EN_304_223:5.2.3-4   │ P7 Supply chain: Advance notice of model updates   │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.4-1   │ P8 Documentation: Audit trail of design and        │ PARTIAL    │ artifact    │ dossier_example.json                │ Found candidate artifact/signal for                │
+│                           │ maintenance                                        │            │             │                                     │ 'technical_documentation_dossier' (1 path(s), 0    │
+│                           │                                                    │            │             │                                     │ code hint(s)) with content markers found           │
+│                           │                                                    │            │             │                                     │ (dossier_id + bundle_checksum). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment. Presence of a    │
+│                           │                                                    │            │             │                                     │ dossier is not a conformity assessment; Art. 11 is │
+│                           │                                                    │            │             │                                     │ never reported Met by this probe.                  │
+│ ETSI_EN_304_223:5.2.4-1.1 │ P8 Documentation: Security-relevant detail in the  │ PARTIAL    │ artifact    │ dossier_example.json                │ Found candidate artifact/signal for                │
+│                           │ record                                             │            │             │                                     │ 'technical_documentation_dossier' (1 path(s), 0    │
+│                           │                                                    │            │             │                                     │ code hint(s)) with content markers found           │
+│                           │                                                    │            │             │                                     │ (dossier_id + bundle_checksum). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment. Presence of a    │
+│                           │                                                    │            │             │                                     │ dossier is not a conformity assessment; Art. 11 is │
+│                           │                                                    │            │             │                                     │ never reported Met by this probe.                  │
+│ ETSI_EN_304_223:5.2.4-1.2 │ P8 Documentation: Hashes for released model        │ PARTIAL    │ artifact    │ sbom.json                           │ Found candidate artifact/signal for                │
+│                           │ components                                         │            │             │                                     │ 'ai_supply_chain_pins' (2 path(s), 0 code hint(s)) │
+│                           │                                                    │            │             │                                     │ with content markers found (an SBOM header, a hash │
+│                           │                                                    │            │             │                                     │ pin or a hub revision pinned to a commit).         │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.4-3   │ P8 Documentation: Log of prompt and configuration  │ PARTIAL    │ artifact    │ oversight-log.json                  │ Found candidate artifact/signal for                │
+│                           │ changes                                            │            │             │                                     │ 'event_log_evidence' (1 path(s), 0 code hint(s)).  │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.2.5-1   │ P9 Testing: Security assessment before release     │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.2.5-2   │ P9 Testing: Operator testing before deployment     │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.2.5-2.1 │ P9 Testing: Independent security testers           │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.2.5-3   │ P9 Testing: Share test findings with operators     │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.2.5-4   │ P9 Testing: Outputs do not expose model or data    │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.2.5-4.1 │ P9 Testing: Outputs give no unintended control     │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.3.1-1   │ P10 End-user comms: Tell end-users how data is     │ PARTIAL    │ artifact    │ PRIVACY.md                          │ Found candidate artifact/signal for                │
+│                           │ used                                               │            │             │                                     │ 'privacy_notice' (1 path(s), 0 code hint(s)) with  │
+│                           │                                                    │            │             │                                     │ content markers found (a controller or contact, a  │
+│                           │                                                    │            │             │                                     │ purpose or legal basis and rights). Heuristic only │
+│                           │                                                    │            │             │                                     │ — not a full obligation assessment.                │
+│ ETSI_EN_304_223:5.3.1-2   │ P10 End-user comms: Usage and configuration        │ PARTIAL    │ artifact    │ docs/instructions-for-use.md        │ Found candidate artifact/signal for                │
+│                           │ guidance                                           │            │             │                                     │ 'deployer_instructions' (1 path(s), 0 code         │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (Art. 13(3)    │
+│                           │                                                    │            │             │                                     │ topic markers). Heuristic only — not a full        │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.3.1-2.1 │ P10 End-user comms: Guidance on limits and failure │ PARTIAL    │ artifact    │ MODEL_CARD.md                       │ Found candidate artifact/signal for 'model_card'   │
+│                           │ modes                                              │            │             │                                     │ (1 path(s), 0 code hint(s)) with content markers   │
+│                           │                                                    │            │             │                                     │ found (intended use, limitations and evaluation    │
+│                           │                                                    │            │             │                                     │ sections). Heuristic only — not a full obligation  │
+│                           │                                                    │            │             │                                     │ assessment.                                        │
+│ ETSI_EN_304_223:5.3.1-2.2 │ P10 End-user comms: Announce security-relevant     │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ updates                                            │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.3.1-3   │ P10 End-user comms: Support users after an         │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │ incident                                           │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.4.1-1   │ P11 Updates: Security updates and patches          │ PARTIAL    │ artifact    │ UPDATES.md                          │ Found candidate artifact/signal for                │
+│                           │ delivered                                          │            │             │                                     │ 'update_mechanism_note' (1 path(s), 0 code         │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (update or     │
+│                           │                                                    │            │             │                                     │ patch, how users get it, and a support period).    │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.4.1-1.1 │ P11 Updates: Fallbacks when updates are impossible │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.4.1-2   │ P11 Updates: Major updates re-tested like new      │ PARTIAL    │ artifact    │ docs/red-team-report.md             │ Found candidate artifact/signal for                │
+│                           │ models                                             │            │             │                                     │ 'ai_red_team_report' (1 path(s), 0 code hint(s))   │
+│                           │                                                    │            │             │                                     │ with content markers found (an AI-specific attack  │
+│                           │                                                    │            │             │                                     │ term and a test-result marker). Heuristic only —   │
+│                           │                                                    │            │             │                                     │ not a full obligation assessment.                  │
+│ ETSI_EN_304_223:5.4.1-3   │ P11 Updates: Help operators evaluate model changes │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.4.2-1   │ P12 Monitoring: Log system and user actions        │ PARTIAL    │ artifact    │ oversight-log.json                  │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'event_log_evidence' (1 path(s), 0 code hint(s)).  │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.4.2-2   │ P12 Monitoring: Analyse logs for anomalies and     │ PARTIAL    │ artifact    │ oversight-log.json                  │ Found candidate artifact/signal for                │
+│                           │ drift                                              │            │             │                                     │ 'event_log_evidence' (1 path(s), 0 code hint(s)).  │
+│                           │                                                    │            │             │                                     │ Heuristic only — not a full obligation assessment. │
+│ ETSI_EN_304_223:5.4.2-3   │ P12 Monitoring: Monitor internal states            │ UNVERIFIED │ attestation │ none                                │ No attestation recorded. Add one under             │
+│                           │                                                    │            │             │                                     │ framework_inputs.ETSI_EN_304_223.attested in the   │
+│                           │                                                    │            │             │                                     │ manifest.                                          │
+│ ETSI_EN_304_223:5.4.2-4   │ P12 Monitoring: Monitor model performance over     │ PARTIAL    │ artifact    │ docs/post-market-monitoring-plan.md │ Found candidate artifact/signal for                │
+│                           │ time                                               │            │             │                                     │ 'post_market_monitoring_plan' (1 path(s), 0 code   │
+│                           │                                                    │            │             │                                     │ hint(s)) with content markers found (clause        │
+│                           │                                                    │            │             │                                     │ keyword in body text, Post-market monitoring       │
+│                           │                                                    │            │             │                                     │ system (Art. 72)). Heuristic only — not a full     │
+│                           │                                                    │            │             │                                     │ obligation assessment.                             │
+│ ETSI_EN_304_223:5.5.1-1   │ P13 Disposal: Dispose of assets on transfer        │ PARTIAL    │ artifact    │ docs/end-of-life.md                 │ Found candidate artifact/signal for                │
+│                           │                                                    │            │             │                                     │ 'etsi_en_304_223.end_of_life_note' (1 path(s), 0   │
+│                           │                                                    │            │             │                                     │ code hint(s)) with content markers found (data or  │
+│                           │                                                    │            │             │                                     │ configuration deletion, model retirement or        │
+│                           │                                                    │            │             │                                     │ transfer, and who is told). Heuristic only — not a │
+│                           │                                                    │            │             │                                     │ full obligation assessment.                        │
+│ ETSI_EN_304_223:5.5.1-2   │ P13 Disposal: Delete data and configuration at     │ PARTIAL    │ artifact    │ docs/end-of-life.md                 │ Found candidate artifact/signal for                │
+│                           │ retirement                                         │            │             │                                     │ 'etsi_en_304_223.end_of_life_note' (1 path(s), 0   │
+│                           │                                                    │            │             │                                     │ code hint(s)) with content markers found (data or  │
+│                           │                                                    │            │             │                                     │ configuration deletion, model retirement or        │
+│                           │                                                    │            │             │                                     │ transfer, and who is told). Heuristic only — not a │
+│                           │                                                    │            │             │                                     │ full obligation assessment.                        │
+└───────────────────────────┴────────────────────────────────────────────────────┴────────────┴─────────────┴─────────────────────────────────────┴────────────────────────────────────────────────────┘
+
+Excluded
+  ETSI_EN_304_223:5.2.1-4: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false).
+  ETSI_EN_304_223:5.2.4-2: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false).
+  ETSI_EN_304_223:5.2.4-2.1: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

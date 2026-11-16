@@ -80,6 +80,102 @@
       "title": "PackageArticle",
       "type": "object"
     },
+    "PackageFramework": {
+      "additionalProperties": false,
+      "properties": {
+        "data_version": {
+          "title": "Data Version",
+          "type": "string"
+        },
+        "excluded": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Excluded",
+          "type": "object"
+        },
+        "framework": {
+          "title": "Framework",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "rows": {
+          "items": {
+            "$ref": "#/$defs/PackageFrameworkRow"
+          },
+          "title": "Rows",
+          "type": "array"
+        }
+      },
+      "required": [
+        "framework",
+        "label",
+        "data_version",
+        "rows",
+        "excluded"
+      ],
+      "title": "PackageFramework",
+      "type": "object"
+    },
+    "PackageFrameworkRow": {
+      "additionalProperties": false,
+      "properties": {
+        "corroborated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Corroborated"
+        },
+        "evidence_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "machine",
+                "hybrid",
+                "organisational"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Evidence Class"
+        },
+        "evidence_ref": {
+          "title": "Evidence Ref",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ArticleGapSource"
+        },
+        "status": {
+          "$ref": "#/$defs/GapStatus"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "source",
+        "evidence_ref",
+        "evidence_class",
+        "corroborated"
+      ],
+      "title": "PackageFrameworkRow",
+      "type": "object"
+    },
     "PackageIdentity": {
       "additionalProperties": false,
       "properties": {
@@ -345,6 +441,21 @@
       },
       "title": "Evidence Hashes",
       "type": "array"
+    },
+    "frameworks": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/PackageFramework"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Frameworks"
     },
     "gaps_included": {
       "default": true,

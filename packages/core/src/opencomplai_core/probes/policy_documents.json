@@ -1,0 +1,241 @@
+{
+  "family": "policy_documents",
+  "probes": {
+    "policy_information_security": {
+      "patterns": [
+        "docs/policies/information-security*",
+        "docs/policies/information_security*",
+        "**/information-security-policy*",
+        "**/information_security_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "information[\\s_-]*security",
+            "flags": "i"
+          }
+        ],
+        "found_label": "the words information security",
+        "lacks_label": "information security and minimum body length",
+        "noun": "information security policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus information security policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_access_control": {
+      "patterns": [
+        "docs/policies/access-control*",
+        "docs/policies/access_control*",
+        "**/access-control-policy*",
+        "**/access_control_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "access[\\s_-]*control|least[\\s_-]*privilege|authori[sz]ation",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an access control, least privilege or authorisation term",
+        "lacks_label": "access-control term and minimum body length",
+        "noun": "access control policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus access control policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_cryptography": {
+      "patterns": [
+        "docs/policies/cryptograph*",
+        "**/cryptography-policy*",
+        "**/cryptography_policy*",
+        "**/encryption-policy*",
+        "**/encryption_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "encryption|encrypted|key[\\s_-]*management",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an encryption or key management term",
+        "lacks_label": "encryption or key-management term and minimum body length",
+        "noun": "cryptography policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus cryptography policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_backup": {
+      "patterns": [
+        "docs/policies/backup*",
+        "**/backup-policy*",
+        "**/backup_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bbackups?\\b|\\brestor(?:e|ed|ing|ation)\\b|\\bretention\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a backup, restore or retention term",
+        "lacks_label": "backup, restore or retention term and minimum body length",
+        "noun": "backup policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus backup policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_change_management": {
+      "patterns": [
+        "docs/policies/change-management*",
+        "docs/policies/change_management*",
+        "**/change-management-policy*",
+        "**/change_management_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "change[\\s_-]*(?:control|management)|\\bapprov(?:al|ed|er)s?\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a change control or approval term",
+        "lacks_label": "change-control or approval term and minimum body length",
+        "noun": "change management policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus change management policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_supplier": {
+      "patterns": [
+        "docs/policies/supplier*",
+        "**/supplier-policy*",
+        "**/supplier_policy*",
+        "**/third-party-policy*",
+        "**/third_party_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bsuppliers?\\b|\\bvendors?\\b|third[\\s_-]*part(?:y|ies)",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a supplier, vendor or third-party term",
+        "lacks_label": "supplier, vendor or third-party term and minimum body length",
+        "noun": "supplier policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus supplier policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_acceptable_use": {
+      "patterns": [
+        "docs/policies/acceptable-use*",
+        "docs/policies/acceptable_use*",
+        "**/acceptable-use-policy*",
+        "**/acceptable_use_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "acceptable[\\s_-]*use|prohibited[\\s_-]*use|\\bprohibited\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an acceptable or prohibited use term",
+        "lacks_label": "acceptable or prohibited use term and minimum body length",
+        "noun": "acceptable use policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus acceptable use policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_continuity": {
+      "patterns": [
+        "docs/policies/continuity*",
+        "**/business-continuity-policy*",
+        "**/business_continuity_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bcontinuity\\b|disaster[\\s_-]*recovery",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a continuity or disaster recovery term",
+        "lacks_label": "continuity or disaster-recovery term and minimum body length",
+        "noun": "continuity policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus continuity policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "policy_ai": {
+      "patterns": [
+        "docs/policies/ai-policy*",
+        "docs/policies/ai_policy*",
+        "**/ai-policy*",
+        "**/ai_policy*",
+        "**/responsible-ai-policy*",
+        "**/responsible_ai_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bAI[\\s_-]*systems?\\b|responsible[\\s_-]*AI",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an AI system or responsible AI term",
+        "lacks_label": "AI-system or responsible-AI term and minimum body length",
+        "noun": "AI policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus AI policy keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

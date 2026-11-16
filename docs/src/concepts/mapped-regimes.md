@@ -8,8 +8,9 @@ that covers similar subject matter to that EU AI Act article.
 
 - It is a pointer, not a verdict. No Met, Partial, Missing or Unverified status is computed for DORA or EBA, and
   the statuses of the EU AI Act rows are identical with and without `--map-to`.
-- DORA and EBA are not compliance targets. `--target DORA` still exits 2, and no probe, evaluator or control is
-  attached to these rows.
+- The `--map-to` columns are citations only. DORA and EBA each have their own pack, evaluated as a target:
+  see [DORA](../frameworks/dora.md) and [EBA](../frameworks/eba.md). No probe, evaluator or control is attached
+  to the mapped rows on this page.
 - Without `--map-to` the output is byte-identical to before.
 
 ## The review flag

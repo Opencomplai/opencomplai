@@ -24,6 +24,14 @@ DRAFT_NOTE = (
 _AGENT_ID = re.compile(r"agent '([^']+)'")
 
 
+def plain_text(text: str) -> str:
+    """`text` with control characters escaped, so an id cannot start a forged line.
+
+    Ordinary text, including quotes and non-ASCII letters, is unchanged.
+    """
+    return "".join(c if c.isprintable() else ascii(c)[1:-1] for c in text)
+
+
 def build_agent_report(
     manifest: SystemManifest, scan_report: CorroborationReport | None = None
 ) -> dict[str, Any]:
@@ -90,7 +98,13 @@ def build_agent_report(
 
 
 def render_agent_report_markdown(report: dict[str, Any]) -> str:
-    lines = [f"# Agent report: {report['system_id']}", "", f"_{report['notice']}_", ""]
+    # Everything that came from the manifest goes through `plain_text`.
+    lines = [
+        f"# Agent report: {plain_text(report['system_id'])}",
+        "",
+        f"_{report['notice']}_",
+        "",
+    ]
     lines += ["## Inventory", ""]
     if not report["inventory"]:
         lines += ["No agent inventory declared.", ""]
@@ -100,22 +114,26 @@ def render_agent_report_markdown(report: dict[str, Any]) -> str:
             "| --- | --- | --- | --- | --- | --- |",
         ]
         for a in report["inventory"]:
+            tools = ", ".join(plain_text(t) for t in a["tools"]) or "-"
+            models = ", ".join(plain_text(m) for m in a["models"]) or "-"
             lines.append(
-                f"| {a['id']} | {a['parent_id'] or '-'} | {', '.join(a['tools']) or '-'} "
-                f"| {', '.join(a['models']) or '-'} | {'yes' if a['has_mandate'] else 'no'} "
+                f"| {plain_text(a['id'])} "
+                f"| {plain_text(a['parent_id']) if a['parent_id'] else '-'} "
+                f"| {tools} | {models} | {'yes' if a['has_mandate'] else 'no'} "
                 f"| {a['guardrail_count']} |"
             )
         lines.append("")
     lines += ["## Findings", ""]
     lines += [
-        f"- [{f['evidence']}] {f['kind']}: {f['detail']}" for f in report["findings"]
+        f"- [{f['evidence']}] {f['kind']}: {plain_text(f['detail'])}"
+        for f in report["findings"]
     ] or ["None."]
     rmap = report["responsibility_map"]
     lines += ["", "## Responsibility map", "", rmap["reference_note"], ""]
     if rmap["declared"]:
         lines.append("Declared in the manifest:")
         for key, items in rmap["declared"].items():
-            lines += [f"- {key}: {item}" for item in items]
+            lines += [f"- {key}: {plain_text(item)}" for item in items]
         lines.append("")
     for r in rmap["reference_rows"]:
         lines.append(

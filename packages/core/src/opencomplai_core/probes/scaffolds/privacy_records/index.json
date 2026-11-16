@@ -1,0 +1,30 @@
+{
+  "dpia_document": {
+    "title": "Data protection impact assessment",
+    "target": "DPIA.md"
+  },
+  "record_of_processing": {
+    "title": "Record of processing",
+    "target": "docs/ropa.md"
+  },
+  "privacy_notice": {
+    "title": "Privacy notice",
+    "target": "PRIVACY.md"
+  },
+  "data_subject_request_procedure": {
+    "title": "Data subject request procedure",
+    "target": "docs/dsar.md"
+  },
+  "processor_register": {
+    "title": "Processor register",
+    "target": "docs/processor-register.md"
+  },
+  "breach_register": {
+    "title": "Breach register",
+    "target": "docs/breach-register.md"
+  },
+  "transfer_record": {
+    "title": "Transfer record",
+    "target": "docs/transfer-impact.md"
+  }
+}

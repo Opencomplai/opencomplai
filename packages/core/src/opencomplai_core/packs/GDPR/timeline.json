@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "id": "gdpr.request_response",
+      "title": "Response to a data subject's request, Art. 12(3)",
+      "applies_from": null,
+      "requirements": ["GDPR:Art. 12"],
+      "scope_note": "The controller provides information on action taken on a request under Arts. 15 to 22 within a set period.",
+      "source": "Reg. (EU) 2016/679, Art. 12(3) (CELEX 32016R0679)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: Art. 12(3) read on EUR-Lex; the period may be extended by two further months where necessary, with the data subject told within the first month.",
+      "duration": "one month from receipt of the request"
+    },
+    {
+      "id": "gdpr.breach_notification",
+      "title": "Personal data breach notification, Art. 33(1)",
+      "applies_from": null,
+      "requirements": ["GDPR:Art. 33"],
+      "scope_note": "The controller notifies the supervisory authority of a personal data breach within a set period where feasible.",
+      "source": "Reg. (EU) 2016/679, Art. 33(1) (CELEX 32016R0679)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: Art. 33(1) read on EUR-Lex; notification without undue delay and, where feasible, within 72 hours, unless the breach is unlikely to result in a risk to individuals.",
+      "duration": "72 hours after becoming aware of the breach"
+    }
+  ]
+}

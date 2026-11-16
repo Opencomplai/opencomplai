@@ -1,0 +1,123 @@
+{
+  "family": "dora",
+  "probes": {
+    "dora.register_of_information": {
+      "patterns": [
+        "**/register-of-information*",
+        "**/register_of_information*",
+        "**/ict-provider-register*",
+        "**/ict_provider_register*",
+        "docs/**/ict-third-party*",
+        "docs/**/ict_third_party*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bproviders?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:services?|functions?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bcritical\\b|\\bimportant\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "provider, function or service, and critical-or-important entries",
+        "lacks_label": "provider, function or service supported, or critical-or-important flag",
+        "noun": "register of information",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general ICT third-party register practice, by topic words only; Article 28 of Regulation (EU) 2022/2554",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "dora.incident_report": {
+      "type": "clause_document",
+      "patterns": [
+        "**/major-incident-report*",
+        "**/major_incident_report*",
+        "docs/**/ict-incident-report*",
+        "docs/**/ict_incident_report*"
+      ],
+      "noun": "major incident report",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general incident reporting practice, by topic words only; Articles 17 to 19 of Regulation (EU) 2022/2554",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "classification": {
+          "title": "Classification of the incident",
+          "markers": [
+            {
+              "re": "\\bclassif\\w*",
+              "flags": "i"
+            },
+            {
+              "re": "\\bcriteria\\b|\\bthreshold\\b|\\bseverity\\b|\\bmateriality\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "initial-notification": {
+          "title": "Initial notification to the authority",
+          "markers": [
+            {
+              "re": "\\binitial\\s+notification\\b|\\bfirst\\s+notification\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bauthority\\b|\\bsupervisor\\b|\\bregulator\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "intermediate-report": {
+          "title": "Intermediate report",
+          "markers": [
+            {
+              "re": "\\bintermediate\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bupdate\\b|\\bstatus\\b|\\brecovery\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "final-report": {
+          "title": "Final report",
+          "markers": [
+            {
+              "re": "\\bfinal\\s+report\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\broot\\s+cause\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "client-information": {
+          "title": "Information to affected clients",
+          "markers": [
+            {
+              "re": "\\bclients?\\b|\\bcustomers?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\binform\\w*|\\bnotif\\w*|\\bcommunicat\\w*",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

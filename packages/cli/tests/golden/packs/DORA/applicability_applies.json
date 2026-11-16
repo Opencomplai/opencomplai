@@ -1,0 +1,12 @@
+{
+  "framework": "DORA",
+  "outcome": "applies",
+  "reason": "",
+  "scope": {
+    "financial_entity": true,
+    "simplified_regime": false
+  },
+  "scoped_out": {
+    "DORA:Art. 16": "Not applicable: the manifest's scope says the system full framework applies (framework_inputs.DORA.scope.simplified_regime = false)."
+  }
+}

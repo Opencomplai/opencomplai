@@ -1,0 +1,6 @@
+{
+  "events": [
+    {"timestamp": "2026-10-01T09:12:00Z", "actor": "service desk lead", "action": "overrode ranking for ticket 1042", "reason": "customer outage"},
+    {"timestamp": "2026-10-02T14:30:00Z", "actor": "service desk lead", "action": "approved model v1.4.0 for release", "reason": "retest passed"}
+  ]
+}

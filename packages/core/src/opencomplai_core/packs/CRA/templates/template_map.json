@@ -1,0 +1,252 @@
+{
+  "CRA:Art. 13(2)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Art. 13(3)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Art. 13(5)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Art. 13(6)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Art. 13(7)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Art. 13(8)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Art. 13(9)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Art. 13(17)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Art. 13(18)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Art. 13(19)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Art. 14(1)": {
+    "template_id": "reporting_record",
+    "kind": "markdown",
+    "file": "reporting_record.md"
+  },
+  "CRA:Art. 14(3)": {
+    "template_id": "reporting_record",
+    "kind": "markdown",
+    "file": "reporting_record.md"
+  },
+  "CRA:Art. 14(8)": {
+    "template_id": "reporting_record",
+    "kind": "markdown",
+    "file": "reporting_record.md"
+  },
+  "CRA:Annex I Part I (1)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(a)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(b)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(c)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(d)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(e)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(f)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(g)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(h)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(j)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(k)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part I (2)(l)": {
+    "template_id": "secure_product_property",
+    "kind": "markdown",
+    "file": "secure_product_property.md"
+  },
+  "CRA:Annex I Part II (1)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (2)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (3)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (4)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (5)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (6)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (7)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex I Part II (8)": {
+    "template_id": "vulnerability_handling",
+    "kind": "markdown",
+    "file": "vulnerability_handling.md"
+  },
+  "CRA:Annex II (1)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (2)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (3)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (4)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (5)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (6)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (7)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (8)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex II (9)": {
+    "template_id": "user_information_point",
+    "kind": "markdown",
+    "file": "user_information_point.md"
+  },
+  "CRA:Annex VII (1)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (2)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (3)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (4)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (5)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (6)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (7)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  },
+  "CRA:Annex VII (8)": {
+    "template_id": "technical_file_point",
+    "kind": "markdown",
+    "file": "technical_file_point.md"
+  }
+}

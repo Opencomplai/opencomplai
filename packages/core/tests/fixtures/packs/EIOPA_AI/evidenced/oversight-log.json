@@ -1,0 +1,1 @@
+{"entries":[{"seq":1,"event":"handler_override","system":"claims-triage","prev_hash":"0000","hash":"a1f3"},{"seq":2,"event":"model_ranking","system":"claims-triage","prev_hash":"a1f3","hash":"b72c"}]}

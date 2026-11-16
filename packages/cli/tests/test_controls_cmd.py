@@ -489,3 +489,116 @@ def test_status_counts_gated_frameworks_by_default(monkeypatch, tmp_path):
 
     assert result.exit_code == 1, result.output
     assert "controls: 2 total · 1 satisfied · 1 evidence_missing" in result.output
+
+
+def _seed_a_missing_custom_control() -> None:
+    # The fake vault is the one `_seed_eu_satisfied_and_fixture_missing` installed.
+    main_module._vault_request.seed(
+        _control("ctrl-custom", article_ref="CUSTOM_ACME:AC-1")
+    )
+
+
+def test_status_counts_a_gated_custom_pack_that_is_not_loaded(monkeypatch, tmp_path):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    _seed_a_missing_custom_control()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [CUSTOM_ACME, FIXTURE]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    # There is no --custom-pack here: the vault rows are counted without the pack.
+    assert result.exit_code == 1, result.output
+    assert "controls: 3 total · 1 satisfied · 2 evidence_missing" in result.output
+
+
+def test_status_notes_a_gated_custom_key_that_matches_no_register_row(
+    monkeypatch, tmp_path
+):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    _seed_a_missing_custom_control()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [CUSTOM_ACME, CUSTOM_ACMEE]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.stderr.count("NOTE:") == 1
+    assert "CUSTOM_ACMEE" in result.stderr
+    assert "CUSTOM_ACME " not in result.stderr
+
+
+def test_status_prints_no_note_when_every_gated_custom_key_has_a_row(
+    monkeypatch, tmp_path
+):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    _seed_a_missing_custom_control()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [CUSTOM_ACME]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert "NOTE:" not in result.stderr
+
+
+def test_status_fails_on_a_missing_control_of_a_gated_custom_pack_not_loaded(
+    monkeypatch, tmp_path
+):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    _seed_a_missing_custom_control()
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [CUSTOM_ACME]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.exit_code == 1, result.output
+    assert "controls: 2 total · 1 satisfied · 1 evidence_missing" in result.output
+
+
+def test_status_still_refuses_a_gated_name_that_is_not_a_custom_key(
+    monkeypatch, tmp_path
+):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [NOT_A_PACK]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.exit_code == 2
+    assert "NOT_A_PACK" in result.output
+
+
+def test_status_counts_a_gated_custom_pack_that_is_loaded(monkeypatch, tmp_path):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+    monkeypatch.setitem(FRAMEWORKS, "CUSTOM_ACME", FRAMEWORKS["FIXTURE"])
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "opencomplai.yaml").write_text(
+        "gate:\n  frameworks: [CUSTOM_ACME]\n", encoding="utf-8"
+    )
+
+    result = runner.invoke(app, ["controls", "status", "--system-id", SYSTEM_ID])
+
+    assert result.exit_code == 0, result.output
+    assert "controls: 1 total · 1 satisfied · 0 evidence_missing" in result.output
+
+
+def test_status_still_refuses_an_unknown_custom_key_named_on_the_command_line(
+    monkeypatch,
+):
+    _seed_eu_satisfied_and_fixture_missing(monkeypatch)
+
+    result = runner.invoke(
+        app,
+        ["controls", "status", "--system-id", SYSTEM_ID, "--framework", "CUSTOM_ACME"],
+    )
+
+    assert result.exit_code == 2
+    assert "CUSTOM_ACME" in result.output

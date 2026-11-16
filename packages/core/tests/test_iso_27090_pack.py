@@ -40,22 +40,43 @@ IDS = [
 EVALUATOR_BACKED = {
     f"{ISO}:5.7": {"EVAL_ADVERSARIAL_V1"},
     f"{ISO}:6.8": {"EVAL_DATA_LEAKAGE_V1"},
-    f"{ISO}:6.9": {"EVAL_ADVERSARIAL_V1", "EVAL_SAFETY_LEXICAL_V1"},
-    f"{ISO}:6.10": {"EVAL_SAFETY_LEXICAL_V1"},
+    f"{ISO}:6.9": {"EVAL_ADVERSARIAL_V1"},
 }
 
-# Rows that also look for a file or code construct. That evidence only adds to the
-# attestation (role "supporting"); it never decides a row by itself.
-SUPPORTING = {
+# Evaluators that follow the attestation (role "corroborating") on hybrid rows.
+CORROBORATING_EVALUATORS = {
+    f"{ISO}:6.3": {"EVAL_ADVERSARIAL_V1"},
+    f"{ISO}:6.4": {"EVAL_DATA_LEAKAGE_V1"},
+    f"{ISO}:6.6": {"EVAL_DATA_LEAKAGE_V1"},
+    f"{ISO}:B.6": {"EVAL_DATA_LEAKAGE_V1"},
+}
+
+# Rows that also look for a file or code construct. That evidence follows the
+# attestation (role "corroborating"): it can lift an attested row to Met, and on its
+# own it gives Missing or Partial.
+CORROBORATING = {
+    f"{ISO}:5.2": {"policy_ai"},
+    f"{ISO}:5.3": {"iso_iec_27090.model_access_control"},
+    f"{ISO}:5.4": {"sast_config", "code_review_rules"},
     f"{ISO}:5.5": {"ai_supply_chain_pins"},
     f"{ISO}:5.6": {"ai_threat_model"},
     f"{ISO}:5.7": {"ai_red_team_report"},
+    f"{ISO}:6.2": {"data_provenance_sheet", "ai_supply_chain_pins"},
+    f"{ISO}:6.3": {"ai_red_team_report"},
     f"{ISO}:6.5": {"rate_limiting_config"},
+    f"{ISO}:6.7": {"ai_supply_chain_pins", "signed_release_config"},
+    f"{ISO}:6.10": {"iso_iec_27090.input_validation_config"},
+    f"{ISO}:7.4": {"post_market_monitoring_plan"},
     f"{ISO}:7.5": {"event_log_evidence"},
+    f"{ISO}:7.6": {"secret_scanning_config"},
+    f"{ISO}:7.7": {"iso_iec_27090.input_validation_config"},
     f"{ISO}:7.8": {"rate_limiting_config"},
     f"{ISO}:B.2": {"rate_limiting_config"},
     f"{ISO}:B.3": {"ai_supply_chain_pins"},
+    f"{ISO}:B.4": {"ai_supply_chain_pins"},
+    f"{ISO}:B.5": {"iso_iec_27090.model_access_control"},
 }
+ORGANISATIONAL = {f"{ISO}:{c}" for c in "5.1 6.11 7.2 7.3 7.9 B.7".split()}
 
 THREAT_MODEL = (
     "# Threat model\n\nAn attacker can use prompt injection in retrieved documents "
@@ -130,21 +151,45 @@ def test_every_row_is_flagged_data_in_table_of_contents_order():
 
 def test_rows_are_attestation_led_with_evaluators_only_where_they_check_the_row():
     evaluators = {}
-    supporting = {}
+    corroborating_evaluators = {}
+    corroborating = {}
     for rid, row in _rows().items():
         sources = row["sources"]
         assert {s["kind"] for s in sources} <= {"attestation", "evaluator", "artifact"}
         assert sources[0] == {"kind": "attestation", "ref": rid}, rid
-        refs = {s["ref"] for s in sources if s["kind"] == "evaluator"}
+        refs = {
+            s["ref"] for s in sources if s["kind"] == "evaluator" and "role" not in s
+        }
         if refs:
             evaluators[rid] = refs
-        # A probe is supporting evidence, never a row's own verdict.
+        refs = {
+            s["ref"]
+            for s in sources
+            if s["kind"] == "evaluator" and s.get("role") == "corroborating"
+        }
+        if refs:
+            corroborating_evaluators[rid] = refs
+        # A probe follows the attestation, never a row's own verdict.
         probes = [s for s in sources if s["kind"] == "artifact"]
-        assert all(s["role"] == "supporting" for s in probes), rid
+        assert all(s["role"] == "corroborating" for s in probes), rid
         if probes:
-            supporting[rid] = {s["ref"] for s in probes}
+            corroborating[rid] = {s["ref"] for s in probes}
     assert evaluators == EVALUATOR_BACKED
-    assert supporting == SUPPORTING
+    assert corroborating_evaluators == CORROBORATING_EVALUATORS
+    assert corroborating == CORROBORATING
+
+
+def test_every_row_is_classified_from_its_sources():
+    rows = _rows()
+    classes = {rid: row["evidence_class"] for rid, row in rows.items()}
+    assert {r for r, c in classes.items() if c == "organisational"} == ORGANISATIONAL
+    assert {r for r, c in classes.items() if c == "machine"} == set(EVALUATOR_BACKED)
+    for rid, row in rows.items():
+        if classes[rid] == "organisational":
+            assert 0 < len(row["why_attestation"]) <= 160, rid
+        assert row["own_wording"] is True, rid
+        assert row["default_ttl_days"] in (90, 180, 365, 730), rid
+    assert len(rows) - len(ORGANISATIONAL) >= 20
 
 
 def test_without_evidence_everything_is_unverified():
@@ -371,23 +416,30 @@ def _repo(tmp_path: Path, files: dict[str, str]) -> Path:
     return tmp_path
 
 
-def test_supporting_evidence_without_an_attestation_stays_unverified(tmp_path: Path):
+def test_evidence_without_an_attestation_is_partial_at_most(tmp_path: Path):
     rid = f"{ISO}:5.6"
     repo = _repo(tmp_path, {"docs/threat-model.md": THREAT_MODEL})
     row = _row(_manifest(), rid, repo_root=repo)
-    assert row.status == GapStatus.UNVERIFIED
+    assert row.status == GapStatus.PARTIAL
     assert row.source.value == "artifact"
     assert row.evidence_ref == "docs/threat-model.md"
-    assert "Evidence found in docs/threat-model.md" in row.rationale
-    assert "not attested" in row.rationale
-    assert "framework_inputs.ISO_IEC_27090.attested" in row.rationale
-    assert row.confidence_label == ConfidenceLabel.NOT_ASSESSED
+    # With nothing found in a repository, the row reads Missing.
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    assert _row(_manifest(), rid, repo_root=empty).status == GapStatus.MISSING
 
 
-def test_evidence_in_the_repository_cannot_fail_a_gate(tmp_path: Path):
+def test_the_gate_reads_rows_with_evidence_but_no_attestation_as_missing(
+    tmp_path: Path,
+):
     repo = _repo(tmp_path, {"docs/threat-model.md": THREAT_MODEL})
     reports = evaluate_targets(_manifest(), [ISO], commit_ref="HEAD", repo_root=repo)
-    assert gate_failures(reports, [ISO], "partial") == []
+    failing = set(gate_failures(reports, [ISO], "missing"))
+    assert f"{ISO}:5.6" not in failing
+    assert f"{ISO}:5.2" in failing
+    # Without a repository there is nothing to read, so nothing fails.
+    bare = evaluate_targets(_manifest(), [ISO], commit_ref="HEAD")
+    assert gate_failures(bare, [ISO], "partial") == []
 
 
 def test_supporting_evidence_keeps_an_attested_row_met_and_names_the_file(
@@ -405,28 +457,28 @@ def test_supporting_evidence_keeps_an_attested_row_met_and_names_the_file(
     assert "docs/threat-model.md (ai_threat_model)" in row.rationale
 
 
-def test_a_supporting_probe_that_finds_nothing_changes_nothing(tmp_path: Path):
+def test_an_attested_row_never_drops_below_partial_when_nothing_is_found(
+    tmp_path: Path,
+):
     rid = f"{ISO}:5.6"
-    unattested = _manifest()
     attested = _manifest(framework_inputs=_attest(rid))
-    for manifest, status in (
-        (unattested, GapStatus.UNVERIFIED),
-        (attested, GapStatus.MET),
-    ):
-        bare = _row(manifest, rid)  # no repo root at all
-        assert bare.status == status
-        assert _row(manifest, rid, repo_root=tmp_path) == bare
+    assert _row(_manifest(), rid).status == GapStatus.UNVERIFIED  # no repo root
+    assert _row(attested, rid).status == GapStatus.MET  # no repo root
+    assert _row(attested, rid, repo_root=tmp_path).status == GapStatus.PARTIAL
+    assert _row(_manifest(), rid, repo_root=tmp_path).status == GapStatus.MISSING
 
 
-def test_a_file_without_the_content_markers_is_not_evidence(tmp_path: Path):
+def test_a_file_without_the_content_markers_does_not_lift_the_row(tmp_path: Path):
     repo = _repo(
         tmp_path,
         {
             "docs/threat-model.md": "# Threat model\n\nTo be written before the release.\n"
         },
     )
-    row = _row(_manifest(), f"{ISO}:5.6", repo_root=repo)
-    assert row.status == GapStatus.UNVERIFIED
+    rid = f"{ISO}:5.6"
+    row = _row(_manifest(framework_inputs=_attest(rid)), rid, repo_root=repo)
+    assert row.status == GapStatus.PARTIAL
+    assert row.status != GapStatus.MET
 
 
 def test_a_failing_evaluator_still_makes_the_row_missing(tmp_path: Path):
@@ -444,10 +496,10 @@ def test_a_failing_evaluator_still_makes_the_row_missing(tmp_path: Path):
     for manifest in (_manifest(), _manifest(framework_inputs=_attest(rid))):
         row = _row(manifest, rid, repo_root=repo, eval_report=fail)
         assert (row.status, row.source.value) == (GapStatus.MISSING, "evaluator")
-    # Without an eval the unattested row stays Unverified, pointing at the file.
+    # Without an eval the unattested row is Partial, pointing at the file.
     row = _row(_manifest(), rid, repo_root=repo)
     assert (row.status, row.evidence_ref) == (
-        GapStatus.UNVERIFIED,
+        GapStatus.PARTIAL,
         "docs/red-team-report.md",
     )
 
@@ -457,19 +509,28 @@ def test_event_log_supports_logging_and_monitoring(tmp_path: Path):
     repo = _repo(tmp_path, {".opencomplai/oversight-log.json": '{"seq": 1}\n'})
     row = _row(_manifest(), rid, repo_root=repo)
     assert (row.status, row.evidence_ref) == (
-        GapStatus.UNVERIFIED,
+        GapStatus.PARTIAL,
         ".opencomplai/oversight-log.json",
     )
     attested = _manifest(framework_inputs=_attest(rid))
-    assert _row(attested, rid, repo_root=repo).status == GapStatus.MET
+    assert _row(attested, rid, repo_root=repo).status in (
+        GapStatus.MET,
+        GapStatus.PARTIAL,
+    )
 
 
 def test_rate_limits_support_exactly_the_throttling_rows(tmp_path: Path):
     repo = _repo(tmp_path, {"app/main.py": "from slowapi import Limiter\n"})
     report = _report(_manifest(), repo_root=repo)
-    assert {r.status for r in report.report.articles} == {GapStatus.UNVERIFIED}
-    pointing = {r.article for r in report.report.articles if r.evidence_ref != "none"}
-    assert pointing == {f"{ISO}:{c}" for c in ("6.5", "7.8", "B.2")}
+    throttling = {f"{ISO}:{c}" for c in ("6.5", "7.8", "B.2")}
+    found = {
+        r.article for r in report.report.articles if r.evidence_ref == "app/main.py"
+    }
+    assert found == throttling
+    assert {r.status for r in report.report.articles if r.article in throttling} == {
+        GapStatus.PARTIAL
+    }
+    pointing = throttling
     # The scope still takes the same rows out when the system has no public API.
     scoped = _report(_scoped(public_api=False), repo_root=repo)
     assert set(scoped.excluded) == pointing

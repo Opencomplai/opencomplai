@@ -11,9 +11,15 @@ Each program was written from the Annex III area names and sub-point titles only
 migration, justice and democratic processes). The signal dictionary, the
 matcher and the scores of the existing sets were not read while writing it.
 
-The area label of every program is a single author's reading of the Annex III
-text. It is not a legal determination and no second person has reviewed it; the
-labels are data, flagged in ``LEADS_META`` for founder review.
+The area label of every program began as a single author's reading of the Annex III
+text. The set then had one blind second pass by two independent automated
+labellers (language models, not people), who each labelled every program from
+its purpose and files without seeing the author's labels; a label would change
+only where both agreed on a different one. Every label was confirmed, so no
+label changed, and every ``labeller`` field is ``second_pass``, meaning that
+automated pass. No label has been reviewed by a person. The labels are still not
+a legal determination: they are data, flagged in ``LEADS_META`` for founder
+review.
 
 The text lives in ``_RAW`` in a line format::
 
@@ -41,8 +47,12 @@ LEADS_META = {
     ),
     "confidence": "low",
     "needs_founder_review": True,
-    "labelled_by": "benchmark author, single author, no second pass",
-    "date": "2026-10-13",
+    "labelled_by": (
+        "benchmark author, then a blind second pass by two independent automated "
+        "labellers (language models, not people); a label changed only when both "
+        "agreed; not reviewed by a person"
+    ),
+    "date": "2026-11-09",
 }
 
 _RAW = r"""
@@ -50,7 +60,7 @@ _RAW = r"""
 area: 3
 purpose: Watch students through the webcam during online exams and flag suspected cheating behaviour for the invigilator
 why: Annex III education 3(d), monitoring and detecting prohibited behaviour of students during tests
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -79,7 +89,7 @@ def review(frames):
 area: 3
 purpose: Rank applicants to the university and recommend which of them are admitted to each programme
 why: Annex III education 3(a), determining access or admission of persons to educational institutions
-labeller: author
+labeller: second_pass
 language: java
 kind: positive
 ## pom.xml
@@ -125,7 +135,7 @@ public class ApplicantRanker {
 area: 3
 purpose: Grade student essays with a language model and set each student's mark and learning level
 why: Annex III education 3(b), evaluating learning outcomes including steering a student's learning process
-labeller: author
+labeller: second_pass
 language: typescript
 kind: positive
 ## package.json
@@ -158,7 +168,7 @@ export async function gradeEssay(studentId: string, essay: string) {
 area: 4
 purpose: Screen job applications and rank candidates so recruiters only look at the top ones
 why: Annex III employment 4(a), recruitment and selection, analysing and filtering applications and evaluating candidates
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -181,7 +191,7 @@ def rank_candidates(applications: pd.DataFrame, keep: int = 20):
 area: 4
 purpose: Score each warehouse worker's productivity from scan rates and flag workers for a performance warning or a termination review
 why: Annex III employment 4(b), monitoring and evaluating the performance and behaviour of workers and decisions on termination
-labeller: author
+labeller: second_pass
 language: go
 kind: positive
 ## go.mod
@@ -222,7 +232,7 @@ func main() {
 area: 4
 purpose: Allocate tasks and shifts to workers from a model of each worker's personal traits and past behaviour
 why: Annex III employment 4(b), allocating tasks based on individual behaviour or personal traits of workers
-labeller: author
+labeller: second_pass
 language: javascript
 kind: positive
 ## package.json
@@ -256,7 +266,7 @@ module.exports = { load, allocate };
 area: 5
 purpose: Estimate the creditworthiness of private individuals applying for a mortgage and set their credit score
 why: Annex III essential_services 5(b), evaluating the creditworthiness of natural persons and establishing their credit score
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -279,7 +289,7 @@ def credit_score(income, debt_ratio, years_employed, missed_payments):
 area: 5
 purpose: Price life and health insurance premiums for individual customers from their medical history and lifestyle
 why: Annex III essential_services 5(c), risk assessment and pricing for natural persons in life and health insurance
-labeller: author
+labeller: second_pass
 language: java
 kind: positive
 ## pom.xml
@@ -325,7 +335,7 @@ public class PremiumPricer {
 area: 5
 purpose: Read incoming emergency calls and decide which ones are sent an ambulance first
 why: Annex III essential_services 5(d), evaluating and classifying emergency calls and prioritising emergency first response dispatch
-labeller: author
+labeller: second_pass
 language: go
 kind: positive
 ## go.mod
@@ -369,7 +379,7 @@ func main() {
 area: 5
 purpose: Decide whether residents are eligible for a housing allowance and reduce or stop the payment when their income changes
 why: Annex III essential_services 5(a), assessing eligibility of natural persons for public assistance benefits and granting, reducing or revoking them
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -392,7 +402,7 @@ def review(household):
 area: 6
 purpose: Assess the risk that a person on parole will re-offend and give the probation officer a risk score
 why: Annex III law_enforcement 6(d), assessing the risk of a natural person offending or re-offending
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -418,7 +428,7 @@ def risk(person: dict) -> float:
 area: 6
 purpose: Evaluate the reliability of witness statements and digital evidence collected in a criminal investigation
 why: Annex III law_enforcement 6(c), evaluating the reliability of evidence in the investigation or prosecution of criminal offences
-labeller: author
+labeller: second_pass
 language: typescript
 kind: positive
 ## package.json
@@ -448,7 +458,7 @@ export async function reliability(statement: string): Promise<number> {
 area: 6
 purpose: Assess the risk that a person becomes the victim of a repeat offence and set a protection priority for the police
 why: Annex III law_enforcement 6(a), assessing the risk of a natural person becoming the victim of criminal offences
-labeller: author
+labeller: second_pass
 language: java
 kind: positive
 ## pom.xml
@@ -486,7 +496,7 @@ public class VictimRisk {
 area: 7
 purpose: Score each visa and residence permit application for the risk of irregular migration and route high scores to a caseworker
 why: Annex III migration 7(b), assessing the risk, including irregular migration risk, posed by a person who applies to enter or reside
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -511,7 +521,7 @@ def route(app):
 area: 7
 purpose: Identify persons at a border checkpoint by matching a face image against the entry watchlist
 why: Annex III migration 7(d), detecting, recognising or identifying natural persons in the context of border control
-labeller: author
+labeller: second_pass
 language: go
 kind: positive
 ## go.mod
@@ -551,7 +561,7 @@ func main() {
 area: 7
 purpose: Assist asylum officers by assessing whether the evidence in each asylum application is reliable and drafting a recommendation
 why: Annex III migration 7(c), examining applications for asylum and assessing the reliability of evidence
-labeller: author
+labeller: second_pass
 language: javascript
 kind: positive
 ## package.json
@@ -584,7 +594,7 @@ module.exports = { assessApplication };
 area: 8
 purpose: Help judges research the facts and the law of a case and apply the law to the facts in a draft ruling
 why: Annex III justice_democracy 8(a), assisting a judicial authority in researching and interpreting facts and law and applying the law to facts
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -609,7 +619,7 @@ def draft_ruling(facts: str, statutes: list[str]) -> str:
 area: 8
 purpose: Predict which voters can be persuaded and choose the message that most changes how they vote in the referendum
 why: Annex III justice_democracy 8(b), influencing the outcome of an election or referendum or the voting behaviour of natural persons
-labeller: author
+labeller: second_pass
 language: python
 kind: positive
 ## requirements.txt
@@ -635,7 +645,7 @@ def targets(voters: pd.DataFrame, top: int = 5000):
 area: 8
 purpose: Recommend a settlement outcome for each dispute submitted to an alternative dispute resolution body
 why: Annex III justice_democracy 8(a), a system used in a similar way in alternative dispute resolution to apply the law to the facts
-labeller: author
+labeller: second_pass
 language: java
 kind: positive
 ## pom.xml
@@ -676,7 +686,7 @@ public class SettlementRecommender {
 area: none
 purpose: Generate practice quiz questions on a topic that students can use to revise on their own
 why: no area applies, it writes revision content and does not admit, grade or monitor any student
-labeller: author
+labeller: second_pass
 language: python
 kind: hard_negative
 ## requirements.txt
@@ -702,7 +712,7 @@ def make_quiz(topic: str, count: int = 10) -> str:
 area: none
 purpose: Index public job postings so that visitors can search them by keyword and location
 why: no area applies, it searches postings and does not screen, rank or evaluate any candidate
-labeller: author
+labeller: second_pass
 language: typescript
 kind: hard_negative
 ## package.json
@@ -736,7 +746,7 @@ export function search(query: string, location?: string) {
 area: none
 purpose: Raise an alert when a card transaction looks like fraud so the bank can block the card
 why: no area applies, Annex III 5(b) excludes systems used to detect financial fraud
-labeller: author
+labeller: second_pass
 language: python
 kind: hard_negative
 ## requirements.txt
@@ -760,7 +770,7 @@ def is_suspicious(amount: float, hour: int, distance_km: float) -> bool:
 area: none
 purpose: Full-text search over closed police case files so officers can find a file by case number or keyword
 why: no area applies, plain retrieval of files that evaluates no person and no evidence
-labeller: author
+labeller: second_pass
 language: java
 kind: hard_negative
 ## pom.xml
@@ -803,7 +813,7 @@ public class FileSearch {
 area: none
 purpose: Translate forms and letters received by the immigration office into the officers' working language
 why: no area applies, it translates text and does not examine an application or assess any person
-labeller: author
+labeller: second_pass
 language: python
 kind: hard_negative
 ## requirements.txt
@@ -830,7 +840,7 @@ def translate(text: str, target: str = "English") -> str:
 area: none
 purpose: Build a weekly staff rota that covers every shift from the availability the employees entered
 why: no area applies, a rota planner that uses stated availability only and sets no evaluation of any person
-labeller: author
+labeller: second_pass
 language: go
 kind: hard_negative
 ## go.mod
@@ -869,7 +879,7 @@ func main() {
 area: none
 purpose: Compute the shortest driving routes for the ambulance fleet between the depot and the hospitals
 why: no area applies, vehicle routing does not classify calls or prioritise any patient
-labeller: author
+labeller: second_pass
 language: python
 kind: hard_negative
 ## requirements.txt
@@ -895,7 +905,7 @@ def solve(distance_matrix, vehicles, depot=0):
 area: none
 purpose: Generate the school timetable that assigns classes to rooms and teachers to periods without clashes
 why: no area applies, room and period scheduling does not decide admission or evaluate any student
-labeller: author
+labeller: second_pass
 language: javascript
 kind: hard_negative
 ## package.json
@@ -925,7 +935,7 @@ module.exports = { build };
 area: none
 purpose: Schedule and send volunteer rota reminders and event invitations to the people who signed up for the campaign
 why: no area applies, Annex III 8(b) excludes tools used for the administrative and logistical organisation of campaigns
-labeller: author
+labeller: second_pass
 language: typescript
 kind: hard_negative
 ## package.json

@@ -1,0 +1,16 @@
+{
+  "framework": "EBA",
+  "outcome": "applies",
+  "reason": "",
+  "scope": {
+    "supervised_institution": true,
+    "grants_credit": false
+  },
+  "scoped_out": {
+    "EBA:GL/2020/06 4.3": "Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).",
+    "EBA:GL/2020/06 4.3.3": "Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).",
+    "EBA:GL/2020/06 4.3.4": "Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).",
+    "EBA:GL/2020/06 4.3.7": "Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).",
+    "EBA:GL/2020/06 5.1": "Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false)."
+  }
+}

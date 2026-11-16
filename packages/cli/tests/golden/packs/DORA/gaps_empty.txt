@@ -1,0 +1,110 @@
+
+DORA Regulation (EU) 2022/2554 digital operational resilience (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement          ┃ Title                                             ┃ Status     ┃ Source      ┃ Evidence                                  ┃ Rationale                                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ DORA:Art. 5(1)-(2)   │ Governance and organisation: management body      │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ accountability                                    │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 5(3)       │ Governance and organisation: ICT third-party      │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ oversight role                                    │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 5(4)       │ Governance and organisation: management body ICT  │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ knowledge                                         │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 6(1)-(3)   │ ICT risk management framework: framework and      │ MISSING    │ artifact    │ policy_information_security               │ No conventional documentation/code probe matched   │
+│                      │ asset protection                                  │            │             │                                           │ for 'policy_information_security'. Add the         │
+│                      │                                                   │            │             │                                           │ expected file or construct, then re-run gaps.      │
+│ DORA:Art. 6(4)       │ ICT risk management framework: control function   │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ and independence                                  │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 6(5)       │ ICT risk management framework: documentation and  │ MISSING    │ artifact    │ management_review_minutes                 │ No conventional documentation/code probe matched   │
+│                      │ review                                            │            │             │                                           │ for 'management_review_minutes'. Add the expected  │
+│                      │                                                   │            │             │                                           │ file or construct, then re-run gaps.               │
+│ DORA:Art. 6(6)-(7)   │ ICT risk management framework: internal audit and │ MISSING    │ artifact    │ internal_audit_report                     │ No conventional documentation/code probe matched   │
+│                      │ follow-up                                         │            │             │                                           │ for 'internal_audit_report'. Add the expected file │
+│                      │                                                   │            │             │                                           │ or construct, then re-run gaps.                    │
+│ DORA:Art. 6(8)       │ ICT risk management framework: digital            │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ operational resilience strategy                   │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 7          │ ICT systems, protocols and tools                  │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │                                                   │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 8          │ Identification                                    │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │                                                   │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 9          │ Protection and prevention                         │ MISSING    │ artifact    │ policy_access_control                     │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'policy_access_control'. Add the expected file │
+│                      │                                                   │            │             │                                           │ or construct, then re-run gaps.                    │
+│ DORA:Art. 10         │ Detection                                         │ MISSING    │ artifact    │ event_log_evidence                        │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'event_log_evidence'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 11         │ Response and recovery                             │ MISSING    │ artifact    │ continuity_plan                           │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'continuity_plan'. Add the expected file or    │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 12         │ Backup policies and procedures, restoration and   │ MISSING    │ artifact    │ policy_backup                             │ No conventional documentation/code probe matched   │
+│                      │ recovery procedures and methods                   │            │             │                                           │ for 'policy_backup'. Add the expected file or      │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 13         │ Learning and evolving                             │ MISSING    │ artifact    │ corrective_action_log                     │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'corrective_action_log'. Add the expected file │
+│                      │                                                   │            │             │                                           │ or construct, then re-run gaps.                    │
+│ DORA:Art. 14         │ Communication                                     │ MISSING    │ artifact    │ incident_notification_template            │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'incident_notification_template'. Add the      │
+│                      │                                                   │            │             │                                           │ expected file or construct, then re-run gaps.      │
+│ DORA:Art. 17         │ ICT-related incident management process           │ MISSING    │ artifact    │ incident_response_plan                    │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'incident_response_plan'. Add the expected     │
+│                      │                                                   │            │             │                                           │ file or construct, then re-run gaps.               │
+│ DORA:Art. 18         │ Classification of ICT-related incidents and cyber │ MISSING    │ artifact    │ dora.incident_report#classification       │ No conventional documentation/code probe matched   │
+│                      │ threats                                           │            │             │                                           │ for 'dora.incident_report#classification'. Add the │
+│                      │                                                   │            │             │                                           │ expected file or construct, then re-run gaps.      │
+│ DORA:Art. 19(1), (4) │ Reporting of major ICT-related incidents to       │ MISSING    │ artifact    │ dora.incident_report#initial-notification │ No conventional documentation/code probe matched   │
+│                      │ authorities                                       │            │             │                                           │ for 'dora.incident_report#initial-notification'.   │
+│                      │                                                   │            │             │                                           │ Add the expected file or construct, then re-run    │
+│                      │                                                   │            │             │                                           │ gaps.                                              │
+│ DORA:Art. 19(3)      │ Informing clients of major ICT-related incidents  │ MISSING    │ artifact    │ dora.incident_report#client-information   │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'dora.incident_report#client-information'. Add │
+│                      │                                                   │            │             │                                           │ the expected file or construct, then re-run gaps.  │
+│ DORA:Art. 24         │ General requirements for digital operational      │ MISSING    │ artifact    │ ai_red_team_report                        │ No conventional documentation/code probe matched   │
+│                      │ resilience testing                                │            │             │                                           │ for 'ai_red_team_report'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 25         │ Testing of ICT tools and systems                  │ MISSING    │ artifact    │ ai_red_team_report                        │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'ai_red_team_report'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 26         │ Advanced testing of ICT tools, systems and        │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ processes based on TLPT                           │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 27         │ Requirements for testers for the carrying out of  │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ TLPT                                              │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 28(1)      │ General principles: ICT third-party risk inside   │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ the framework                                     │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 28(2)      │ General principles: strategy on ICT third-party   │ MISSING    │ artifact    │ policy_supplier                           │ No conventional documentation/code probe matched   │
+│                      │ risk                                              │            │             │                                           │ for 'policy_supplier'. Add the expected file or    │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 28(3)      │ General principles: register of information       │ MISSING    │ artifact    │ dora.register_of_information              │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'dora.register_of_information'. Add the        │
+│                      │                                                   │            │             │                                           │ expected file or construct, then re-run gaps.      │
+│ DORA:Art. 28(4)      │ General principles: assessment before contracting │ MISSING    │ artifact    │ vendor_register                           │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'vendor_register'. Add the expected file or    │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 28(5)      │ General principles: provider information security │ MISSING    │ artifact    │ contract_checklist                        │ No conventional documentation/code probe matched   │
+│                      │ standards                                         │            │             │                                           │ for 'contract_checklist'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 28(6)      │ General principles: audit and inspection rights   │ MISSING    │ artifact    │ contract_checklist                        │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'contract_checklist'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 28(7)      │ General principles: termination rights            │ MISSING    │ artifact    │ contract_checklist                        │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'contract_checklist'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 28(8)      │ General principles: exit strategies               │ MISSING    │ artifact    │ exit_plan                                 │ No conventional documentation/code probe matched   │
+│                      │                                                   │            │             │                                           │ for 'exit_plan'. Add the expected file or          │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 29         │ Preliminary assessment of ICT concentration risk  │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ at entity level                                   │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 30(1)-(2)  │ Key contractual provisions: written contract and  │ MISSING    │ artifact    │ contract_checklist                        │ No conventional documentation/code probe matched   │
+│                      │ core terms                                        │            │             │                                           │ for 'contract_checklist'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 30(3)      │ Key contractual provisions: critical or important │ MISSING    │ artifact    │ contract_checklist                        │ No conventional documentation/code probe matched   │
+│                      │ functions                                         │            │             │                                           │ for 'contract_checklist'. Add the expected file or │
+│                      │                                                   │            │             │                                           │ construct, then re-run gaps.                       │
+│ DORA:Art. 45         │ Information-sharing arrangements on cyber threat  │ UNVERIFIED │ attestation │ none                                      │ No attestation recorded. Add one under             │
+│                      │ information and intelligence                      │            │             │                                           │ framework_inputs.DORA.attested in the manifest.    │
+└──────────────────────┴───────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────────┴────────────────────────────────────────────────────┘
+
+Excluded
+  DORA:Art. 16: Not applicable: the manifest's scope says the system full framework applies (framework_inputs.DORA.scope.simplified_regime = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

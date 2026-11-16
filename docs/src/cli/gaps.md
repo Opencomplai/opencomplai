@@ -42,6 +42,7 @@ with `opencomplai check`. A framework that `opencomplai.yaml` gates (see
 | `--strict` | off | Exit `2` on unknown top-level keys in the manifest instead of warning and ignoring them |
 | `--attestations-file` | *(none)* | Read an attestation bundle from this file and merge it into the manifest's `framework_inputs` for this run. Offline. [`attestations pull`](attestations.md) writes one. Replaces `attestations` in `opencomplai.yaml`. See [Attestation bundles](../frameworks/more-packs.md#attestation-bundles). |
 | `--attestations-remote` | off | Fetch the attestation bundle from the endpoint configured in `OPENCOMPLAI_DASHBOARD_URL`, with `OPENCOMPLAI_API_KEY`, and merge it the same way. Without this flag, `--attestations-file` or an `attestations` section in `opencomplai.yaml`, no bundle is read and nothing is fetched. If the fetch fails the run goes on with the manifest alone and prints a warning. Passing it with `--attestations-file` exits `2`. |
+| `--custom-pack` | *(none)* | A custom controls pack, a JSON or YAML file of your own attestation-led controls, to assess as a further framework `CUSTOM_<key>`, next to the targets. Available from 0.16.0. A file that cannot be used exits `2`. See [Custom controls pack](../reference/custom-pack-format.md). |
 | `--sort` | `article` | Row order of the human tables: `article`, or `priority` (rows that are not Met first, then earliest known deadline, worst status, smallest effort). With `--output json`, `priority` also adds a `backlog` list of the open rows, ranked; `articles` stay in article order. A NIST-only run keeps subcategory order. The effort is an engineering estimate, not a compliance claim |
 | `--output` / `-o` | `human` | `human` or `json` (JSON is wrapped in a versioned envelope — not a signed artifact) |
 
@@ -191,9 +192,9 @@ per target:
         "articles": [
           {
             "article": "NIST_AI_RMF:GOVERN 1.1",
-            "status": "missing",
+            "status": "unverified",
             "source": "crosswalk",
-            "evidence_ref": "Art. 5, Art. 9, Art. 11, Art. 16, Art. 17",
+            "evidence_ref": "Art. 5, Art. 6, Art. 16",
             "confidence_label": "heuristic_estimate",
             "disclaimer_ref": "DISCLAIMER_V2"
           }
@@ -203,6 +204,8 @@ per target:
   }
 }
 ```
+
+The `GOVERN 1.1` row above shows the status from 0.16.0 (`unverified`, from low-confidence article links); 0.15.0 prints a different status and evidence reference for it.
 
 The envelope carries the framework-neutral disclaimer for such a run. An unknown
 target, a `framework_inputs` key that is not a known framework, or a

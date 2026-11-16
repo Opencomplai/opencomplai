@@ -40,6 +40,13 @@ class _Closed(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+# The two expiry fields vanish from the bytes while unset, so an artifact signed
+# before they existed still re-serialises, and verifies, unchanged.
+_AGENTS_OMIT: dict[str, OmitRule] = dict.fromkeys(
+    ("earliest_mandate_expiry", "expiring_soon"), OMIT_NONE
+)
+
+
 class OversightSummary(_Closed):
     entries: Count
     approvals: Count
@@ -59,6 +66,12 @@ class AgentsSummary(_Closed):
     out_of_mandate: Count | None = None
     chain_valid: bool | None = None
     log_head_sha256: Sha256 | None = None
+    earliest_mandate_expiry: Day | None = None
+    expiring_soon: Count | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unset(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), _AGENTS_OMIT)
 
 
 class QmsClauses(_Closed):

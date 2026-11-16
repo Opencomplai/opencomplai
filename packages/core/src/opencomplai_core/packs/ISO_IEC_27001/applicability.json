@@ -1,0 +1,34 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "contract_commitment",
+      "text": "Does a certification plan, customer contract or internal policy commit you to this framework?",
+      "false_means": "no commitment"
+    },
+    {
+      "key": "has_physical_premises",
+      "text": "Does the organisation control offices, server rooms or other premises?",
+      "false_means": "no premises under its control"
+    },
+    {
+      "key": "develops_software",
+      "text": "Does it develop software?",
+      "false_means": "no software development"
+    },
+    {
+      "key": "has_employees",
+      "text": "Does it have staff beyond its founders?",
+      "false_means": "no staff beyond the founders"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {
+        "contract_commitment": true
+      },
+      "outcome": "applies",
+      "reason": "A certification plan, contract or policy commits you to this framework, so its requirements apply to you."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EIOPA_AI",
+  "order": 10,
+  "kind": "native",
+  "name": "EIOPA Opinion on AI governance and risk management",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "EIOPA AI Opinion",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "eiopa_ai.json",
+  "data_files": ["applicability.json"],
+  "copyright": "agency",
+  "row_count": 8,
+  "target_machine_share": 4,
+  "timeline": "none",
+  "timeline_reason": "a supervisory opinion without application dates of its own",
+  "catalogue": true
+}

@@ -1,0 +1,171 @@
+{
+  "family": "ai_lifecycle",
+  "probes": {
+    "model_card": {
+      "patterns": [
+        "MODEL_CARD.md",
+        "**/model-card*",
+        "**/model_card*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "intended[\\s_-]+(?:use|purpose)|\\buse[\\s_-]+cases?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\blimitations?\\b|\\bknown\\s+(?:issues|weaknesses)\\b|out[\\s_-]+of[\\s_-]+scope",
+            "flags": "i"
+          },
+          {
+            "re": "\\bevaluation\\b|\\bmetrics?\\b|\\baccuracy\\b|\\bF1\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "intended use, limitations and evaluation sections",
+        "lacks_label": "intended use, limitations, evaluation and minimum body length",
+        "noun": "model card",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus model-card section keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "data_provenance_sheet": {
+      "patterns": [
+        "**/datasheet*",
+        "**/data-provenance*",
+        "**/data_provenance*",
+        "**/dataset-card*",
+        "**/dataset_card*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bsources?\\b|\\bcollect(?:ed|ion)\\b|\\bprovenance\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\blicen[cs]es?\\b|\\bconsent\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:preparation|preprocess(?:ed|ing)|cleaning|cleaned|label(?:l?ed|l?ing)|annotat(?:ed|ion))\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "source, licence or consent, and preparation sections",
+        "lacks_label": "source, licence or consent, preparation and minimum body length",
+        "noun": "data provenance sheet",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus data-documentation keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "evaluation_evidence": {
+      "patterns": [
+        "**/eval-report*",
+        "**/eval_report*",
+        "**/evaluation-report*",
+        "**/evaluation_report*",
+        "docs/**/evaluation*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bmetrics?\\b|\\baccuracy\\b|\\bprecision\\b|\\brecall\\b|\\bF1\\b|\\bAUC\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bdatasets?\\b|\\bbenchmarks?\\b|\\btest\\s+set\\b|\\bhold-?out\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bresults?\\b|\\bthresholds?\\b|\\bscored?\\b|\\bpass(?:ed)?\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a metric, a dataset or benchmark, and a result",
+        "lacks_label": "metric, dataset or benchmark, result and minimum body length",
+        "noun": "evaluation report",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus evaluation-report keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "ai_impact_assessment": {
+      "type": "clause_document",
+      "patterns": [
+        "AI_IMPACT_ASSESSMENT.md",
+        "docs/**/ai-impact-assessment*",
+        "docs/**/ai_impact_assessment*",
+        "**/ai-impact-assessment*",
+        "**/ai_impact_assessment*"
+      ],
+      "noun": "AI impact assessment",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus impact-assessment section keywords from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "purpose": {
+          "title": "Purpose",
+          "markers": [
+            {
+              "re": "\\bpurpose\\b|\\bintended\\b|\\bobjective\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "affected parties": {
+          "title": "Affected parties",
+          "markers": [
+            {
+              "re": "\\baffected\\b|\\bstakeholders?\\b|\\bindividuals?\\b|\\bgroups?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "impacts": {
+          "title": "Impacts",
+          "markers": [
+            {
+              "re": "\\bimpacts?\\b|\\bharms?\\b|\\bbenefits?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "mitigations": {
+          "title": "Mitigations",
+          "markers": [
+            {
+              "re": "\\bmitigat\\w*|\\bsafeguards?\\b|\\bremediat\\w*|\\bcontrols?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "review": {
+          "title": "Review",
+          "markers": [
+            {
+              "re": "\\breview(?:ed)?\\b|\\bre-?assess\\w*|\\bowner\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

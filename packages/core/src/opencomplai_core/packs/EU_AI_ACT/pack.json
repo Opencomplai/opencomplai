@@ -1,0 +1,20 @@
+{
+  "id": "EU_AI_ACT",
+  "order": 1,
+  "kind": "native",
+  "name": "EU AI Act (Regulation (EU) 2024/1689)",
+  "status": "evaluated",
+  "label": "EU AI Act (Regulation (EU) 2024/1689)",
+  "short_name": "EU AI Act",
+  "disclaimer_ref": "DISCLAIMER_V1",
+  "requirements": "../../data/gap_article_map.json",
+  "legacy_file": "gap_article_map.json",
+  "data_files": [
+    "../../data/regulatory_timeline.json"
+  ],
+  "copyright": "eu_law",
+  "row_count": 24,
+  "target_machine_share": 22,
+  "timeline": "core",
+  "catalogue": true
+}

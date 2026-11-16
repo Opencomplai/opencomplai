@@ -14,7 +14,7 @@ names and model names never reach a gap row (they reach the dashboard).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 from opencomplai_core.models import (
@@ -127,16 +127,31 @@ def cross_check(inventory, found: Detected) -> CrossCheck:
     return CrossCheck(undeclared, unseen)
 
 
-def _expired(expires_at: str | None, today: date) -> bool:
-    """True when the mandate expiry date (UTC) is before today; None never expires."""
-    if expires_at is None:
-        return False
+MANDATE_EXPIRY_WINDOW_DAYS = 30
+
+
+def mandate_expiry_day(expires_at: str) -> date | None:
+    """The UTC calendar date of a mandate expiry; None when it cannot be parsed.
+
+    An offset that puts the instant outside the supported years (such as
+    `0001-01-01T00:00:00+05:00`) cannot be converted to UTC and counts as unparseable.
+    """
     try:
         dt = datetime.fromisoformat(expires_at)
-    except ValueError:
-        return True
-    dt = dt.replace(tzinfo=UTC) if dt.tzinfo is None else dt.astimezone(UTC)
-    return dt.date() < today
+        dt = dt.replace(tzinfo=UTC) if dt.tzinfo is None else dt.astimezone(UTC)
+    except (ValueError, OverflowError):
+        return None
+    return dt.date()
+
+
+def _expired(expires_at: str | None, today: date) -> bool:
+    """True when the mandate expiry date (UTC) is before today; None never expires.
+
+    An expiry that cannot be parsed counts as expired."""
+    if expires_at is None:
+        return False
+    day = mandate_expiry_day(expires_at)
+    return day is None or day < today
 
 
 def expired_mandates(manifest: SystemManifest, today: date) -> list[tuple[str, str]]:
@@ -151,6 +166,26 @@ def expired_mandates(manifest: SystemManifest, today: date) -> list[tuple[str, s
         and a.mandate.expires_at is not None
         and _expired(a.mandate.expires_at, today)
     ]
+
+
+def expiring_mandates(
+    manifest: SystemManifest, today: date, days: int = MANDATE_EXPIRY_WINDOW_DAYS
+) -> list[tuple[str, str]]:
+    """(agent id, expires_at) of each mandate whose expiry day falls from today to
+    `days` days later, inclusive, in inventory order. An expired mandate is not
+    expiring, and an unparseable expiry is not listed."""
+    inventory = manifest.agent_inventory
+    if inventory is None:
+        return []
+    last = today + timedelta(days=days)
+    found: list[tuple[str, str]] = []
+    for a in inventory.agents:
+        if a.mandate is None or a.mandate.expires_at is None:
+            continue
+        day = mandate_expiry_day(a.mandate.expires_at)
+        if day is not None and today <= day <= last:
+            found.append((a.id, a.mandate.expires_at))
+    return found
 
 
 def _evidence_missing(repo_root: Path, ref: str, *, file_only: bool = False) -> bool:

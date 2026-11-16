@@ -37,8 +37,8 @@ Cross-check your declared `intended_purpose` against AI capability signals detec
 | `--output-file` / `-f` | — | Write results to `.json` or `.md` file (stdout unchanged) |
 | `--ocignore` | repo-root `.ocignore` | Custom scan config path (must be inside `--repo-root`) |
 | `--ocignore-bootstrap` / `--no-ocignore-bootstrap` | bootstrap on | Create default `.ocignore` on first scan if missing |
-| `--ai-intent` | off | Run local AI intent classification on extracted callsites (requires `opencomplai-ai`). It uses the configured model (`qwen2.5-coder-1.5b` unless changed), which needs the `[deep]` extra by default; on a base install the scan prints that AI intent was skipped. `--propose` uses the deterministic `codebert-onnx` backend instead |
-| `--ai-model` | configured default (`codebert-onnx` under `--propose`) | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
+| `--ai-intent` | off | Run local AI intent classification on extracted callsites (requires `opencomplai-ai`). From 0.16.0 it uses the deterministic `codebert-onnx` matcher on the base install, unless `--ai-model` or a saved default says otherwise (0.15.0 and earlier default to `qwen2.5-coder-1.5b`, which needs the `[deep]` extra; on a base install those versions print that AI intent was skipped). A local LLM stays available with `--ai-model` or `opencomplai ai configure`. `--propose` always uses `codebert-onnx` unless `--ai-model` is given |
+| `--ai-model` | saved default, else `codebert-onnx` (from 0.16.0; 0.15.0 and earlier use `qwen2.5-coder-1.5b`), except under `--propose`, which ignores the saved default | Override the active model for this scan (e.g. `codebert-onnx`, `qwen2.5-coder-1.5b`) |
 | `--framework-detectors` | off | Opt-in AST-level detection of orchestration-framework object construction + invocation (see below) |
 | `--quick` | off | Zero-config discovery scan — no manifest, never gates CI, never emits evidence (see below) |
 | `--propose` | off | Write `classification-proposal.json`: a classification the scan suggests from your code, for you to confirm with [`accept --proposal`](accept.md#confirming-a-classification-proposal). Turns on the intent analysis with the deterministic `codebert-onnx` backend unless `--ai-model` is given; needs the optional AI plugin (see below) |
@@ -253,9 +253,11 @@ signal in that case).
 
 There are three backends. `codebert-onnx` is a deterministic code-signal matcher: it runs on the base install of `opencomplai-ai`, needs no download, no ONNX Runtime and no `optimum`, and matches each callsite against the built-in Annex III, prohibited-practice and limited-risk signal lists. The GGUF models (`qwen2.5-coder-*`, `smollm2-1.7b`, `phi-3.5-mini`, `mistral-7b`) are real local LLM inference; they need the `[deep]` extra and a one-time model download. `saas` is the third, opt-in cloud backend: it runs no model locally and, once you have consented to data egress and set `OPENCOMPLAI_API_KEY`, sends redacted code snippets to the hosted intent API. The `codebert-onnx` id is kept for compatibility with existing configs and annotations; no CodeBERT model is loaded.
 
+From 0.16.0 `--ai-intent` uses `codebert-onnx` when neither `--ai-model` nor a saved default names another model (0.15.0 and earlier default to `qwen2.5-coder-1.5b`). A model you saved with `opencomplai ai configure` still wins.
+
 ### Install
 
-**Deterministic matcher (base install, no download):**
+**Deterministic matcher (base install, no download; the default from 0.16.0):**
 
 === "macOS / Linux"
     ```bash
@@ -269,7 +271,7 @@ There are three backends. `codebert-onnx` is a deterministic code-signal matcher
     opencomplai ai configure --model codebert-onnx --set-default
     ```
 
-**GGUF (optional, local LLM inference with larger models):**
+**GGUF (opt-in, local LLM inference with larger models):**
 
 === "macOS / Linux"
     ```bash
@@ -287,21 +289,21 @@ There are three backends. `codebert-onnx` is a deterministic code-signal matcher
 
 === "macOS / Linux"
     ```bash
-    # Use the configured default model
+    # Use the default model (codebert-onnx from 0.16.0, or the one you saved)
     opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent
 
-    # Override model for this scan only
+    # Opt in to a local LLM for this scan only (needs the [deep] extra)
     opencomplai scan --manifest system-manifest.json --repo-root . \
-      --ai-intent --ai-model codebert-onnx
+      --ai-intent --ai-model qwen2.5-coder-1.5b
     ```
 
 === "Windows (PowerShell)"
     ```powershell
-    # Use the configured default model
+    # Use the default model (codebert-onnx from 0.16.0, or the one you saved)
     opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent
 
-    # Override model for this scan only
-    opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent --ai-model codebert-onnx
+    # Opt in to a local LLM for this scan only (needs the [deep] extra)
+    opencomplai scan --manifest system-manifest.json --repo-root . --ai-intent --ai-model qwen2.5-coder-1.5b
     ```
 
 ### Available models

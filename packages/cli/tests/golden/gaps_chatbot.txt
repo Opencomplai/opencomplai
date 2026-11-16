@@ -36,6 +36,8 @@ Statuses are heuristic estimates — not a legal determination.
 │ Art. 17 │ Clauses 4-10 (the AI management system as a whole)           │ PARTIAL    │ artifact    │ docs/qms.md                       │ Found candidate artifact/signal for 'provider_qms' (1        │
 │         │                                                              │            │             │                                   │ path(s), 0 code hint(s)). Heuristic only — not a full        │
 │         │                                                              │            │             │                                   │ obligation assessment.                                       │
+│ Art. 20 │ Clause 10.2 (Nonconformity and corrective action)            │ UNVERIFIED │ attestation │ none                              │ No attestation recorded. Add one under                       │
+│         │                                                              │            │             │                                   │ framework_inputs.EU_AI_ACT.attested in the manifest.         │
 │ Art. 24 │ Clause 8.1 (Operational planning and control)                │ MISSING    │ artifact    │ distributor_conformity            │ No conventional documentation/code probe matched for         │
 │         │                                                              │            │             │                                   │ 'distributor_conformity'. Add the expected file or           │
 │         │                                                              │            │             │                                   │ construct, then re-run gaps.                                 │
@@ -81,16 +83,16 @@ Regulatory timeline
 
 Principle Summary
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Principle                                  ┃ Status     ┃ Articles                                                                                                 ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ Technical Robustness and Safety            │ MISSING    │ Art. 15, Art. 25, Art. 72                                                                                │
-│ Privacy and Data Governance                │ UNVERIFIED │ Art. 10                                                                                                  │
-│ Transparency                               │ MISSING    │ Art. 12, Art. 13, Art. 49, Art. 50                                                                       │
-│ Diversity, Non-discrimination and Fairness │ UNVERIFIED │ Art. 5, Art. 6, Art. 10                                                                                  │
-│ Societal and Environmental Wellbeing       │ UNVERIFIED │ Art. 5                                                                                                   │
-│ Accountability                             │ MISSING    │ Art. 4, Art. 9, Art. 11, Art. 14, Art. 16, Art. 17, Art. 24, Art. 26, Art. 43, Art. 53, Art. 55, Art. 73 │
-└────────────────────────────────────────────┴────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Principle                                  ┃ Status     ┃ Articles                                                                                                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Technical Robustness and Safety            │ MISSING    │ Art. 15, Art. 25, Art. 72                                                                                         │
+│ Privacy and Data Governance                │ UNVERIFIED │ Art. 10                                                                                                           │
+│ Transparency                               │ MISSING    │ Art. 12, Art. 13, Art. 49, Art. 50                                                                                │
+│ Diversity, Non-discrimination and Fairness │ UNVERIFIED │ Art. 5, Art. 6, Art. 10                                                                                           │
+│ Societal and Environmental Wellbeing       │ UNVERIFIED │ Art. 5                                                                                                            │
+│ Accountability                             │ MISSING    │ Art. 4, Art. 9, Art. 11, Art. 14, Art. 16, Art. 17, Art. 20, Art. 24, Art. 26, Art. 43, Art. 53, Art. 55, Art. 73 │
+└────────────────────────────────────────────┴────────────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 Gap report is informational only — it does not gate CI. See `opencomplai check` for the compliance-artifact.json CI contract.
 

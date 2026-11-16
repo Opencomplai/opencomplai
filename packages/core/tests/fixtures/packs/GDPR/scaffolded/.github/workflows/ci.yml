@@ -1,0 +1,6 @@
+name: ci
+on: push
+jobs:
+  test:
+    steps:
+      - run: pytest

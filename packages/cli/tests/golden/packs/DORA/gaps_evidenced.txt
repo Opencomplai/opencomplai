@@ -1,0 +1,149 @@
+
+DORA Regulation (EU) 2022/2554 digital operational resilience (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement          ┃ Title                                               ┃ Status     ┃ Source      ┃ Evidence                                ┃ Rationale                                          ┃
+┡━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ DORA:Art. 5(1)-(2)   │ Governance and organisation: management body        │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ accountability                                      │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 5(3)       │ Governance and organisation: ICT third-party        │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ oversight role                                      │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 5(4)       │ Governance and organisation: management body ICT    │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ knowledge                                           │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 6(1)-(3)   │ ICT risk management framework: framework and asset  │ MISSING    │ artifact    │ risk_register                           │ No conventional documentation/code probe matched   │
+│                      │ protection                                          │            │             │                                         │ for 'risk_register'. Add the expected file or      │
+│                      │                                                     │            │             │                                         │ construct, then re-run gaps.                       │
+│ DORA:Art. 6(4)       │ ICT risk management framework: control function and │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ independence                                        │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 6(5)       │ ICT risk management framework: documentation and    │ PARTIAL    │ artifact    │ docs/management-review.md               │ Found candidate artifact/signal for                │
+│                      │ review                                              │            │             │                                         │ 'management_review_minutes' (1 path(s), 0 code     │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (a management  │
+│                      │                                                     │            │             │                                         │ review with decisions or actions and attendees or  │
+│                      │                                                     │            │             │                                         │ a date). Heuristic only — not a full obligation    │
+│                      │                                                     │            │             │                                         │ assessment.                                        │
+│ DORA:Art. 6(6)-(7)   │ ICT risk management framework: internal audit and   │ PARTIAL    │ artifact    │ docs/internal-audit.md                  │ Found candidate artifact/signal for                │
+│                      │ follow-up                                           │            │             │                                         │ 'internal_audit_report' (1 path(s), 0 code         │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (an audit with │
+│                      │                                                     │            │             │                                         │ findings and an auditor, scope or date). Heuristic │
+│                      │                                                     │            │             │                                         │ only — not a full obligation assessment.           │
+│ DORA:Art. 6(8)       │ ICT risk management framework: digital operational  │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ resilience strategy                                 │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 7          │ ICT systems, protocols and tools                    │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │                                                     │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 8          │ Identification                                      │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │                                                     │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 9          │ Protection and prevention                           │ PARTIAL    │ artifact    │ docs/policies/access-control.md         │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'policy_access_control' (1 path(s), 0 code         │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (an access     │
+│                      │                                                     │            │             │                                         │ control, least privilege or authorisation term).   │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 10         │ Detection                                           │ MISSING    │ artifact    │ event_log_evidence                      │ No conventional documentation/code probe matched   │
+│                      │                                                     │            │             │                                         │ for 'event_log_evidence'. Add the expected file or │
+│                      │                                                     │            │             │                                         │ construct, then re-run gaps.                       │
+│ DORA:Art. 11         │ Response and recovery                               │ PARTIAL    │ artifact    │ docs/business-continuity.md             │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'continuity_plan' (1 path(s), 0 code hint(s)) with │
+│                      │                                                     │            │             │                                         │ content markers found (recovery objectives,        │
+│                      │                                                     │            │             │                                         │ critical services and tests or exercises).         │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 12         │ Backup policies and procedures, restoration and     │ PARTIAL    │ artifact    │ docs/policies/backup.md                 │ Found candidate artifact/signal for                │
+│                      │ recovery procedures and methods                     │            │             │                                         │ 'policy_backup' (1 path(s), 0 code hint(s)) with   │
+│                      │                                                     │            │             │                                         │ content markers found (a backup, restore or        │
+│                      │                                                     │            │             │                                         │ retention term). Heuristic only — not a full       │
+│                      │                                                     │            │             │                                         │ obligation assessment.                             │
+│ DORA:Art. 13         │ Learning and evolving                               │ PARTIAL    │ artifact    │ docs/corrective-action-log.md           │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'corrective_action_log' (1 path(s), 0 code         │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (a             │
+│                      │                                                     │            │             │                                         │ nonconformity with its root cause and corrective   │
+│                      │                                                     │            │             │                                         │ action). Heuristic only — not a full obligation    │
+│                      │                                                     │            │             │                                         │ assessment.                                        │
+│ DORA:Art. 14         │ Communication                                       │ PARTIAL    │ artifact    │ docs/incident-notification.md           │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'incident_notification_template' (1 path(s), 0     │
+│                      │                                                     │            │             │                                         │ code hint(s)) with content markers found (a        │
+│                      │                                                     │            │             │                                         │ notification stage, a recipient and a time limit). │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 17         │ ICT-related incident management process             │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                    │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'incident_response_plan' (1 path(s), 0 code        │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (detection,    │
+│                      │                                                     │            │             │                                         │ containment and roles or escalation topics).       │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 18         │ Classification of ICT-related incidents and cyber   │ PARTIAL    │ artifact    │ docs/incidents/major-incident-report.md │ Found 'docs/incidents/major-incident-report.md'    │
+│                      │ threats                                             │            │             │                                         │ with clause 'classification' holding content       │
+│                      │                                                     │            │             │                                         │ markers (Classification of the incident).          │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 19(1), (4) │ Reporting of major ICT-related incidents to         │ PARTIAL    │ artifact    │ docs/incidents/major-incident-report.md │ Found 'docs/incidents/major-incident-report.md'    │
+│                      │ authorities                                         │            │             │                                         │ with clause 'initial-notification' holding content │
+│                      │                                                     │            │             │                                         │ markers (Initial notification to the authority).   │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 19(3)      │ Informing clients of major ICT-related incidents    │ PARTIAL    │ artifact    │ docs/incidents/major-incident-report.md │ Found 'docs/incidents/major-incident-report.md'    │
+│                      │                                                     │            │             │                                         │ with clause 'client-information' holding content   │
+│                      │                                                     │            │             │                                         │ markers (Information to affected clients).         │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 24         │ General requirements for digital operational        │ MISSING    │ artifact    │ ai_red_team_report                      │ No conventional documentation/code probe matched   │
+│                      │ resilience testing                                  │            │             │                                         │ for 'ai_red_team_report'. Add the expected file or │
+│                      │                                                     │            │             │                                         │ construct, then re-run gaps.                       │
+│ DORA:Art. 25         │ Testing of ICT tools and systems                    │ MISSING    │ artifact    │ ai_red_team_report                      │ No conventional documentation/code probe matched   │
+│                      │                                                     │            │             │                                         │ for 'ai_red_team_report'. Add the expected file or │
+│                      │                                                     │            │             │                                         │ construct, then re-run gaps.                       │
+│ DORA:Art. 26         │ Advanced testing of ICT tools, systems and          │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ processes based on TLPT                             │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 27         │ Requirements for testers for the carrying out of    │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ TLPT                                                │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 28(1)      │ General principles: ICT third-party risk inside the │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ framework                                           │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 28(2)      │ General principles: strategy on ICT third-party     │ PARTIAL    │ artifact    │ docs/policies/supplier.md               │ Found candidate artifact/signal for                │
+│                      │ risk                                                │            │             │                                         │ 'policy_supplier' (1 path(s), 0 code hint(s)) with │
+│                      │                                                     │            │             │                                         │ content markers found (a supplier, vendor or       │
+│                      │                                                     │            │             │                                         │ third-party term). Heuristic only — not a full     │
+│                      │                                                     │            │             │                                         │ obligation assessment.                             │
+│ DORA:Art. 28(3)      │ General principles: register of information         │ PARTIAL    │ artifact    │ docs/ict/register-of-information.md     │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'dora.register_of_information' (1 path(s), 0 code  │
+│                      │                                                     │            │             │                                         │ hint(s)) with content markers found (provider,     │
+│                      │                                                     │            │             │                                         │ function or service, and critical-or-important     │
+│                      │                                                     │            │             │                                         │ entries). Heuristic only — not a full obligation   │
+│                      │                                                     │            │             │                                         │ assessment.                                        │
+│ DORA:Art. 28(4)      │ General principles: assessment before contracting   │ PARTIAL    │ artifact    │ docs/vendor-register.md                 │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'vendor_register' (2 path(s), 0 code hint(s)) with │
+│                      │                                                     │            │             │                                         │ content markers found (provider, service and       │
+│                      │                                                     │            │             │                                         │ criticality entries). Heuristic only — not a full  │
+│                      │                                                     │            │             │                                         │ obligation assessment.                             │
+│ DORA:Art. 28(5)      │ General principles: provider information security   │ PARTIAL    │ artifact    │ docs/contract-checklist.md              │ Found candidate artifact/signal for                │
+│                      │ standards                                           │            │             │                                         │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                      │                                                     │            │             │                                         │ with content markers found (audit or access,       │
+│                      │                                                     │            │             │                                         │ termination and security or service-level terms).  │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 28(6)      │ General principles: audit and inspection rights     │ PARTIAL    │ artifact    │ docs/contract-checklist.md              │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                      │                                                     │            │             │                                         │ with content markers found (audit or access,       │
+│                      │                                                     │            │             │                                         │ termination and security or service-level terms).  │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 28(7)      │ General principles: termination rights              │ PARTIAL    │ artifact    │ docs/contract-checklist.md              │ Found candidate artifact/signal for                │
+│                      │                                                     │            │             │                                         │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                      │                                                     │            │             │                                         │ with content markers found (audit or access,       │
+│                      │                                                     │            │             │                                         │ termination and security or service-level terms).  │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 28(8)      │ General principles: exit strategies                 │ PARTIAL    │ artifact    │ docs/exit-plan.md                       │ Found candidate artifact/signal for 'exit_plan' (1 │
+│                      │                                                     │            │             │                                         │ path(s), 0 code hint(s)) with content markers      │
+│                      │                                                     │            │             │                                         │ found (exit, alternative and trigger or timeline   │
+│                      │                                                     │            │             │                                         │ entries). Heuristic only — not a full obligation   │
+│                      │                                                     │            │             │                                         │ assessment.                                        │
+│ DORA:Art. 29         │ Preliminary assessment of ICT concentration risk at │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ entity level                                        │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+│ DORA:Art. 30(1)-(2)  │ Key contractual provisions: written contract and    │ PARTIAL    │ artifact    │ docs/contract-checklist.md              │ Found candidate artifact/signal for                │
+│                      │ core terms                                          │            │             │                                         │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                      │                                                     │            │             │                                         │ with content markers found (audit or access,       │
+│                      │                                                     │            │             │                                         │ termination and security or service-level terms).  │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 30(3)      │ Key contractual provisions: critical or important   │ PARTIAL    │ artifact    │ docs/contract-checklist.md              │ Found candidate artifact/signal for                │
+│                      │ functions                                           │            │             │                                         │ 'contract_checklist' (1 path(s), 0 code hint(s))   │
+│                      │                                                     │            │             │                                         │ with content markers found (audit or access,       │
+│                      │                                                     │            │             │                                         │ termination and security or service-level terms).  │
+│                      │                                                     │            │             │                                         │ Heuristic only — not a full obligation assessment. │
+│ DORA:Art. 45         │ Information-sharing arrangements on cyber threat    │ UNVERIFIED │ attestation │ none                                    │ No attestation recorded. Add one under             │
+│                      │ information and intelligence                        │            │             │                                         │ framework_inputs.DORA.attested in the manifest.    │
+└──────────────────────┴─────────────────────────────────────────────────────┴────────────┴─────────────┴─────────────────────────────────────────┴────────────────────────────────────────────────────┘
+
+Excluded
+  DORA:Art. 16: Not applicable: the manifest's scope says the system full framework applies (framework_inputs.DORA.scope.simplified_regime = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

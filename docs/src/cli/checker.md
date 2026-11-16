@@ -111,6 +111,13 @@ classify. `opencomplai check` fails a `prohibited_practice` or
 `high_risk_ai_system` verdict even when the purpose text matches no rule; see
 [check](check.md).
 
+## Regulatory timeline
+
+From 0.16.0, the regulatory timeline table that `checker` prints shows
+only the high-risk date that matches the answers given: the Annex III date for
+an Annex III system, the Annex I date for an Annex I product, or both when the
+answers point to both. When the answers do not say, both dates are listed.
+
 ## Init integration
 
 === "macOS / Linux"

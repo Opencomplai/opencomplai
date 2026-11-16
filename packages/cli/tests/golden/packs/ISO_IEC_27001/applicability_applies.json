@@ -1,0 +1,9 @@
+{
+  "framework": "ISO_IEC_27001",
+  "outcome": "applies",
+  "reason": "A certification plan, contract or policy commits you to this framework, so its requirements apply to you.",
+  "scope": {
+    "contract_commitment": true
+  },
+  "scoped_out": {}
+}

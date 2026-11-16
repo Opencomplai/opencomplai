@@ -1,0 +1,76 @@
+{
+  "family": "etsi_en_304_223",
+  "probes": {
+    "etsi_en_304_223.ai_asset_inventory": {
+      "patterns": [
+        "**/ai-asset-inventory*",
+        "**/ai_asset_inventory*",
+        "**/model-inventory*",
+        "**/model_inventory*",
+        "docs/**/ai-assets*",
+        "docs/**/ai_assets*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bmodels?\\b[^\\n]{0,80}\\b(?:name|entry|id|type|provider)\\b|\\b(?:name|entry|id|type|provider)\\b[^\\n]{0,80}\\bmodels?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:datasets?|training[\\s_-]*data|prompts?|system[\\s_-]*prompts?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:owner|owned[\\s_-]*by|maintainer|version|v\\d+\\.\\d+)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a model entry, a dataset or prompt entry and an owner or version",
+        "lacks_label": "model entry, dataset or prompt entry, owner or version, and minimum body length",
+        "noun": "AI asset inventory",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus model, dataset or prompt, and owner or version words; own wording, no standard text",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "etsi_en_304_223.end_of_life_note": {
+      "patterns": [
+        "**/decommission*",
+        "**/end-of-life*",
+        "**/end_of_life*",
+        "docs/**/ai-disposal*",
+        "docs/**/ai_disposal*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:delet\\w*|eras\\w*|purg\\w*|remov\\w*|wip\\w*)\\b[^\\n]{0,80}\\b(?:data|datasets?|config\\w*|credentials?|keys?|logs?)\\b|\\b(?:data|datasets?|config\\w*|credentials?|keys?|logs?)\\b[^\\n]{0,80}\\b(?:delet\\w*|eras\\w*|purg\\w*|remov\\w*|wip\\w*)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:retir\\w*|decommission\\w*|transfer\\w*|hand(?:ed)?[\\s_-]*over|archiv\\w*)\\b[^\\n]{0,80}\\bmodels?\\b|\\bmodels?\\b[^\\n]{0,80}\\b(?:retir\\w*|decommission\\w*|transfer\\w*|hand(?:ed)?[\\s_-]*over|archiv\\w*)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:notif\\w*|inform\\w*|tell|told|communicat\\w*|announc\\w*)\\b[^\\n]{0,80}\\b(?:users?|customers?|data[\\s_-]*controllers?|stakeholders?|owners?|operators?|teams?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "data or configuration deletion, model retirement or transfer, and who is told",
+        "lacks_label": "data or configuration deletion, model retirement or transfer, notification, and minimum body length",
+        "noun": "end-of-life note",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus deletion, model retirement or transfer, and notification words; own wording, no standard text",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

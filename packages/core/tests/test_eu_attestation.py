@@ -180,13 +180,13 @@ def test_an_undated_art_4_attestation_goes_stale_after_a_year() -> None:
     ]
 
 
-def test_art_4_alone_is_the_eu_row_with_an_attestation_source() -> None:
+def test_art_4_and_art_20_are_the_eu_rows_with_an_attestation_source() -> None:
     taking = {
         article
         for article, config in load_gap_article_map().items()
         if any(s["kind"] == "attestation" for s in config["sources"])
     }
-    assert taking == {"Art. 4"}
+    assert taking == {"Art. 4", "Art. 20"}
 
 
 # --- NIST AI RMF does not inherit Art. 4 -------------------------------------
@@ -217,11 +217,11 @@ def _sub(report, subcategory: str):
     return next(r for r in report.subcategories if r.subcategory == subcategory)
 
 
-def test_govern_2_2_takes_an_attestation_and_map_3_4_does_not() -> None:
+def test_govern_2_2_map_3_4_and_govern_2_1_can_take_an_attestation() -> None:
     attestable = attestable_subcategories()
     assert f"{NIST}:GOVERN 2.2" in attestable
-    assert f"{NIST}:MAP 3.4" not in attestable
-    assert f"{NIST}:GOVERN 2.1" not in attestable  # Art. 17, a code-decided article
+    assert f"{NIST}:MAP 3.4" in attestable  # Art. 4 and Art. 26, which may not apply
+    assert f"{NIST}:GOVERN 2.1" in attestable  # Art. 17, which may not apply
     assert f"{NIST}:MANAGE 2.1" in attestable  # no EU mapping at all
 
 
@@ -263,6 +263,7 @@ def test_an_expired_govern_2_2_attestation_reads_unverified() -> None:
 
 
 def test_map_3_4_is_decided_by_art_26_alone() -> None:
+    # Art. 26 is a low link, so its Missing reads Unverified (capped) in MAP 3.4.
     report = build_nist_rmf_report(
         _gap_report(
             Art_4=ATTESTED_ART_4, Art_26=(GapStatus.MISSING, ArticleGapSource.ARTIFACT)
@@ -271,7 +272,7 @@ def test_map_3_4_is_decided_by_art_26_alone() -> None:
         TODAY,
     )
     row = _sub(report, "MAP 3.4")
-    assert row.status is GapStatus.MISSING
+    assert row.status is GapStatus.UNVERIFIED
     assert row.source_eu_ai_act_articles == ["Art. 26"]
     assert "Art. 4 ->" not in row.rationale
     assert row.rationale.endswith(
@@ -328,8 +329,8 @@ def test_nist_attestations_through_evaluate_targets() -> None:
     )
     assert govern.status is GapStatus.MET
 
-    bad = _manifest(**{NIST: FrameworkInputs(attested={f"{NIST}:MAP 3.4": _att()})})
-    with pytest.raises(ValueError, match=r"MAP 3\.4"):
+    bad = _manifest(**{NIST: FrameworkInputs(attested={f"{NIST}:GOVERN 1.1": _att()})})
+    with pytest.raises(ValueError, match=r"GOVERN 1\.1"):
         evaluate_targets(bad, [NIST], commit_ref="abc", today=TODAY)
 
 

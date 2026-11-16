@@ -3,13 +3,26 @@ return, and each corrected fact must stay stated. Pure file reads."""
 
 from __future__ import annotations
 
+import importlib.util
 import re
 import tomllib
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parents[3]
 
-STANDING_LINE = "EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed)"
+
+def _standing_line() -> str:
+    """The standing line, generated from the parity check by the export script."""
+    path = _ROOT / "tools" / "packs" / "export_framework_data.py"
+    spec = importlib.util.spec_from_file_location("export_framework_data", path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return str(module.standing_line(module.build_framework_data()))
+
+
+STANDING_LINE = _standing_line()
 STANDING_LINE_FILES = ["README.md", "docs/src/index.md", "docs/src/frameworks/index.md"]
 
 RETIRED: list[tuple[str, str]] = [
@@ -183,8 +196,8 @@ def test_no_unbacked_product_claims() -> None:
 
 def test_iso_and_regime_wording_is_not_overclaimed() -> None:
     banned = [
-        re.compile(r"ISO[^.\n]{0,40}\b(certified|evaluated)\b", re.I),
-        re.compile(r"DORA[^.\n]{0,40}\b(evaluated|verdict|compliant)\b", re.I),
+        re.compile(r"ISO[^.\n]{0,40}\bcertified\b", re.I),
+        re.compile(r"DORA[^.\n]{0,40}\bcompliant\b", re.I),
     ]
     found = [
         f"{rel}: {m.pattern}"

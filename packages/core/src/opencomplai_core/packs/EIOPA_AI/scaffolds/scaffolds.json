@@ -1,0 +1,8 @@
+{
+  "ai_governance_note": {
+    "title": "AI policy",
+    "target": "docs/policies/ai-policy.md",
+    "probe": "policy_ai",
+    "file": "ai_governance_note.md"
+  }
+}

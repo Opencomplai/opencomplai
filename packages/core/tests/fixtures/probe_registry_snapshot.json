@@ -1,0 +1,781 @@
+{
+  "EVAL_ADVERSARIAL_V1": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): deterministic lexical signature match; the evaluator's own reference is NIST AI RMF MEASURE 2.7 / EU AI Act Art. 15 (text unverified here)"
+    }
+  },
+  "ai_red_team_report": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "prompt[\\s_-]*injection|jailbreak|(?:data|model)[\\s_-]*poisoning|evasion\\s+attack|adversarial\\s+(?:example|input|prompt)|membership[\\s_-]*inference|model[\\s_-]*(?:inversion|extraction|exfiltration)|backdoor\\s+attack|model\\s+backdoor",
+          "i"
+        ],
+        [
+          "\\b(?:findings?|results?|outcomes?|success\\s+rate|vulnerabilit(?:y|ies)|bypass(?:ed|es)?|passed|failed)\\b",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "an AI-specific attack term and a test-result marker",
+      "lacks_label": "AI-specific attack term, test-result marker and minimum body length",
+      "note": "",
+      "noun": "red-team report",
+      "select": false
+    },
+    "patterns": [
+      "**/red-team*",
+      "**/red_team*",
+      "**/red-team/**",
+      "docs/**/adversarial-testing*"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.7 (id and heading only); file-name convention plus AI-attack and test-result keywords"
+    }
+  },
+  "ai_supply_chain_pins": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "\\\"(?:spdxVersion|bomFormat)\\\"|\\b(?:md5|sha1|sha256)\\b[\\\"']?\\s*[:=]\\s*[\\\"']?[0-9a-f]{32,64}\\b|\\b(?:from_pretrained|hf_hub_download|snapshot_download)\\([^)]*\\brevision\\s*=\\s*[\\\"'][0-9a-f]{7,40}[\\\"']",
+          "i"
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": false,
+      "found_label": "an SBOM header, a hash pin or a hub revision pinned to a commit",
+      "lacks_label": "SBOM header, hash pin or pinned hub revision",
+      "note": "",
+      "noun": "supply-chain pin",
+      "select": true
+    },
+    "patterns": [
+      "**/*.spdx.json",
+      "**/*.cdx.json",
+      "**/sbom*.json",
+      "**/bom.json",
+      "**/dvc.lock",
+      "**/*.dvc",
+      "**/models.lock*",
+      "**/datasets.lock*",
+      "**/model-pins*",
+      "**/dataset-pins*",
+      "**/*.py"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 5.5 and B.3 (ids and headings only); SBOM header, hash pin or hub model pinned to a commit hash"
+    }
+  },
+  "ai_threat_model": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "prompt[\\s_-]*injection|jailbreak|(?:data|model)[\\s_-]*poisoning|evasion\\s+attack|adversarial\\s+(?:example|input|prompt)|membership[\\s_-]*inference|model[\\s_-]*(?:inversion|extraction|exfiltration)|backdoor\\s+attack|model\\s+backdoor",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "an AI-specific attack term",
+      "lacks_label": "AI-specific attack term and minimum body length",
+      "note": "",
+      "noun": "threat model",
+      "select": false
+    },
+    "patterns": [
+      "**/threat-model*",
+      "**/threat_model*",
+      "**/threat-model/**",
+      "docs/**/threat*model*"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.6 (id and heading only); file-name convention plus AI-attack keywords"
+    }
+  },
+  "conformity_assessment_docs": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/conformity*",
+      "CONFORMITY*",
+      "docs/**/assessment*"
+    ],
+    "provenance": null
+  },
+  "deployer_instructions": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "intended\\s+purpose|instructions\\s+for\\s+use",
+          "i"
+        ],
+        [
+          "oversight|misuse|limitation|accuracy|maintenance|contact",
+          "i"
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": true,
+      "found_label": "Art. 13(3) topic markers",
+      "lacks_label": "Art. 13(3) topic",
+      "note": "",
+      "noun": "set of instructions for use",
+      "select": false
+    },
+    "patterns": [
+      "docs/instructions*",
+      "docs/**/instructions*",
+      "INSTRUCTIONS.md",
+      "DEPLOYER.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): Art. 13(3) topic keywords in the instructions file"
+    }
+  },
+  "deployer_use_records": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "**/deployer-use-log*",
+      "**/deployer_use_log*",
+      "**/use-records*",
+      "DEPLOYER_USE_RECORDS.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 26 (text unverified here); file-name convention only"
+    }
+  },
+  "distributor_conformity": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/conformity*",
+      "CONFORMITY*",
+      "CE_MARKING*",
+      "docs/**/distributor*"
+    ],
+    "provenance": null
+  },
+  "eu_database_registration_evidence": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "**/eu-database*",
+      "**/eu_database*",
+      "EU_DATABASE_REGISTRATION.md",
+      "**/art49-registration*"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 49 (text unverified here); file-name convention only"
+    }
+  },
+  "event_log_evidence": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "**/oversight-log.json",
+      "**/agent-log.jsonl"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Regulation (EU) 2024/1689 Art. 12; presence of a chained log file (oversight log or agent decision log), contents not verified by the probe"
+    }
+  },
+  "gpai_downstream_information": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/gpai/downstream-information*",
+      "docs/**/downstream-provider-information*",
+      "GPAI_DOWNSTREAM_INFORMATION.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 53 and Annex XII (text unverified here); file-name convention only"
+    }
+  },
+  "gpai_model_documentation": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/gpai/model-documentation*",
+      "docs/**/gpai-model-documentation*",
+      "GPAI_MODEL_DOCUMENTATION.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 53 and Annex XI (text unverified here); file-name convention only"
+    }
+  },
+  "gpai_systemic_risk_evaluation": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/gpai/systemic-risk*",
+      "docs/**/adversarial-testing*",
+      "GPAI_SYSTEMIC_RISK.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 55 and Annex XI Section 2 (text unverified here); file-name convention only"
+    }
+  },
+  "human_oversight_construct": {
+    "code_hint": [
+      "\\b(human_in_the_loop|require_approval|hitl|human_oversight)\\b",
+      "i"
+    ],
+    "markers": null,
+    "patterns": [
+      "**/human_oversight*",
+      "**/oversight*",
+      "docs/**/oversight*"
+    ],
+    "provenance": null
+  },
+  "post_market_monitoring_plan": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "post[\\s-]*market|monitor|\"prev_hash\"\\s*:\\s*\"sha256:",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Post-market monitoring system (Art. 72)",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/post-market-monitoring-plan*",
+      "docs/qms/post-market-monitoring*",
+      "docs/**/post-market-monitoring*",
+      "POST_MARKET_MONITORING_PLAN.md",
+      "POST_MARKET_MONITORING.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 72 (text unverified here); file-name convention plus heuristic content keywords"
+    }
+  },
+  "provider_fria": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/fria*",
+      "docs/**/fria*",
+      "FRIA.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/qms*",
+      "docs/qms/**",
+      "docs/**/quality*",
+      "QMS.md",
+      "QUALITY_MANAGEMENT.md",
+      "docs/**/quality-management*"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_a": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "compliance|conformity|regulat",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Regulatory-compliance strategy",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/regulatory-compliance-strategy*",
+      "docs/**/regulatory-compliance*",
+      "docs/**/compliance-strategy*",
+      "REGULATORY_COMPLIANCE_STRATEGY.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_b": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "design",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Design and design-control procedures",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/design-control*",
+      "docs/**/design-control*",
+      "docs/**/design-verification*",
+      "DESIGN_CONTROL.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_c": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "quality\\s+(control|assurance)|\\bQA\\b|\\bQC\\b|development",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Development, QC and QA procedures",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/quality-management-procedures*",
+      "docs/**/quality-assurance*",
+      "docs/**/quality-control*",
+      "QUALITY_MANAGEMENT_PROCEDURES.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_d": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "test|validat|examination",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Testing and validation procedures",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/testing-validation*",
+      "docs/**/test-validation*",
+      "docs/**/validation-procedures*",
+      "TESTING_VALIDATION.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_e": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "specification|standard",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Technical specifications and standards applied",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/technical-documentation*",
+      "docs/**/technical-specifications*",
+      "docs/**/harmonised-standards*",
+      "TECHNICAL_DOCUMENTATION.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_f": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "data\\s+(management|governance|quality|collection)|training\\s+data",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Data-management systems and procedures",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/data-governance*",
+      "docs/**/data-governance*",
+      "docs/**/data-management*",
+      "DATA_GOVERNANCE.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_g": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "risk",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Risk-management system (Art. 9)",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/risk-management-system*",
+      "docs/**/risk-management-system*",
+      "RISK_MANAGEMENT_SYSTEM.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_h": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "post[\\s-]*market|monitor|\"prev_hash\"\\s*:\\s*\"sha256:",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Post-market monitoring system (Art. 72)",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/post-market-monitoring*",
+      "docs/**/post-market-monitoring*",
+      "POST_MARKET_MONITORING.md",
+      "incident-log.json"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_i": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "incident|\"prev_hash\"\\s*:\\s*\"sha256:",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Serious-incident reporting procedures (Art. 73)",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/serious-incident-reporting*",
+      "docs/**/incident-reporting*",
+      "docs/**/serious-incident*",
+      "INCIDENT_REPORTING.md",
+      "incident-log.json"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_j": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "authorit|regulator|communicat",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Communication with national competent authorities",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/regulatory-communication*",
+      "docs/**/regulatory-communication*",
+      "docs/**/transparency*",
+      "TRANSPARENCY.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_k": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "record|log|retain|retention",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Record-keeping of relevant documentation",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/record-keeping*",
+      "docs/**/record-keeping*",
+      "RECORD_KEEPING.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_l": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "resource|supply|staff|budget",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Resource management, incl. security of supply",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/resource-management*",
+      "docs/**/resource-management*",
+      "docs/**/security-of-supply*",
+      "RESOURCE_MANAGEMENT.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_17_1_m": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "accountab|responsib|owner",
+          "i"
+        ]
+      ],
+      "body_only": true,
+      "forbid_scaffold": true,
+      "found_label": "clause keyword in body text, Accountability framework",
+      "lacks_label": "clause-specific keyword and minimum body length",
+      "note": "",
+      "noun": "QMS clause document",
+      "select": false
+    },
+    "patterns": [
+      "docs/qms/accountability-framework*",
+      "docs/**/accountability*",
+      "ACCOUNTABILITY_FRAMEWORK.md"
+    ],
+    "provenance": null
+  },
+  "provider_qms_bundle": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "docs/provider-obligations*",
+      "docs/**/provider*",
+      "PROVIDER_OBLIGATIONS.md",
+      "docs/**/technical-documentation*"
+    ],
+    "provenance": null
+  },
+  "rate_limiting_config": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "\\b(?:from|import)\\s+(?:slowapi|fastapi_limiter|flask_limiter|django_ratelimit)\\b|\\b(?:require\\s*\\(|import\\s*\\(?|from)\\s*[\\\"'](?:express-rate-limit|@fastify/rate-limit|rate-limiter-flexible)[\\\"']|^[ \\t]*limit_(?:req|conn)(?:_zone)?[ \\t]+(?:zone=|\\$)|\\benvoy\\.filters\\.http\\.(?:local_)?ratelimit\\b|\\bDEFAULT_THROTTLE_RATES\\b",
+          "im"
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": false,
+      "found_label": "a rate-limit library import or directive",
+      "lacks_label": "rate-limit library import or directive",
+      "note": "",
+      "noun": "rate-limit configuration",
+      "select": true
+    },
+    "patterns": [
+      "**/*.py",
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.cjs",
+      "**/*.ts",
+      "**/*.conf*",
+      "**/*.yaml",
+      "**/*.yml"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 6.5, 7.8 and B.2 (ids and headings only); rate-limit library imports and nginx or Envoy directives, by name"
+    }
+  },
+  "risk_register": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "risk[\\s_-]*(identification|analysis|assessment)|identified\\s+risks|hazard",
+          "i"
+        ],
+        [
+          "mitigat|control\\s+measure|treatment|residual\\s+risk",
+          "i"
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": true,
+      "found_label": "risk identification + mitigation",
+      "lacks_label": "risk-identification and mitigation",
+      "note": "",
+      "noun": "risk register",
+      "select": false
+    },
+    "patterns": [
+      "risk_register.json",
+      "risk-register.json",
+      "docs/risk*",
+      "docs/**/risk*"
+    ],
+    "provenance": null
+  },
+  "serious_incident_log": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "\"prev_hash\"\\s*:\\s*\"sha256:",
+          ""
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": true,
+      "found_label": "a signed-log entry",
+      "lacks_label": "signed-log entry",
+      "note": "",
+      "noun": "incident log",
+      "select": false
+    },
+    "patterns": [
+      "incident-log.json"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 73 (text unverified here); root incident-log.json with a signed-log line (heuristic marker)"
+    }
+  },
+  "technical_documentation_dossier": {
+    "code_hint": null,
+    "markers": {
+      "all": [
+        [
+          "\"dossier_id\"",
+          ""
+        ],
+        [
+          "\"bundle_checksum\"",
+          ""
+        ]
+      ],
+      "body_only": false,
+      "forbid_scaffold": true,
+      "found_label": "dossier_id + bundle_checksum",
+      "lacks_label": "dossier_id and bundle_checksum",
+      "note": " Presence of a dossier is not a conformity assessment; Art. 11 is never reported Met by this probe.",
+      "noun": "dossier",
+      "select": false
+    },
+    "patterns": [
+      "**/dossier_*.json"
+    ],
+    "provenance": {
+      "confidence": "medium",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 11 and Annex IV (text unverified here); dossier_<id>.json written by the CLI dossier command"
+    }
+  },
+  "transparency_notice_evidence": {
+    "code_hint": null,
+    "markers": null,
+    "patterns": [
+      "**/art50-transparency_middleware*",
+      "**/ai-disclosure*",
+      "AI_DISCLOSURE.md"
+    ],
+    "provenance": {
+      "confidence": "low",
+      "needs_founder_review": true,
+      "source": "Reg. (EU) 2024/1689 Art. 50 (text unverified here); file names written by `recommend` plus common disclosure names"
+    }
+  }
+}

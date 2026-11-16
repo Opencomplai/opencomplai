@@ -10,9 +10,8 @@ functions — there is no cron, scheduler, or background worker. Callers
 `check`, persist the result via `apply_stale`, and enqueue a `ReviewItem` per
 row via `services/risk-engine/src/opencomplai_risk_engine/review_queue.py`.
 
-Donor for the module shape (Config dataclass, row dataclass, dedup key,
-read-time detection, no dispatch):
-`dashboard-saas/services/render-api/src/dashboard_render/policy_drift.py`.
+The module shape (Config dataclass, row dataclass, dedup key, read-time
+detection, no dispatch) follows the policy-drift detector written earlier.
 """
 
 from __future__ import annotations

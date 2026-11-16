@@ -1,0 +1,27 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "affects_individuals",
+      "text": "Can the system's outputs affect individual people?",
+      "false_means": "no effect on individuals"
+    },
+    {
+      "key": "affects_groups_or_society",
+      "text": "Can the system affect groups of people or society at large?",
+      "false_means": "no effect on groups or society"
+    },
+    {
+      "key": "contract_commitment",
+      "text": "Does a customer contract or internal policy commit you to this framework?",
+      "false_means": "no commitment"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "contract_commitment": true },
+      "outcome": "applies",
+      "reason": "A contract or policy commits the organisation to this framework."
+    }
+  ]
+}

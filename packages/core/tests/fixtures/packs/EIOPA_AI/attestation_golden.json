@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "EIOPA_AI": [
+      "EIOPA_AI:3.1-3.6"
+    ]
+  },
+  "mixed_attestable": {
+    "EIOPA_AI": [
+      "EIOPA_AI:3.12-3.16",
+      "EIOPA_AI:3.17-3.21",
+      "EIOPA_AI:3.22-3.24",
+      "EIOPA_AI:3.25-3.28",
+      "EIOPA_AI:3.29-3.33",
+      "EIOPA_AI:3.34-3.38",
+      "EIOPA_AI:3.7-3.11"
+    ]
+  },
+  "records": [],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": []
+}

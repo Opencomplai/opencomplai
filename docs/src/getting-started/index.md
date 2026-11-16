@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to Opencomplai — an open-source AI compliance toolkit for AI engineering teams. It evaluates the EU AI Act natively and derives a NIST AI RMF 1.0 view from the same evidence (see [Frameworks](../frameworks/index.md)). EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
+Welcome to Opencomplai — an open-source AI compliance toolkit for AI engineering teams. It evaluates the EU AI Act natively and derives a NIST AI RMF 1.0 view from the same evidence (see [Frameworks](../frameworks/index.md)). 15 frameworks by status, evaluated: EU AI Act, NIST AI RMF 1.0, ISO/IEC 42001:2023 AI management system, ISO/IEC 27090:2026 AI security guidance, ISO/IEC 27001:2022 information security management, SOC 2 Trust Services Criteria (not a SOC 2 report), NIS2 Directive (EU) 2022/2555 cybersecurity measures, DORA Regulation (EU) 2022/2554 digital operational resilience, EBA Guidelines on ICT, outsourcing and loan origination, EIOPA Opinion on AI governance and risk management, GDPR Regulation (EU) 2016/679, duties relevant to AI systems, Cyber Resilience Act Regulation (EU) 2024/2847, ETSI EN 304 223 baseline cyber security for AI, ISO/IEC 42005:2025 AI system impact assessment, ISO/IEC 23894:2023 AI risk management guidance.
 
 ## What is Opencomplai?
 

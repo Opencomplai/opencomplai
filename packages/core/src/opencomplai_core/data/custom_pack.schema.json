@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "CustomControl": {
+      "additionalProperties": false,
+      "description": "One control of a custom pack.",
+      "properties": {
+        "default_ttl_days": {
+          "default": 365,
+          "description": "Days an attestation of this control stays current.",
+          "maximum": 3650,
+          "minimum": 1,
+          "title": "Default Ttl Days",
+          "type": "integer"
+        },
+        "description": {
+          "default": "",
+          "description": "What the control asks of the organisation.",
+          "maxLength": 2000,
+          "pattern": "^(?:[^\\x00-\\x08\\x0b-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff]|\\r\\n)*$",
+          "title": "Description",
+          "type": "string"
+        },
+        "id": {
+          "description": "Control id, unique in the pack. No colon.",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "not": {
+            "pattern": "^\\s*$"
+          },
+          "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff]+$",
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "title": "CustomControl",
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.opencomplai.dev/custom_pack/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A custom controls pack file.",
+  "properties": {
+    "controls": {
+      "items": {
+        "$ref": "#/$defs/CustomControl"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Controls",
+      "type": "array"
+    },
+    "format": {
+      "const": "opencomplai/custom-pack/v1",
+      "title": "Format",
+      "type": "string"
+    },
+    "key": {
+      "description": "Pack key. The framework key is CUSTOM_<key>.",
+      "pattern": "^[A-Z][A-Z0-9_]{1,40}$",
+      "title": "Key",
+      "type": "string"
+    },
+    "label": {
+      "maxLength": 120,
+      "minLength": 1,
+      "not": {
+        "pattern": "^\\s*$"
+      },
+      "pattern": "^[^\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff]+$",
+      "title": "Label",
+      "type": "string"
+    }
+  },
+  "required": [
+    "format",
+    "key",
+    "label",
+    "controls"
+  ],
+  "schema_version": "1",
+  "title": "CustomPackDocument",
+  "type": "object"
+}

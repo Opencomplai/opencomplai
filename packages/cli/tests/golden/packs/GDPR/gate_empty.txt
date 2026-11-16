@@ -1,0 +1,17 @@
+exit=1
+GDPR:Art. 9
+GDPR:Art. 12
+GDPR:Art. 13
+GDPR:Art. 14
+GDPR:Art. 15
+GDPR:Art. 17
+GDPR:Art. 21
+GDPR:Art. 22
+GDPR:Art. 25
+GDPR:Art. 28
+GDPR:Art. 30
+GDPR:Art. 32
+GDPR:Art. 33
+GDPR:Art. 34
+GDPR:Art. 35
+GDPR:Art. 36

@@ -1,0 +1,18 @@
+{
+  "system_id": "pack-golden-sys",
+  "intended_purpose": "ticket ranking for the Example Ltd service desk",
+  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": [
+    "ISO_IEC_42001"
+  ],
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "ISO_IEC_42001": {
+      "scope": {
+        "develops_or_uses_ai": true,
+        "ai_provider": false
+      }
+    }
+  }
+}

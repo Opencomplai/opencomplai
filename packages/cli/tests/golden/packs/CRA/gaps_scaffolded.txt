@@ -1,0 +1,239 @@
+
+Cyber Resilience Act Regulation (EU) 2024/2847 (evaluated, not an audit, certification or legal assessment) — example-ltd-cra
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement               ┃ Title                                         ┃ Status     ┃ Source      ┃ Evidence                                      ┃ Rationale                                     ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ CRA:Art. 13(2)            │ Cybersecurity risk assessment                 │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Art. 13(3)            │ Documented, updated risk assessment           │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '3' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Art. 13(5)            │ Due diligence on third-party components       │ MISSING    │ artifact    │ sbom_file                                     │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'sbom_file'. Add the expected     │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Art. 13(6)            │ Component flaws reported upstream and fixed   │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found 'docs/vulnerability-handling.md' but it │
+│                           │                                               │            │             │                                               │ still contains 5 unfilled scaffold            │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled vulnerability handling policy.   │
+│ CRA:Art. 13(7)            │ Systematic cybersecurity documentation        │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '2' still contains 3 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Art. 13(8)            │ Support period and vulnerability handling     │ PARTIAL    │ artifact    │ SUPPORT.md                                    │ Found 'SUPPORT.md' but it still contains 13   │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled support    │
+│                           │                                               │            │             │                                               │ period statement.                             │
+│ CRA:Art. 13(9)            │ Security updates kept available               │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found 'UPDATES.md' but it still contains 4    │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled update     │
+│                           │                                               │            │             │                                               │ mechanism note.                               │
+│ CRA:Art. 13(12)           │ Documentation, assessment, declaration and CE │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │ mark                                          │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(13)           │ Documentation kept for 10 years               │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(14)           │ Conformity across series production           │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(15)           │ Product identification number                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(16)           │ Manufacturer contact details on product       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(17)           │ Single point of contact                       │ PARTIAL    │ artifact    │ SECURITY.md                                   │ Found 'SECURITY.md' but it still contains 4   │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled security   │
+│                           │                                               │            │             │                                               │ policy.                                       │
+│ CRA:Art. 13(18)           │ User information and instructions supplied    │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '8' still contains 3 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Art. 13(19)           │ Support period end date stated                │ PARTIAL    │ artifact    │ SUPPORT.md                                    │ Found 'SUPPORT.md' but it still contains 13   │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled support    │
+│                           │                                               │            │             │                                               │ period statement.                             │
+│ CRA:Art. 13(20)           │ Declaration of conformity supplied            │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(21)           │ Corrective action, withdrawal or recall       │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(22)           │ Cooperation with market surveillance          │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 13(23)           │ Notice before ceasing operations              │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 14(1)            │ Actively exploited vulnerability reporting    │ MISSING    │ artifact    │ cra.vulnerability_notification_record#early-… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#early… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(3)            │ Severe incident reporting                     │ MISSING    │ artifact    │ cra.vulnerability_notification_record#notifi… │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#notif… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 14(8)            │ Users informed of exploited flaws and         │ MISSING    │ artifact    │ cra.vulnerability_notification_record#user-i… │ No conventional documentation/code probe      │
+│                           │ incidents                                     │            │             │                                               │ matched for                                   │
+│                           │                                               │            │             │                                               │ 'cra.vulnerability_notification_record#user-… │
+│                           │                                               │            │             │                                               │ Add the expected file or construct, then      │
+│                           │                                               │            │             │                                               │ re-run gaps.                                  │
+│ CRA:Art. 28               │ EU declaration of conformity                  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Art. 30               │ CE marking                                    │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (1)    │ Risk-based level of cybersecurity by design   │ MISSING    │ artifact    │ ai_threat_model                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'ai_threat_model'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(a) │ No known exploitable vulnerabilities at       │ MISSING    │ artifact    │ sast_config                                   │ No conventional documentation/code probe      │
+│                           │ release                                       │            │             │                                               │ matched for 'sast_config'. Add the expected   │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Annex I Part I (2)(b) │ Secure by default configuration               │ PARTIAL    │ artifact    │ HARDENING.md                                  │ Found 'HARDENING.md' but it still contains 4  │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled secure     │
+│                           │                                               │            │             │                                               │ defaults note.                                │
+│ CRA:Annex I Part I (2)(c) │ Vulnerabilities fixable by security updates   │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found 'UPDATES.md' but it still contains 4    │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled update     │
+│                           │                                               │            │             │                                               │ mechanism note.                               │
+│ CRA:Annex I Part I (2)(d) │ Protection from unauthorised access           │ PARTIAL    │ artifact    │ docs/policies/access-control.md               │ Found 'docs/policies/access-control.md' but   │
+│                           │                                               │            │             │                                               │ it still contains 5 unfilled scaffold         │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled access control policy.           │
+│ CRA:Annex I Part I (2)(e) │ Confidentiality of data                       │ PARTIAL    │ artifact    │ docs/policies/cryptography.md                 │ Found 'docs/policies/cryptography.md' but it  │
+│                           │                                               │            │             │                                               │ still contains 5 unfilled scaffold            │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled cryptography policy.             │
+│ CRA:Annex I Part I (2)(f) │ Integrity of data, commands and programs      │ MISSING    │ artifact    │ signed_release_config                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'signed_release_config'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(g) │ Data minimisation                             │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(h) │ Availability of essential functions           │ MISSING    │ artifact    │ rate_limiting_config                          │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'rate_limiting_config'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(i) │ Limited impact on other devices and networks  │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part I (2)(j) │ Limited attack surface                        │ MISSING    │ artifact    │ iac_definitions                               │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'iac_definitions'. Add the        │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(k) │ Exploitation mitigation                       │ MISSING    │ artifact    │ sast_config                                   │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'sast_config'. Add the expected   │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Annex I Part I (2)(l) │ Security logging and monitoring               │ MISSING    │ artifact    │ event_log_evidence                            │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'event_log_evidence'. Add the     │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part I (2)(m) │ Secure permanent data removal                 │ UNVERIFIED │ attestation │ none                                          │ No attestation recorded. Add one under        │
+│                           │                                               │            │             │                                               │ framework_inputs.CRA.attested in the          │
+│                           │                                               │            │             │                                               │ manifest.                                     │
+│ CRA:Annex I Part II (1)   │ Vulnerabilities and components documented,    │ MISSING    │ artifact    │ ai_supply_chain_pins                          │ No conventional documentation/code probe      │
+│                           │ SBOM                                          │            │             │                                               │ matched for 'ai_supply_chain_pins'. Add the   │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (2)   │ Vulnerabilities remediated without delay      │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found 'docs/vulnerability-handling.md' but it │
+│                           │                                               │            │             │                                               │ still contains 5 unfilled scaffold            │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled vulnerability handling policy.   │
+│ CRA:Annex I Part II (3)   │ Regular security tests and reviews            │ MISSING    │ artifact    │ sast_config                                   │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'sast_config'. Add the expected   │
+│                           │                                               │            │             │                                               │ file or construct, then re-run gaps.          │
+│ CRA:Annex I Part II (4)   │ Public disclosure of fixed vulnerabilities    │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found 'docs/vulnerability-handling.md' but it │
+│                           │                                               │            │             │                                               │ still contains 5 unfilled scaffold            │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled vulnerability handling policy.   │
+│ CRA:Annex I Part II (5)   │ Coordinated vulnerability disclosure policy   │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md                │ Found 'docs/vulnerability-handling.md' but it │
+│                           │                                               │            │             │                                               │ still contains 5 unfilled scaffold            │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled vulnerability handling policy.   │
+│ CRA:Annex I Part II (6)   │ Vulnerability information sharing and contact │ PARTIAL    │ artifact    │ SECURITY.md                                   │ Found 'SECURITY.md' but it still contains 4   │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled security   │
+│                           │                                               │            │             │                                               │ policy.                                       │
+│ CRA:Annex I Part II (7)   │ Secure distribution of updates                │ MISSING    │ artifact    │ signed_release_config                         │ No conventional documentation/code probe      │
+│                           │                                               │            │             │                                               │ matched for 'signed_release_config'. Add the  │
+│                           │                                               │            │             │                                               │ expected file or construct, then re-run gaps. │
+│ CRA:Annex I Part II (8)   │ Updates disseminated without delay            │ PARTIAL    │ artifact    │ UPDATES.md                                    │ Found 'UPDATES.md' but it still contains 4    │
+│                           │                                               │            │             │                                               │ unfilled scaffold placeholder(s) ('_fill      │
+│                           │                                               │            │             │                                               │ in_') — a scaffold is not a filled update     │
+│                           │                                               │            │             │                                               │ mechanism note.                               │
+│ CRA:Annex II (1)          │ Manufacturer identity and contact             │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '1' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (2)          │ Vulnerability reporting contact               │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '2' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (3)          │ Product identification                        │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '3' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (4)          │ Intended purpose and security properties      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '4' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (5)          │ Known risk circumstances and foreseeable      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │ misuse                                        │            │             │                                               │ clause '5' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (6)          │ Web address of declaration of conformity      │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '6' still contains 1 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (7)          │ Security support offered and end date         │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '7' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (8)          │ Instructions for secure use through to        │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │ decommissioning                               │            │             │                                               │ clause '8' still contains 3 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex II (9)          │ Location of the SBOM if offered               │ PARTIAL    │ artifact    │ docs/security-information.md                  │ Found 'docs/security-information.md' but      │
+│                           │                                               │            │             │                                               │ clause '9' still contains 1 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled user information.                │
+│ CRA:Annex VII (1)         │ General description of the product            │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '1' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (2)         │ Design, development, production,              │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │ vulnerability handling                        │            │             │                                               │ clause '2' still contains 3 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (3)         │ Cybersecurity risk assessment in the file     │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '3' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (4)         │ Basis for the support period                  │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '4' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (5)         │ Standards and solutions applied               │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '5' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (6)         │ Test reports                                  │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '6' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (7)         │ Copy of the declaration of conformity         │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '7' still contains 1 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+│ CRA:Annex VII (8)         │ SBOM available on authority request           │ PARTIAL    │ artifact    │ CRA_TECHNICAL_DOCUMENTATION.md                │ Found 'CRA_TECHNICAL_DOCUMENTATION.md' but    │
+│                           │                                               │            │             │                                               │ clause '8' still contains 2 unfilled scaffold │
+│                           │                                               │            │             │                                               │ placeholder(s) ('_fill in_') — a scaffold is  │
+│                           │                                               │            │             │                                               │ not a filled technical documentation.         │
+└───────────────────────────┴───────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────────────┴───────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

@@ -1,0 +1,47 @@
+{
+  "default": "applies",
+  "questions": [
+    {
+      "key": "financial_entity",
+      "text": "Is the organisation a financial entity of a type listed in Art. 2(1) (bank, payment or e-money institution, investment firm, insurer, crypto-asset service provider and others)?",
+      "false_means": "not a financial entity"
+    },
+    {
+      "key": "ict_provider_to_financial_entities",
+      "text": "Does it supply ICT services to financial entities?",
+      "false_means": "no financial-sector customers"
+    },
+    {
+      "key": "excluded_entity",
+      "text": "Is it one of the entities Art. 2(3) leaves out?",
+      "false_means": "not excluded"
+    },
+    {
+      "key": "simplified_regime",
+      "text": "Does the simplified ICT risk framework of Art. 16 apply to it?",
+      "false_means": "full framework applies"
+    },
+    {
+      "key": "threat_led_testing_required",
+      "text": "Has the authority identified it for threat-led penetration testing?",
+      "false_means": "not identified for advanced testing"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "financial_entity": false, "ict_provider_to_financial_entities": true },
+      "outcome": "voluntary",
+      "reason": "Financial customers pass the contract terms of Art. 28 to 30 on to their providers."
+    },
+    {
+      "when": { "financial_entity": false },
+      "outcome": "not_applicable",
+      "reason": "The Regulation addresses financial entities. Confirm with your adviser."
+    },
+    {
+      "when": { "excluded_entity": true },
+      "outcome": "not_applicable",
+      "reason": "Art. 2(3) leaves this type of entity out. Confirm with your adviser."
+    }
+  ]
+}

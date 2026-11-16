@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "NIS2": [
+      "NIS2:Art. 20(1)",
+      "NIS2:Art. 20(2)",
+      "NIS2:Art. 21(1)",
+      "NIS2:Art. 21(2)(j)",
+      "NIS2:Art. 23(2)"
+    ]
+  },
+  "mixed_attestable": {
+    "NIS2": [
+      "NIS2:Art. 21(2)(a)",
+      "NIS2:Art. 21(2)(b)",
+      "NIS2:Art. 21(2)(c)",
+      "NIS2:Art. 21(2)(d)",
+      "NIS2:Art. 21(2)(e)",
+      "NIS2:Art. 21(2)(f)",
+      "NIS2:Art. 21(2)(g)",
+      "NIS2:Art. 21(2)(h)",
+      "NIS2:Art. 21(2)(i)",
+      "NIS2:Art. 21(3)",
+      "NIS2:Art. 21(4)",
+      "NIS2:Art. 23(1)",
+      "NIS2:Art. 23(4)(a)",
+      "NIS2:Art. 23(4)(b)",
+      "NIS2:Art. 23(4)(c)",
+      "NIS2:Art. 23(4)(d)"
+    ]
+  },
+  "records": [],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": []
+}

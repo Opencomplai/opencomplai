@@ -1,0 +1,71 @@
+
+GDPR Regulation (EU) 2016/679, duties relevant to AI systems (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement     ┃ Title                                                       ┃ Status     ┃ Source      ┃ Evidence                   ┃ Rationale                                                    ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ GDPR:Art. 5     │ Principles relating to processing of personal data          │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 6     │ Lawfulness of processing                                    │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 9     │ Processing of special categories of personal data           │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' but clause 'special-categories' still        │
+│                 │                                                             │            │             │                            │ contains 1 unfilled scaffold placeholder(s) ('_fill in_') —  │
+│                 │                                                             │            │             │                            │ a scaffold is not a filled data protection impact            │
+│                 │                                                             │            │             │                            │ assessment.                                                  │
+│ GDPR:Art. 12    │ Transparent information and modalities for exercising data  │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found 'docs/dsar.md' but it still contains 6 unfilled        │
+│                 │ subject rights                                              │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled data subject request procedure.                       │
+│ GDPR:Art. 13    │ Information to be provided where data are collected from    │ PARTIAL    │ artifact    │ PRIVACY.md                 │ Found 'PRIVACY.md' but it still contains 5 unfilled scaffold │
+│                 │ the data subject                                            │            │             │                            │ placeholder(s) ('_fill in_') — a scaffold is not a filled    │
+│                 │                                                             │            │             │                            │ privacy notice.                                              │
+│ GDPR:Art. 14    │ Information where data have not been obtained from the data │ PARTIAL    │ artifact    │ PRIVACY.md                 │ Found 'PRIVACY.md' but it still contains 5 unfilled scaffold │
+│                 │ subject                                                     │            │             │                            │ placeholder(s) ('_fill in_') — a scaffold is not a filled    │
+│                 │                                                             │            │             │                            │ privacy notice.                                              │
+│ GDPR:Art. 15    │ Right of access by the data subject                         │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found 'docs/dsar.md' but it still contains 6 unfilled        │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled data subject request procedure.                       │
+│ GDPR:Art. 17    │ Right to erasure ('right to be forgotten')                  │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found 'docs/dsar.md' but it still contains 6 unfilled        │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled data subject request procedure.                       │
+│ GDPR:Art. 21    │ Right to object                                             │ PARTIAL    │ artifact    │ docs/dsar.md               │ Found 'docs/dsar.md' but it still contains 6 unfilled        │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled data subject request procedure.                       │
+│ GDPR:Art. 22    │ Automated individual decision-making, including profiling   │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' but clause 'automated-decisions' still       │
+│                 │                                                             │            │             │                            │ contains 1 unfilled scaffold placeholder(s) ('_fill in_') —  │
+│                 │                                                             │            │             │                            │ a scaffold is not a filled data protection impact            │
+│                 │                                                             │            │             │                            │ assessment.                                                  │
+│ GDPR:Art. 24    │ Responsibility of the controller                            │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │                                                             │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+│ GDPR:Art. 25    │ Data protection by design and by default                    │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' but clause 'measures' still contains 1       │
+│                 │                                                             │            │             │                            │ unfilled scaffold placeholder(s) ('_fill in_') — a scaffold  │
+│                 │                                                             │            │             │                            │ is not a filled data protection impact assessment.           │
+│ GDPR:Art. 28    │ Processor                                                   │ PARTIAL    │ artifact    │ docs/processor-register.md │ Found 'docs/processor-register.md' but it still contains 5   │
+│                 │                                                             │            │             │                            │ unfilled scaffold placeholder(s) ('_fill in_') — a scaffold  │
+│                 │                                                             │            │             │                            │ is not a filled processor register.                          │
+│ GDPR:Art. 30    │ Records of processing activities                            │ PARTIAL    │ artifact    │ docs/ropa.md               │ Found 'docs/ropa.md' but it still contains 6 unfilled        │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled record of processing.                                 │
+│ GDPR:Art. 32    │ Security of processing                                      │ PARTIAL    │ artifact    │ SECURITY.md                │ Found 'SECURITY.md' but it still contains 4 unfilled         │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled security policy.                                      │
+│ GDPR:Art. 33    │ Notification of a personal data breach to the supervisory   │ PARTIAL    │ artifact    │ docs/breach-register.md    │ Found 'docs/breach-register.md' but it still contains 5      │
+│                 │ authority                                                   │            │             │                            │ unfilled scaffold placeholder(s) ('_fill in_') — a scaffold  │
+│                 │                                                             │            │             │                            │ is not a filled breach register.                             │
+│ GDPR:Art. 34    │ Communication of a personal data breach to the data subject │ PARTIAL    │ artifact    │ docs/breach-register.md    │ Found 'docs/breach-register.md' but it still contains 5      │
+│                 │                                                             │            │             │                            │ unfilled scaffold placeholder(s) ('_fill in_') — a scaffold  │
+│                 │                                                             │            │             │                            │ is not a filled breach register.                             │
+│ GDPR:Art. 35    │ Data protection impact assessment                           │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' but clause 'risks' still contains 5 unfilled │
+│                 │                                                             │            │             │                            │ scaffold placeholder(s) ('_fill in_') — a scaffold is not a  │
+│                 │                                                             │            │             │                            │ filled data protection impact assessment.                    │
+│ GDPR:Art. 36    │ Prior consultation                                          │ PARTIAL    │ artifact    │ DPIA.md                    │ Found 'DPIA.md' but clause 'consultation' still contains 1   │
+│                 │                                                             │            │             │                            │ unfilled scaffold placeholder(s) ('_fill in_') — a scaffold  │
+│                 │                                                             │            │             │                            │ is not a filled data protection impact assessment.           │
+│ GDPR:Art. 37-39 │ Designation, position and tasks of the data protection      │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                       │
+│                 │ officer                                                     │            │             │                            │ framework_inputs.GDPR.attested in the manifest.              │
+└─────────────────┴─────────────────────────────────────────────────────────────┴────────────┴─────────────┴────────────────────────────┴──────────────────────────────────────────────────────────────┘
+
+Excluded
+  GDPR:Chapter V: Not applicable: the manifest's scope says the system no transfers outside the EEA (framework_inputs.GDPR.scope.transfers_outside_eea = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

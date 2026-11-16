@@ -1,0 +1,19 @@
+{
+  "id": "ETSI_EN_304_223",
+  "order": 13,
+  "kind": "native",
+  "name": "ETSI EN 304 223 baseline cyber security for AI",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "ETSI EN 304 223",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "etsi_en_304_223.json",
+  "data_files": ["applicability.json", "probes.json"],
+  "copyright": "restricted",
+  "row_count": 72,
+  "target_machine_share": 38,
+  "timeline": "none",
+  "timeline_reason": "a standard without legal application dates",
+  "catalogue": true
+}

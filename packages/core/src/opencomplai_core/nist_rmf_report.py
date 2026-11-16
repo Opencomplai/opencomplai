@@ -8,15 +8,20 @@ It mirrors `principle_report.py`'s worst-case rollup pattern (same
 list in `data/nist_ai_rmf_subcategories.json`, and it additionally
 propagates that mapping's confidence: a subcategory mapped only at
 `confidence="low"` is never reported as more confident than that, no matter
-how "measured" the underlying EU AI Act evidence is.
+how "measured" the underlying EU AI Act evidence is. A low-confidence link
+also cannot fail a subcategory: where its article reads Missing or Partial the
+link counts as Unverified in the rollup and is cited as supporting evidence
+only, so only a medium-or-better link can make a subcategory Missing or Partial.
 
 A subcategory with no EU AI Act evidence to re-project reads UNVERIFIED /
 not_assessed until the provider records an attestation under
 `framework_inputs.NIST_AI_RMF.attested`, and Met / attested once they do. That
-is a subcategory whose `eu_ai_act` list is empty, or whose mapped articles are
-all decided by an attestation themselves (GOVERN 2.2 maps only to Art. 4). A
-subcategory that has EU AI Act evidence takes no attestation: its verdict comes
-from that evidence only.
+is a subcategory whose `eu_ai_act` list is empty, whose mapped articles are
+all decided by an attestation themselves (GOVERN 2.2 maps only to Art. 4), or
+whose mapped articles are all out of scope in this run: an article the
+checker session says does not apply sits in `GapReport.not_applicable` and
+gives no evidence. A subcategory that has EU AI Act evidence takes no
+attestation: its verdict comes from that evidence only.
 
 An EU AI Act row whose status comes from an attestation counts as no evidence
 for NIST. Otherwise an attestation of Art. 4, which maps to GOVERN 2.2 and MAP
@@ -46,7 +51,10 @@ from opencomplai_core.models import (
     RmfFunction,
     RmfSubcategoryStatus,
 )
-from opencomplai_core.nist_ai_rmf_subcategories import get_subcategories
+from opencomplai_core.nist_ai_rmf_subcategories import (
+    RmfSubcategoryEntry,
+    get_subcategories,
+)
 
 _CONFIDENCE_RANK = {"low": 0, "medium": 1, "high": 2}
 _PREFIX = "NIST_AI_RMF:"
@@ -62,16 +70,41 @@ def _attestation_only_articles() -> set[str]:
     }
 
 
+def _conditional_articles() -> set[str]:
+    """EU AI Act articles that apply only for some checker answers
+    (`applies_when_any`): a checker session can move them to not applicable."""
+    return {
+        article
+        for article, config in load_gap_article_map().items()
+        if config.get("applies_when_any")
+    }
+
+
 def attestable_subcategories() -> set[str]:
-    """Prefixed ids of the subcategories that take an attestation: those the
-    EU AI Act evidence holds nothing for, because no article maps to them or
-    every article that does is decided by an attestation itself."""
-    attestation_only = _attestation_only_articles()
+    """Prefixed ids of the subcategories that can take an attestation: those the
+    EU AI Act evidence may hold nothing for, because no article maps to them,
+    or every article that does is decided by an attestation itself or may be
+    not applicable. A static superset: whether an attestation counts in a given
+    run is `_takes_attestation`."""
+    covered = _attestation_only_articles() | _conditional_articles()
     return {
         f"{_PREFIX}{subcat_id}"
         for subcat_id, entry in get_subcategories().items()
-        if all(article in attestation_only for article, _ in entry.eu_ai_act)
+        if all(article in covered for article, _ in entry.eu_ai_act)
     }
+
+
+def _takes_attestation(
+    entry: RmfSubcategoryEntry, not_applicable: Mapping[str, str]
+) -> bool:
+    """True when no EU AI Act article gives evidence for this subcategory in
+    this run: every mapped article is decided by an attestation or is not
+    applicable (vacuously true when none is mapped)."""
+    attestation_only = _attestation_only_articles()
+    return all(
+        article in attestation_only or article in not_applicable
+        for article, _ in entry.eu_ai_act
+    )
 
 
 def _unassessed(
@@ -107,15 +140,20 @@ def build_nist_rmf_report(
     whose mapped articles are absent from this run's `gap_report` is
     UNVERIFIED with `confidence_label=NOT_ASSESSED`. `attested` is the
     manifest's `framework_inputs.NIST_AI_RMF.attested`; it is read only for the
-    subcategories in `attestable_subcategories()`. An article whose row comes
+    subcategories `_takes_attestation` says no article gives evidence for in
+    this run (mapped articles all decided by an attestation or listed in
+    `gap_report.not_applicable`). On any other row it is not used, and the
+    rationale says so. An article whose row comes
     from an attestation is no evidence here: it is left out of every
     re-projection and holds the row at Unverified at best, attested or not.
+    A link below `medium` confidence whose article reads Missing or Partial
+    counts as Unverified in the worst-status rollup and is named in the
+    rationale; the citations keep the article's own status.
     An attestation whose `valid_until` is before `today`
     (default: the current UTC date) reads Unverified.
     """
     attested = attested or {}
     effective_today = today if today is not None else datetime.now(UTC).date()
-    attestable = attestable_subcategories()
     status_by_article: dict[str, ArticleGapStatus] = {}
     set_aside: set[str] = set()
     for row in gap_report.articles:
@@ -126,8 +164,9 @@ def build_nist_rmf_report(
 
     rows: list[RmfSubcategoryStatus] = []
     for subcat_id, entry in get_subcategories().items():
-        if f"{_PREFIX}{subcat_id}" in attestable:
-            attestation = attested.get(f"{_PREFIX}{subcat_id}")
+        key = f"{_PREFIX}{subcat_id}"
+        if _takes_attestation(entry, gap_report.not_applicable):
+            attestation = attested.get(key)
             expired = (
                 attestation_expiry_text(attestation, "NIST_AI_RMF", effective_today)
                 if attestation is not None
@@ -138,17 +177,27 @@ def build_nist_rmf_report(
                     _unassessed(subcat_id, entry.function, entry.category, expired, [])
                 )
             elif attestation is None:
+                not_applicable = [
+                    article
+                    for article, _ in entry.eu_ai_act
+                    if article in gap_report.not_applicable
+                ]
+                if not_applicable:
+                    unattested = (
+                        f"None of the EU AI Act articles mapped to {subcat_id} "
+                        "gives evidence in this run (not applicable: "
+                        f"{', '.join(not_applicable)}). Add an attestation under "
+                        "framework_inputs.NIST_AI_RMF.attested in the manifest."
+                    )
+                else:
+                    unattested = (
+                        "The EU AI Act evidence holds nothing for this "
+                        "subcategory. Add an attestation under "
+                        "framework_inputs.NIST_AI_RMF.attested in the manifest."
+                    )
                 rows.append(
                     _unassessed(
-                        subcat_id,
-                        entry.function,
-                        entry.category,
-                        (
-                            "The EU AI Act evidence holds nothing for this "
-                            "subcategory. Add an attestation under "
-                            "framework_inputs.NIST_AI_RMF.attested in the manifest."
-                        ),
-                        [],
+                        subcat_id, entry.function, entry.category, unattested, []
                     )
                 )
             else:
@@ -172,6 +221,15 @@ def build_nist_rmf_report(
         ]
 
         ignored = [article for article, _ in entry.eu_ai_act if article in set_aside]
+        # An attestation recorded for a row that EU AI Act evidence decides is
+        # not used; say so, so nobody reads the row as attested.
+        unused_note = (
+            " The attestation recorded for this subcategory is not used: it "
+            "counts only when every mapped article is not applicable or decided "
+            "by an attestation."
+            if key in attested
+            else ""
+        )
         # Said only when it happened, so an ordinary row reads as it always did.
         ignored_note = (
             " Set aside, because an attestation decides it and is no evidence "
@@ -190,18 +248,36 @@ def build_nist_rmf_report(
                     (
                         f"{subcat_id} maps to {', '.join(mapped)}, but none of "
                         "those articles are present in this gap report run."
-                        f"{ignored_note}"
+                        f"{ignored_note}{unused_note}"
                     ),
                     mapped,
                 )
             )
             continue
 
+        # A low-confidence link cannot make a subcategory Missing or Partial: it
+        # counts as Unverified here and stays in the citations as supporting
+        # evidence. Met and Unverified results are never capped.
+        capped = [
+            article
+            for article, status, confidence in present
+            if _CONFIDENCE_RANK[confidence] < _CONFIDENCE_RANK["medium"]
+            and status.status in (GapStatus.MISSING, GapStatus.PARTIAL)
+        ]
+        capped_note = (
+            " Capped at Unverified, because a low-confidence link cannot make "
+            f"a subcategory Missing or Partial: {', '.join(capped)}."
+            if capped
+            else ""
+        )
         # A set-aside article is no evidence, so it holds the row at Unverified at
         # best, as it did before an attestation could decide it: an attestation
         # never lifts a subcategory through the mapping.
         worst_status = max(
-            [status.status for _, status, _ in present]
+            [
+                GapStatus.UNVERIFIED if article in capped else status.status
+                for article, status, _ in present
+            ]
             + ([GapStatus.UNVERIFIED] if ignored else []),
             key=lambda s: STATUS_SEVERITY[s],
         )
@@ -219,7 +295,7 @@ def build_nist_rmf_report(
         rationale = (
             f"Re-projected via data/nist_ai_rmf_subcategories.json (mapping "
             f"confidence={mapping_confidence}) from existing EU AI Act "
-            f"evidence: {citations}.{ignored_note}"
+            f"evidence: {citations}.{capped_note}{ignored_note}{unused_note}"
         )
 
         rows.append(
@@ -258,15 +334,23 @@ def nist_rmf_as_gap_report(
     derived from. Verdicts and labels come unchanged from
     `build_nist_rmf_report`; a re-projection carries no numeric confidence. A
     row with an attestation keeps the attestation source and reference even
-    when the attestation has expired and the row reads Unverified.
+    when the attestation has expired and the row reads Unverified. An
+    attestation on a row that EU AI Act evidence decides is not used and the
+    row stays CROSSWALK.
     """
     attested = attested or {}
     nist = build_nist_rmf_report(gap_report, attested, today)
-    attestable = attestable_subcategories()
+    subcategories = get_subcategories()
     articles = []
     for row in nist.subcategories:
         rid = f"{_PREFIX}{row.subcategory}"
-        attestation = attested.get(rid) if rid in attestable else None
+        attestation = (
+            attested.get(rid)
+            if _takes_attestation(
+                subcategories[row.subcategory], gap_report.not_applicable
+            )
+            else None
+        )
         if attestation is not None:
             source = ArticleGapSource.ATTESTATION
             evidence_ref = attestation_evidence_ref(attestation)

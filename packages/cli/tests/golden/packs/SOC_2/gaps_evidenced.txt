@@ -1,0 +1,160 @@
+
+SOC 2 Trust Services Criteria (not a SOC 2 report) (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement ┃ Title                                                    ┃ Status     ┃ Source      ┃ Evidence                              ┃ Rationale                                                ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ SOC_2:CC1.1 │ Integrity and ethical values                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC1.2 │ Board independence and oversight of internal control     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC1.3 │ Structures, reporting lines and responsibilities         │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC1.4 │ Attracting, developing and retaining competent people    │ PARTIAL    │ artifact    │ docs/training-record.md               │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'competence_training_record' (1 path(s), 0 code hint(s)) │
+│             │                                                          │            │             │                                       │ with content markers found (training or competence with  │
+│             │                                                          │            │             │                                       │ a completion date and a role or attendee). Heuristic     │
+│             │                                                          │            │             │                                       │ only — not a full obligation assessment.                 │
+│ SOC_2:CC1.5 │ Accountability for internal control duties               │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC2.1 │ Quality information to support internal control          │ PARTIAL    │ artifact    │ docs/assurance/system-description.md  │ Found 'docs/assurance/system-description.md' with clause │
+│             │                                                          │            │             │                                       │ 'commitments' holding content markers (Service           │
+│             │                                                          │            │             │                                       │ commitments and system requirements). Heuristic only —   │
+│             │                                                          │            │             │                                       │ not a full obligation assessment.                        │
+│ SOC_2:CC2.2 │ Internal communication of objectives and duties          │ PARTIAL    │ artifact    │ docs/policies/information-security.md │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'policy_information_security' (1 path(s), 0 code         │
+│             │                                                          │            │             │                                       │ hint(s)) with content markers found (the words           │
+│             │                                                          │            │             │                                       │ information security). Heuristic only — not a full       │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC2.3 │ Communication with external parties                      │ PARTIAL    │ artifact    │ SECURITY.md                           │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'security_policy_file' (1 path(s), 0 code hint(s)) with  │
+│             │                                                          │            │             │                                       │ content markers found (a how-to-report section and a     │
+│             │                                                          │            │             │                                       │ contact or advisory link). Heuristic only — not a full   │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC3.1 │ Clear objectives so risks can be assessed                │ PARTIAL    │ artifact    │ docs/objectives.md                    │ Found candidate artifact/signal for 'objectives_record'  │
+│             │                                                          │            │             │                                       │ (1 path(s), 0 code hint(s)) with content markers found   │
+│             │                                                          │            │             │                                       │ (objectives with a measure or target and an owner or due │
+│             │                                                          │            │             │                                       │ date). Heuristic only — not a full obligation            │
+│             │                                                          │            │             │                                       │ assessment.                                              │
+│ SOC_2:CC3.2 │ Risk identification and analysis                         │ PARTIAL    │ artifact    │ docs/risk-register.md                 │ Found candidate artifact/signal for 'risk_register' (1   │
+│             │                                                          │            │             │                                       │ path(s), 0 code hint(s)) with content markers found      │
+│             │                                                          │            │             │                                       │ (risk identification + mitigation). Heuristic only — not │
+│             │                                                          │            │             │                                       │ a full obligation assessment.                            │
+│ SOC_2:CC3.3 │ Fraud risk consideration                                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC3.4 │ Assessing changes that affect internal control           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC4.1 │ Ongoing and separate control evaluations                 │ PARTIAL    │ artifact    │ docs/internal-audit.md                │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'internal_audit_report' (1 path(s), 0 code hint(s)) with │
+│             │                                                          │            │             │                                       │ content markers found (an audit with findings and an     │
+│             │                                                          │            │             │                                       │ auditor, scope or date). Heuristic only — not a full     │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC4.2 │ Reporting and correcting control deficiencies            │ PARTIAL    │ artifact    │ docs/corrective-action-log.md         │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'corrective_action_log' (1 path(s), 0 code hint(s)) with │
+│             │                                                          │            │             │                                       │ content markers found (a nonconformity with its root     │
+│             │                                                          │            │             │                                       │ cause and corrective action). Heuristic only — not a     │
+│             │                                                          │            │             │                                       │ full obligation assessment.                              │
+│ SOC_2:CC5.1 │ Control activities that reduce risk                      │ PARTIAL    │ artifact    │ docs/assurance/control-matrix.md      │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'soc_2.control_matrix' (1 path(s), 0 code hint(s)) with  │
+│             │                                                          │            │             │                                       │ content markers found (criterion id, control statement   │
+│             │                                                          │            │             │                                       │ and evidence reference). Heuristic only — not a full     │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC5.2 │ General controls over technology                         │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC5.3 │ Controls deployed through policies and procedures        │ PARTIAL    │ artifact    │ docs/policies/information-security.md │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'policy_information_security' (1 path(s), 0 code         │
+│             │                                                          │            │             │                                       │ hint(s)) with content markers found (the words           │
+│             │                                                          │            │             │                                       │ information security). Heuristic only — not a full       │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC6.1 │ Logical access security over protected assets            │ PARTIAL    │ artifact    │ docs/policies/access-control.md       │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'policy_access_control' (1 path(s), 0 code hint(s)) with │
+│             │                                                          │            │             │                                       │ content markers found (an access control, least          │
+│             │                                                          │            │             │                                       │ privilege or authorisation term). Heuristic only — not a │
+│             │                                                          │            │             │                                       │ full obligation assessment.                              │
+│ SOC_2:CC6.2 │ User registration and credential issuance                │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC6.3 │ Granting, changing and removing access                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC6.4 │ Physical access to facilities and assets                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC6.5 │ Secure disposal of assets and media                      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC6.6 │ Protection against threats from outside the system       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │ boundary                                                 │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC6.7 │ Controls over moving and transmitting information        │ PARTIAL    │ artifact    │ docs/policies/cryptography.md         │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'policy_cryptography' (1 path(s), 0 code hint(s)) with   │
+│             │                                                          │            │             │                                       │ content markers found (an encryption or key management   │
+│             │                                                          │            │             │                                       │ term). Heuristic only — not a full obligation            │
+│             │                                                          │            │             │                                       │ assessment.                                              │
+│ SOC_2:CC6.8 │ Preventing and detecting malicious software              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                   │
+│             │                                                          │            │             │                                       │ framework_inputs.SOC_2.attested in the manifest.         │
+│ SOC_2:CC7.1 │ Detecting vulnerabilities and risky configuration        │ PARTIAL    │ artifact    │ .github/workflows/sast.yml            │ Found candidate artifact/signal for 'sast_config' (1     │
+│             │ changes                                                  │            │             │                                       │ path(s), 0 code hint(s)) with content markers found (a   │
+│             │                                                          │            │             │                                       │ static-analysis tool name). Heuristic only — not a full  │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC7.2 │ Monitoring systems for anomalies                         │ PARTIAL    │ artifact    │ oversight-log.json                    │ Found candidate artifact/signal for 'event_log_evidence' │
+│             │                                                          │            │             │                                       │ (1 path(s), 0 code hint(s)). Heuristic only — not a full │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC7.3 │ Evaluating security events as incidents                  │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                  │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'incident_response_plan' (1 path(s), 0 code hint(s))     │
+│             │                                                          │            │             │                                       │ with content markers found (detection, containment and   │
+│             │                                                          │            │             │                                       │ roles or escalation topics). Heuristic only — not a full │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC7.4 │ Incident response program                                │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                  │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'incident_response_plan' (1 path(s), 0 code hint(s))     │
+│             │                                                          │            │             │                                       │ with content markers found (detection, containment and   │
+│             │                                                          │            │             │                                       │ roles or escalation topics). Heuristic only — not a full │
+│             │                                                          │            │             │                                       │ obligation assessment.                                   │
+│ SOC_2:CC7.5 │ Recovery from security incidents                         │ PARTIAL    │ artifact    │ docs/restore-test.md                  │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'restore_test_report' (1 path(s), 0 code hint(s)) with   │
+│             │                                                          │            │             │                                       │ content markers found (a restore, a result or duration   │
+│             │                                                          │            │             │                                       │ and a date). Heuristic only — not a full obligation      │
+│             │                                                          │            │             │                                       │ assessment.                                              │
+│ SOC_2:CC8.1 │ Change management                                        │ PARTIAL    │ artifact    │ docs/policies/change-management.md    │ Found candidate artifact/signal for                      │
+│             │                                                          │            │             │                                       │ 'policy_change_management' (1 path(s), 0 code hint(s))   │
+│             │                                                          │            │             │                                       │ with content markers found (a change control or approval │
+│             │                                                          │            │             │                                       │ term). Heuristic only — not a full obligation            │
+│             │                                                          │            │             │                                       │ assessment.                                              │
+│ SOC_2:CC9.1 │ Risk mitigation for business disruption                  │ PARTIAL    │ artifact    │ docs/business-continuity.md           │ Found candidate artifact/signal for 'continuity_plan' (1 │
+│             │                                                          │            │             │                                       │ path(s), 0 code hint(s)) with content markers found      │
+│             │                                                          │            │             │                                       │ (recovery objectives, critical services and tests or     │
+│             │                                                          │            │             │                                       │ exercises). Heuristic only — not a full obligation       │
+│             │                                                          │            │             │                                       │ assessment.                                              │
+│ SOC_2:CC9.2 │ Vendor and business partner risk                         │ PARTIAL    │ artifact    │ docs/vendor-register.md               │ Found candidate artifact/signal for 'vendor_register' (1 │
+│             │                                                          │            │             │                                       │ path(s), 0 code hint(s)) with content markers found      │
+│             │                                                          │            │             │                                       │ (provider, service and criticality entries). Heuristic   │
+│             │                                                          │            │             │                                       │ only — not a full obligation assessment.                 │
+└─────────────┴──────────────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────┴──────────────────────────────────────────────────────────┘
+
+Excluded
+  SOC_2:A1.1: Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).
+  SOC_2:A1.2: Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).
+  SOC_2:A1.3: Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).
+  SOC_2:C1.1: Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).
+  SOC_2:C1.2: Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).
+  SOC_2:PI1.1: Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).
+  SOC_2:PI1.2: Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).
+  SOC_2:PI1.3: Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).
+  SOC_2:PI1.4: Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).
+  SOC_2:PI1.5: Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).
+  SOC_2:P1.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P2.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P3.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P3.2: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P4.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P4.2: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P4.3: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P5.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P5.2: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.2: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.3: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.4: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.5: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.6: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P6.7: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P7.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+  SOC_2:P8.1: Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

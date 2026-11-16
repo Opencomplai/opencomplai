@@ -131,6 +131,16 @@
         "disclaimer_ref": "DISCLAIMER_V1"
       },
       {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
         "article": "Art. 24",
         "status": "missing",
         "source": "artifact",
@@ -302,6 +312,7 @@
             "Art. 14",
             "Art. 16",
             "Art. 17",
+            "Art. 20",
             "Art. 24",
             "Art. 26",
             "Art. 43",

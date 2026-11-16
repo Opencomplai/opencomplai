@@ -1,0 +1,37 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "develops_or_uses_ai",
+      "text": "Does the organisation develop, provide or use AI systems?",
+      "false_means": "no AI systems"
+    },
+    {
+      "key": "contract_commitment",
+      "text": "Does a certification plan, customer contract or internal policy commit you to this framework?",
+      "false_means": "no commitment"
+    },
+    {
+      "key": "ai_provider",
+      "text": "Does the organisation develop AI systems or provide them to others?",
+      "false_means": "not an AI provider"
+    },
+    {
+      "key": "uses_third_party_models",
+      "text": "Does it rely on models, data or AI services from another party?",
+      "false_means": "no third-party AI"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "develops_or_uses_ai": false },
+      "outcome": "not_applicable",
+      "reason": "The management system concerns organisations that develop, provide or use AI. Confirm with your adviser."
+    },
+    {
+      "when": { "contract_commitment": true },
+      "outcome": "applies",
+      "reason": "A certification plan, contract or internal policy commits the organisation to this framework."
+    }
+  ]
+}

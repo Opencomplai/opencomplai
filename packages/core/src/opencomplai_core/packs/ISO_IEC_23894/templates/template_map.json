@@ -1,0 +1,17 @@
+{
+  "ISO_IEC_23894:Clause 6.2": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.3.2": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.3.3": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.3.4": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.4.2": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.4.3": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.4.4": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.5.2": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.5.3": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.6": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 6.7": {"template_id": "risk_process_step", "kind": "markdown", "file": "risk_process_step.md"},
+  "ISO_IEC_23894:Clause 5.4.1": {"template_id": "framework_record", "kind": "markdown", "file": "framework_record.md"},
+  "ISO_IEC_23894:Clause 5.4.2": {"template_id": "framework_record", "kind": "markdown", "file": "framework_record.md"},
+  "ISO_IEC_23894:Clause 5.6": {"template_id": "framework_record", "kind": "markdown", "file": "framework_record.md"},
+  "ISO_IEC_23894:Clause 5.7.2": {"template_id": "framework_record", "kind": "markdown", "file": "framework_record.md"}
+}

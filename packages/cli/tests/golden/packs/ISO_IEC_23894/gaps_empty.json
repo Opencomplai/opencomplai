@@ -1,0 +1,604 @@
+{
+  "schema_version": "1.0",
+  "tool_name": "opencomplai",
+  "tool_version": "<VERSION>",
+  "disclaimer": "OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.",
+  "generated_at": "<TIMESTAMP>",
+  "scan_errors": [],
+  "payload": {
+    "system_id": "example-ltd-system",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "missing",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'credit scoring for loan applications' matches Annex III categories: essential_services.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "risk_register",
+        "rationale": "No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "event_log_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_instructions",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "human_oversight_construct",
+        "rationale": "No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": {
+      "principles": [
+        {
+          "principle_id": "technical_robustness_safety",
+          "title": "Technical Robustness and Safety",
+          "status": "missing",
+          "articles": [
+            "Art. 15",
+            "Art. 25",
+            "Art. 72"
+          ]
+        },
+        {
+          "principle_id": "privacy_data_governance",
+          "title": "Privacy and Data Governance",
+          "status": "unverified",
+          "articles": [
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "transparency",
+          "title": "Transparency",
+          "status": "missing",
+          "articles": [
+            "Art. 12",
+            "Art. 13",
+            "Art. 49",
+            "Art. 50"
+          ]
+        },
+        {
+          "principle_id": "diversity_non_discrimination_fairness",
+          "title": "Diversity, Non-discrimination and Fairness",
+          "status": "missing",
+          "articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "societal_environmental_wellbeing",
+          "title": "Societal and Environmental Wellbeing",
+          "status": "unverified",
+          "articles": [
+            "Art. 5"
+          ]
+        },
+        {
+          "principle_id": "accountability",
+          "title": "Accountability",
+          "status": "missing",
+          "articles": [
+            "Art. 4",
+            "Art. 9",
+            "Art. 11",
+            "Art. 14",
+            "Art. 16",
+            "Art. 17",
+            "Art. 20",
+            "Art. 24",
+            "Art. 26",
+            "Art. 43",
+            "Art. 53",
+            "Art. 55",
+            "Art. 73"
+          ]
+        }
+      ]
+    },
+    "frameworks": {
+      "ISO_IEC_23894": {
+        "framework": "ISO_IEC_23894",
+        "label": "ISO/IEC 23894:2023 AI risk management guidance (evaluated, not an audit, certification or legal assessment)",
+        "data_version": "cdbbee725a54",
+        "derived_from": null,
+        "disclaimer_ref": "DISCLAIMER_V2",
+        "gated": false,
+        "excluded": {},
+        "applicability": {
+          "outcome": "voluntary",
+          "reason": ""
+        },
+        "report": {
+          "system_id": "example-ltd-system",
+          "commit_ref": "HEAD",
+          "generated_at": "<TIMESTAMP>",
+          "articles": [
+            {
+              "article": "ISO_IEC_23894:Clause 4",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.2",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.3",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.4.1",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "scope_statement",
+              "rationale": "No conventional documentation/code probe matched for 'scope_statement'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.4.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "policy_ai",
+              "rationale": "No conventional documentation/code probe matched for 'policy_ai'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.4.3",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.4.4",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.4.5",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.5",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.6",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "management_review_minutes",
+              "rationale": "No conventional documentation/code probe matched for 'management_review_minutes'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.7.1",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.ISO_IEC_23894.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 5.7.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "corrective_action_log",
+              "rationale": "No conventional documentation/code probe matched for 'corrective_action_log'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.2",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.2'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.3.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.3.2",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.3.2'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.3.3",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.3.3",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.3.3'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.3.4",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.3.4",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.3.4'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.4.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.4.2",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.4.2'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.4.3",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.4.3",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.4.3'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.4.4",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.4.4",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.4.4'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.5.2",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.5.2",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.5.2'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.5.3",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.5.3",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.5.3'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.6",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.6",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.6'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "ISO_IEC_23894:Clause 6.7",
+              "status": "missing",
+              "source": "artifact",
+              "evidence_ref": "iso_iec_23894.risk_process#6.7",
+              "rationale": "No conventional documentation/code probe matched for 'iso_iec_23894.risk_process#6.7'. Add the expected file or construct, then re-run gaps.",
+              "confidence": 0.4,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            }
+          ],
+          "evidence_hashes": [],
+          "principle_summary": null
+        }
+      }
+    }
+  }
+}

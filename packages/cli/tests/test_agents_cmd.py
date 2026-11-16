@@ -187,3 +187,154 @@ def test_report_writes_output_file(tmp_path):
     assert out.read_text(encoding="utf-8").startswith(
         "# Agent report: sys-agents-sample"
     )
+
+
+_ESC = "\x1b[31m"
+_WRITTEN_ESC = r"\x1b[31m"
+
+
+def _hostile_manifest(tmp_path: Path, *, dangling: bool = False) -> str:
+    """An inventory whose ids, names, tools and models hold a newline and an escape."""
+    m = json.loads(Path(MANIFEST).read_text())
+    first, second = m["agent_inventory"]["agents"]
+    first["id"] = "orch\nFORGED-ID" + _ESC
+    first["name"] = "Orchestrator\nFORGED-NAME" + _ESC
+    first["tools"][0]["name"] = "search\nFORGED-TOOL" + _ESC
+    first["mandate"]["permitted_actions"] = ["tool:" + first["tools"][0]["name"]]
+    first["models"][0]["model"] = "gpt\nFORGED-MODEL" + _ESC
+    first["delegation"]["may_delegate_to"] = ["summariser"]
+    second["parent_id"] = first["id"] + ("-ghost" if dangling else "")
+    path = tmp_path / "hostile-inventory.json"
+    path.write_text(json.dumps(m), encoding="utf-8")
+    return str(path)
+
+
+def test_inventory_escapes_ids_names_tools_and_models(tmp_path):
+    result = _run("inventory", "-m", _hostile_manifest(tmp_path))
+
+    assert result.exit_code == 0, result.output
+    assert "\x1b" not in result.output
+    lines = result.output.splitlines()
+    # Two agents, two lines: nothing in a value can start a line of its own.
+    assert len(lines) == 2, result.output
+    assert lines[0].startswith("- orch" + r"\nFORGED-ID" + _WRITTEN_ESC)
+    assert r"(Orchestrator\nFORGED-NAME" + _WRITTEN_ESC + ")" in lines[0]
+    assert r"tools: search\nFORGED-TOOL" + _WRITTEN_ESC in lines[0]
+    assert r"OpenAI/gpt\nFORGED-MODEL" + _WRITTEN_ESC in lines[0]
+    assert lines[1].startswith("  - summariser")
+    # The JSON output keeps the values as declared.
+    data = json.loads(
+        _run("inventory", "-m", _hostile_manifest(tmp_path), "-o", "json").output
+    )
+    assert data["agents"][0]["id"] == "orch\nFORGED-ID" + _ESC
+
+
+def test_inventory_escapes_an_agent_in_a_parent_cycle(tmp_path):
+    m = json.loads(Path(MANIFEST).read_text())
+    first, second = m["agent_inventory"]["agents"]
+    first["id"] = "orch\nFORGED-ID" + _ESC
+    first["parent_id"] = "summariser"
+    first["name"] = "Orchestrator\nFORGED-NAME"
+    first["delegation"]["may_delegate_to"] = ["summariser"]
+    second["parent_id"] = first["id"]
+    path = tmp_path / "cycle.json"
+    path.write_text(json.dumps(m), encoding="utf-8")
+
+    result = _run("inventory", "-m", str(path))
+
+    assert result.exit_code == 0, result.output
+    assert "\x1b" not in result.output
+    assert all(ln.startswith("- ") for ln in result.output.splitlines())
+    assert "parent cycle" in result.output
+
+
+def test_report_escapes_every_value_it_prints_from_the_manifest(tmp_path):
+    result = _run("report", "-m", _hostile_manifest(tmp_path, dangling=True))
+
+    assert result.exit_code == 0, result.output
+    assert "\x1b" not in result.output
+    assert not any(ln.startswith("FORGED") for ln in result.output.splitlines())
+    row = next(ln for ln in result.output.splitlines() if ln.startswith("| orch"))
+    assert row.startswith("| orch" + r"\nFORGED-ID" + _WRITTEN_ESC + " | -")
+    assert r"search\nFORGED-TOOL" + _WRITTEN_ESC in row
+    assert r"OpenAI/gpt\nFORGED-MODEL" + _WRITTEN_ESC in row
+    finding = next(ln for ln in result.output.splitlines() if "dangling parent" in ln)
+    assert finding.startswith("- [declared] invalid_inventory: agent 'summariser'")
+    assert r"orch\nFORGED-ID" + _WRITTEN_ESC + "-ghost" in finding
+
+
+def test_report_escapes_a_system_id_and_declared_responsibility_text(tmp_path):
+    m = json.loads(Path(MANIFEST).read_text())
+    m["system_id"] = "sys\nFORGED-SYSTEM" + _ESC
+    m["agent_inventory"]["responsibility_map"] = {
+        "customer_obligations": ["keep logs\n## FORGED-HEADING" + _ESC]
+    }
+    path = tmp_path / "text.json"
+    path.write_text(json.dumps(m), encoding="utf-8")
+
+    result = _run("report", "-m", str(path))
+
+    assert result.exit_code == 0, result.output
+    assert "\x1b" not in result.output
+    lines = result.output.splitlines()
+    assert lines[0] == "# Agent report: sys" + r"\nFORGED-SYSTEM" + _WRITTEN_ESC
+    assert not any(ln.startswith("## FORGED") for ln in lines)
+    assert "- customer_obligations: keep logs" + r"\n## FORGED-HEADING" in result.output
+
+
+def _hostile_scan(tmp_path: Path) -> str:
+    """The sample scan with an SDK label that holds a newline and an escape."""
+    scan = json.loads(Path(SCAN).read_text())
+    scan["evidence"][1]["token_label"] = "llama\nFORGED-SCAN" + _ESC
+    path = tmp_path / "hostile-scan.json"
+    path.write_text(json.dumps(scan), encoding="utf-8")
+    return str(path)
+
+
+def test_check_and_report_escape_a_label_that_came_from_the_scan(tmp_path):
+    scan = _hostile_scan(tmp_path)
+    written = r"llama\nforged-scan" + _WRITTEN_ESC  # the scan label is case-folded
+
+    checked = _run("check", "-m", MANIFEST, "--scan-report", scan)
+    reported = _run("report", "-m", MANIFEST, "--scan-report", scan)
+
+    for result in (checked, reported):
+        assert "\x1b" not in result.output
+        assert not any(ln.startswith("forged") for ln in result.output.splitlines())
+        line = next(ln for ln in result.output.splitlines() if "detected_not" in ln)
+        assert written in line
+    assert checked.exit_code == 1
+
+
+def test_an_invalid_manifest_error_escapes_what_the_manifest_puts_in_it(tmp_path):
+    m = json.loads(Path(MANIFEST).read_text())
+    agent = m["agent_inventory"]["agents"][0]
+    agent["evil\nFORGED-LINE" + _ESC] = 1  # an unknown key: its name is in the message
+    agent["extra"] = "[bold]MARKUP[/bold]"  # an unknown key: its value is quoted
+    path = tmp_path / "invalid.json"
+    path.write_text(json.dumps(m), encoding="utf-8")
+
+    result = _run("inventory", "-m", str(path))
+
+    assert result.exit_code == 2, result.output
+    assert "invalid manifest" in result.output
+    assert "\x1b" not in result.output
+    assert not any(ln.startswith("FORGED-LINE") for ln in result.output.splitlines())
+    assert r"evil\nFORGED-LINE" + _WRITTEN_ESC in result.output
+    # markup in a quoted value is shown as it is written, not read as a style
+    assert "input_value='[bold]MARKUP[/bold]'" in result.output
+
+
+def test_the_scan_file_warning_escapes_what_the_scan_file_puts_in_it(tmp_path):
+    scan = json.loads(Path(SCAN).read_text())
+    scan["feature_summary"] = {"evil\nFORGED-SCAN" + _ESC: "not a number"}
+    path = tmp_path / "invalid-scan.json"
+    path.write_text(json.dumps(scan), encoding="utf-8")
+
+    result = _run("inventory", "-m", MANIFEST, "--scan-report", str(path))
+
+    assert result.exit_code == 0, result.output
+    assert "Warning: failed to parse" in result.output
+    assert "\x1b" not in result.output
+    assert not any(ln.startswith("FORGED-SCAN") for ln in result.output.splitlines())
+    assert r"evil\nFORGED-SCAN" + _WRITTEN_ESC in result.output

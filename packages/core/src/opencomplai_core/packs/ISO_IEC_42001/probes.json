@@ -1,0 +1,40 @@
+{
+  "family": "iso_iec_42001",
+  "probes": {
+    "iso_iec_42001.soa_justification": {
+      "patterns": [
+        "**/statement-of-applicability*",
+        "**/statement_of_applicability*",
+        "**/soa*.md",
+        "docs/**/aims/*applicability*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bA\\.(?:[2-9]|10)\\.\\d",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:included?|inclusion|excluded?|exclusion|not\\s+applicable|applicable)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:justification|justified|justify|reasons?|rationale|because)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "Annex A rows named with an inclusion or exclusion and a justification",
+        "lacks_label": "Annex A ids, inclusion or exclusion, and a justification",
+        "noun": "statement of applicability",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus content keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

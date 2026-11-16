@@ -13,6 +13,9 @@ from opencomplai_core.agent_sources import (
     agent_gap_status,
     cross_check,
     detected,
+    expired_mandates,
+    expiring_mandates,
+    mandate_expiry_day,
 )
 from opencomplai_core.gap_probes import STUB_SOURCE_REFS
 from opencomplai_core.gap_report import build_gap_report, load_gap_article_map
@@ -341,6 +344,19 @@ def test_art26_expired_mandate_is_missing() -> None:
     assert _art26(_mandate("2026-10-11")).status is GapStatus.PARTIAL
     assert _art26(_mandate("2026-10-10T23:59:59Z")).status is GapStatus.MISSING
     assert _art26(_mandate("2026-10-11T01:00:00+05:00")).status is GapStatus.MISSING
+
+
+@pytest.mark.parametrize(
+    "expires_at", ["0001-01-01T00:00:00+05:00", "9999-12-31T23:59:59-05:00"]
+)
+def test_an_expiry_that_cannot_be_converted_to_utc_is_unparseable(expires_at) -> None:
+    # The manifest accepts these, but astimezone(UTC) leaves the supported years.
+    manifest = _mandate(expires_at)
+
+    assert mandate_expiry_day(expires_at) is None
+    assert expired_mandates(manifest, _TODAY) == [("agent-a1", expires_at)]
+    assert expiring_mandates(manifest, _TODAY) == []
+    assert _art26(manifest).status is GapStatus.MISSING  # counts as expired
 
 
 def test_art26_future_or_absent_expiry_is_partial() -> None:

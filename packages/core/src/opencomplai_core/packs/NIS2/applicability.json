@@ -1,0 +1,47 @@
+{
+  "default": "applies",
+  "questions": [
+    {
+      "key": "annex_sector",
+      "text": "Does the organisation work in a sector listed in Annex I or II (energy, transport, banking, health, digital infrastructure and others)?",
+      "false_means": "not in a listed sector"
+    },
+    {
+      "key": "special_case_entity",
+      "text": "Is it in scope whatever its size (for example a DNS, top-level-domain, trust or public communications provider)?",
+      "false_means": "no special case"
+    },
+    {
+      "key": "medium_or_larger",
+      "text": "Does it have 50 or more staff, or more than EUR 10 million turnover or balance sheet?",
+      "false_means": "below the size threshold"
+    },
+    {
+      "key": "supplier_to_in_scope_entity",
+      "text": "Does it supply an organisation that is in scope?",
+      "false_means": "no in-scope customers"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {"annex_sector": false, "supplier_to_in_scope_entity": true},
+      "outcome": "voluntary",
+      "reason": "In-scope customers pass security duties down to their suppliers by contract."
+    },
+    {
+      "when": {"annex_sector": false},
+      "outcome": "not_applicable",
+      "reason": "The sector is not listed in the Directive's annexes. Confirm with your adviser."
+    },
+    {
+      "when": {"special_case_entity": true},
+      "outcome": "applies",
+      "reason": "Entities of this kind are in scope whatever their size."
+    },
+    {
+      "when": {"medium_or_larger": false},
+      "outcome": "not_applicable",
+      "reason": "The organisation is below the size threshold, although national law can still designate an entity. Confirm with your adviser."
+    }
+  ]
+}

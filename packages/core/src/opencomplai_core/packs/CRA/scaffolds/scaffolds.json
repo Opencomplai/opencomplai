@@ -1,0 +1,26 @@
+{
+  "vulnerability_handling_policy": {
+    "title": "Vulnerability handling policy",
+    "target": "docs/vulnerability-handling.md",
+    "probe": "vulnerability_handling_policy",
+    "shared": "product_security/vulnerability_handling_policy.md"
+  },
+  "support_period_statement": {
+    "title": "Support period statement",
+    "target": "SUPPORT.md",
+    "probe": "cra.support_period_statement",
+    "file": "support_period_statement.md"
+  },
+  "technical_documentation": {
+    "title": "Technical documentation",
+    "target": "CRA_TECHNICAL_DOCUMENTATION.md",
+    "probe": "cra.technical_documentation",
+    "file": "technical_documentation.md"
+  },
+  "user_information": {
+    "title": "User security information",
+    "target": "docs/security-information.md",
+    "probe": "cra.user_information",
+    "file": "user_information.md"
+  }
+}

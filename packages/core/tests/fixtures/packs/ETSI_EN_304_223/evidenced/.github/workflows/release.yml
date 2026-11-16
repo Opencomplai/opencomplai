@@ -1,0 +1,6 @@
+name: release
+on: push
+jobs:
+  sign:
+    steps:
+      - run: cosign sign-blob dist/app.tar.gz

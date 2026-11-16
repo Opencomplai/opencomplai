@@ -88,6 +88,18 @@
     "applies_when_any": ["provider_high_risk"],
     "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."}
   },
+  "Art. 20": {
+    "default_ttl_days": 365,
+    "sources": [
+      { "kind": "attestation", "ref": "Art. 20" }
+    ],
+    "applies_when_any": ["provider_high_risk"],
+    "applicability_note": {"source": "obligation catalogue article_ref in compliance_checker/data/obligations.json", "confidence": "low", "needs_founder_review": true, "text": "Operator-role reading of which checker obligations this article belongs to, not a legal determination."},
+    "source": "Regulation (EU) 2024/1689 Art. 20; obligations.json provider_high_risk",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "note": "No code can show that corrective actions were taken or that distributors, deployers and authorities were told, so only the provider's own attestation decides this row. Applicability comes from a recorded checker session (applies_when_any), not from this row."
+  },
   "Art. 24": {
     "sources": [
       { "kind": "artifact", "ref": "distributor_conformity" }

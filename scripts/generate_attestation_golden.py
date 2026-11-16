@@ -12,10 +12,16 @@ pack, and writes the status of each row of interest. It also writes, per framewo
 requirement ids that only an attestation can decide, and the other ids that take one.
 
 Run after editing a framework pack's data, the attestation merge or the status rules:
-    python scripts/generate_attestation_golden.py
+    python scripts/generate_attestation_golden.py              # combined file and every per-pack file
+    python scripts/generate_attestation_golden.py --pack GDPR  # that pack's file only
+
+The same statuses are also written one file per framework, to
+packages/core/tests/fixtures/packs/<KEY>/attestation_golden.json: the shared header fields and
+only that framework's part of each per-framework section. Both forms are sliced from one
+computation, so they cannot disagree.
 
 packages/core/tests/test_attestation_golden.py fails loud when the committed file is stale; so does
-    python scripts/generate_attestation_golden.py --check
+    python scripts/generate_attestation_golden.py --check [--pack KEY]
 """
 
 from __future__ import annotations
@@ -54,6 +60,9 @@ OUTPUT_PATH = (
     / "fixtures"
     / "attestation_golden_statuses.json"
 )
+
+PACKS_DIR = REPO_ROOT / "packages" / "core" / "tests" / "fixtures" / "packs"
+PACK_FILE = "attestation_golden.json"
 
 TODAY = date(2026, 11, 3)  # the day the run is judged
 ISSUED_ON = date(
@@ -318,8 +327,51 @@ def build() -> dict[str, Any]:
     }
 
 
+def _dump(data: dict[str, Any]) -> str:
+    return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+
+
+def pack_path(key: str) -> Path:
+    return PACKS_DIR / key / PACK_FILE
+
+
+def split(data: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Slice the combined data per framework: the header fields unchanged and, in each
+    per-framework section, only that framework's part."""
+    bundle = data["bundle"]
+    out: dict[str, dict[str, Any]] = {}
+    for key in data["attestation_only"]:
+        part = dict(data)
+        part["attestation_only"] = {key: data["attestation_only"][key]}
+        part["mixed_attestable"] = {
+            k: v for k, v in data["mixed_attestable"].items() if k == key
+        }
+        part["records"] = [
+            r for r in data["records"] if framework_of(r["requirement_id"]) == key
+        ]
+        part["bundle"] = {
+            **bundle,
+            "attestations": {
+                k: v for k, v in bundle["attestations"].items() if k == key
+            },
+            "excluded": {k: v for k, v in bundle["excluded"].items() if k == key},
+        }
+        part["rows"] = [r for r in data["rows"] if r["framework"] == key]
+        out[key] = part
+    return out
+
+
+def render_all() -> dict[Path, str]:
+    """Every file the generator owns, path -> text, from one computation."""
+    data = build()
+    files = {OUTPUT_PATH: _dump(data)}
+    for key, part in split(data).items():
+        files[pack_path(key)] = _dump(part)
+    return files
+
+
 def render() -> str:
-    return json.dumps(build(), indent=2, ensure_ascii=False) + "\n"
+    return render_all()[OUTPUT_PATH]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -327,23 +379,40 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--check",
         action="store_true",
-        help="Exit 1 when the committed file is stale; write nothing.",
+        help="Exit 1 when the selected files are stale; write nothing.",
+    )
+    parser.add_argument(
+        "--pack",
+        metavar="KEY",
+        help="Select that framework's per-pack file only.",
     )
     args = parser.parse_args(argv)
-    text = render()
+    files = render_all()
+    if args.pack:
+        path = pack_path(args.pack)
+        if path not in files:
+            print(f"unknown framework key {args.pack!r}")
+            return 2
+        files = {path: files[path]}
     if args.check:
-        current = (
-            OUTPUT_PATH.read_text(encoding="utf-8") if OUTPUT_PATH.is_file() else ""
-        )
-        if current != text:
+        stale = [
+            p
+            for p, text in files.items()
+            if not p.is_file() or p.read_text(encoding="utf-8") != text
+        ]
+        for p in stale:
             print(
-                f"{OUTPUT_PATH} is stale: run python scripts/generate_attestation_golden.py"
+                f"{p} is stale: run python scripts/generate_attestation_golden.py"
+                + (f" --pack {args.pack}" if args.pack else "")
             )
+        if stale:
             return 1
-        print(f"{OUTPUT_PATH} is up to date")
+        print(f"{len(files)} file(s) up to date")
         return 0
-    OUTPUT_PATH.write_text(text, encoding="utf-8", newline="\n")
-    print(f"Wrote {OUTPUT_PATH}")
+    for p, text in files.items():
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8", newline="\n")
+        print(f"Wrote {p}")
     return 0
 
 

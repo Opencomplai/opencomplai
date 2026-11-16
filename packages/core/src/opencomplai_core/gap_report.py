@@ -23,6 +23,7 @@ from opencomplai_core.exemption_gap import exemption_record_status
 from opencomplai_core.gap_probes import (
     STUB_SOURCE_REFS,
     artifact_gap_status,
+    corroboration_status,
     supporting_gap_status,
 )
 from opencomplai_core.manifest_sources import manifest_gap_status
@@ -379,6 +380,9 @@ def _not_applicable_reason(
     return f"{reason} (operator role: {', '.join(roles)})" if roles else reason
 
 
+_CORROBORATING_KINDS = frozenset({"artifact", "evaluator", "scan"})
+
+
 def _source_enabled(
     source: dict[str, Any], checker_session: CheckerSessionRef | None
 ) -> bool:
@@ -391,6 +395,54 @@ def _source_enabled(
     )
 
 
+def _compose_corroboration(
+    attestation_row: ArticleGapStatus | None,
+    probes: list[tuple[str, ArticleGapStatus, bool]],
+) -> ArticleGapStatus | None:
+    """One candidate for a row with corroborating sources (see `build_gap_report`).
+
+    `probes` holds (ref, row, evidenced) for each corroborating source that ran.
+    """
+    worst: tuple[str, ArticleGapStatus, bool] | None = None
+    for item in probes:
+        if (
+            worst is None
+            or STATUS_SEVERITY[item[1].status] > STATUS_SEVERITY[worst[1].status]
+        ):
+            worst = item
+    if (
+        attestation_row is None
+        or attestation_row.status != GapStatus.MET
+        or attestation_row.source != ArticleGapSource.ATTESTATION
+    ):
+        # No valid attestation: the probe decides.
+        return worst[1] if worst is not None else attestation_row
+    if worst is None:
+        return attestation_row.model_copy(update={"corroborated": False})
+    evidenced = next((item for item in probes if item[2]), None)
+    if evidenced is not None:
+        ref, hit, _ = evidenced
+        return attestation_row.model_copy(
+            update={
+                "corroborated": True,
+                "rationale": f"{attestation_row.rationale} Corroborated by "
+                f"{hit.evidence_ref} ({ref}).",
+            }
+        )
+    if worst[1].status != GapStatus.MISSING:
+        rationale = f"Attested. {worst[1].rationale}"
+    else:
+        refs = ", ".join(item[0] for item in probes)
+        rationale = f"Attested, no supporting evidence found ({refs})."
+    return attestation_row.model_copy(
+        update={
+            "status": GapStatus.PARTIAL,
+            "corroborated": False,
+            "rationale": rationale,
+        }
+    )
+
+
 def build_gap_report(
     system_id: str,
     commit_ref: str,
@@ -398,12 +450,13 @@ def build_gap_report(
     corroboration_report: CorroborationReport | None = None,
     eval_report: EvalReport | None = None,
     repo_root: Path | None = None,
-    requirements: dict[str, Any] | None = None,
+    requirements: Mapping[str, Any] | None = None,
     attestations: dict[str, Attestation] | None = None,
     *,
     manifest: SystemManifest | None = None,
     checker_session: CheckerSessionRef | None = None,
     today: date | None = None,
+    crosswalk: Mapping[str, ArticleGapStatus] | None = None,
 ) -> GapReport:
     """Project rule/obligation/scan/eval/artifact outputs into a per-article gap report.
 
@@ -423,12 +476,18 @@ def build_gap_report(
     silent otherwise.
     `today` (default: the current UTC date) is the date agent mandate expiry is
     compared with.
+    A `crosswalk` source takes `crosswalk[ref]` (rows another projection already
+    decided, by requirement id) as a deciding source in worst-wins; a ref the
+    mapping lacks gives no candidate. Without the mapping it gives none at all.
+    An attestation source after a crosswalk row that does not itself come from
+    an attestation gives no candidate: the evidence behind that row decides.
     """
     article_map = requirements if requirements is not None else load_gap_article_map()
     articles: list[ArticleGapStatus] = []
     not_applicable: dict[str, str] = {}
     effective_today = today if today is not None else datetime.now(UTC).date()
     supporting_hits: dict[str, ArticleGapStatus | None] = {}  # one probe run per ref
+    corroboration_hits: dict[str, tuple[ArticleGapStatus, bool] | None] = {}
 
     for article, config in article_map.items():
         reason = _not_applicable_reason(article, config, manifest, checker_session)
@@ -440,6 +499,16 @@ def build_gap_report(
         manifest_row: ArticleGapStatus | None = None
         agent_missing = False
         supporting: list[tuple[str, ArticleGapStatus]] = []
+        corroborating = any(
+            s.get("role") == "corroborating"
+            and s["kind"] in _CORROBORATING_KINDS
+            and _source_enabled(s, checker_session)
+            and s["ref"] not in STUB_SOURCE_REFS.get(s["kind"], frozenset())
+            for s in sources
+        )
+        corroborating_probes: list[tuple[str, ArticleGapStatus, bool]] = []
+        attestation_row: ArticleGapStatus | None = None
+        crosswalk_decides = False
 
         for source in sources:
             kind = source["kind"]
@@ -448,12 +517,38 @@ def build_gap_report(
                 continue
             if ref in STUB_SOURCE_REFS.get(kind, frozenset()):
                 continue  # placeholder slot: never a candidate
+            if corroborating and kind == "attestation":
+                if attestation_row is None:
+                    attestation_row = _attestation_status(
+                        ref, attestations or {}, effective_today
+                    )
+                continue  # composed with the corroborating probes, below
+            if kind in _CORROBORATING_KINDS and source.get("role") == "corroborating":
+                probe_row: ArticleGapStatus | None = None
+                evidenced = False
+                if kind == "artifact":
+                    if ref not in corroboration_hits:
+                        corroboration_hits[ref] = corroboration_status(ref, repo_root)
+                    hit = corroboration_hits[ref]
+                    if hit is not None:
+                        probe_row, evidenced = hit
+                else:
+                    if kind == "scan" and corroboration_report is not None:
+                        probe_row = _scan_status(ref, corroboration_report)
+                    elif kind == "evaluator" and eval_report is not None:
+                        probe_row = _evaluator_status(ref, eval_report)
+                    evidenced = (
+                        probe_row is not None and probe_row.status == GapStatus.MET
+                    )
+                if probe_row is not None:
+                    corroborating_probes.append((ref, probe_row, evidenced))
+                continue  # composed with the attestation, below
             if kind == "artifact" and source.get("role") == "supporting":
                 if ref not in supporting_hits:
                     supporting_hits[ref] = supporting_gap_status(ref, repo_root)
-                hit = supporting_hits[ref]
-                if hit is not None:
-                    supporting.append((ref, hit))
+                supporting_hit = supporting_hits[ref]
+                if supporting_hit is not None:
+                    supporting.append((ref, supporting_hit))
                 continue  # resolved after the other sources, below
             candidate: ArticleGapStatus | None = None
 
@@ -470,8 +565,18 @@ def build_gap_report(
             elif kind == "record" and manifest is not None and repo_root is not None:
                 candidate = exemption_record_status(manifest, repo_root)
             elif kind == "attestation":
-                candidate = _attestation_status(
-                    ref, attestations or {}, effective_today
+                # A crosswalk row that was not itself taken from an attestation
+                # was decided by the other projection's evidence: an attestation
+                # does not override it (it would lower a Met row to Unverified).
+                if not crosswalk_decides:
+                    candidate = _attestation_status(
+                        ref, attestations or {}, effective_today
+                    )
+            elif kind == "crosswalk" and crosswalk is not None:
+                candidate = crosswalk.get(ref)
+                crosswalk_decides = (
+                    candidate is not None
+                    and candidate.source != ArticleGapSource.ATTESTATION
                 )
             elif (
                 kind == "manifest" and ref == AGENT_SOURCE_REF and manifest is not None
@@ -501,6 +606,14 @@ def build_gap_report(
                 STATUS_SEVERITY[candidate.status] > STATUS_SEVERITY[row.status]
             ):
                 row = candidate
+
+        if corroborating:
+            composed = _compose_corroboration(attestation_row, corroborating_probes)
+            if composed is not None and (
+                row is None
+                or STATUS_SEVERITY[composed.status] > STATUS_SEVERITY[row.status]
+            ):
+                row = composed
 
         # A declaration is the provider's own statement. It fills a gap (no
         # row, UNVERIFIED) and supersedes an artifact probe that found no file
@@ -573,6 +686,10 @@ def build_gap_report(
             )
         else:
             row = row.model_copy(update={"article": article})
+
+        evidence_class = config.get("evidence_class")
+        if evidence_class is not None:
+            row = row.model_copy(update={"evidence_class": evidence_class})
 
         articles.append(row)
 

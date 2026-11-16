@@ -1,0 +1,37 @@
+{
+  "EBA:GL/2019/02 Section 11": {
+    "template_id": "eba_outsourcing_arrangement",
+    "kind": "markdown",
+    "file": "outsourcing_arrangement.md"
+  },
+  "EBA:GL/2019/02 Section 13": {
+    "template_id": "eba_outsourcing_arrangement",
+    "kind": "markdown",
+    "file": "outsourcing_arrangement.md"
+  },
+  "EBA:GL/2019/02 Section 13.3": {
+    "template_id": "eba_outsourcing_arrangement",
+    "kind": "markdown",
+    "file": "outsourcing_arrangement.md"
+  },
+  "EBA:GL/2019/02 Section 13.4": {
+    "template_id": "eba_outsourcing_arrangement",
+    "kind": "markdown",
+    "file": "outsourcing_arrangement.md"
+  },
+  "EBA:GL/2019/02 Section 15": {
+    "template_id": "eba_outsourcing_arrangement",
+    "kind": "markdown",
+    "file": "outsourcing_arrangement.md"
+  },
+  "EBA:GL/2020/06 4.3.4": {
+    "template_id": "eba_credit_model_evidence",
+    "kind": "markdown",
+    "file": "credit_model_evidence.md"
+  },
+  "EBA:GL/2020/06 4.3.7": {
+    "template_id": "eba_credit_model_evidence",
+    "kind": "markdown",
+    "file": "credit_model_evidence.md"
+  }
+}

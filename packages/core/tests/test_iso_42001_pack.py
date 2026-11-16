@@ -16,8 +16,6 @@ from opencomplai_core.frameworks import (
     evaluate_targets,
     load_requirements_map,
 )
-from opencomplai_core.gap_probes import artifact_gap_status
-from opencomplai_core.gap_report import STATUS_SEVERITY
 from opencomplai_core.models import (
     Attestation,
     ComplianceTarget,
@@ -42,13 +40,6 @@ _CONTROLS = (
     "A.10.2 A.10.3 A.10.4"
 ).split()
 IDS = {f"{ISO}:Clause {c}" for c in _CLAUSES} | {f"{ISO}:{c}" for c in _CONTROLS}
-
-PROBE_BACKED = {
-    f"{ISO}:Clause 6.1.2": "risk_register",
-    f"{ISO}:Clause 6.1.3": "risk_register",
-    f"{ISO}:A.8.2": "deployer_instructions",
-    f"{ISO}:A.6.2.7": "provider_qms_bundle",
-}
 
 
 def _rows() -> dict[str, dict]:
@@ -91,16 +82,19 @@ def test_every_row_is_flagged_data():
 
 def test_rows_are_attestation_led():
     rows = _rows()
-    artifact_rows = {}
     for rid, row in rows.items():
-        kinds = {s["kind"] for s in row["sources"]}
-        assert not kinds & {"rule", "obligation", "scan", "evaluator"}, rid
+        assert not {s["kind"] for s in row["sources"]} & {"rule", "obligation"}, rid
         assert {"kind": "attestation", "ref": rid} in row["sources"], rid
-        for s in row["sources"]:
-            if s["kind"] == "artifact":
-                artifact_rows[rid] = s["ref"]
-    assert artifact_rows == PROBE_BACKED
-    assert sum(len(r["sources"]) == 1 for r in rows.values()) >= 60
+        evidence = [s for s in row["sources"] if s["kind"] != "attestation"]
+        for s in evidence:
+            assert s["kind"] in {"artifact", "evaluator", "scan"}, rid
+            assert s.get("role") == "corroborating", rid
+        if row["evidence_class"] == "organisational":
+            assert not evidence, rid
+            assert 0 < len(row["why_attestation"]) <= 160, rid
+        else:
+            assert evidence, rid
+    assert sum(r["evidence_class"] != "organisational" for r in rows.values()) >= 23
 
 
 def test_without_evidence_everything_is_unverified():
@@ -133,11 +127,10 @@ def test_probe_backed_row_stays_below_met_on_a_file_alone(tmp_path: Path):
     rid = f"{ISO}:Clause 6.1.2"
     report = _report(_manifest(framework_inputs=_attest(rid)), tmp_path)
     status = {r.article: r for r in report.report.articles}[rid].status
-    probe = artifact_gap_status("risk_register", tmp_path).status
-    # The attestation reads Met, so the worse of the two is the probe's status.
-    assert STATUS_SEVERITY[status] == max(
-        STATUS_SEVERITY[probe], STATUS_SEVERITY[GapStatus.MET]
-    )
+    # Corroborating evidence lifts an attested row to Met, never below Partial.
+    assert status == GapStatus.MET
+    bare = _report(_manifest(framework_inputs=_attest(rid)), tmp_path / "docs")
+    assert {r.article: r for r in bare.report.articles}[rid].status == GapStatus.PARTIAL
     # A file alone, without the attestation, never reads Met either.
     alone = {r.article: r for r in _report(_manifest(), tmp_path).report.articles}
     assert alone[rid].status != GapStatus.MET

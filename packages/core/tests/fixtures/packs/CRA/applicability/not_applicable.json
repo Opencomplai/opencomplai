@@ -1,0 +1,21 @@
+{
+  "system_id": "example-ltd-cra",
+  "intended_purpose": "smart thermostat with companion app sold to consumers",
+  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": [
+    "CRA"
+  ],
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "CRA": {
+      "scope": {
+        "product_with_digital_elements": true,
+        "commercial_activity": true,
+        "is_manufacturer": true,
+        "hosted_service_only": true,
+        "sector_carve_out": false
+      }
+    }
+  }
+}

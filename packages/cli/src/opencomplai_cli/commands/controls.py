@@ -39,8 +39,14 @@ from opencomplai_core.control_freshness import (
     detect_stale,
     effective_ttl_days,
 )
-from opencomplai_core.frameworks import EU_AI_ACT, FRAMEWORKS, framework_of
+from opencomplai_core.frameworks import (
+    CUSTOM_FRAMEWORK_PREFIX,
+    EU_AI_ACT,
+    FRAMEWORKS,
+    framework_of,
+)
 from opencomplai_core.models import ControlInstance, ControlState
+from rich.markup import escape
 from rich.table import Table
 
 app = typer.Typer(
@@ -313,7 +319,17 @@ def status_cmd(
         EU_AI_ACT,
         *main_mod._project_config(Path(".")).gate_frameworks,
     ]
-    unknown = [fw for fw in frameworks if fw not in FRAMEWORKS]
+    # A pack gated in opencomplai.yaml may be a custom pack that is not loaded here
+    # (there is no --custom-pack on this command). Vault rows are keyed by
+    # requirement id and need no registry, so its controls are still counted. A name
+    # given with --framework must be known: an unknown target exits 2 in `check` and
+    # `gaps` as well.
+    unknown = [
+        fw
+        for fw in frameworks
+        if fw not in FRAMEWORKS
+        and (framework or not fw.startswith(CUSTOM_FRAMEWORK_PREFIX))
+    ]
     if unknown:
         main_mod.err_console.print(
             f"[red]Error:[/red] unknown framework {', '.join(unknown)}; known "
@@ -325,6 +341,15 @@ def status_cmd(
         for control in _list_controls(main_mod, system_id)
         if framework_of(control.obligation_id) in frameworks
     ]
+    # Only rows already in the register are counted, and a custom pack's rows are in
+    # it only once someone has recorded one: a mistyped key counts zero, so say so.
+    counted = {framework_of(control.obligation_id) for control in controls}
+    for fw in frameworks:
+        if fw.startswith(CUSTOM_FRAMEWORK_PREFIX) and fw not in counted:
+            main_mod.err_console.print(
+                f"[dim]NOTE: no control in the register for {escape(fw)}; it counts "
+                "as zero. Check the key against the pack file.[/dim]"
+            )
     stale_rows = detect_stale(controls, get_catalog())
     stale_count = len(stale_rows)
 

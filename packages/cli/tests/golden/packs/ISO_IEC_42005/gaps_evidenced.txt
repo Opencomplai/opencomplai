@@ -1,0 +1,74 @@
+
+ISO/IEC 42005:2025 AI system impact assessment (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement                ┃ Title                                                   ┃ Status     ┃ Source      ┃ Evidence                ┃ Rationale                                                ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ISO_IEC_42005:Clause 5.2   │ Documenting the process                                 │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.2'        │
+│                            │                                                         │            │             │                         │ holding content markers (Documenting the process).       │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 5.3   │ Integration with other organizational management        │ UNVERIFIED │ attestation │ none                    │ No attestation recorded. Add one under                   │
+│                            │ processes                                               │            │             │                         │ framework_inputs.ISO_IEC_42005.attested in the manifest. │
+│ ISO_IEC_42005:Clause 5.4   │ Timing of AI system impact assessment                   │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.4'        │
+│                            │                                                         │            │             │                         │ holding content markers (Timing of AI system impact      │
+│                            │                                                         │            │             │                         │ assessment). Heuristic only — not a full obligation      │
+│                            │                                                         │            │             │                         │ assessment.                                              │
+│ ISO_IEC_42005:Clause 5.5   │ Scope of the AI system impact assessment                │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.5'        │
+│                            │                                                         │            │             │                         │ holding content markers (Scope of the AI system impact   │
+│                            │                                                         │            │             │                         │ assessment). Heuristic only — not a full obligation      │
+│                            │                                                         │            │             │                         │ assessment.                                              │
+│ ISO_IEC_42005:Clause 5.6   │ Allocating responsibilities                             │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.6'        │
+│                            │                                                         │            │             │                         │ holding content markers (Allocating responsibilities).   │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 5.7   │ Establishing thresholds for sensitive uses, restricted  │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.7'        │
+│                            │ uses and impact scales                                  │            │             │                         │ holding content markers (Establishing thresholds for     │
+│                            │                                                         │            │             │                         │ sensitive uses, restricted uses and impact scales).      │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 5.8   │ Performing the AI system impact assessment              │ UNVERIFIED │ attestation │ none                    │ No attestation recorded. Add one under                   │
+│                            │                                                         │            │             │                         │ framework_inputs.ISO_IEC_42005.attested in the manifest. │
+│ ISO_IEC_42005:Clause 5.9   │ Analysing the results of the AI system impact           │ UNVERIFIED │ attestation │ none                    │ No attestation recorded. Add one under                   │
+│                            │ assessment                                              │            │             │                         │ framework_inputs.ISO_IEC_42005.attested in the manifest. │
+│ ISO_IEC_42005:Clause 5.10  │ Recording and reporting                                 │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.10'       │
+│                            │                                                         │            │             │                         │ holding content markers (Recording and reporting).       │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 5.11  │ Approval process                                        │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.11'       │
+│                            │                                                         │            │             │                         │ holding content markers (Approval process). Heuristic    │
+│                            │                                                         │            │             │                         │ only — not a full obligation assessment.                 │
+│ ISO_IEC_42005:Clause 5.12  │ Monitoring and review                                   │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '5.12'       │
+│                            │                                                         │            │             │                         │ holding content markers (Monitoring and review).         │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 6.2   │ Scope of the AI system impact assessment                │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.2'        │
+│                            │                                                         │            │             │                         │ holding content markers (Scope of the AI system impact   │
+│                            │                                                         │            │             │                         │ assessment). Heuristic only — not a full obligation      │
+│                            │                                                         │            │             │                         │ assessment.                                              │
+│ ISO_IEC_42005:Clause 6.3   │ AI system information                                   │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.3'        │
+│                            │                                                         │            │             │                         │ holding content markers (AI system information).         │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 6.4   │ Data information and quality                            │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.4'        │
+│                            │                                                         │            │             │                         │ holding content markers (Data information and quality).  │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 6.5   │ Algorithm and model information                         │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.5'        │
+│                            │                                                         │            │             │                         │ holding content markers (Algorithm and model             │
+│                            │                                                         │            │             │                         │ information). Heuristic only — not a full obligation     │
+│                            │                                                         │            │             │                         │ assessment.                                              │
+│ ISO_IEC_42005:Clause 6.6   │ Deployment environment                                  │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.6'        │
+│                            │                                                         │            │             │                         │ holding content markers (Deployment environment).        │
+│                            │                                                         │            │             │                         │ Heuristic only — not a full obligation assessment.       │
+│ ISO_IEC_42005:Clause 6.8.3 │ AI system failures and reasonably foreseeable misuse    │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.8.3'      │
+│                            │                                                         │            │             │                         │ holding content markers (AI system failures and          │
+│                            │                                                         │            │             │                         │ reasonably foreseeable misuse). Heuristic only — not a   │
+│                            │                                                         │            │             │                         │ full obligation assessment.                              │
+│ ISO_IEC_42005:Clause 6.9   │ Measures to address harms and benefits                  │ PARTIAL    │ artifact    │ AI_IMPACT_ASSESSMENT.md │ Found 'AI_IMPACT_ASSESSMENT.md' with clause '6.9'        │
+│                            │                                                         │            │             │                         │ holding content markers (Measures to address harms and   │
+│                            │                                                         │            │             │                         │ benefits). Heuristic only — not a full obligation        │
+│                            │                                                         │            │             │                         │ assessment.                                              │
+└────────────────────────────┴─────────────────────────────────────────────────────────┴────────────┴─────────────┴─────────────────────────┴──────────────────────────────────────────────────────────┘
+
+Excluded
+  ISO_IEC_42005:Clause 6.7: Not applicable: the manifest's scope says the system no effect on individuals and no effect on groups or society (framework_inputs.ISO_IEC_42005.scope.affects_individuals =
+false, framework_inputs.ISO_IEC_42005.scope.affects_groups_or_society = false).
+  ISO_IEC_42005:Clause 6.8.2: Not applicable: the manifest's scope says the system no effect on individuals and no effect on groups or society (framework_inputs.ISO_IEC_42005.scope.affects_individuals
+= false, framework_inputs.ISO_IEC_42005.scope.affects_groups_or_society = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

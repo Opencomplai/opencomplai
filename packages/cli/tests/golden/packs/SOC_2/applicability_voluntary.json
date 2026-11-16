@@ -1,0 +1,41 @@
+{
+  "framework": "SOC_2",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "availability_in_scope": false,
+    "confidentiality_in_scope": false,
+    "processing_integrity_in_scope": false,
+    "privacy_in_scope": false
+  },
+  "scoped_out": {
+    "SOC_2:A1.1": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+    "SOC_2:A1.2": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+    "SOC_2:A1.3": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+    "SOC_2:C1.1": "Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).",
+    "SOC_2:C1.2": "Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).",
+    "SOC_2:PI1.1": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+    "SOC_2:PI1.2": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+    "SOC_2:PI1.3": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+    "SOC_2:PI1.4": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+    "SOC_2:PI1.5": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+    "SOC_2:P1.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P2.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P3.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P3.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P4.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P4.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P4.3": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P5.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P5.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.3": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.4": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.5": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.6": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P6.7": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P7.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+    "SOC_2:P8.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false)."
+  }
+}

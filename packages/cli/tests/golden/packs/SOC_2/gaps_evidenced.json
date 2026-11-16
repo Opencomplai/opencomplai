@@ -1,0 +1,743 @@
+{
+  "schema_version": "1.0",
+  "tool_name": "opencomplai",
+  "tool_version": "<VERSION>",
+  "disclaimer": "OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.",
+  "generated_at": "<TIMESTAMP>",
+  "scan_errors": [],
+  "payload": {
+    "system_id": "pack-golden-sys",
+    "commit_ref": "HEAD",
+    "generated_at": "<TIMESTAMP>",
+    "articles": [
+      {
+        "article": "Art. 4",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 5",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "prohibited",
+        "rationale": "Obligation 'Prohibited AI practices' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 6",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART6_HIGH_RISK",
+        "rationale": "Use case 'ticket ranking for the Example Ltd service desk' does not match any Annex III high-risk categories.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 9",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "docs/risk-register.md",
+        "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.6,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 10",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 11",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "technical_documentation_dossier",
+        "rationale": "No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 12",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "oversight-log.json",
+        "rationale": "Found candidate artifact/signal for 'event_log_evidence' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.55,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 13",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_instructions",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 14",
+        "status": "partial",
+        "source": "artifact",
+        "evidence_ref": "oversight-log.json",
+        "rationale": "Found candidate artifact/signal for 'human_oversight_construct' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+        "confidence": 0.55,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 15",
+        "status": "unverified",
+        "source": "evaluator",
+        "evidence_ref": "none",
+        "rationale": "No source data supplied for this article in this run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 16",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms_bundle",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 17",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_qms",
+        "rationale": "No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 20",
+        "status": "unverified",
+        "source": "attestation",
+        "evidence_ref": "none",
+        "rationale": "No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 24",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "distributor_conformity",
+        "rationale": "No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 25",
+        "status": "met",
+        "source": "rule",
+        "evidence_ref": "EU_AIA_ART25_MODIFICATION_TRAP",
+        "rationale": "No substantial modification declared in assessment answers.",
+        "confidence": 0.9,
+        "confidence_label": "measured",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 26",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "deployer_use_records",
+        "rationale": "No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 27",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "provider_fria",
+        "rationale": "No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 43",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "conformity_assessment_docs",
+        "rationale": "No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 49",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "eu_database_registration_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 50",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "transparency_notice_evidence",
+        "rationale": "No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 53",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_provider",
+        "rationale": "Obligation 'General-purpose AI model provider obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 55",
+        "status": "unverified",
+        "source": "obligation",
+        "evidence_ref": "gpai_systemic_risk",
+        "rationale": "Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run.",
+        "confidence": null,
+        "confidence_label": "not_assessed",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 72",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "post_market_monitoring_plan",
+        "rationale": "No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      },
+      {
+        "article": "Art. 73",
+        "status": "missing",
+        "source": "artifact",
+        "evidence_ref": "serious_incident_log",
+        "rationale": "No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps.",
+        "confidence": 0.4,
+        "confidence_label": "heuristic_estimate",
+        "disclaimer_ref": "DISCLAIMER_V1"
+      }
+    ],
+    "evidence_hashes": [],
+    "principle_summary": {
+      "principles": [
+        {
+          "principle_id": "technical_robustness_safety",
+          "title": "Technical Robustness and Safety",
+          "status": "missing",
+          "articles": [
+            "Art. 15",
+            "Art. 25",
+            "Art. 72"
+          ]
+        },
+        {
+          "principle_id": "privacy_data_governance",
+          "title": "Privacy and Data Governance",
+          "status": "unverified",
+          "articles": [
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "transparency",
+          "title": "Transparency",
+          "status": "missing",
+          "articles": [
+            "Art. 12",
+            "Art. 13",
+            "Art. 49",
+            "Art. 50"
+          ]
+        },
+        {
+          "principle_id": "diversity_non_discrimination_fairness",
+          "title": "Diversity, Non-discrimination and Fairness",
+          "status": "unverified",
+          "articles": [
+            "Art. 5",
+            "Art. 6",
+            "Art. 10"
+          ]
+        },
+        {
+          "principle_id": "societal_environmental_wellbeing",
+          "title": "Societal and Environmental Wellbeing",
+          "status": "unverified",
+          "articles": [
+            "Art. 5"
+          ]
+        },
+        {
+          "principle_id": "accountability",
+          "title": "Accountability",
+          "status": "missing",
+          "articles": [
+            "Art. 4",
+            "Art. 9",
+            "Art. 11",
+            "Art. 14",
+            "Art. 16",
+            "Art. 17",
+            "Art. 20",
+            "Art. 24",
+            "Art. 26",
+            "Art. 43",
+            "Art. 53",
+            "Art. 55",
+            "Art. 73"
+          ]
+        }
+      ]
+    },
+    "frameworks": {
+      "SOC_2": {
+        "framework": "SOC_2",
+        "label": "SOC 2 Trust Services Criteria (not a SOC 2 report) (evaluated, not an audit, certification or legal assessment)",
+        "data_version": "3002036e9fe4",
+        "derived_from": null,
+        "disclaimer_ref": "DISCLAIMER_V2",
+        "gated": false,
+        "excluded": {
+          "SOC_2:A1.1": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+          "SOC_2:A1.2": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+          "SOC_2:A1.3": "Not applicable: the manifest's scope says the system availability not in scope (framework_inputs.SOC_2.scope.availability_in_scope = false).",
+          "SOC_2:C1.1": "Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).",
+          "SOC_2:C1.2": "Not applicable: the manifest's scope says the system confidentiality not in scope (framework_inputs.SOC_2.scope.confidentiality_in_scope = false).",
+          "SOC_2:PI1.1": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+          "SOC_2:PI1.2": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+          "SOC_2:PI1.3": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+          "SOC_2:PI1.4": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+          "SOC_2:PI1.5": "Not applicable: the manifest's scope says the system processing integrity not in scope (framework_inputs.SOC_2.scope.processing_integrity_in_scope = false).",
+          "SOC_2:P1.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P2.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P3.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P3.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P4.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P4.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P4.3": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P5.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P5.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.2": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.3": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.4": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.5": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.6": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P6.7": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P7.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false).",
+          "SOC_2:P8.1": "Not applicable: the manifest's scope says the system privacy not in scope (framework_inputs.SOC_2.scope.privacy_in_scope = false)."
+        },
+        "applicability": {
+          "outcome": "voluntary",
+          "reason": ""
+        },
+        "report": {
+          "system_id": "pack-golden-sys",
+          "commit_ref": "HEAD",
+          "generated_at": "<TIMESTAMP>",
+          "articles": [
+            {
+              "article": "SOC_2:CC1.1",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC1.2",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC1.3",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC1.4",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/training-record.md",
+              "rationale": "Found candidate artifact/signal for 'competence_training_record' (1 path(s), 0 code hint(s)) with content markers found (training or competence with a completion date and a role or attendee). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC1.5",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC2.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/assurance/system-description.md",
+              "rationale": "Found 'docs/assurance/system-description.md' with clause 'commitments' holding content markers (Service commitments and system requirements). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC2.2",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/information-security.md",
+              "rationale": "Found candidate artifact/signal for 'policy_information_security' (1 path(s), 0 code hint(s)) with content markers found (the words information security). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC2.3",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "SECURITY.md",
+              "rationale": "Found candidate artifact/signal for 'security_policy_file' (1 path(s), 0 code hint(s)) with content markers found (a how-to-report section and a contact or advisory link). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC3.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/objectives.md",
+              "rationale": "Found candidate artifact/signal for 'objectives_record' (1 path(s), 0 code hint(s)) with content markers found (objectives with a measure or target and an owner or due date). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC3.2",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/risk-register.md",
+              "rationale": "Found candidate artifact/signal for 'risk_register' (1 path(s), 0 code hint(s)) with content markers found (risk identification + mitigation). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC3.3",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC3.4",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC4.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/internal-audit.md",
+              "rationale": "Found candidate artifact/signal for 'internal_audit_report' (1 path(s), 0 code hint(s)) with content markers found (an audit with findings and an auditor, scope or date). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC4.2",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/corrective-action-log.md",
+              "rationale": "Found candidate artifact/signal for 'corrective_action_log' (1 path(s), 0 code hint(s)) with content markers found (a nonconformity with its root cause and corrective action). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC5.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/assurance/control-matrix.md",
+              "rationale": "Found candidate artifact/signal for 'soc_2.control_matrix' (1 path(s), 0 code hint(s)) with content markers found (criterion id, control statement and evidence reference). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC5.2",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC5.3",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/information-security.md",
+              "rationale": "Found candidate artifact/signal for 'policy_information_security' (1 path(s), 0 code hint(s)) with content markers found (the words information security). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC6.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/access-control.md",
+              "rationale": "Found candidate artifact/signal for 'policy_access_control' (1 path(s), 0 code hint(s)) with content markers found (an access control, least privilege or authorisation term). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC6.2",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC6.3",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC6.4",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC6.5",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC6.6",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC6.7",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/cryptography.md",
+              "rationale": "Found candidate artifact/signal for 'policy_cryptography' (1 path(s), 0 code hint(s)) with content markers found (an encryption or key management term). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC6.8",
+              "status": "unverified",
+              "source": "attestation",
+              "evidence_ref": "none",
+              "rationale": "No attestation recorded. Add one under framework_inputs.SOC_2.attested in the manifest.",
+              "confidence": null,
+              "confidence_label": "not_assessed",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "organisational"
+            },
+            {
+              "article": "SOC_2:CC7.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": ".github/workflows/sast.yml",
+              "rationale": "Found candidate artifact/signal for 'sast_config' (1 path(s), 0 code hint(s)) with content markers found (a static-analysis tool name). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC7.2",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "oversight-log.json",
+              "rationale": "Found candidate artifact/signal for 'event_log_evidence' (1 path(s), 0 code hint(s)). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.55,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC7.3",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "INCIDENT_RESPONSE.md",
+              "rationale": "Found candidate artifact/signal for 'incident_response_plan' (1 path(s), 0 code hint(s)) with content markers found (detection, containment and roles or escalation topics). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC7.4",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "INCIDENT_RESPONSE.md",
+              "rationale": "Found candidate artifact/signal for 'incident_response_plan' (1 path(s), 0 code hint(s)) with content markers found (detection, containment and roles or escalation topics). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC7.5",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/restore-test.md",
+              "rationale": "Found candidate artifact/signal for 'restore_test_report' (1 path(s), 0 code hint(s)) with content markers found (a restore, a result or duration and a date). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC8.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/policies/change-management.md",
+              "rationale": "Found candidate artifact/signal for 'policy_change_management' (1 path(s), 0 code hint(s)) with content markers found (a change control or approval term). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC9.1",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/business-continuity.md",
+              "rationale": "Found candidate artifact/signal for 'continuity_plan' (1 path(s), 0 code hint(s)) with content markers found (recovery objectives, critical services and tests or exercises). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            },
+            {
+              "article": "SOC_2:CC9.2",
+              "status": "partial",
+              "source": "artifact",
+              "evidence_ref": "docs/vendor-register.md",
+              "rationale": "Found candidate artifact/signal for 'vendor_register' (1 path(s), 0 code hint(s)) with content markers found (provider, service and criticality entries). Heuristic only — not a full obligation assessment.",
+              "confidence": 0.6,
+              "confidence_label": "heuristic_estimate",
+              "disclaimer_ref": "DISCLAIMER_V2",
+              "evidence_class": "hybrid"
+            }
+          ],
+          "evidence_hashes": [],
+          "principle_summary": null
+        }
+      }
+    }
+  }
+}

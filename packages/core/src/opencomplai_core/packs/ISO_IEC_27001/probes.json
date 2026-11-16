@@ -1,0 +1,154 @@
+{
+  "family": "iso_iec_27001",
+  "probes": {
+    "iso_iec_27001.risk_treatment_plan": {
+      "patterns": [
+        "**/risk-treatment-plan*",
+        "**/risk_treatment_plan*",
+        "docs/**/isms/*treatment*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\brisks?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(reduce|mitigate|accept|transfer|avoid)\\w*\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bowner\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(due|target date|deadline)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a risk, a treatment decision, an owner and a due date",
+        "lacks_label": "risk, treatment decision, owner or due date",
+        "noun": "risk treatment plan",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention for a risk treatment plan; marker words from general practice (risk, treatment decision, owner, due date)",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "iso_iec_27001.asset_inventory": {
+      "patterns": [
+        "**/asset-inventory*",
+        "**/asset_inventory*",
+        "**/asset-register*",
+        "**/asset_register*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bassets?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bowner\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bclassif\\w*\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an asset, an owner and a classification",
+        "lacks_label": "asset, owner or classification",
+        "noun": "asset inventory",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention for an asset inventory; marker words from general practice (asset, owner, classification)",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "iso_iec_27001.soa_annex_a": {
+      "patterns": [
+        "**/statement-of-applicability*",
+        "**/statement_of_applicability*",
+        "**/soa*.md",
+        "docs/**/isms/*applicability*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "A\\.5\\.\\d+",
+            "flags": "i"
+          },
+          {
+            "re": "A\\.6\\.\\d+",
+            "flags": "i"
+          },
+          {
+            "re": "A\\.7\\.\\d+",
+            "flags": "i"
+          },
+          {
+            "re": "A\\.8\\.\\d+",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(included?|excluded?|inclusion|exclusion|applicable|not applicable)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(justif\\w*|rationale|reason)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an id from each Annex A theme, an inclusion or exclusion decision and a justification",
+        "lacks_label": "id from each Annex A theme, inclusion or exclusion decision or justification",
+        "noun": "statement of applicability",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention for a statement of applicability; marker words from general practice (Annex A ids by theme, inclusion or exclusion, justification)",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "iso_iec_27001.operating_procedures": {
+      "patterns": [
+        "**/runbook*",
+        "docs/**/operations/*procedure*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(steps?|procedures?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(owner|on-call|on call)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(rollback|roll back|escalat\\w*)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a step or procedure, an owner or on-call role and a rollback or escalation",
+        "lacks_label": "step or procedure, owner or on-call role or rollback or escalation",
+        "noun": "documented operating procedure",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention for a runbook or operating procedure; marker words from general practice (step, owner or on-call role, rollback or escalation)",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

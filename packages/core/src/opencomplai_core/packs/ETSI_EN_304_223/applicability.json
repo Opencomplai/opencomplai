@@ -1,0 +1,27 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "builds_or_operates_ai",
+      "text": "Does the organisation build or operate an AI system, rather than only buy a finished service?",
+      "false_means": "no AI system built or operated"
+    },
+    {
+      "key": "contract_commitment",
+      "text": "Does a customer contract or internal policy commit you to this baseline?",
+      "false_means": "no commitment"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "builds_or_operates_ai": false },
+      "outcome": "not_applicable",
+      "reason": "The baseline addresses those who build or operate AI systems. Confirm with your adviser."
+    },
+    {
+      "when": { "contract_commitment": true },
+      "outcome": "applies",
+      "reason": "A contract or policy commits the organisation to this baseline."
+    }
+  ]
+}

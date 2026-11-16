@@ -3,6 +3,7 @@ ISO/IEC 42001 and ISO/IEC 27090 data files agree with each other."""
 
 from __future__ import annotations
 
+import importlib.util
 import re
 import subprocess
 import sys
@@ -80,6 +81,33 @@ def test_mappings_page_is_up_to_date():
         [sys.executable, str(script), "--check"], capture_output=True, text=True
     )
     assert result.returncode == 0, result.stdout
+
+
+def _render() -> str:
+    spec = importlib.util.spec_from_file_location(
+        "generate_framework_mappings_doc",
+        Path(__file__).resolve().parents[3]
+        / "scripts"
+        / "generate_framework_mappings_doc.py",
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.render()
+
+
+def test_mappings_page_has_one_section_per_registry_key_and_review_columns():
+    text = _render()
+    for key in FRAMEWORKS:
+        assert text.count(f"Key `{key}`.") == 1, key
+    headers = [
+        ln for ln in text.splitlines() if ln.startswith(("| Id |", "| Subcategory |"))
+    ]
+    assert len(headers) == len(FRAMEWORKS)
+    for header in headers:
+        assert "Evidence class" in header, header
+        assert "Review" in header, header
 
 
 def test_every_nist_subcategory_has_a_mapping_decision():

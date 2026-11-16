@@ -1,0 +1,91 @@
+{
+  "entries": [
+    {
+      "id": "nis2.measures_apply",
+      "title": "Member states apply their NIS2 measures",
+      "applies_from": "2024-10-18",
+      "requirements": [
+        "NIS2:Art. 20(1)",
+        "NIS2:Art. 20(2)",
+        "NIS2:Art. 21(1)",
+        "NIS2:Art. 21(2)(a)",
+        "NIS2:Art. 21(2)(b)",
+        "NIS2:Art. 21(2)(c)",
+        "NIS2:Art. 21(2)(d)",
+        "NIS2:Art. 21(2)(e)",
+        "NIS2:Art. 21(2)(f)",
+        "NIS2:Art. 21(2)(g)",
+        "NIS2:Art. 21(2)(h)",
+        "NIS2:Art. 21(2)(i)",
+        "NIS2:Art. 21(2)(j)",
+        "NIS2:Art. 21(3)",
+        "NIS2:Art. 21(4)"
+      ],
+      "scope_note": "Date from which member states apply their transposition measures; the Directive binds through national law, which differs per member state.",
+      "source": "Directive (EU) 2022/2555 (CELEX 32022L2555), Art. 41(1)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "nis2.early_warning",
+      "title": "Early warning of a significant incident",
+      "applies_from": null,
+      "requirements": [
+        "NIS2:Art. 23(4)(a)"
+      ],
+      "scope_note": "Period set by the Directive for entities in scope; it binds through national law, which differs per member state.",
+      "source": "Directive (EU) 2022/2555 (CELEX 32022L2555), Art. 23(4)(a)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "24 hours after becoming aware"
+    },
+    {
+      "id": "nis2.incident_notification",
+      "title": "Incident notification of a significant incident",
+      "applies_from": null,
+      "requirements": [
+        "NIS2:Art. 23(4)(b)"
+      ],
+      "scope_note": "Period set by the Directive for entities in scope; it binds through national law, which differs per member state.",
+      "source": "Directive (EU) 2022/2555 (CELEX 32022L2555), Art. 23(4)(b)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "72 hours after becoming aware"
+    },
+    {
+      "id": "nis2.final_report",
+      "title": "Final report on a significant incident",
+      "applies_from": null,
+      "requirements": [
+        "NIS2:Art. 23(4)(d)"
+      ],
+      "scope_note": "Period set by the Directive for entities in scope; it binds through national law, which differs per member state.",
+      "source": "Directive (EU) 2022/2555 (CELEX 32022L2555), Art. 23(4)(d)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "one month after the incident notification"
+    },
+    {
+      "id": "nis2.implementing_regulation",
+      "title": "Implementing rules for digital infrastructure and digital providers",
+      "applies_from": "2024-11-07",
+      "requirements": [
+        "NIS2:Art. 21(2)(a)",
+        "NIS2:Art. 21(2)(b)",
+        "NIS2:Art. 21(2)(c)",
+        "NIS2:Art. 21(2)(d)",
+        "NIS2:Art. 21(2)(e)",
+        "NIS2:Art. 21(2)(f)",
+        "NIS2:Art. 21(2)(g)",
+        "NIS2:Art. 21(2)(h)",
+        "NIS2:Art. 21(2)(i)",
+        "NIS2:Art. 21(2)(j)"
+      ],
+      "scope_note": "Digital infrastructure and digital providers named in that regulation; the entities in scope are set by national law, which differs per member state.",
+      "source": "Commission Implementing Regulation (EU) 2024/2690 (CELEX 32024R2690), Art. 16",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "applies from entry into force, the twentieth day after publication in OJ L on 18.10.2024"
+    }
+  ]
+}

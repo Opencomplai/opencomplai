@@ -1,0 +1,14 @@
+{
+  "trains_models": {
+    "text": "The system trains or fine-tunes models",
+    "false_means": "does not train or fine-tune models"
+  },
+  "uses_retrieval": {
+    "text": "The system retrieves external content for the model",
+    "false_means": "does not use retrieval over external content"
+  },
+  "public_api": {
+    "text": "The model is reachable through a public API",
+    "false_means": "is not reachable through a public API"
+  }
+}

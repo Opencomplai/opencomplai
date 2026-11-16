@@ -1,0 +1,19 @@
+{
+  "id": "ISO_IEC_23894",
+  "order": 15,
+  "kind": "native",
+  "name": "ISO/IEC 23894:2023 AI risk management guidance",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "ISO/IEC 23894",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "iso_23894.json",
+  "data_files": ["applicability.json", "probes.json"],
+  "copyright": "restricted",
+  "row_count": 23,
+  "target_machine_share": 12,
+  "timeline": "none",
+  "timeline_reason": "a standard without legal application dates",
+  "catalogue": true
+}

@@ -59,6 +59,7 @@ def test_loader_rejects_malformed_entries():
         "date": {"applies_from": "2027-13-40"},
         "flag": {"needs_founder_review": "yes"},
         "articles": {"articles": ["no article here"]},
+        "basis": {"high_risk_basis": "annex_ii"},
     }
     for label, change in mutations.items():
         with pytest.raises(ValueError, match="art5_prohibitions"):
@@ -127,6 +128,36 @@ def test_timeline_for_articles_orders_by_date():
     assert "annex_iii_high_risk" in [
         e.id for e in rt.timeline_for_articles(["Art. 24"])
     ]
+
+
+def test_high_risk_entries_cite_chapter_iii_articles():
+    by_id = {e.id: e for e in rt.load_timeline()}
+    want = ("Art. 6", *(f"Art. {n}" for n in range(8, 28)), "Art. 43")
+    for entry_id in ("annex_iii_high_risk", "annex_i_high_risk"):
+        assert by_id[entry_id].articles == want, entry_id
+
+
+def test_high_risk_basis_is_only_on_the_two_high_risk_entries():
+    basis = {e.id: e.high_risk_basis for e in rt.load_timeline()}
+    assert basis.pop("annex_iii_high_risk") == "annex_iii"
+    assert basis.pop("annex_i_high_risk") == "annex_i"
+    assert set(basis.values()) == {None}
+    assert all(
+        "high_risk_basis" not in e for e in _raw()["entries"] if e["id"] in basis
+    )
+
+
+def test_timeline_for_articles_filters_by_high_risk_basis():
+    def ids(**kw):
+        return [e.id for e in rt.timeline_for_articles(["Art. 9"], **kw)]
+
+    assert ids() == ["annex_iii_high_risk", "annex_i_high_risk"]
+    assert ids(bases={"annex_i"}) == ["annex_i_high_risk"]
+    assert ids(bases={"annex_iii"}) == ["annex_iii_high_risk"]
+    assert ids(bases=set()) == []
+    for bases in (set(), {"annex_i"}, {"annex_iii"}):
+        got = rt.timeline_for_articles(["Art. 4"], bases=bases)
+        assert [e.id for e in got] == ["ai_literacy"]
 
 
 def test_status_uses_injected_clock():

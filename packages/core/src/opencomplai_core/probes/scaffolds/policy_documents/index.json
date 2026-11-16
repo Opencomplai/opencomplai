@@ -1,0 +1,38 @@
+{
+  "policy_information_security": {
+    "title": "Information security policy",
+    "target": "docs/policies/information-security.md"
+  },
+  "policy_access_control": {
+    "title": "Access control policy",
+    "target": "docs/policies/access-control.md"
+  },
+  "policy_cryptography": {
+    "title": "Cryptography policy",
+    "target": "docs/policies/cryptography.md"
+  },
+  "policy_backup": {
+    "title": "Backup policy",
+    "target": "docs/policies/backup.md"
+  },
+  "policy_change_management": {
+    "title": "Change management policy",
+    "target": "docs/policies/change-management.md"
+  },
+  "policy_supplier": {
+    "title": "Supplier policy",
+    "target": "docs/policies/supplier.md"
+  },
+  "policy_acceptable_use": {
+    "title": "Acceptable use policy",
+    "target": "docs/policies/acceptable-use.md"
+  },
+  "policy_continuity": {
+    "title": "Business continuity policy",
+    "target": "docs/policies/continuity.md"
+  },
+  "policy_ai": {
+    "title": "AI policy",
+    "target": "docs/policies/ai-policy.md"
+  }
+}

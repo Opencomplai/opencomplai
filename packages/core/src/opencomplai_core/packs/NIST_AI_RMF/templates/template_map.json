@@ -1,0 +1,282 @@
+{
+  "NIST_AI_RMF:GOVERN 1.1": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 1.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 1.3": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 1.4": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 1.5": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 2.1": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 2.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 2.3": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 3.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 4.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 4.3": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 5.1": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 5.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 6.1": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:GOVERN 6.2": {
+    "template_id": "govern_outcome",
+    "kind": "markdown",
+    "file": "govern_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 1.1": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 1.5": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 1.6": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 2.1": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 2.2": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 2.3": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 3.2": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 3.3": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 3.4": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 3.5": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 4.1": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 4.2": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 5.1": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MAP 5.2": {
+    "template_id": "map_outcome",
+    "kind": "markdown",
+    "file": "map_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 1.1": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 1.2": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.1": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.3": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.4": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.5": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.6": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.7": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.8": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.9": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.10": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 2.11": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 3.1": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 4.2": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MEASURE 4.3": {
+    "template_id": "measure_outcome",
+    "kind": "markdown",
+    "file": "measure_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 1.1": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 1.2": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 1.3": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 1.4": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 2.2": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 2.3": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 2.4": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 3.1": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 3.2": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 4.1": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 4.2": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  },
+  "NIST_AI_RMF:MANAGE 4.3": {
+    "template_id": "manage_outcome",
+    "kind": "markdown",
+    "file": "manage_outcome.md"
+  }
+}

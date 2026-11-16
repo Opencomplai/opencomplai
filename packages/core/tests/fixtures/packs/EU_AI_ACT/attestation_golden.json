@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "EU_AI_ACT": [
+      "Art. 20",
+      "Art. 4"
+    ]
+  },
+  "mixed_attestable": {},
+  "records": [
+    {
+      "id": "rec-art-4",
+      "requirement_id": "EU_AI_ACT:Art. 4",
+      "system_id": null,
+      "kind": "attested",
+      "status": "active",
+      "statement": "In place (rec-art-4).",
+      "attested_by": "Jane Doe",
+      "attested_at": "2026-06-01",
+      "valid_until": null
+    }
+  ],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {
+      "EU_AI_ACT": {
+        "Art. 4": {
+          "statement": "In place (rec-art-4).",
+          "attested_by": "Jane Doe",
+          "attested_at": "2026-06-01",
+          "record_id": "rec-art-4"
+        }
+      }
+    },
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": [
+    {
+      "case": "eu-art-4",
+      "requirement_id": "EU_AI_ACT:Art. 4",
+      "framework": "EU_AI_ACT",
+      "bundle_id": "Art. 4",
+      "attestation_only": true,
+      "engine_status": "met",
+      "engine_record_id": "rec-art-4"
+    },
+    {
+      "case": "mixed-eu-article",
+      "requirement_id": "EU_AI_ACT:Art. 9",
+      "framework": "EU_AI_ACT",
+      "bundle_id": "Art. 9",
+      "attestation_only": false,
+      "engine_status": "unverified",
+      "engine_record_id": null
+    }
+  ]
+}

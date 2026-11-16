@@ -1,0 +1,8 @@
+{
+  "outsourcing_register": {
+    "title": "Outsourcing register",
+    "target": "docs/vendor-register.md",
+    "probe": "vendor_register",
+    "shared": "third_parties/vendor_register.md"
+  }
+}

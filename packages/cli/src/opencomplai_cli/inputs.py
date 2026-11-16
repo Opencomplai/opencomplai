@@ -43,6 +43,7 @@ def load_manifest(path: Path, strict: bool = False):
     """Load a system manifest. Unknown top-level keys are dropped by the model,
     so name them on stderr; under `strict` that is an error (exit 2).
     Validation errors propagate to the caller unchanged."""
+    from opencomplai_core.agent_report import plain_text
     from opencomplai_core.models import SystemManifest, unknown_manifest_keys
 
     from opencomplai_cli.commands.portfolio import reject_multi_system
@@ -53,7 +54,8 @@ def load_manifest(path: Path, strict: bool = False):
     manifest = SystemManifest.model_validate(raw)
     unknown = unknown_manifest_keys(raw) if isinstance(raw, dict) else []
     if unknown:
-        keys = ", ".join(unknown)
+        # key names come from the file; a plain print, so only control characters
+        keys = plain_text(", ".join(unknown))
         if strict:
             print(f"Error: unknown manifest key(s): {keys}", file=sys.stderr)
             sys.exit(2)

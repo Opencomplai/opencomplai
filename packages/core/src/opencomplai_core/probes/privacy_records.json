@@ -1,0 +1,245 @@
+{
+  "family": "privacy_records",
+  "probes": {
+    "dpia_document": {
+      "patterns": [
+        "DPIA.md",
+        "docs/**/dpia*",
+        "**/data-protection-impact-assessment*",
+        "**/data_protection_impact_assessment*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:necessity|necessary|proportionality|proportionate)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\brisks?\\b[^\\n]{0,80}\\b(?:individuals?|data subjects?|people|persons?)\\b|\\b(?:individuals?|data subjects?|people|persons?)\\b[^\\n]{0,80}\\brisks?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:measures?|mitigations?|safeguards?|controls?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a necessity statement, risks to individuals and measures",
+        "lacks_label": "necessity, risks-to-individuals and measures content and minimum body length",
+        "noun": "DPIA",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "record_of_processing": {
+      "patterns": [
+        "**/ropa*",
+        "**/record-of-processing*",
+        "**/record_of_processing*",
+        "**/records-of-processing*",
+        "**/records_of_processing*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bpurposes?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bcategor(?:y|ies)\\b[^\\n]{0,60}\\b(?:data|data subjects?|personal)\\b|\\bdata subjects?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:recipients?|retention)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a purpose, data categories and recipients or retention",
+        "lacks_label": "purpose, data-category and recipient-or-retention content and minimum body length",
+        "noun": "record of processing",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "privacy_notice": {
+      "patterns": [
+        "PRIVACY.md",
+        "docs/**/privacy-notice*",
+        "docs/**/privacy_notice*",
+        "**/privacy-policy*",
+        "**/privacy_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:controller|contact|data protection officer|dpo)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:purposes?|legal basis|lawful basis)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:rights?|access|erasure|rectification|object)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a controller or contact, a purpose or legal basis and rights",
+        "lacks_label": "controller-or-contact, purpose-or-legal-basis and rights content and minimum body length",
+        "noun": "privacy notice",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "data_subject_request_procedure": {
+      "patterns": [
+        "docs/**/dsar*",
+        "**/data-subject-request*",
+        "**/data_subject_request*",
+        "**/subject-access*",
+        "**/subject_access*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:access|erasure|rectification|deletion)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:within\\s+(?:\\w+\\s+){0,2}(?:days?|weeks?|month)|\\d+\\s+(?:calendar\\s+)?(?:days?|weeks?)|one\\s+month|response\\s+time|deadline)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:identity|verify|verification|id\\s+check)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a request type, a response time and an identity check",
+        "lacks_label": "request-type, response-time and identity-check content and minimum body length",
+        "noun": "data subject request procedure",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "processor_register": {
+      "patterns": [
+        "**/processor-register*",
+        "**/processor_register*",
+        "**/subprocessor*",
+        "**/sub-processor*",
+        "**/sub_processor*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bprocessors?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:agreement|dpa|contract)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:location|region|country|transfers?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a processor, an agreement and a location or transfer",
+        "lacks_label": "processor, agreement and location-or-transfer content and minimum body length",
+        "noun": "processor register",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "breach_register": {
+      "patterns": [
+        "**/breach-register*",
+        "**/breach_register*",
+        "**/breach-log*",
+        "**/breach_log*",
+        "**/data-breach-register*",
+        "**/data_breach_register*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bbreach(?:es)?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:date\\s+(?:detected|discovered|identified)|detected\\s+on|discovered\\s+on|detection\\s+date)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:notif(?:y|ied|ication)|reported\\s+to|supervisory\\s+authority)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a breach entry, a detection date and notification",
+        "lacks_label": "breach, detection-date and notification content and minimum body length",
+        "noun": "breach register",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "transfer_record": {
+      "patterns": [
+        "**/transfer-impact*",
+        "**/transfer_impact*",
+        "**/international-transfer*",
+        "**/international_transfer*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\btransfers?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:safeguards?|adequacy|standard\\s+contractual\\s+clauses|scc)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a transfer and a safeguard or adequacy decision",
+        "lacks_label": "transfer and safeguard-or-adequacy content and minimum body length",
+        "noun": "transfer record",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice marker words",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

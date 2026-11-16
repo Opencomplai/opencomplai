@@ -1,0 +1,95 @@
+
+ISO/IEC 27090:2026 AI security guidance (evaluated, guidance, not a certification) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement        ┃ Title                                              ┃ Status     ┃ Source      ┃ Evidence                              ┃ Rationale                                               ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ISO_IEC_27090:5.1  │ General                                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:5.2  │ AI governance programme                            │ PARTIAL    │ artifact    │ docs/policies/ai-policy.md            │ Found 'docs/policies/ai-policy.md' but it still         │
+│                    │                                                    │            │             │                                       │ contains 5 unfilled scaffold placeholder(s) ('_fill     │
+│                    │                                                    │            │             │                                       │ in_') — a scaffold is not a filled AI policy.           │
+│ ISO_IEC_27090:5.3  │ Zero trust principles                              │ MISSING    │ artifact    │ iso_iec_27090.model_access_control    │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'iso_iec_27090.model_access_control'. Add the expected  │
+│                    │                                                    │            │             │                                       │ file or construct, then re-run gaps.                    │
+│ ISO_IEC_27090:5.4  │ Applying software engineering best practices to AI │ MISSING    │ artifact    │ sast_config                           │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'sast_config'. Add the expected file or construct, then │
+│                    │                                                    │            │             │                                       │ re-run gaps.                                            │
+│ ISO_IEC_27090:5.5  │ Supply chain management                            │ MISSING    │ artifact    │ ai_supply_chain_pins                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'ai_supply_chain_pins'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:5.6  │ Threat modelling                                   │ PARTIAL    │ artifact    │ docs/threat-model.md                  │ Found 'docs/threat-model.md' but it still contains 60   │
+│                    │                                                    │            │             │                                       │ unfilled scaffold placeholder(s) ('_fill in_') — a      │
+│                    │                                                    │            │             │                                       │ scaffold is not a filled threat model.                  │
+│ ISO_IEC_27090:5.7  │ Red teaming                                        │ PARTIAL    │ artifact    │ docs/red-team-report.md               │ Found 'docs/red-team-report.md' but it still contains   │
+│                    │                                                    │            │             │                                       │ 13 unfilled scaffold placeholder(s) ('_fill in_') — a   │
+│                    │                                                    │            │             │                                       │ scaffold is not a filled red-team report.               │
+│ ISO_IEC_27090:6.2  │ Data poisoning attack                              │ MISSING    │ artifact    │ ai_supply_chain_pins                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'ai_supply_chain_pins'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:6.3  │ Evasion attack                                     │ PARTIAL    │ artifact    │ docs/red-team-report.md               │ Found 'docs/red-team-report.md' but it still contains   │
+│                    │                                                    │            │             │                                       │ 13 unfilled scaffold placeholder(s) ('_fill in_') — a   │
+│                    │                                                    │            │             │                                       │ scaffold is not a filled red-team report.               │
+│ ISO_IEC_27090:6.5  │ Model exfiltration                                 │ MISSING    │ artifact    │ rate_limiting_config                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'rate_limiting_config'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:6.7  │ Direct model poisoning                             │ MISSING    │ artifact    │ ai_supply_chain_pins                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'ai_supply_chain_pins'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:6.8  │ Sensitive model output                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:6.9  │ Prompt injection                                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:6.10 │ Output contains injection attacks                  │ MISSING    │ artifact    │ iso_iec_27090.input_validation_config │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'iso_iec_27090.input_validation_config'. Add the        │
+│                    │                                                    │            │             │                                       │ expected file or construct, then re-run gaps.           │
+│ ISO_IEC_27090:6.11 │ Considerations for AI systems                      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:7.2  │ Conflicting interactions of mitigations            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:7.3  │ Continuity of mitigations across the AI life cycle │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+│ ISO_IEC_27090:7.4  │ Model and mitigation deterioration over time       │ MISSING    │ artifact    │ post_market_monitoring_plan           │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'post_market_monitoring_plan'. Add the expected file or │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:7.5  │ Logging and monitoring                             │ MISSING    │ artifact    │ event_log_evidence                    │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'event_log_evidence'. Add the expected file or          │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:7.7  │ Malicious input detection and filtering            │ MISSING    │ artifact    │ iso_iec_27090.input_validation_config │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'iso_iec_27090.input_validation_config'. Add the        │
+│                    │                                                    │            │             │                                       │ expected file or construct, then re-run gaps.           │
+│ ISO_IEC_27090:7.8  │ Throttling model use                               │ MISSING    │ artifact    │ rate_limiting_config                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'rate_limiting_config'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:B.2  │ Denial-of-service attacks (provisional numbering)  │ MISSING    │ artifact    │ rate_limiting_config                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'rate_limiting_config'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:B.3  │ Supply chain attacks (provisional numbering)       │ MISSING    │ artifact    │ ai_supply_chain_pins                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'ai_supply_chain_pins'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:B.4  │ Backdoor attacks (provisional numbering)           │ MISSING    │ artifact    │ ai_supply_chain_pins                  │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'ai_supply_chain_pins'. Add the expected file or        │
+│                    │                                                    │            │             │                                       │ construct, then re-run gaps.                            │
+│ ISO_IEC_27090:B.5  │ Direct model theft (provisional numbering)         │ MISSING    │ artifact    │ iso_iec_27090.model_access_control    │ No conventional documentation/code probe matched for    │
+│                    │                                                    │            │             │                                       │ 'iso_iec_27090.model_access_control'. Add the expected  │
+│                    │                                                    │            │             │                                       │ file or construct, then re-run gaps.                    │
+│ ISO_IEC_27090:B.7  │ Model input leak (provisional numbering)           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under                  │
+│                    │                                                    │            │             │                                       │ framework_inputs.ISO_IEC_27090.attested in the          │
+│                    │                                                    │            │             │                                       │ manifest.                                               │
+└────────────────────┴────────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────┴─────────────────────────────────────────────────────────┘
+
+Excluded
+  ISO_IEC_27090:6.4: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).
+  ISO_IEC_27090:6.6: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).
+  ISO_IEC_27090:7.6: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).
+  ISO_IEC_27090:7.9: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).
+  ISO_IEC_27090:B.6: Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

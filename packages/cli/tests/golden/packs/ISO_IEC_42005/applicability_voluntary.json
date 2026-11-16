@@ -1,0 +1,13 @@
+{
+  "framework": "ISO_IEC_42005",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "affects_individuals": false,
+    "affects_groups_or_society": false
+  },
+  "scoped_out": {
+    "ISO_IEC_42005:Clause 6.7": "Not applicable: the manifest's scope says the system no effect on individuals and no effect on groups or society (framework_inputs.ISO_IEC_42005.scope.affects_individuals = false, framework_inputs.ISO_IEC_42005.scope.affects_groups_or_society = false).",
+    "ISO_IEC_42005:Clause 6.8.2": "Not applicable: the manifest's scope says the system no effect on individuals and no effect on groups or society (framework_inputs.ISO_IEC_42005.scope.affects_individuals = false, framework_inputs.ISO_IEC_42005.scope.affects_groups_or_society = false)."
+  }
+}

@@ -15,12 +15,13 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 from functools import cache
 from pathlib import Path
 from typing import Any
 
+from opencomplai_core.applicability import applicability_outcome, declared_scope_keys
 from opencomplai_core.gap_report import build_gap_report, load_gap_article_map
 from opencomplai_core.models import (
     Attestation,
@@ -37,11 +38,14 @@ from opencomplai_core.nist_rmf_report import (
     attestable_subcategories,
     nist_rmf_as_gap_report,
 )
+from opencomplai_core.pack_registry import discover_packs, pack_dir, pack_label
 
 _DATA_DIR = Path(__file__).resolve().parent / "data"
 
 EU_AI_ACT = "EU_AI_ACT"
 ISO_27090 = "ISO_IEC_27090"
+# Framework keys of a custom controls pack all start with this (custom_pack.py).
+CUSTOM_FRAMEWORK_PREFIX = "CUSTOM_"
 
 
 @dataclass(frozen=True)
@@ -58,79 +62,42 @@ class FrameworkPack:
     ) = None
     # A derived pack's requirement ids that take an attestation.
     attestable: Callable[[], set[str]] | None = None
+    # A hybrid pack runs the native path with the EU re-projection (the same
+    # `derive` function) as the rows of its `crosswalk` sources.
+    hybrid: bool = False
     # Data a pack reads besides its requirements map, for data_version.
     data_files: tuple[Path, ...] = ()
+    # A native pack's requirements map held in memory instead of a file (a
+    # custom controls pack). Set instead of `requirements`, never with it.
+    requirements_data: Mapping[str, Any] | None = field(
+        default=None, compare=False, hash=False
+    )
 
 
-FRAMEWORKS: dict[str, FrameworkPack] = {
-    EU_AI_ACT: FrameworkPack(
-        EU_AI_ACT,
-        "EU AI Act (Regulation (EU) 2024/1689)",
-        "DISCLAIMER_V1",
-        requirements=_DATA_DIR / "gap_article_map.json",
-        data_files=(_DATA_DIR / "regulatory_timeline.json",),
-    ),
-    "NIST_AI_RMF": FrameworkPack(
-        "NIST_AI_RMF",
-        "NIST AI RMF 1.0 (derived from EU AI Act evidence)",
-        derive=nist_rmf_as_gap_report,
-        attestable=attestable_subcategories,
-        data_files=(_DATA_DIR / "nist_ai_rmf_subcategories.json",),
-    ),
-    "ISO_IEC_42001": FrameworkPack(
-        "ISO_IEC_42001",
-        "ISO/IEC 42001:2023 AI management system (attestation-led, not a certification)",
-        requirements=_DATA_DIR / "iso_42001.json",
-    ),
-    ISO_27090: FrameworkPack(
-        ISO_27090,
-        "ISO/IEC 27090:2026 AI security guidance (attestation-led, guidance, not a certification)",
-        requirements=_DATA_DIR / "iso_27090.json",
-    ),
-}
-
-# Further native, attestation-led packs: key -> (label, data file).
-_MORE_PACKS = {
-    "ISO_IEC_27001": (
-        "ISO/IEC 27001:2022 information security management",
-        "iso_27001.json",
-    ),
-    "SOC_2": ("SOC 2 Trust Services Criteria (not a SOC 2 report)", "soc_2.json"),
-    "NIS2": ("NIS2 Directive (EU) 2022/2555 cybersecurity measures", "nis2.json"),
-    "DORA": (
-        "DORA Regulation (EU) 2022/2554 digital operational resilience",
-        "dora.json",
-    ),
-    "EBA": ("EBA Guidelines on ICT, outsourcing and loan origination", "eba.json"),
-    "EIOPA_AI": ("EIOPA Opinion on AI governance and risk management", "eiopa_ai.json"),
-    "GDPR": (
-        "GDPR Regulation (EU) 2016/679, duties relevant to AI systems",
-        "gdpr.json",
-    ),
-    "CRA": ("Cyber Resilience Act Regulation (EU) 2024/2847", "cra.json"),
-    "ETSI_EN_304_223": (
-        "ETSI EN 304 223 baseline cyber security for AI",
-        "etsi_en_304_223.json",
-    ),
-    "ISO_IEC_42005": (
-        "ISO/IEC 42005:2025 AI system impact assessment",
-        "iso_42005.json",
-    ),
-    "ISO_IEC_23894": (
-        "ISO/IEC 23894:2023 AI risk management guidance",
-        "iso_23894.json",
-    ),
-}
-FRAMEWORKS.update(
-    {
-        key: FrameworkPack(
-            key,
-            f"{label} (attestation-led, not an audit, certification or legal assessment)",
-            requirements=_DATA_DIR / fname,
+def _build_registry() -> dict[str, FrameworkPack]:
+    registry: dict[str, FrameworkPack] = {}
+    for meta in discover_packs():
+        base = pack_dir(meta["id"])
+        derived = meta["kind"] == "derived"
+        hybrid = meta["kind"] == "hybrid"
+        registry[meta["id"]] = FrameworkPack(
+            meta["id"],
+            pack_label(meta),
+            meta["disclaimer_ref"],
+            requirements=(
+                (base / meta["requirements"]).resolve()
+                if meta["requirements"]
+                else None
+            ),
+            derive=nist_rmf_as_gap_report if derived or hybrid else None,
+            attestable=attestable_subcategories if derived or hybrid else None,
+            hybrid=hybrid,
+            data_files=tuple((base / rel).resolve() for rel in meta["data_files"]),
         )
-        for key, (label, fname) in _MORE_PACKS.items()
-    }
-)
+    return registry
+
+
+FRAMEWORKS: dict[str, FrameworkPack] = _build_registry()
 
 # The statuses each level fails on. "unverified" also fails an Unverified row
 # that only an attestation can decide (see `gate_failures`).
@@ -150,9 +117,14 @@ def framework_of(requirement_id: str) -> str:
 def _require_known(frameworks: Sequence[str], what: str) -> None:
     unknown = [fw for fw in frameworks if fw not in FRAMEWORKS]
     if unknown:
+        hint = (
+            " (load it with --custom-pack)"
+            if any(fw.startswith(CUSTOM_FRAMEWORK_PREFIX) for fw in unknown)
+            else ""
+        )
         raise ValueError(
             f"unknown {what} {', '.join(unknown)}; known frameworks: "
-            f"{', '.join(FRAMEWORKS)}"
+            f"{', '.join(FRAMEWORKS)}{hint}"
         )
 
 
@@ -177,6 +149,16 @@ def load_requirements_map(path: Path) -> dict[str, Any]:
         return json.load(handle)
 
 
+def pack_requirements(pack: FrameworkPack) -> Mapping[str, Any] | None:
+    """A native pack's requirements map, from memory or from its file; None for
+    a derived pack."""
+    if pack.requirements_data is not None:
+        return pack.requirements_data
+    if pack.requirements is None:
+        return None
+    return load_requirements_map(pack.requirements)
+
+
 def requirement_title(requirement_id: str) -> str | None:
     """Human text for a requirement id, or None when none is known. Never raises.
 
@@ -191,27 +173,21 @@ def requirement_title(requirement_id: str) -> str | None:
         entry = get_subcategories().get(requirement_id.partition(":")[2])
         return entry.outcome if entry else None
     pack = FRAMEWORKS.get(framework)
-    if pack is None or pack.requirements is None:
+    requirements = pack_requirements(pack) if pack is not None else None
+    if requirements is None:
         return None
-    entry = load_requirements_map(pack.requirements).get(requirement_id)
+    entry = requirements.get(requirement_id)
     return entry.get("title") if isinstance(entry, dict) else None
 
 
 def data_version(pack: FrameworkPack) -> str:
     """Short hash of the pack's data, independent of line endings and key order."""
     paths = ([pack.requirements] if pack.requirements else []) + list(pack.data_files)
-    parsed = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
+    parsed: list[Any] = [json.loads(path.read_text(encoding="utf-8")) for path in paths]
+    if pack.requirements_data is not None:
+        parsed.insert(0, pack.requirements_data)
     blob = json.dumps(parsed, sort_keys=True).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()[:12]
-
-
-# What each `framework_inputs.<FW>.scope` answer of false says, for the reason
-# written when it takes a row out of scope.
-_SCOPE_FALSE = {
-    "trains_models": "does not train or fine-tune models",
-    "uses_retrieval": "does not use retrieval over external content",
-    "public_api": "is not reachable through a public API",
-}
 
 
 def _scope_exclusions(
@@ -227,13 +203,14 @@ def _scope_exclusions(
     if scope is None:
         return {}
     prefix = f"framework_inputs.{fw}.scope"
+    declared = declared_scope_keys(fw)
     out: dict[str, str] = {}
     for rid, config in requirements.items():
         if rid in inputs.attested:
             continue
         for group in config.get("scope_out", []):
-            if all(getattr(scope, key) is False for key in group):
-                says = " and ".join(_SCOPE_FALSE[key] for key in group)
+            if all(scope.answer(key) is False for key in group):
+                says = " and ".join(declared[key]["false_means"] for key in group)
                 answers = ", ".join(f"{prefix}.{key} = false" for key in group)
                 out[rid] = (
                     f"Not applicable: the manifest's scope says the system {says} "
@@ -260,9 +237,10 @@ def attestable_ids(fw: str) -> frozenset[str]:
         return frozenset()
     if pack.attestable is not None:
         return frozenset(pack.attestable())
-    if pack.requirements is None:
+    requirements = pack_requirements(pack)
+    if requirements is None:
         return frozenset()
-    return frozenset(_attestable_ids(load_requirements_map(pack.requirements)))
+    return frozenset(_attestable_ids(requirements))
 
 
 def _require_attestable(
@@ -295,8 +273,10 @@ def evaluate_targets(
     given `framework_inputs.<FW>.scope`, move from `report.articles` to
     `excluded`; an explicit exclusion keeps its own reason over a generated one.
     `framework_inputs.EU_AI_ACT.attested` reaches the EU report for the
-    articles that take an attestation (Art. 4); the EU AI Act takes no
+    articles that take an attestation (Art. 4 and Art. 20); the EU AI Act takes no
     `excluded` and no `scope`.
+    A `framework_inputs` key that starts with CUSTOM_ and is not a registered pack
+    (a custom pack not loaded in this run) is skipped, not refused.
     Raises ValueError on an unknown framework, EU AI Act `excluded` or `scope`,
     an excluded/attested id the framework does not have, or a blank
     exclusion justification. `today` (default: the current UTC date) is the
@@ -305,7 +285,16 @@ def evaluate_targets(
     """
     today = today or datetime.now(UTC).date()
     _require_known(targets, "compliance target")
-    _require_known(list(manifest.framework_inputs), "framework in framework_inputs")
+    # Attestations of a custom pack travel in the manifest: one that is not
+    # loaded in this run is left alone rather than refused.
+    _require_known(
+        [
+            fw
+            for fw in manifest.framework_inputs
+            if fw in FRAMEWORKS or not fw.startswith(CUSTOM_FRAMEWORK_PREFIX)
+        ],
+        "framework in framework_inputs",
+    )
     eu_inputs = manifest.framework_inputs.get(EU_AI_ACT, FrameworkInputs())
     if eu_inputs.excluded or eu_inputs.scope is not None:
         raise ValueError(
@@ -345,11 +334,33 @@ def evaluate_targets(
         pack = FRAMEWORKS[fw]
         inputs = manifest.framework_inputs.get(fw, FrameworkInputs())
         out_of_scope: dict[str, str] = {}
-        if pack.derive is not None:
+        if inputs.scope is not None:
+            declared = declared_scope_keys(fw)
+            for name in [
+                *type(inputs.scope).model_fields,
+                *(inputs.scope.model_extra or {}),
+            ]:
+                if name not in declared:
+                    raise ValueError(
+                        f"framework_inputs.{fw}.scope: {name!r} is not a scope "
+                        f"key of {fw} (declared: {', '.join(sorted(declared))})"
+                    )
+        outcome = applicability_outcome(
+            fw, inputs.scope.answers() if inputs.scope is not None else {}
+        )
+        if pack.derive is not None and not pack.hybrid:
             report = pack.derive(eu, inputs.attested, today)
             attestable: set[str] = pack.attestable() if pack.attestable else set()
         else:
-            requirements = load_requirements_map(pack.requirements)
+            requirements = pack_requirements(pack)
+            if requirements is None:
+                raise ValueError(f"framework {fw} has no requirements data")
+            crosswalk = None
+            if pack.hybrid and pack.derive is not None:
+                crosswalk = {
+                    row.article: row
+                    for row in pack.derive(eu, inputs.attested, today).articles
+                }
             report = build_gap_report(
                 system_id=manifest.system_id,
                 commit_ref=commit_ref,
@@ -362,8 +373,13 @@ def evaluate_targets(
                 manifest=manifest,
                 checker_session=manifest.checker_session,
                 today=today,
+                crosswalk=crosswalk,
             )
-            attestable = _attestable_ids(requirements)
+            attestable = (
+                pack.attestable()
+                if pack.hybrid and pack.attestable
+                else _attestable_ids(requirements)
+            )
             out_of_scope = _scope_exclusions(fw, requirements, inputs)
 
         ids = {row.article for row in report.articles}
@@ -378,6 +394,15 @@ def evaluate_targets(
                 )
         _require_attestable(fw, inputs.attested, attestable)
 
+        if outcome is not None and outcome[0] == "not_applicable":
+            why = outcome[1] or "the framework does not apply to the system"
+            not_applicable = {
+                row.article: f"Not applicable: {why}"
+                for row in report.articles
+                if row.article not in inputs.attested
+            }
+            out_of_scope = {**out_of_scope, **not_applicable}
+
         excluded = {**out_of_scope, **inputs.excluded}
         kept = [
             row.model_copy(update={"disclaimer_ref": pack.disclaimer_ref})
@@ -390,6 +415,9 @@ def evaluate_targets(
             data_version=data_version(pack),
             derived_from=EU_AI_ACT if pack.derive is not None else None,
             disclaimer_ref=pack.disclaimer_ref,
+            applicability=(
+                {"outcome": outcome[0], "reason": outcome[1]} if outcome else None
+            ),
             excluded={
                 row.article: excluded[row.article]
                 for row in report.articles
@@ -429,11 +457,12 @@ def attestation_only_ids(fw: str) -> frozenset[str]:
     (NIST AI RMF) has none, and neither does an unknown framework.
     """
     pack = FRAMEWORKS.get(fw)
-    if pack is None or pack.requirements is None:
+    requirements = pack_requirements(pack) if pack is not None else None
+    if requirements is None:
         return frozenset()
     return frozenset(
         rid
-        for rid, config in load_requirements_map(pack.requirements).items()
+        for rid, config in requirements.items()
         if {
             s["kind"]
             for s in config.get("sources", [])

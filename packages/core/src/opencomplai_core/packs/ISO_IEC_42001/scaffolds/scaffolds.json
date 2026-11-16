@@ -1,0 +1,26 @@
+{
+  "scope_statement": {
+    "title": "Management-system scope statement",
+    "target": "docs/scope-statement.md",
+    "probe": "scope_statement",
+    "shared": "management_system/scope_statement.md"
+  },
+  "ai_policy": {
+    "title": "AI policy",
+    "target": "docs/policies/ai-policy.md",
+    "probe": "policy_ai",
+    "shared": "policy_documents/policy_ai.md"
+  },
+  "objectives": {
+    "title": "Objectives record",
+    "target": "docs/objectives.md",
+    "probe": "objectives_record",
+    "shared": "management_system/objectives_record.md"
+  },
+  "statement_of_applicability": {
+    "title": "Statement of applicability",
+    "target": "docs/aims/statement-of-applicability.md",
+    "probe": "iso_iec_42001.soa_justification",
+    "file": "statement_of_applicability.md"
+  }
+}

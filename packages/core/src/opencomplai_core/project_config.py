@@ -13,6 +13,7 @@ values from this file.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -21,6 +22,11 @@ import yaml
 DEFAULT_CONFIG_FILENAME = "opencomplai.yaml"
 # Mirrors the CLI's FailOnLevel enum (a CLI test pins the two equal).
 FAIL_ON_LEVELS = ("none", "new-major", "major", "critical")
+# The levels `gate.fail_on` takes; mirrors the keys of `frameworks._FAIL_ON` (a core
+# test pins the two equal). The gate values are printed by the CLI, so they are
+# checked here, once, and an error never repeats what the file said.
+GATE_FAIL_ON_LEVELS = ("missing", "partial", "unverified")
+_GATE_FRAMEWORK = re.compile(r"[A-Za-z0-9_]{1,64}")
 
 
 @dataclass
@@ -75,8 +81,13 @@ def load_project_config(path: Path) -> ProjectConfig:
         isinstance(fw, str) for fw in gate_frameworks
     ):
         raise ValueError(f"{path.name}: gate.frameworks must be a list of frameworks")
+    if not all(_GATE_FRAMEWORK.fullmatch(fw) for fw in gate_frameworks):
+        raise ValueError(
+            f"{path.name}: each gate.frameworks entry must be 1 to 64 letters, "
+            "digits or underscores"
+        )
     gate_fail_on = gate_section.get("fail_on")
-    if gate_fail_on is not None and not isinstance(gate_fail_on, str):
+    if gate_fail_on is not None and gate_fail_on not in GATE_FAIL_ON_LEVELS:
         raise ValueError(
             f"{path.name}: gate.fail_on must be missing, partial or unverified"
         )

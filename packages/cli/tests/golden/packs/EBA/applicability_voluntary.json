@@ -1,0 +1,10 @@
+{
+  "framework": "EBA",
+  "outcome": "voluntary",
+  "reason": "Institutions pass outsourcing terms on to their providers.",
+  "scope": {
+    "supervised_institution": false,
+    "supplier_to_supervised_institution": true
+  },
+  "scoped_out": {}
+}

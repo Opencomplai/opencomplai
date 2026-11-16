@@ -117,8 +117,11 @@ def test_scan_page_documents_unreadable_snippet_warning():
 
 def test_scan_page_separates_ai_intent_model_from_propose_backend():
     page = _page("cli", "scan.md")
-    assert "needs the `[deep]` extra by default" in page
-    assert "`--propose` uses the deterministic `codebert-onnx` backend" in page
+    assert "From 0.16.0 it uses the deterministic `codebert-onnx` matcher" in page
+    assert "0.15.0 and earlier default to `qwen2.5-coder-1.5b`" in page
+    assert (
+        "`--propose` always uses `codebert-onnx` unless `--ai-model` is given" in page
+    )
 
 
 def test_deployer_pack_page_states_import_reads_partial_at_most():

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "description": "Machine-readable crosswalk from EU AI Act articles (the repo's existing control_catalog universe) to ISO/IEC 42001:2023 clauses/Annex A controls and NIST AI RMF 1.0 (NIST AI 100-1) function-and-category references. This is a MAPPING only — a citation that an article corresponds to a clause/subcategory, with a source and a confidence label. It is not a computed conformity verdict for either ISO/IEC 42001 or NIST AI RMF: only EU_AI_ACT gets a deterministic pass/gap verdict from opencomplai today (see D-3 in PLAN/CLOSE-P1/00-OVERVIEW.md). A smaller initial set focused on the articles packages/core/src/opencomplai_core/control_catalog.py already covers, not exhaustive. Every row is needs_founder_review=true and every confidence is deliberately conservative ('low' unless the mapping is a well-established textbook correspondence) — this is compliance-facing content that has not been confirmed by a human reviewer or legal counsel.",
+    "description": "Machine-readable crosswalk from EU AI Act articles (the repo's existing control_catalog universe) to ISO/IEC 42001:2023 clauses/Annex A controls and NIST AI RMF 1.0 (NIST AI 100-1) function-and-category references. This is a MAPPING only — a citation that an article corresponds to a clause/subcategory, with a source and a confidence label. It is not a computed conformity verdict for either ISO/IEC 42001 or NIST AI RMF: only EU_AI_ACT gets a deterministic pass/gap verdict from opencomplai today. A smaller initial set focused on the articles packages/core/src/opencomplai_core/control_catalog.py already covers, not exhaustive. Every row is needs_founder_review=true and every confidence is deliberately conservative ('low' unless the mapping is a well-established textbook correspondence) — this is compliance-facing content that has not been confirmed by a human reviewer or legal counsel.",
     "researched_at": "2026-09-18",
     "confidence_definitions": {
       "medium": "A well-established, commonly-cited correspondence between the article's subject matter and the cited clause/category (e.g. Art. 17 quality management <-> ISO/IEC 42001 as a whole).",
@@ -136,6 +136,16 @@
       "confidence": "medium",
       "needs_founder_review": true,
       "notes": "The most direct mapping in this file: ISO/IEC 42001:2023 IS an AI management-system standard, so an implemented AIMS is the natural evidence for Art. 17's quality-management-system obligation."
+    },
+    {
+      "eu_ai_act_article": "Art. 20",
+      "iso_42001_clause": "Clause 10.2 (Nonconformity and corrective action)",
+      "iso_42001_annex_a_control": null,
+      "nist_ai_rmf_subcategory": "MANAGE 2",
+      "source": "iso_42001; nist_ai_rmf",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "notes": "The provider's duty to correct a non-conforming system and to inform others about it corresponds topically to ISO 42001's corrective-action clause and to NIST's management of risk responses; exact sub-clause and subcategory not independently confirmed."
     },
     {
       "eu_ai_act_article": "Art. 24",

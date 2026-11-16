@@ -1,0 +1,18 @@
+{
+  "id": "NIS2",
+  "order": 7,
+  "kind": "native",
+  "name": "NIS2 Directive (EU) 2022/2555 cybersecurity measures",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "NIS2",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "nis2.json",
+  "data_files": ["applicability.json", "probes.json", "timeline.json"],
+  "copyright": "eu_law",
+  "row_count": 21,
+  "target_machine_share": 7,
+  "timeline": "file",
+  "catalogue": true
+}

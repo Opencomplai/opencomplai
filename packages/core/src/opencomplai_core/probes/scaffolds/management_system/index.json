@@ -1,0 +1,30 @@
+{
+  "scope_statement": {
+    "title": "Management-system scope statement",
+    "target": "docs/scope-statement.md"
+  },
+  "statement_of_applicability": {
+    "title": "Statement of applicability",
+    "target": "docs/statement-of-applicability.md"
+  },
+  "objectives_record": {
+    "title": "Objectives record",
+    "target": "docs/objectives.md"
+  },
+  "internal_audit_report": {
+    "title": "Internal audit report",
+    "target": "docs/internal-audit.md"
+  },
+  "management_review_minutes": {
+    "title": "Management review minutes",
+    "target": "docs/management-review.md"
+  },
+  "corrective_action_log": {
+    "title": "Corrective action log",
+    "target": "docs/corrective-action-log.md"
+  },
+  "competence_training_record": {
+    "title": "Competence and training record",
+    "target": "docs/training-record.md"
+  }
+}

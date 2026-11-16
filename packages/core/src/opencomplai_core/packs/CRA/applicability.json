@@ -1,0 +1,57 @@
+{
+  "default": "applies",
+  "questions": [
+    {
+      "key": "product_with_digital_elements",
+      "text": "Do you place connectable software or hardware on the EU market?",
+      "false_means": "no product with digital elements"
+    },
+    {
+      "key": "hosted_service_only",
+      "text": "Is it only a hosted service, with nothing running on the user's side?",
+      "false_means": "something is supplied to users"
+    },
+    {
+      "key": "commercial_activity",
+      "text": "Is it supplied commercially?",
+      "false_means": "no commercial activity"
+    },
+    {
+      "key": "sector_carve_out",
+      "text": "Is it a medical device, vehicle, aviation or marine product?",
+      "false_means": "no sector carve-out"
+    },
+    {
+      "key": "is_manufacturer",
+      "text": "Do you make it, or market it under your name?",
+      "false_means": "not the manufacturer"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "product_with_digital_elements": false },
+      "outcome": "not_applicable",
+      "reason": "The Act covers products with digital elements. Confirm with your adviser."
+    },
+    {
+      "when": { "hosted_service_only": true },
+      "outcome": "not_applicable",
+      "reason": "A hosted service alone is outside the Act; NIS2 may apply instead. Confirm with your adviser."
+    },
+    {
+      "when": { "commercial_activity": false },
+      "outcome": "not_applicable",
+      "reason": "Supply outside a commercial activity is outside the Act. Confirm with your adviser."
+    },
+    {
+      "when": { "sector_carve_out": true },
+      "outcome": "not_applicable",
+      "reason": "The sector's own EU law applies. Confirm with your adviser."
+    },
+    {
+      "when": { "is_manufacturer": false },
+      "outcome": "voluntary",
+      "reason": "These rows are manufacturer duties; other roles have duties not listed here."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "GDPR",
+  "order": 11,
+  "kind": "native",
+  "name": "GDPR Regulation (EU) 2016/679, duties relevant to AI systems",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "GDPR",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "gdpr.json",
+  "data_files": ["applicability.json", "probes.json", "timeline.json"],
+  "copyright": "eu_law",
+  "row_count": 21,
+  "target_machine_share": 8,
+  "timeline": "file",
+  "catalogue": true
+}

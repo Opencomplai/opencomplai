@@ -203,3 +203,90 @@ def test_load_project_config_rejects_wrong_types(tmp_path, text, message):
     config_file.write_text(text, encoding="utf-8")
     with pytest.raises(ValueError, match=message):
         load_project_config(config_file)
+
+
+# -- gate values are checked where the file is read -----------------------------------
+# The CLI prints them, so a value with markup, a control character or a long run of
+# text is refused with a short message that does not repeat it.
+
+_MARKER = "MARKER-7f3a91c2"
+
+
+@pytest.mark.parametrize(
+    "entry",
+    [
+        '"[bold red]X[/]"',
+        '"NIST AI RMF"',
+        '"NIST\\nAI"',
+        '"NIST\\x1b[31mAI"',
+        '"CUSTOM_ACME-1"',
+        '"ACM\u00c9"',
+        '""',
+        '"' + "A" * 65 + '"',
+        "5",
+    ],
+    ids=[
+        "markup",
+        "space",
+        "newline",
+        "escape-code",
+        "hyphen",
+        "non-ascii",
+        "empty",
+        "too-long",
+        "not-a-string",
+    ],
+)
+def test_a_gate_framework_with_odd_characters_is_refused_without_repeating_it(
+    tmp_path, entry
+):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(
+        f"gate:\n  frameworks: [NIST_AI_RMF, {entry.replace('X', _MARKER)}]\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match=r"gate\.frameworks") as caught:
+        load_project_config(config_file)
+    assert _MARKER not in str(caught.value)
+    assert "\x1b" not in str(caught.value)
+    assert "\n" not in str(caught.value)
+
+
+@pytest.mark.parametrize("level", [_MARKER, "none", "critical", "", "MISSING", "3"])
+def test_a_gate_fail_on_that_is_not_a_known_level_is_refused(tmp_path, level):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(f'gate:\n  fail_on: "{level}"\n', encoding="utf-8")
+    with pytest.raises(ValueError, match=r"gate\.fail_on must be") as caught:
+        load_project_config(config_file)
+    assert _MARKER not in str(caught.value)
+
+
+def test_a_non_string_gate_fail_on_is_refused(tmp_path):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text("gate:\n  fail_on: 3\n", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"gate\.fail_on must be"):
+        load_project_config(config_file)
+
+
+@pytest.mark.parametrize(
+    "name", ["NIST_AI_RMF", "CUSTOM_ACME_AI", "nist_ai_rmf", "A", "A" * 64, "X2_y"]
+)
+def test_any_plain_gate_framework_name_still_loads(tmp_path, name):
+    # The names are looked up later, so an unknown but plain name is the CLI's to refuse.
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(f"gate:\n  frameworks: [{name}]\n", encoding="utf-8")
+    assert load_project_config(config_file).gate_frameworks == [name]
+
+
+@pytest.mark.parametrize("level", ["missing", "partial", "unverified"])
+def test_every_gate_fail_on_level_still_loads(tmp_path, level):
+    config_file = tmp_path / "opencomplai.yaml"
+    config_file.write_text(f"gate:\n  fail_on: {level}\n", encoding="utf-8")
+    assert load_project_config(config_file).gate_fail_on == level
+
+
+def test_the_gate_levels_are_the_levels_the_gate_knows():
+    from opencomplai_core.frameworks import _FAIL_ON
+    from opencomplai_core.project_config import GATE_FAIL_ON_LEVELS
+
+    assert set(GATE_FAIL_ON_LEVELS) == set(_FAIL_ON)

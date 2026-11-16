@@ -1,0 +1,254 @@
+{
+  "family": "management_system",
+  "probes": {
+    "scope_statement": {
+      "patterns": [
+        "docs/**/scope-statement*",
+        "docs/**/scope_statement*",
+        "**/management-system-scope*",
+        "**/management_system_scope*",
+        "**/isms-scope*",
+        "**/isms_scope*",
+        "**/aims-scope*",
+        "**/aims_scope*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:scope|boundar(?:y|ies))\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:in[\\s-]scope|out[\\s-]of[\\s-]scope|out[\\s-]scope|included|excluded|inclusions?|exclusions?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a scope or boundary statement and what is in or out",
+        "lacks_label": "scope or boundary, and in-scope or out-of-scope items",
+        "noun": "management-system scope statement",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a management-system scope statement",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "statement_of_applicability": {
+      "patterns": [
+        "**/statement-of-applicability*",
+        "**/statement_of_applicability*",
+        "**/soa.md",
+        "**/soa.csv"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:applicable|applicability)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:justification|rationale|reasons?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:implementation status|implemented|partially implemented|not implemented|planned)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "applicability decisions, justification and implementation status",
+        "lacks_label": "applicability, justification, implementation status",
+        "noun": "statement of applicability",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a statement of applicability",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "objectives_record": {
+      "patterns": [
+        "docs/**/objectives*",
+        "**/security-objectives*",
+        "**/security_objectives*",
+        "**/ai-objectives*",
+        "**/ai_objectives*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bobjectives?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:measures?|metrics?|targets?|kpis?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:owner|owned by|responsible|due date|due|deadline)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "objectives with a measure or target and an owner or due date",
+        "lacks_label": "objective, measure or target, owner or due date",
+        "noun": "objectives record",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a objectives record",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "internal_audit_report": {
+      "patterns": [
+        "docs/**/internal-audit*",
+        "docs/**/internal_audit*",
+        "**/audit-report*",
+        "**/audit_report*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\baudit",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:findings?|observations?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:auditors?|audit scope|scope|date)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an audit with findings and an auditor, scope or date",
+        "lacks_label": "audit, findings, auditor or scope or date",
+        "noun": "internal audit report",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a internal audit report",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "management_review_minutes": {
+      "patterns": [
+        "docs/**/management-review*",
+        "docs/**/management_review*",
+        "**/mgmt-review*",
+        "**/mgmt_review*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bmanagement review\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:decisions?|actions?|action items?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:attendees?|participants?|present|date)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a management review with decisions or actions and attendees or a date",
+        "lacks_label": "management review, decisions or actions, attendees or date",
+        "noun": "management review minutes",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a management review minutes",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "corrective_action_log": {
+      "patterns": [
+        "**/corrective-action*",
+        "**/corrective_action*",
+        "**/capa-log*",
+        "**/capa_log*",
+        "**/nonconformit*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bnon[\\s-]?conformit",
+            "flags": "i"
+          },
+          {
+            "re": "\\broot[\\s-]cause\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bcorrective action",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a nonconformity with its root cause and corrective action",
+        "lacks_label": "nonconformity, root cause, corrective action",
+        "noun": "corrective action log",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a corrective action log",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "competence_training_record": {
+      "patterns": [
+        "**/training-record*",
+        "**/training_record*",
+        "**/training-log*",
+        "**/training_log*",
+        "**/competence-record*",
+        "**/competence_record*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:training|competen(?:ce|cy))\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:date completed|completion date|completed on|completed)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:role|attendees?|trainee|participants?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "training or competence with a completion date and a role or attendee",
+        "lacks_label": "training or competence, date completed, role or attendee",
+        "noun": "competence and training record",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general-practice content keywords for a competence and training record",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

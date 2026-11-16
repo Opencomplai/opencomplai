@@ -136,9 +136,23 @@ nav:
       - Applicability Checker: getting-started/eu-ai-act-checker.md
       - "Control Codes → Principles → Articles": concepts/eu-ai-act-principles.md
       - Annex IV coverage ledger: concepts/annex-iv-coverage.md
+      - Status and rows: frameworks/eu-ai-act.md
     - NIST AI RMF: concepts/nist-ai-rmf.md
     - ISO/IEC 27090: concepts/iso-27090.md
+    - "ISO/IEC 42001:2023 AI management system": frameworks/iso-iec-42001.md
+    - "ISO/IEC 27001:2022 information security management": frameworks/iso-iec-27001.md
+    - "SOC 2 Trust Services Criteria (not a SOC 2 report)": frameworks/soc-2.md
+    - "NIS2 Directive (EU) 2022/2555 cybersecurity measures": frameworks/nis2.md
+    - "DORA Regulation (EU) 2022/2554 digital operational resilience": frameworks/dora.md
+    - "EBA Guidelines on ICT, outsourcing and loan origination": frameworks/eba.md
+    - "EIOPA Opinion on AI governance and risk management": frameworks/eiopa-ai.md
+    - "GDPR Regulation (EU) 2016/679, duties relevant to AI systems": frameworks/gdpr.md
+    - "Cyber Resilience Act Regulation (EU) 2024/2847": frameworks/cra.md
+    - "ETSI EN 304 223 baseline cyber security for AI": frameworks/etsi-en-304-223.md
+    - "ISO/IEC 42005:2025 AI system impact assessment": frameworks/iso-iec-42005.md
+    - "ISO/IEC 23894:2023 AI risk management guidance": frameworks/iso-iec-23894.md
     - More framework packs: frameworks/more-packs.md
+    - Custom controls pack: reference/custom-pack-format.md
     - Framework mappings: frameworks/mappings.md
     - Mapped-only regimes (DORA, EBA): concepts/mapped-regimes.md
     - GPAI training summary and Code of Practice: frameworks/gpai-training-summary-and-cop.md
@@ -157,6 +171,7 @@ nav:
     - Key Management: security/key-management.md
     - CI Integration: guides/ci-integration.md
     - GitHub Action: guides/github-action.md
+    - Framework gates: guides/framework-gates.md
     - CI for GitLab and Azure: guides/ci-gitlab-azure.md
     - CI Recipes (other systems): guides/ci-recipes.md
     - Pre-commit Integration: guides/pre-commit.md
@@ -173,6 +188,8 @@ nav:
     - accept: cli/accept.md
     - scan: cli/scan.md
     - gaps: cli/gaps.md
+    - scope: cli/scope.md
+    - scaffold: cli/scaffold.md
     - diff: cli/diff.md
     - rules changelog: cli/rules.md
     - controls: cli/controls.md
@@ -186,6 +203,7 @@ nav:
     - verify-output: cli/verify-output.md
     - verify: cli/verify.md
     - export: cli/export.md
+    - generate: cli/generate.md
     - docs generate: cli/docs-generate.md
     - instructions generate: cli/instructions-generate.md
     - sync metadata: cli/sync-metadata.md

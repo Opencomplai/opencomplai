@@ -1,0 +1,10 @@
+{
+  "framework": "EIOPA_AI",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "insurance_undertaking": true,
+    "eu_high_risk_system": false
+  },
+  "scoped_out": {}
+}

@@ -1,0 +1,217 @@
+{
+  "ISO_IEC_27001:Clause 4.3": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 5.2": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:Clause 6.1.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 6.1.3": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 6.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 7.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 8.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 8.3": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 9.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 9.3": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:Clause 10.2": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:A.5.1": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.5.9": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:A.5.10": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.5.15": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.5.19": {
+    "template_id": "supplier_control",
+    "kind": "markdown",
+    "file": "supplier_control.md"
+  },
+  "ISO_IEC_27001:A.5.20": {
+    "template_id": "supplier_control",
+    "kind": "markdown",
+    "file": "supplier_control.md"
+  },
+  "ISO_IEC_27001:A.5.21": {
+    "template_id": "supplier_control",
+    "kind": "markdown",
+    "file": "supplier_control.md"
+  },
+  "ISO_IEC_27001:A.5.22": {
+    "template_id": "supplier_control",
+    "kind": "markdown",
+    "file": "supplier_control.md"
+  },
+  "ISO_IEC_27001:A.5.23": {
+    "template_id": "supplier_control",
+    "kind": "markdown",
+    "file": "supplier_control.md"
+  },
+  "ISO_IEC_27001:A.5.24": {
+    "template_id": "incident_and_continuity",
+    "kind": "markdown",
+    "file": "incident_and_continuity.md"
+  },
+  "ISO_IEC_27001:A.5.26": {
+    "template_id": "incident_and_continuity",
+    "kind": "markdown",
+    "file": "incident_and_continuity.md"
+  },
+  "ISO_IEC_27001:A.5.27": {
+    "template_id": "incident_and_continuity",
+    "kind": "markdown",
+    "file": "incident_and_continuity.md"
+  },
+  "ISO_IEC_27001:A.5.29": {
+    "template_id": "incident_and_continuity",
+    "kind": "markdown",
+    "file": "incident_and_continuity.md"
+  },
+  "ISO_IEC_27001:A.5.30": {
+    "template_id": "incident_and_continuity",
+    "kind": "markdown",
+    "file": "incident_and_continuity.md"
+  },
+  "ISO_IEC_27001:A.5.34": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.5.35": {
+    "template_id": "management_system_record",
+    "kind": "markdown",
+    "file": "management_system_record.md"
+  },
+  "ISO_IEC_27001:A.5.37": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.6.3": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.6.8": {
+    "template_id": "security_policy",
+    "kind": "markdown",
+    "file": "security_policy.md"
+  },
+  "ISO_IEC_27001:A.8.4": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.8": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.9": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.12": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.13": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.15": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.16": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.24": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.25": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.28": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.29": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.31": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  },
+  "ISO_IEC_27001:A.8.32": {
+    "template_id": "engineering_control",
+    "kind": "markdown",
+    "file": "engineering_control.md"
+  }
+}

@@ -26,8 +26,10 @@ from opencomplai_core.agent_report import (
     build_agent_report,
     render_agent_report_markdown,
 )
-from opencomplai_core.agent_sources import expired_mandates
+from opencomplai_core.agent_report import plain_text as _plain
+from opencomplai_core.agent_sources import expired_mandates, expiring_mandates
 from opencomplai_core.models import CorroborationReport, SystemManifest
+from rich.markup import escape
 
 app = typer.Typer(help="Agent inventory commands (offline; evidence only).")
 
@@ -76,14 +78,16 @@ def _load(
     try:
         manifest = load_manifest(manifest_file)
     except Exception as e:
-        _fail(f"invalid manifest: {e}")
+        # pydantic quotes the manifest's own values, and `_fail` reads markup
+        _fail(f"invalid manifest: {escape(_plain(str(e)))}")
     scan = None
     if scan_file is not None:
         try:
             scan = CorroborationReport.model_validate(read_json_file(scan_file))
         except Exception as e:
             _main.err_console.print(
-                f"Warning: failed to parse {scan_file}: {e}", markup=False
+                f"Warning: failed to parse {scan_file}: {_plain(str(e))}",
+                markup=False,
             )
     return manifest, scan
 
@@ -118,9 +122,11 @@ def inventory_cmd(
         ).append(a)
 
     def show(a: dict, depth: int) -> None:
+        tools = ", ".join(_plain(t) for t in a["tools"]) or "-"
+        models = ", ".join(_plain(m) for m in a["models"]) or "-"
         typer.echo(
-            f"{'  ' * depth}- {a['id']} ({a['name']}) | tools: "
-            f"{', '.join(a['tools']) or '-'} | models: {', '.join(a['models']) or '-'}"
+            f"{'  ' * depth}- {_plain(a['id'])} ({_plain(a['name'])}) | tools: "
+            f"{tools} | models: {models}"
             f" | mandate: {'yes' if a['has_mandate'] else 'no'}"
         )
         for c in children.get(a["id"], []):
@@ -132,7 +138,10 @@ def inventory_cmd(
     shown = _reachable(children)
     for a in agents:
         if a["id"] not in shown:
-            typer.echo(f"- {a['id']} ({a['name']}) | parent cycle; see `agents check`")
+            typer.echo(
+                f"- {_plain(a['id'])} ({_plain(a['name'])}) | parent cycle; "
+                "see `agents check`"
+            )
 
 
 def _reachable(children: dict[str | None, list[dict]]) -> set[str]:
@@ -160,11 +169,15 @@ def check_cmd(
     detected findings. Exit 0: none. Never a compliance verdict.
 
     An expired mandate (UTC calendar date, as in `gaps`) is listed after the
-    findings, not counted as one, and does not change the exit status.
+    findings, not counted as one, and does not change the exit status. A mandate
+    that expires within the next 30 days is listed after the expired ones the
+    same way.
     """
     manifest, scan = _load(manifest_file, scan_report_file)
     findings = build_agent_report(manifest, scan)["findings"]
-    expired = expired_mandates(manifest, _today())
+    today = _today()
+    expired = expired_mandates(manifest, today)
+    expiring = expiring_mandates(manifest, today)
     invalid = [f for f in findings if f["kind"] == "invalid_inventory"]
     code = 2 if invalid else 1 if findings else 0
     if output_format == OutputFormat.json:
@@ -174,16 +187,22 @@ def check_cmd(
                 "notice": NOT_A_VERDICT,
                 "findings": findings,
                 "expired_mandates": [{"id": i, "expires_at": e} for i, e in expired],
+                "expiring_mandates": [{"id": i, "expires_at": e} for i, e in expiring],
                 "exit_code": code,
             }
         )
     else:
         for f in findings:
-            typer.echo(f"[{f['evidence']}] {f['kind']}: {f['detail']}")
+            typer.echo(f"[{f['evidence']}] {f['kind']}: {_plain(f['detail'])}")
         for agent_id, expires_at in expired:
             typer.echo(
-                f"[declared] expired_mandate: agent '{agent_id}' mandate "
+                f"[declared] expired_mandate: agent '{_plain(agent_id)}' mandate "
                 f"expired (expires_at {expires_at})"
+            )
+        for agent_id, expires_at in expiring:
+            typer.echo(
+                f"[declared] expiring_mandate: agent '{_plain(agent_id)}' mandate "
+                f"expires within 30 days (expires_at {expires_at})"
             )
         typer.echo(f"{len(findings)} finding(s); {NOT_A_VERDICT}.")
     raise typer.Exit(code)

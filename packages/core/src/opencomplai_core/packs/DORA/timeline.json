@@ -1,0 +1,95 @@
+{
+  "entries": [
+    {
+      "id": "dora.application",
+      "title": "DORA applies from 17 January 2025",
+      "applies_from": "2025-01-17",
+      "requirements": [
+        "DORA:Art. 5(1)-(2)",
+        "DORA:Art. 5(3)",
+        "DORA:Art. 5(4)",
+        "DORA:Art. 6(1)-(3)",
+        "DORA:Art. 6(4)",
+        "DORA:Art. 6(5)",
+        "DORA:Art. 6(6)-(7)",
+        "DORA:Art. 6(8)",
+        "DORA:Art. 7",
+        "DORA:Art. 8",
+        "DORA:Art. 9",
+        "DORA:Art. 10",
+        "DORA:Art. 11",
+        "DORA:Art. 12",
+        "DORA:Art. 13",
+        "DORA:Art. 14",
+        "DORA:Art. 16",
+        "DORA:Art. 17",
+        "DORA:Art. 18",
+        "DORA:Art. 19(1), (4)",
+        "DORA:Art. 19(3)",
+        "DORA:Art. 24",
+        "DORA:Art. 25",
+        "DORA:Art. 26",
+        "DORA:Art. 27",
+        "DORA:Art. 28(1)",
+        "DORA:Art. 28(2)",
+        "DORA:Art. 28(3)",
+        "DORA:Art. 28(4)",
+        "DORA:Art. 28(5)",
+        "DORA:Art. 28(6)",
+        "DORA:Art. 28(7)",
+        "DORA:Art. 28(8)",
+        "DORA:Art. 29",
+        "DORA:Art. 30(1)-(2)",
+        "DORA:Art. 30(3)",
+        "DORA:Art. 45"
+      ],
+      "scope_note": "The Regulation as a whole applies from this date.",
+      "source": "Reg. (EU) 2022/2554 (CELEX 32022R2554), Art. 64",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: Art. 64 read on EUR-Lex, CELEX 32022R2554; it applies from 17 January 2025."
+    },
+    {
+      "id": "dora.initial_notification",
+      "title": "Major incident: initial notification",
+      "applies_from": null,
+      "requirements": [
+        "DORA:Art. 19(1), (4)"
+      ],
+      "scope_note": "First report of a major ICT-related incident to the competent authority.",
+      "source": "Commission Delegated Reg. (EU) 2025/301 (CELEX 32025R0301), Art. 5(1)(a); Reg. (EU) 2022/2554, Art. 19(4)(a)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: time limit read on EUR-Lex, CELEX 32025R0301.",
+      "duration": "As early as possible, within four hours from classification of the incident as major and no later than 24 hours from awareness of the incident"
+    },
+    {
+      "id": "dora.intermediate_report",
+      "title": "Major incident: intermediate report",
+      "applies_from": null,
+      "requirements": [
+        "DORA:Art. 19(1), (4)"
+      ],
+      "scope_note": "Status update on a major ICT-related incident after the initial notification.",
+      "source": "Commission Delegated Reg. (EU) 2025/301 (CELEX 32025R0301), Art. 5(1)(b); Reg. (EU) 2022/2554, Art. 19(4)(b)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: time limit read on EUR-Lex, CELEX 32025R0301.",
+      "duration": "At the latest within 72 hours from submission of the initial notification; an updated report follows without undue delay and when regular activities are recovered"
+    },
+    {
+      "id": "dora.final_report",
+      "title": "Major incident: final report",
+      "applies_from": null,
+      "requirements": [
+        "DORA:Art. 19(1), (4)"
+      ],
+      "scope_note": "Closing report on a major ICT-related incident, including root cause.",
+      "source": "Commission Delegated Reg. (EU) 2025/301 (CELEX 32025R0301), Art. 5(1)(c); Reg. (EU) 2022/2554, Art. 19(4)(c)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "verified: time limit read on EUR-Lex, CELEX 32025R0301.",
+      "duration": "No later than one month after the intermediate report, or after the latest updated intermediate report"
+    }
+  ]
+}

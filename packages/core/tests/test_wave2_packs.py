@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 from opencomplai_core.frameworks import (
     FRAMEWORKS,
+    attestation_only_ids,
     evaluate_targets,
     gate_failures,
     load_requirements_map,
@@ -24,20 +25,21 @@ from opencomplai_core.models import (
     GapStatus,
     SystemManifest,
 )
+from opencomplai_core.pack_registry import load_pack_meta
 
-ROWS = {
-    "ISO_IEC_27001": 118,
-    "SOC_2": 61,
-    "NIS2": 21,
-    "DORA": 37,
-    "EBA": 25,
-    "EIOPA_AI": 8,
-    "GDPR": 21,
-    "CRA": 63,
-    "ETSI_EN_304_223": 72,
-    "ISO_IEC_42005": 20,
-    "ISO_IEC_23894": 23,
-}
+KEYS = (
+    "ISO_IEC_27001",
+    "SOC_2",
+    "NIS2",
+    "DORA",
+    "EBA",
+    "EIOPA_AI",
+    "GDPR",
+    "CRA",
+    "ETSI_EN_304_223",
+    "ISO_IEC_42005",
+    "ISO_IEC_23894",
+)
 DATA = Path(FRAMEWORKS["EU_AI_ACT"].requirements).parent
 EU_ARTICLES = {
     k
@@ -63,10 +65,15 @@ def _report(key: str, attested: tuple[str, ...] = ()):
     return evaluate_targets(manifest, [key], commit_ref="HEAD")
 
 
-@pytest.mark.parametrize("key", ROWS)
+@pytest.mark.parametrize("key", KEYS)
+def test_row_count_is_the_one_the_pack_declares(key: str):
+    assert len(_rows(key)) == load_pack_meta(key)["row_count"]
+
+
+@pytest.mark.parametrize("key", KEYS)
 def test_rows_are_flagged_and_links_resolve(key: str):
     rows = _rows(key)
-    assert len(rows) == ROWS[key]
+    only = attestation_only_ids(key)
     iso27001 = {rid.split(":", 1)[1] for rid in _rows("ISO_IEC_27001")}
     iso42001 = set(_rows("ISO_IEC_42001"))
     for rid, row in rows.items():
@@ -75,26 +82,47 @@ def test_rows_are_flagged_and_links_resolve(key: str):
         assert "\n" not in row["note"], rid
         assert row["confidence"] == "low", rid
         assert row["needs_founder_review"] is True, rid
-        assert row["sources"][0] == {"kind": "attestation", "ref": rid}, rid
         assert set(row["eu_ai_act"]) <= EU_ARTICLES, rid
         assert set(row.get("iso_27001", [])) <= iso27001, rid
         assert set(row.get("iso_42001", [])) <= iso42001, rid
+        if rid in only:
+            assert row["sources"][0] == {"kind": "attestation", "ref": rid}, rid
     if key == "ISO_IEC_27001":
         assert not any("iso_27001" in row for row in rows.values())
 
 
-@pytest.mark.parametrize("key", ROWS)
-def test_unattested_rows_are_unverified_and_never_fail_a_gate(key: str):
+@pytest.mark.parametrize("key", KEYS)
+def test_every_other_row_has_a_source_that_is_not_only_a_pointer(key: str):
+    only = attestation_only_ids(key)
+    for rid, row in _rows(key).items():
+        if rid in only:
+            continue
+        kinds = {
+            s["kind"]
+            for s in row["sources"]
+            if s["kind"] != "attestation"
+            and not (s["kind"] == "artifact" and s.get("role") == "supporting")
+        }
+        assert kinds, rid
+
+
+@pytest.mark.parametrize("key", KEYS)
+def test_unattested_rows_an_attestation_decides_are_unverified_and_gate_by_the_data(
+    key: str,
+):
+    only = attestation_only_ids(key)
+    assert only
     reports = _report(key)
     rows = reports[key].report.articles
-    assert len(rows) == ROWS[key]
-    assert {r.status for r in rows} == {GapStatus.UNVERIFIED}
-    assert gate_failures(reports, [key], "partial") == []
+    assert len(rows) == load_pack_meta(key)["row_count"]
+    assert {r.status for r in rows if r.article in only} == {GapStatus.UNVERIFIED}
+    assert not set(gate_failures(reports, [key], "partial")) & only
+    assert set(gate_failures(reports, [key], "unverified")) >= only
 
 
-@pytest.mark.parametrize("key", ROWS)
+@pytest.mark.parametrize("key", KEYS)
 def test_an_attestation_makes_a_row_met(key: str):
-    rid = next(iter(_rows(key)))
+    rid = sorted(attestation_only_ids(key))[0]
     row = {r.article: r for r in _report(key, (rid,))[key].report.articles}[rid]
     assert row.status == GapStatus.MET
     assert row.confidence_label == ConfidenceLabel.ATTESTED

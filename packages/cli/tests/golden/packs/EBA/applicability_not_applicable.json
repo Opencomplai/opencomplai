@@ -1,0 +1,36 @@
+{
+  "framework": "EBA",
+  "outcome": "not_applicable",
+  "reason": "The guidelines address supervised institutions. Confirm with your adviser.",
+  "scope": {
+    "supervised_institution": false,
+    "supplier_to_supervised_institution": false
+  },
+  "scoped_out": {
+    "EBA:GL/2019/04 3.8": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 3": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 4": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 5": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 6": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 7": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 8": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 9": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 10": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 11": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 12.1": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 12.2": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 12.3": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 13": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 13.1": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 13.2": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 13.3": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 13.4": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 14": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2019/02 Section 15": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2020/06 4.3": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2020/06 4.3.3": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2020/06 4.3.4": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2020/06 4.3.7": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser.",
+    "EBA:GL/2020/06 5.1": "Not applicable: The guidelines address supervised institutions. Confirm with your adviser."
+  }
+}

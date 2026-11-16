@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 from opencomplai_cli import main
+from opencomplai_core.frameworks import FRAMEWORKS, load_requirements_map
 from opencomplai_core.models import DISCLAIMER_V2
 from rich.console import Console
 from typer.testing import CliRunner
@@ -102,14 +103,15 @@ def test_gate_on_iso_unverified_does_not_fail(cli):
     assert code != 2, stderr
     artifact = json.loads(Path("compliance-artifact.json").read_text())
     failed = [c for c in artifact["failed_controls"] if c.startswith(f"{ISO}:")]
-    # Attestation-only rows are Unverified and never fail. The four rows that also
-    # look for a document read Missing in a repo without one, which is correct.
-    assert set(failed) <= {
-        f"{ISO}:Clause 6.1.2",
-        f"{ISO}:Clause 6.1.3",
-        f"{ISO}:A.6.2.7",
-        f"{ISO}:A.8.2",
+    # Attestation-only rows are Unverified and never fail. A row with corroborating
+    # evidence reads Missing in a repo without any, which is correct.
+    rows = load_requirements_map(FRAMEWORKS[ISO].requirements)
+    evidenced = {
+        rid
+        for rid, row in rows.items()
+        if any(s["kind"] != "attestation" for s in row["sources"])
     }
+    assert set(failed) <= evidenced
 
 
 def test_eu_only_output_unchanged_by_registration(cli):

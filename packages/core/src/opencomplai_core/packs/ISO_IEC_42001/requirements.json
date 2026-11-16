@@ -1,0 +1,1474 @@
+{
+  "ISO_IEC_42001:Clause 4.1": {
+    "title": "Understanding the organization and its context",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1", "MAP 1.3", "MAP 1.4", "MAP 4.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the organisation has understood its own context and the issues relevant to its AI use.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: understanding the organization and its context."
+  },
+  "ISO_IEC_42001:Clause 4.2": {
+    "title": "Understanding the needs and expectations of interested parties",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": [],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that interested parties and their expectations were identified and are kept current.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: understanding the needs and expectations of interested parties."
+  },
+  "ISO_IEC_42001:Clause 4.3": {
+    "title": "Determining the scope of the AI management system",
+    "default_ttl_days": 730,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "scope_statement",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 6"],
+    "nist_ai_rmf": ["MAP 3.3"],
+    "iso_27090": [],
+    "note": "Evidence that the AI management system scope is written down and names the AI systems and boundaries it covers.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 4.4": {
+    "title": "AI management system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 4.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "MEASURE 3.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the AI management system is established, run and improved in practice.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: aI management system."
+  },
+  "ISO_IEC_42001:Clause 5.1": {
+    "title": "Leadership and commitment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.3", "MAP 1.4"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only top management can vouch for its own leadership and commitment to the AI management system.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: leadership and commitment."
+  },
+  "ISO_IEC_42001:Clause 5.2": {
+    "title": "AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "policy_ai",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 2.3", "MAP 1.3"],
+    "iso_27090": [],
+    "note": "Evidence that a written AI policy exists and states the organisation's commitments.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 5.3": {
+    "title": "Roles, responsibilities and authorities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 5.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that roles and authorities are assigned and understood across the organisation.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: roles, responsibilities and authorities."
+  },
+  "ISO_IEC_42001:Clause 6.1.1": {
+    "title": "General",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "MAP 1.5", "MEASURE 1.1", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that risks and opportunities were considered when planning the management system.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: general."
+  },
+  "ISO_IEC_42001:Clause 6.1.2": {
+    "title": "AI risk assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "GOVERN 1.4", "MAP 5.1", "MEASURE 1.1", "MEASURE 1.3", "MEASURE 2.8", "MANAGE 1.2", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:5.6"],
+    "note": "Evidence that an AI risk register exists with identified risks, owners and ratings.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 6.1.3": {
+    "title": "AI risk treatment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "corroborating"
+      },
+      {
+        "kind": "artifact",
+        "ref": "iso_iec_42001.soa_justification",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.3", "GOVERN 1.4", "MANAGE 1.2", "MANAGE 1.3", "MANAGE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:7.2"],
+    "note": "Evidence that a risk register and a statement of applicability justification exist and name the controls included or excluded.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 6.1.4": {
+    "title": "AI system impact assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.1.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#impacts",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.2", "MAP 1.1", "MANAGE 1.2", "MANAGE 1.3"],
+    "iso_27090": [],
+    "note": "Evidence that an AI impact assessment records the impacts on individuals and groups.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 6.2": {
+    "title": "AI objectives and planning to achieve them",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "objectives_record",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1", "MAP 1.3"],
+    "iso_27090": [],
+    "note": "Evidence that AI objectives are recorded with owners and measures.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 6.3": {
+    "title": "Planning of changes",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 6.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": [],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that changes to the management system are planned and carried out in a controlled way.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: planning of changes."
+  },
+  "ISO_IEC_42001:Clause 7.1": {
+    "title": "Resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 2.1", "MANAGE 2.1", "MANAGE 2.2"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the resources the AI management system needs are determined and provided.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: resources."
+  },
+  "ISO_IEC_42001:Clause 7.2": {
+    "title": "Competence",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "competence_training_record",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4"],
+    "nist_ai_rmf": ["GOVERN 2.1", "GOVERN 2.2", "GOVERN 3.2", "MAP 1.2", "MAP 3.4"],
+    "iso_27090": [],
+    "note": "Evidence that competence and training records exist for people working on AI systems.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 7.3": {
+    "title": "Awareness",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MAP 1.3"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that staff are aware of the AI policy and their contribution to it.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: awareness."
+  },
+  "ISO_IEC_42001:Clause 7.4": {
+    "title": "Communication",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "nist_ai_rmf": ["GOVERN 2.1", "GOVERN 4.2", "MAP 1.3"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that internal and external communication on AI is planned and actually happens.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: communication."
+  },
+  "ISO_IEC_42001:Clause 7.5": {
+    "title": "Documented information",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 7.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 1.3"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that documented information is controlled, current and available where it is needed.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: documented information."
+  },
+  "ISO_IEC_42001:Clause 8.1": {
+    "title": "Operational planning and control",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": [],
+    "iso_27090": ["ISO_IEC_27090:7.3"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that operational processes are planned, run and controlled as the plan intends.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: operational planning and control."
+  },
+  "ISO_IEC_42001:Clause 8.2": {
+    "title": "AI risk assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.5", "MAP 3.2", "MEASURE 2.6", "MEASURE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.6"],
+    "note": "Evidence that AI risk assessments are recorded in the risk register.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 8.3": {
+    "title": "AI risk treatment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9"],
+    "nist_ai_rmf": ["GOVERN 1.4", "GOVERN 1.5", "MAP 3.2"],
+    "iso_27090": [],
+    "note": "Evidence that AI risk treatments are recorded in the risk register.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 8.4": {
+    "title": "AI system impact assessment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 8.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#mitigations",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 1.5", "MAP 3.2", "MEASURE 3.1"],
+    "iso_27090": [],
+    "note": "Evidence that AI impact assessment mitigations are recorded.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 9.1": {
+    "title": "Monitoring, measurement, analysis and evaluation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "post_market_monitoring_plan",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 12", "Art. 72"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MEASURE 2.4", "MEASURE 4.1", "MEASURE 4.2"],
+    "iso_27090": ["ISO_IEC_27090:7.4"],
+    "note": "Evidence that a monitoring plan defines what is measured, how and how often.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 9.2": {
+    "title": "Internal audit",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "internal_audit_report",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17", "Art. 43"],
+    "nist_ai_rmf": ["MEASURE 1.3", "MEASURE 4.2", "MANAGE 4.1"],
+    "iso_27090": [],
+    "note": "Evidence that an internal audit report exists with findings.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 9.3": {
+    "title": "Management review",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 9.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "management_review_minutes",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 2.3", "GOVERN 3.2", "MEASURE 4.3", "MANAGE 1.2", "MANAGE 4.2", "MANAGE 4.3"],
+    "iso_27090": [],
+    "note": "Evidence that management review minutes exist with decisions.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:Clause 10.1": {
+    "title": "Continual improvement",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 10.1"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17", "Art. 72"],
+    "nist_ai_rmf": ["MEASURE 3.2", "MANAGE 2.2"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the organisation keeps improving the AI management system over time.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: continual improvement."
+  },
+  "ISO_IEC_42001:Clause 10.2": {
+    "title": "Nonconformity and corrective action",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:Clause 10.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "corrective_action_log",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 20", "Art. 73"],
+    "nist_ai_rmf": ["MANAGE 2.3"],
+    "iso_27090": [],
+    "note": "Evidence that a corrective action log records nonconformities and actions.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.2.2": {
+    "title": "AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "policy_ai",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.1", "GOVERN 1.2", "MAP 4.1"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "note": "Evidence that a written AI policy exists.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.2.3": {
+    "title": "Alignment with other organizational policies",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["MEASURE 2.7", "MEASURE 2.10"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the AI policy has been aligned with the organisation's other policies.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: alignment with other organizational policies."
+  },
+  "ISO_IEC_42001:A.2.4": {
+    "title": "Review of the AI policy",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.2.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["GOVERN 1.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the AI policy was actually reviewed and that the review led to a decision.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: review of the AI policy."
+  },
+  "ISO_IEC_42001:A.3.2": {
+    "title": "AI roles and responsibilities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.3.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17", "Art. 26"],
+    "nist_ai_rmf": ["GOVERN 2.1", "MEASURE 2.7"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that AI roles and responsibilities are understood and accepted by those named.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: aI roles and responsibilities."
+  },
+  "ISO_IEC_42001:A.3.3": {
+    "title": "Reporting of concerns",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.3.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": [],
+    "nist_ai_rmf": ["MANAGE 2.2"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that staff can raise concerns about AI systems and that they are acted on.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: reporting of concerns."
+  },
+  "ISO_IEC_42001:A.4.2": {
+    "title": "Resource documentation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "technical_documentation_dossier",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MEASURE 2.1", "MANAGE 2.1"],
+    "iso_27090": [],
+    "note": "Evidence that the resources of each AI system are documented in a technical dossier.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.4.3": {
+    "title": "Data resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "data_provenance_sheet",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1"],
+    "iso_27090": [],
+    "note": "Evidence that the data resources used are recorded with their provenance.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.4.4": {
+    "title": "Tooling resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MANAGE 3.2"],
+    "iso_27090": ["ISO_IEC_27090:7.6"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that the tooling resources for AI systems are identified and fit for purpose.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: tooling resources."
+  },
+  "ISO_IEC_42001:A.4.5": {
+    "title": "System and computing resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 1.6", "MAP 2.1", "MEASURE 2.12"],
+    "iso_27090": ["ISO_IEC_27090:B.2"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that computing resources for AI systems are identified and sufficient.",
+    "scope_out": [],
+    "note": "Evidence that a person has confirmed: system and computing resources."
+  },
+  "ISO_IEC_42001:A.4.6": {
+    "title": "Human resources",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.4.6"
+      },
+      {
+        "kind": "artifact",
+        "ref": "competence_training_record",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 4", "Art. 14"],
+    "nist_ai_rmf": ["GOVERN 1.6", "GOVERN 3.1", "GOVERN 3.2", "MAP 1.2", "MAP 2.1", "MAP 3.4"],
+    "iso_27090": [],
+    "note": "Evidence that the people involved have recorded competence and training.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.5.2": {
+    "title": "AI system impact assessment process",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#purpose",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.1", "MAP 1.1", "MAP 1.4", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MAP 5.1", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.7", "MEASURE 2.10"],
+    "iso_27090": [],
+    "note": "Evidence that an impact assessment records the purpose of the AI system.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.5.3": {
+    "title": "Documentation of AI system impact assessments",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#review",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 3.2", "GOVERN 5.1", "MAP 1.1", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MANAGE 1.4"],
+    "iso_27090": [],
+    "note": "Evidence that impact assessments are documented and reviewed.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.5.4": {
+    "title": "Assessing AI system impact on individuals or groups of individuals",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#affected parties",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 3.1", "GOVERN 4.1", "GOVERN 4.2", "GOVERN 5.1", "GOVERN 5.2", "MAP 1.1", "MAP 1.6", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.8", "MEASURE 2.11", "MEASURE 4.1", "MANAGE 1.4"],
+    "iso_27090": [],
+    "note": "Evidence that the affected individuals and groups are identified in the impact assessment.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.5.5": {
+    "title": "Assessing societal impacts of AI systems",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.5.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#impacts",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "nist_ai_rmf": ["GOVERN 4.2", "GOVERN 5.2", "MAP 1.1", "MAP 1.6", "MAP 3.1", "MAP 3.2", "MAP 3.3", "MEASURE 1.2", "MEASURE 1.3", "MEASURE 2.8", "MEASURE 2.11", "MEASURE 2.12", "MEASURE 4.1"],
+    "iso_27090": [],
+    "note": "Evidence that societal impacts are assessed in the impact assessment.",
+    "evidence_class": "hybrid",
+    "scope_out": []
+  },
+  "ISO_IEC_42001:A.6.1.2": {
+    "title": "Objectives for responsible development of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "objectives_record",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 4.1", "GOVERN 4.3", "MEASURE 2.7", "MEASURE 2.8", "MANAGE 2.2"],
+    "iso_27090": [],
+    "note": "Evidence that a recorded set of objectives for responsible AI development exists and is kept current.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["ai_provider"]
+    ]
+  },
+  "ISO_IEC_42001:A.6.1.3": {
+    "title": "Processes for responsible AI system design and development",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.1.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 17"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 3.2", "GOVERN 4.1", "GOVERN 4.3", "GOVERN 5.2", "MAP 2.3", "MAP 3.5", "MAP 5.2", "MANAGE 1.1", "MANAGE 2.2", "MANAGE 2.4"],
+    "iso_27090": ["ISO_IEC_27090:5.4"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that design and development processes are defined and actually followed.",
+    "scope_out": [
+      ["ai_provider"]
+    ],
+    "note": "Evidence that a person has confirmed: processes for responsible AI system design and development."
+  },
+  "ISO_IEC_42001:A.6.2.2": {
+    "title": "AI system requirements and specification",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "technical_documentation_dossier",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 1.4", "MAP 1.6"],
+    "iso_27090": [],
+    "note": "Evidence that the technical dossier states the system requirements and specification.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["ai_provider"]
+    ]
+  },
+  "ISO_IEC_42001:A.6.2.3": {
+    "title": "Documentation of AI system design and development",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "technical_documentation_dossier",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["MAP 2.1", "MEASURE 2.7"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.3", "ISO_IEC_27090:6.4", "ISO_IEC_27090:6.5", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.7", "ISO_IEC_27090:6.8", "ISO_IEC_27090:6.9", "ISO_IEC_27090:6.10"],
+    "note": "Evidence that the technical dossier describes the design and development of the system.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["ai_provider"]
+    ]
+  },
+  "ISO_IEC_42001:A.6.2.4": {
+    "title": "AI system verification and validation",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "corroborating"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_ADVERSARIAL_V1",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.3", "MEASURE 1.2", "MEASURE 2.1", "MEASURE 2.2", "MEASURE 2.5", "MEASURE 2.6", "MEASURE 2.13", "MEASURE 4.1", "MANAGE 1.1", "MANAGE 2.2", "MANAGE 4.2"],
+    "iso_27090": ["ISO_IEC_27090:5.4", "ISO_IEC_27090:5.7", "ISO_IEC_27090:6.3"],
+    "note": "Evidence that verification and validation results exist, including an adversarial robustness test report.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["ai_provider"]
+    ]
+  },
+  "ISO_IEC_42001:A.6.2.5": {
+    "title": "AI system deployment",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.5"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 43"],
+    "nist_ai_rmf": ["MEASURE 2.5", "MEASURE 2.9"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that deployment is planned, approved and carried out as agreed.",
+    "scope_out": [
+      ["ai_provider"]
+    ],
+    "note": "Evidence that a person has confirmed: aI system deployment."
+  },
+  "ISO_IEC_42001:A.6.2.6": {
+    "title": "AI system operation and monitoring",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.6"
+      },
+      {
+        "kind": "artifact",
+        "ref": "post_market_monitoring_plan",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26", "Art. 72"],
+    "nist_ai_rmf": ["GOVERN 1.7", "GOVERN 4.3", "GOVERN 5.2", "MAP 5.2", "MEASURE 2.3", "MEASURE 2.4", "MEASURE 2.6", "MEASURE 2.13", "MEASURE 3.2", "MEASURE 4.3", "MANAGE 2.2", "MANAGE 3.2", "MANAGE 4.1", "MANAGE 4.2", "MANAGE 4.3"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.3", "ISO_IEC_27090:6.4", "ISO_IEC_27090:6.5", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.7", "ISO_IEC_27090:6.8", "ISO_IEC_27090:6.9", "ISO_IEC_27090:6.10", "ISO_IEC_27090:7.3", "ISO_IEC_27090:7.4", "ISO_IEC_27090:7.5"],
+    "note": "Evidence that a monitoring plan covers how the system is operated and watched in service.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.6.2.7": {
+    "title": "AI system technical documentation",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.7"
+      },
+      {
+        "kind": "artifact",
+        "ref": "provider_qms_bundle",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 11"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.2", "MAP 2.3", "MAP 3.5", "MAP 4.2", "MEASURE 2.1", "MEASURE 2.5", "MEASURE 2.9", "MEASURE 4.3", "MANAGE 1.4", "MANAGE 2.4"],
+    "iso_27090": [],
+    "evidence_class": "hybrid",
+    "note": "Evidence that a person has confirmed: aI system technical documentation."
+  },
+  "ISO_IEC_42001:A.6.2.8": {
+    "title": "AI system recording of event logs",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.6.2.8"
+      },
+      {
+        "kind": "artifact",
+        "ref": "event_log_evidence",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 12"],
+    "nist_ai_rmf": ["MEASURE 2.4", "MEASURE 2.6", "MEASURE 3.2"],
+    "iso_27090": ["ISO_IEC_27090:7.5"],
+    "note": "Evidence that event logs of the system are recorded and retained, shown by sample log extracts.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.7.2": {
+    "title": "Data for development and enhancement of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "data_provenance_sheet",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.7", "MEASURE 2.8", "MEASURE 2.10", "MANAGE 2.2"],
+    "iso_27090": ["ISO_IEC_27090:B.6"],
+    "note": "Evidence that a data sheet records the data used for development and enhancement.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["trains_models", "uses_retrieval"]
+    ]
+  },
+  "ISO_IEC_42001:A.7.3": {
+    "title": "Acquisition of data",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "data_provenance_sheet",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.10"],
+    "iso_27090": ["ISO_IEC_27090:6.2"],
+    "note": "Evidence that a data sheet records how and from where data was acquired.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.7.4": {
+    "title": "Quality of data for AI systems",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.4"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_BIAS_FAIRNESS_V1",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.3"],
+    "iso_27090": ["ISO_IEC_27090:6.2"],
+    "note": "Evidence that a bias and fairness test report covers the quality of data used.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.7.5": {
+    "title": "Data provenance",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "data_provenance_sheet",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3", "MEASURE 2.9"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.11"],
+    "note": "Evidence that a data sheet records the origin and lineage of the data.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.7.6": {
+    "title": "Data preparation",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.7.6"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 10"],
+    "nist_ai_rmf": ["MAP 2.3"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that data preparation steps are sound and suited to the intended purpose.",
+    "scope_out": [
+      ["trains_models", "uses_retrieval"]
+    ],
+    "note": "Evidence that a person has confirmed: data preparation."
+  },
+  "ISO_IEC_42001:A.8.2": {
+    "title": "System documentation and information for users",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "deployer_instructions",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MAP 2.2", "MAP 3.5", "MAP 4.2", "MEASURE 2.5", "MEASURE 2.9", "MEASURE 3.3", "MEASURE 4.2", "MANAGE 1.4", "MANAGE 2.4"],
+    "iso_27090": [],
+    "evidence_class": "hybrid",
+    "note": "Evidence that a person has confirmed: system documentation and information for users."
+  },
+  "ISO_IEC_42001:A.8.3": {
+    "title": "External reporting",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 73"],
+    "nist_ai_rmf": ["GOVERN 4.3", "GOVERN 5.1", "GOVERN 5.2", "MAP 5.2", "MEASURE 3.3", "MEASURE 4.2", "MANAGE 4.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that external reporting duties are understood and met.",
+    "note": "Evidence that a person has confirmed: external reporting."
+  },
+  "ISO_IEC_42001:A.8.4": {
+    "title": "Communication of incidents",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "incident_notification_template",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 73"],
+    "nist_ai_rmf": ["GOVERN 4.3", "MEASURE 2.1", "MEASURE 3.3"],
+    "iso_27090": [],
+    "note": "Evidence that an incident notification template exists for telling affected parties.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.8.5": {
+    "title": "Information for interested parties",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.8.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "model_card",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "nist_ai_rmf": ["GOVERN 4.2", "GOVERN 4.3", "MANAGE 4.3"],
+    "iso_27090": [],
+    "note": "Evidence that a model card gives interested parties information about the system.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.9.2": {
+    "title": "Processes for responsible use of AI systems",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "human_oversight_construct",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26"],
+    "nist_ai_rmf": ["GOVERN 4.1", "MAP 4.1", "MANAGE 1.1"],
+    "iso_27090": [],
+    "note": "Evidence that human oversight is built into how the system is used.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.9.3": {
+    "title": "Objectives for responsible use of AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.3"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 26"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 3.2", "GOVERN 4.1", "MAP 2.2", "MEASURE 2.7", "MEASURE 2.8", "MANAGE 1.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that objectives for responsible use are set and pursued.",
+    "note": "Evidence that a person has confirmed: objectives for responsible use of AI system."
+  },
+  "ISO_IEC_42001:A.9.4": {
+    "title": "Intended use of the AI system",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.9.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "deployer_instructions",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 26"],
+    "nist_ai_rmf": ["MAP 1.4", "MAP 4.1", "MANAGE 1.1", "MANAGE 2.4"],
+    "iso_27090": [],
+    "note": "Evidence that instructions for deployers state the intended use of the system.",
+    "evidence_class": "hybrid"
+  },
+  "ISO_IEC_42001:A.10.2": {
+    "title": "Allocating responsibilities",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.2"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": ["GOVERN 6.1", "GOVERN 6.2", "MANAGE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.5"],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that responsibilities with partners are allocated and understood.",
+    "note": "Evidence that a person has confirmed: allocating responsibilities."
+  },
+  "ISO_IEC_42001:A.10.3": {
+    "title": "Suppliers",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "vendor_register",
+        "role": "corroborating"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 25"],
+    "nist_ai_rmf": ["GOVERN 1.2", "GOVERN 4.1", "GOVERN 6.1", "GOVERN 6.2", "MAP 4.2", "MANAGE 3.1"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:6.7", "ISO_IEC_27090:B.3", "ISO_IEC_27090:B.7"],
+    "note": "Evidence that a vendor register lists suppliers of AI components and services.",
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["uses_third_party_models"]
+    ]
+  },
+  "ISO_IEC_42001:A.10.4": {
+    "title": "Customers",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "attestation",
+        "ref": "ISO_IEC_42001:A.10.4"
+      }
+    ],
+    "source": "ISO/IEC 42001:2023 (clause or Annex A control id; titles taken from the project's draft catalogue, not from the licensed standard text)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "eu_ai_act": ["Art. 13", "Art. 25"],
+    "nist_ai_rmf": ["GOVERN 5.1", "GOVERN 5.2", "MAP 1.4", "MANAGE 4.1"],
+    "iso_27090": [],
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can vouch that customer needs and expectations are weighed in practice.",
+    "scope_out": [
+      ["ai_provider"]
+    ],
+    "note": "Evidence that a person has confirmed: customers."
+  }
+}

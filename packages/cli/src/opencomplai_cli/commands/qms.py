@@ -24,6 +24,7 @@ from enum import StrEnum
 from pathlib import Path
 
 import typer
+from opencomplai_core.agent_report import plain_text
 from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.models import CorroborationReport, EvalReport, SystemManifest
 from opencomplai_core.qms_document import (
@@ -31,6 +32,7 @@ from opencomplai_core.qms_document import (
     render_qms_document_markdown,
     scaffold_qms,
 )
+from rich.markup import escape
 from rich.table import Table
 
 app = typer.Typer(help="Art. 17 quality-management-system document commands.")
@@ -138,7 +140,8 @@ def generate_cmd(
             )
         except Exception as exc:
             _main.err_console.print(
-                f"[yellow]Warning:[/yellow] failed to parse {scan_report_file}: {exc}"
+                f"[yellow]Warning:[/yellow] failed to parse {scan_report_file}: "
+                f"{escape(plain_text(str(exc)))}"
             )
 
     eval_report: EvalReport | None = None
@@ -149,7 +152,8 @@ def generate_cmd(
             )
         except Exception as exc:
             _main.err_console.print(
-                f"[yellow]Warning:[/yellow] failed to parse {eval_report_file}: {exc}"
+                f"[yellow]Warning:[/yellow] failed to parse {eval_report_file}: "
+                f"{escape(plain_text(str(exc)))}"
             )
 
     resolved_repo_root = repo_root.resolve()

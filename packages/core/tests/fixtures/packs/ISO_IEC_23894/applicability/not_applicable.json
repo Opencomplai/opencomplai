@@ -1,0 +1,15 @@
+{
+  "system_id": "example-ltd-system",
+  "intended_purpose": "credit scoring for loan applications",
+  "compliance_targets": [
+    "ISO_IEC_23894"
+  ],
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "ISO_IEC_23894": {
+      "scope": {
+        "develops_or_uses_ai": false
+      }
+    }
+  }
+}

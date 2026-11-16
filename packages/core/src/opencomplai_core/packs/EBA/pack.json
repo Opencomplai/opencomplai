@@ -1,0 +1,19 @@
+{
+  "id": "EBA",
+  "order": 9,
+  "kind": "native",
+  "name": "EBA Guidelines on ICT, outsourcing and loan origination",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "EBA guidelines",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "eba.json",
+  "data_files": ["applicability.json", "timeline.json"],
+  "copyright": "agency",
+  "row_count": 25,
+  "target_machine_share": 3,
+  "timeline": "file",
+  "catalogue": true,
+  "machine_share_note": "Mostly outsourcing governance with no repository footprint; upstream guidelines are being withdrawn, see the timeline."
+}

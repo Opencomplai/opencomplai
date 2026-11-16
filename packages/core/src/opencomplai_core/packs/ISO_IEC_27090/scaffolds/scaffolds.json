@@ -1,0 +1,14 @@
+{
+  "ai_threat_model": {
+    "title": "AI threat model",
+    "target": "docs/threat-model.md",
+    "probe": "ai_threat_model",
+    "file": "ai_threat_model.md"
+  },
+  "ai_red_team_report": {
+    "title": "Red-team report",
+    "target": "docs/red-team-report.md",
+    "probe": "ai_red_team_report",
+    "file": "ai_red_team_report.md"
+  }
+}

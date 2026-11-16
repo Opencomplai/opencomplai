@@ -1,0 +1,20 @@
+{
+  "id": "NIST_AI_RMF",
+  "order": 2,
+  "kind": "hybrid",
+  "name": "NIST AI RMF 1.0",
+  "caveat": "own evidence plus EU AI Act evidence, not a certification",
+  "status": "evaluated",
+  "short_name": "NIST AI RMF",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "nist_ai_rmf.json",
+  "data_files": ["applicability.json", "probes.json", "../../data/nist_ai_rmf_subcategories.json"],
+  "copyright": "public_domain",
+  "row_count": 72,
+  "target_machine_share": 40,
+  "timeline": "none",
+  "timeline_reason": "a voluntary framework without legal dates",
+  "docs_page": "concepts/nist-ai-rmf.md",
+  "catalogue": true
+}

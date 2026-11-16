@@ -95,6 +95,14 @@ key of `-o json`) with the agent id and the `expires_at` value. The rule is the
 one `gaps` uses: the UTC calendar date, so the expiry day itself is not expired.
 Expired mandates are not counted as findings and do not change the exit code.
 
+From 0.16.0, a mandate whose expiry day falls within the next 30 days
+(today included, the 30th day included) is also listed, after the expired ones,
+as an `expiring_mandate` line and in the `expiring_mandates` key of `-o json`.
+These lines are not findings either and never change the exit code. The summary
+that `check` adds to a signed artifact carries the earliest mandate expiry day
+and a count of the mandates expiring within 30 days of the artifact's own
+timestamp, never an agent id.
+
 The scan side is heuristic: a finding in test, docs, generated or vendor code
 is ignored, and provider names are matched by containment. Treat a finding as
 a prompt to look, not as a result.

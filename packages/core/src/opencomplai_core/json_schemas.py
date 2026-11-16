@@ -1,5 +1,6 @@
 """JSON Schema documents for the compliance artifact, the gap report, the
-Annex IV dossier, the evidence package and the attestation bundle.
+Annex IV dossier, the evidence package, the attestation bundle and the custom
+controls pack file.
 
 Generated from the pydantic models (scripts/generate_artifact_schemas.py writes
 them to data/, the evidence package and attestation bundle schemas included).
@@ -13,6 +14,7 @@ from __future__ import annotations
 from typing import Any
 
 from opencomplai_core.attestation_bundle import SCHEMA_ID, AttestationBundle
+from opencomplai_core.custom_pack import CustomPackDocument
 from opencomplai_core.dossier import AnnexIVDossier
 from opencomplai_core.evidence_package import EvidencePackage
 from opencomplai_core.models import GapReport, ScanStatusArtifact
@@ -24,6 +26,7 @@ GAP_REPORT_SCHEMA_ID = "https://schemas.opencomplai.dev/gap_report/v1"
 DOSSIER_SCHEMA_ID = "https://schemas.opencomplai.dev/annex_iv_dossier/v1"
 EVIDENCE_PACKAGE_SCHEMA_ID = "https://schemas.opencomplai.dev/evidence_package/v1"
 ATTESTATION_BUNDLE_SCHEMA_ID = SCHEMA_ID
+CUSTOM_PACK_SCHEMA_ID = "https://schemas.opencomplai.dev/custom_pack/v1"
 
 
 def _build(model: Any, schema_id: str) -> dict[str, Any]:
@@ -52,3 +55,7 @@ def build_evidence_package_schema() -> dict[str, Any]:
 
 def build_attestation_bundle_schema() -> dict[str, Any]:
     return _build(AttestationBundle, ATTESTATION_BUNDLE_SCHEMA_ID)
+
+
+def build_custom_pack_schema() -> dict[str, Any]:
+    return _build(CustomPackDocument, CUSTOM_PACK_SCHEMA_ID)

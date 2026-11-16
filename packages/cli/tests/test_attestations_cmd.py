@@ -34,7 +34,7 @@ from opencomplai_core.attestation_bundle import (
     bundle_sha256,
     bundle_signing_bytes,
 )
-from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
+from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack, attestation_only_ids
 from opencomplai_core.models import (
     Attestation,
     FrameworkInputs,
@@ -54,7 +54,8 @@ FIXTURE_PACK = FrameworkPack(
     / "requirements.json",
 )
 ISO = "ISO_IEC_27001"
-ROW = f"{ISO}:A.6.3"
+# Read from the pack: probes now decide many ISO rows, so a typed id can go stale.
+ROW = min(attestation_only_ids(ISO))
 ENV_URL = "http://127.0.0.1:8099/api/ingest"
 ARTIFACT = Path("compliance-artifact.json")
 
@@ -492,8 +493,6 @@ def test_unknown_and_non_attestable_ids_are_dropped_with_a_warning() -> None:
 
 
 def test_exclusions_apply_only_to_rows_an_attestation_alone_decides() -> None:
-    from opencomplai_core.frameworks import attestation_only_ids
-
     mixed = next(
         rid
         for rid in att.attestable_ids("ISO_IEC_27090")

@@ -1,0 +1,18 @@
+{
+  "framework": "NIST_AI_RMF",
+  "outcome": "applies",
+  "reason": "A contract, procurement rule or policy commits the organisation to this framework.",
+  "scope": {
+    "develops_or_deploys_ai": true,
+    "uses_third_party_models": false,
+    "contract_commitment": true
+  },
+  "scoped_out": {
+    "NIST_AI_RMF:GOVERN 6.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+    "NIST_AI_RMF:GOVERN 6.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+    "NIST_AI_RMF:MAP 4.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+    "NIST_AI_RMF:MAP 4.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+    "NIST_AI_RMF:MANAGE 3.1": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false).",
+    "NIST_AI_RMF:MANAGE 3.2": "Not applicable: the manifest's scope says the system no third-party AI (framework_inputs.NIST_AI_RMF.scope.uses_third_party_models = false)."
+  }
+}

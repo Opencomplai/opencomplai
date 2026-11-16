@@ -1,0 +1,82 @@
+{
+  "NIS2:Art. 21(2)(a)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(b)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(c)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(d)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(e)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(f)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(g)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(h)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(2)(i)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(3)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 21(4)": {
+    "template_id": "nis2_security_measure",
+    "kind": "markdown",
+    "file": "security_measure.md"
+  },
+  "NIS2:Art. 23(1)": {
+    "template_id": "nis2_incident_report_stage",
+    "kind": "markdown",
+    "file": "incident_report_stage.md"
+  },
+  "NIS2:Art. 23(4)(a)": {
+    "template_id": "nis2_incident_report_stage",
+    "kind": "markdown",
+    "file": "incident_report_stage.md"
+  },
+  "NIS2:Art. 23(4)(b)": {
+    "template_id": "nis2_incident_report_stage",
+    "kind": "markdown",
+    "file": "incident_report_stage.md"
+  },
+  "NIS2:Art. 23(4)(c)": {
+    "template_id": "nis2_incident_report_stage",
+    "kind": "markdown",
+    "file": "incident_report_stage.md"
+  },
+  "NIS2:Art. 23(4)(d)": {
+    "template_id": "nis2_incident_report_stage",
+    "kind": "markdown",
+    "file": "incident_report_stage.md"
+  }
+}

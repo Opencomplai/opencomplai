@@ -1,0 +1,5 @@
+roles:
+  ml-engineer:
+    allow: [read, deploy]
+  analyst:
+    deny: [deploy]

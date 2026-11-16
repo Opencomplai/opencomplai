@@ -1,0 +1,16 @@
+{
+  "framework": "ISO_IEC_27090",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "trains_models": false,
+    "builds_or_operates_ai": true
+  },
+  "scoped_out": {
+    "ISO_IEC_27090:6.4": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).",
+    "ISO_IEC_27090:6.6": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).",
+    "ISO_IEC_27090:7.6": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).",
+    "ISO_IEC_27090:7.9": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false).",
+    "ISO_IEC_27090:B.6": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ISO_IEC_27090.scope.trains_models = false)."
+  }
+}

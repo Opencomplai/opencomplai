@@ -24,10 +24,11 @@
     },
     "accountability": {
       "title": "Accountability",
-      "articles": ["Art. 4", "Art. 9", "Art. 11", "Art. 14", "Art. 16", "Art. 17", "Art. 24", "Art. 26", "Art. 43", "Art. 53", "Art. 55", "Art. 73"]
+      "articles": ["Art. 4", "Art. 9", "Art. 11", "Art. 14", "Art. 16", "Art. 17", "Art. 20", "Art. 24", "Art. 26", "Art. 43", "Art. 53", "Art. 55", "Art. 73"]
     }
   },
   "review_flags": {
+    "Art. 20": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
     "Art. 26": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
     "Art. 49": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },
     "Art. 72": { "source": "Regulation (EU) 2024/1689; HLEG grouping of this article is not specified by the Regulation", "confidence": "low", "needs_founder_review": true },

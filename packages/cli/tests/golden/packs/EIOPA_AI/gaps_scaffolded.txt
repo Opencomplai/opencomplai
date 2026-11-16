@@ -1,0 +1,28 @@
+
+EIOPA Opinion on AI governance and risk management (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement        ┃ Title                                   ┃ Status     ┃ Source      ┃ Evidence                  ┃ Rationale                                                                      ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ EIOPA_AI:3.1-3.6   │ Risk-based approach and proportionality │ UNVERIFIED │ attestation │ none                      │ No attestation recorded. Add one under framework_inputs.EIOPA_AI.attested in   │
+│                    │                                         │            │             │                           │ the manifest.                                                                  │
+│ EIOPA_AI:3.7-3.11  │ Risk management system                  │ MISSING    │ artifact    │ risk_register             │ No conventional documentation/code probe matched for 'risk_register'. Add the  │
+│                    │                                         │            │             │                           │ expected file or construct, then re-run gaps.                                  │
+│ EIOPA_AI:3.12-3.16 │ Fairness and ethics                     │ UNVERIFIED │ attestation │ none                      │ No attestation recorded. Add one under framework_inputs.EIOPA_AI.attested in   │
+│                    │                                         │            │             │                           │ the manifest.                                                                  │
+│ EIOPA_AI:3.17-3.21 │ Data governance                         │ PARTIAL    │ artifact    │ docs/data-provenance.md   │ Found 'docs/data-provenance.md' but it still contains 4 unfilled scaffold      │
+│                    │                                         │            │             │                           │ placeholder(s) ('_fill in_') — a scaffold is not a filled data provenance      │
+│                    │                                         │            │             │                           │ sheet.                                                                         │
+│ EIOPA_AI:3.22-3.24 │ Documentation and record keeping        │ MISSING    │ artifact    │ event_log_evidence        │ No conventional documentation/code probe matched for 'event_log_evidence'. Add │
+│                    │                                         │            │             │                           │ the expected file or construct, then re-run gaps.                              │
+│ EIOPA_AI:3.25-3.28 │ Transparency and explainability         │ MISSING    │ artifact    │ deployer_instructions     │ No conventional documentation/code probe matched for 'deployer_instructions'.  │
+│                    │                                         │            │             │                           │ Add the expected file or construct, then re-run gaps.                          │
+│ EIOPA_AI:3.29-3.33 │ Human oversight                         │ MISSING    │ artifact    │ human_oversight_construct │ No conventional documentation/code probe matched for                           │
+│                    │                                         │            │             │                           │ 'human_oversight_construct'. Add the expected file or construct, then re-run   │
+│                    │                                         │            │             │                           │ gaps.                                                                          │
+│ EIOPA_AI:3.34-3.38 │ Accuracy, robustness and cybersecurity  │ PARTIAL    │ artifact    │ SECURITY.md               │ Found 'SECURITY.md' but it still contains 4 unfilled scaffold placeholder(s)   │
+│                    │                                         │            │             │                           │ ('_fill in_') — a scaffold is not a filled security policy.                    │
+└────────────────────┴─────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────┴────────────────────────────────────────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

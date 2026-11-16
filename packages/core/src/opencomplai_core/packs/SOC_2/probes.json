@@ -1,0 +1,119 @@
+{
+  "family": "soc_2",
+  "probes": {
+    "soc_2.system_description": {
+      "type": "clause_document",
+      "patterns": [
+        "**/system-description*",
+        "**/system_description*",
+        "docs/**/assurance/*description*"
+      ],
+      "noun": "system description",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general practice, by topic words only; system description kept for a SOC 2 style assessment",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "services": {
+          "title": "Services provided",
+          "markers": [
+            {
+              "re": "\\bservices?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bcustomers?\\b|\\busers?\\b|\\bclients?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "components": {
+          "title": "System components",
+          "markers": [
+            {
+              "re": "\\bcomponents?\\b|\\binfrastructure\\b|\\bsoftware\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bdata\\b|\\bpeople\\b|\\bprocedures?\\b|\\bhosting\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "boundaries": {
+          "title": "System boundaries",
+          "markers": [
+            {
+              "re": "\\bboundar(?:y|ies)\\b|\\bscope\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bin\\s+scope\\b|\\bout\\s+of\\s+scope\\b|\\bexcluded\\b|\\bincluded\\b|\\bsubservice\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "commitments": {
+          "title": "Service commitments and system requirements",
+          "markers": [
+            {
+              "re": "\\bcommitments?\\b|\\bSLA\\b|\\bagreements?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\brequirements?\\b|\\bobjectives?\\b|\\buptime\\b|\\bavailability\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "incidents": {
+          "title": "Incidents in the period",
+          "markers": [
+            {
+              "re": "\\bincidents?\\b|\\bbreach(?:es)?\\b|\\boutages?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bperiod\\b|\\bnone\\b|\\bresolved\\b|\\bresponse\\b|\\bcorrective\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    },
+    "soc_2.control_matrix": {
+      "patterns": [
+        "**/control-matrix*",
+        "**/control_matrix*",
+        "docs/**/assurance/*controls*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bCC\\d\\.\\d\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bcontrols?\\b|\\bstatements?\\b|\\bwe\\s+(?:review|restrict|require|monitor|approve|test)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bevidence\\b|\\bscreenshots?\\b|\\blogs?\\b|\\btickets?\\b|\\breports?\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "criterion id, control statement and evidence reference",
+        "lacks_label": "criterion id, control statement or evidence reference",
+        "noun": "control matrix",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general practice, by topic words only; control matrix kept for a SOC 2 style assessment",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from collections import Counter
 
-from opencomplai_core.frameworks import EU_AI_ACT, framework_of
+from opencomplai_core.frameworks import EU_AI_ACT, framework_of, requirement_title
 from opencomplai_core.scanner.sarif import SARIF_SCHEMA_URI, SARIF_VERSION
 
 _HEURISTIC = "Heuristic projection, not a compliance verdict."
@@ -30,6 +30,45 @@ def summarize_failed_controls(ids: list[str], limit: int | None = None) -> str:
     return ", ".join(
         [*eu[:limit], *(f"{fw}: {n} requirement(s)" for fw, n in others.items())]
     )
+
+
+def failed_pack_rows(artifact: dict | None) -> list[dict]:
+    """The failed rows of gated non-EU packs, one dict per requirement.
+
+    A row is an id in `failed_controls` whose framework is not the EU AI Act and
+    that has an entry in `framework_reports[<FW>]["report"]["articles"]`. Order
+    follows the framework reports, then each report's rows. Keys: id, framework,
+    label, title, status, evidence_ref, rationale. Pure: reads the dict only.
+    """
+    if not artifact:
+        return []
+    failed = {
+        str(c)
+        for c in artifact.get("failed_controls") or []
+        if framework_of(str(c)) != EU_AI_ACT
+    }
+    if not failed:
+        return []
+    rows: list[dict] = []
+    for fw, entry in (artifact.get("framework_reports") or {}).items():
+        if fw == EU_AI_ACT or not isinstance(entry, dict):
+            continue
+        for row in (entry.get("report") or {}).get("articles") or []:
+            rid = str(row.get("article") or "")
+            if rid not in failed or framework_of(rid) != fw:
+                continue
+            rows.append(
+                {
+                    "id": rid,
+                    "framework": fw,
+                    "label": str(entry.get("label") or fw),
+                    "title": requirement_title(rid) or rid,
+                    "status": str(row.get("status") or "unknown"),
+                    "evidence_ref": str(row.get("evidence_ref") or "none"),
+                    "rationale": str(row.get("rationale") or ""),
+                }
+            )
+    return rows
 
 
 def signed_state(artifact: dict | None, signer_key_id: str = "") -> str:
@@ -84,7 +123,27 @@ def artifact_to_junit(
     else:
         ET.SubElement(case, "error", message="No artifact result parsed")
 
+    pack_rows = failed_pack_rows(artifact)
+    for row in pack_rows:
+        pack_case = ET.SubElement(
+            suite,
+            "testcase",
+            name=row["id"],
+            classname=f"opencomplai.{row['framework']}",
+        )
+        ET.SubElement(
+            pack_case,
+            "failure",
+            message=f"{row['status']}: {row['title']}",
+        ).text = f"{row['rationale']} (evidence: {row['evidence_ref']})"
+    if pack_rows:
+        suite.set("tests", str(1 + len(pack_rows)))
+
     return ET.tostring(suite, encoding="unicode", xml_declaration=False)
+
+
+def _cell(text: str) -> str:
+    return " ".join(str(text).split()).replace("|", r"\|")
 
 
 def artifact_to_summary_md(artifact: dict | None, *, signer_key_id: str = "") -> str:
@@ -112,6 +171,25 @@ def artifact_to_summary_md(artifact: dict | None, *, signer_key_id: str = "") ->
         )
     elif artifact and artifact.get("eval_overall_outcome"):
         lines.append(f"| Eval outcome | `{artifact['eval_overall_outcome']}` |")
+    by_framework: dict[str, list[dict]] = {}
+    for row in failed_pack_rows(artifact):
+        by_framework.setdefault(row["framework"], []).append(row)
+    for rows in by_framework.values():
+        lines += [
+            "",
+            f"### {rows[0]['label']}",
+            "",
+            "| Requirement | Title | Status | Evidence |",
+            "|-------------|-------|--------|----------|",
+        ]
+        lines += [
+            "| "
+            + " | ".join(
+                _cell(v) for v in (r["id"], r["title"], r["status"], r["evidence_ref"])
+            )
+            + " |"
+            for r in rows
+        ]
     return "\n".join(lines)
 
 
@@ -148,8 +226,18 @@ def artifact_to_sarif(
             }
         )
 
+    pack_rows = {r["id"]: r for r in failed_pack_rows(artifact)}
     for control in artifact.get("failed_controls") or []:
         control = str(control)
+        pack_row = pack_rows.get(control)
+        if pack_row is not None:
+            add(
+                control,
+                f"Failed requirement {control}",
+                _GAP_LEVELS.get(pack_row["status"], "error"),
+                f"{pack_row['title']}: {pack_row['rationale']}",
+            )
+            continue
         add(
             control,
             f"Failed control {control}",

@@ -142,7 +142,7 @@ failed = json.load(open("compliance-artifact.json"))["failed_controls"]
 assert any(c.startswith("NIST_AI_RMF:") for c in failed), failed
 EOF
 
-# iso_42001.json must ship in the wheel: the ISO/IEC 42001 pack reads it.
+# packs/ISO_IEC_42001/requirements.json must ship in the wheel: the ISO/IEC 42001 pack reads it.
 opencomplai gaps --manifest system-manifest.json --target ISO_IEC_42001 --output json >iso-gaps.json
 python - <<'EOF'
 import json

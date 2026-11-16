@@ -1,0 +1,9 @@
+{
+  "framework": "ISO_IEC_23894",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "develops_or_uses_ai": true
+  },
+  "scoped_out": {}
+}

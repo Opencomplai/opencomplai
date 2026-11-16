@@ -1,0 +1,93 @@
+
+ISO/IEC 23894:2023 AI risk management guidance (evaluated, not an audit, certification or legal assessment) — example-ltd-system
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement                ┃ Title                                                ┃ Status     ┃ Source      ┃ Evidence                      ┃ Rationale                                             ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ISO_IEC_23894:Clause 4     │ Principles of AI risk management                     │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.2   │ Leadership and commitment                            │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.3   │ Integration                                          │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.4.1 │ Understanding the organization and its context       │ PARTIAL    │ artifact    │ docs/scope-statement.md       │ Found 'docs/scope-statement.md' but it still contains │
+│                            │                                                      │            │             │                               │ 6 unfilled scaffold placeholder(s) ('_fill in_') — a  │
+│                            │                                                      │            │             │                               │ scaffold is not a filled management-system scope      │
+│                            │                                                      │            │             │                               │ statement.                                            │
+│ ISO_IEC_23894:Clause 5.4.2 │ Articulating risk management commitment              │ PARTIAL    │ artifact    │ docs/policies/ai-policy.md    │ Found 'docs/policies/ai-policy.md' but it still       │
+│                            │                                                      │            │             │                               │ contains 5 unfilled scaffold placeholder(s) ('_fill   │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled AI policy.         │
+│ ISO_IEC_23894:Clause 5.4.3 │ Assigning organizational roles, authorities,         │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │ responsibilities & accountabilities                  │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.4.4 │ Allocating resources                                 │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.4.5 │ Establishing communication and consultation          │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.5   │ Implementation                                       │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.6   │ Evaluation                                           │ PARTIAL    │ artifact    │ docs/management-review.md     │ Found 'docs/management-review.md' but it still        │
+│                            │                                                      │            │             │                               │ contains 11 unfilled scaffold placeholder(s) ('_fill  │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled management review  │
+│                            │                                                      │            │             │                               │ minutes.                                              │
+│ ISO_IEC_23894:Clause 5.7.1 │ Adapting                                             │ UNVERIFIED │ attestation │ none                          │ No attestation recorded. Add one under                │
+│                            │                                                      │            │             │                               │ framework_inputs.ISO_IEC_23894.attested in the        │
+│                            │                                                      │            │             │                               │ manifest.                                             │
+│ ISO_IEC_23894:Clause 5.7.2 │ Continually improving                                │ PARTIAL    │ artifact    │ docs/corrective-action-log.md │ Found 'docs/corrective-action-log.md' but it still    │
+│                            │                                                      │            │             │                               │ contains 12 unfilled scaffold placeholder(s) ('_fill  │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled corrective action  │
+│                            │                                                      │            │             │                               │ log.                                                  │
+│ ISO_IEC_23894:Clause 6.2   │ Communication and consultation                       │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.2' still  │
+│                            │                                                      │            │             │                               │ contains 1 unfilled scaffold placeholder(s) ('_fill   │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled AI risk management │
+│                            │                                                      │            │             │                               │ procedure.                                            │
+│ ISO_IEC_23894:Clause 6.3.2 │ Defining the scope                                   │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.3.2'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.3.3 │ External and internal context                        │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.3.3'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.3.4 │ Defining risk criteria                               │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.3.4'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.4.2 │ Risk identification                                  │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.4.2'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.4.3 │ Risk analysis                                        │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.4.3'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.4.4 │ Risk evaluation                                      │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.4.4'      │
+│                            │                                                      │            │             │                               │ still contains 9 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.5.2 │ Selection of risk treatment options                  │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.5.2'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.5.3 │ Preparing and implementing risk treatment plans      │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.5.3'      │
+│                            │                                                      │            │             │                               │ still contains 1 unfilled scaffold placeholder(s)     │
+│                            │                                                      │            │             │                               │ ('_fill in_') — a scaffold is not a filled AI risk    │
+│                            │                                                      │            │             │                               │ management procedure.                                 │
+│ ISO_IEC_23894:Clause 6.6   │ Monitoring and review                                │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.6' still  │
+│                            │                                                      │            │             │                               │ contains 1 unfilled scaffold placeholder(s) ('_fill   │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled AI risk management │
+│                            │                                                      │            │             │                               │ procedure.                                            │
+│ ISO_IEC_23894:Clause 6.7   │ Recording and reporting                              │ PARTIAL    │ artifact    │ AI_RISK_MANAGEMENT.md         │ Found 'AI_RISK_MANAGEMENT.md' but clause '6.7' still  │
+│                            │                                                      │            │             │                               │ contains 1 unfilled scaffold placeholder(s) ('_fill   │
+│                            │                                                      │            │             │                               │ in_') — a scaffold is not a filled AI risk management │
+│                            │                                                      │            │             │                               │ procedure.                                            │
+└────────────────────────────┴──────────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────┴───────────────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

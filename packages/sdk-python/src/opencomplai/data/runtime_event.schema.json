@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.opencomplai.dev/runtime_event_batch/v1",
+  "title": "Runtime event batch",
+  "description": "One batch of runtime events for a single AI system, sent by RuntimeReporter with POST /v1/runtime-events. Events carry hashes and metadata only: no free text, no intent, and no tool input or output. event_id is a uuid4 hex string and is the key a server uses to drop duplicates. A server that stores a batch answers 202 with {\"accepted\": <int>, \"duplicates\": <int>}. A metric value lies between -1e15 and 1e15. A server must parse the body with the non-finite constants NaN and Infinity refused, because a schema comparison does not catch NaN.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "system_id", "events"],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "system_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "not": { "pattern": "[\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff\\ud800-\\udfff]" },
+      "allOf": [{ "not": { "pattern": "^\\s*$" } }]
+    },
+    "sdk_version": {
+      "type": "string",
+      "pattern": "^[0-9A-Za-z.+-]{1,32}$",
+      "not": { "pattern": "[\\x00-\\x1f\\x7f]" }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/DecisionLogEvent" },
+          { "$ref": "#/$defs/OutOfMandateEvent" },
+          { "$ref": "#/$defs/MetricEvent" },
+          { "$ref": "#/$defs/IncidentEvent" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "EventId": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 32,
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "OccurredAt": {
+      "type": "string",
+      "maxLength": 27,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?Z$",
+      "not": { "pattern": "[\\x00-\\x1f\\x7f]" }
+    },
+    "InputHash": {
+      "type": "string",
+      "minLength": 71,
+      "maxLength": 71,
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "not": { "pattern": "[\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff\\ud800-\\udfff]" },
+      "allOf": [{ "not": { "pattern": "^\\s*$" } }]
+    },
+    "DecisionLogEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "kind", "occurred_at", "agent_id", "tool", "outcome", "input_hash"],
+      "properties": {
+        "event_id": { "$ref": "#/$defs/EventId" },
+        "kind": { "const": "decision_log" },
+        "occurred_at": { "$ref": "#/$defs/OccurredAt" },
+        "agent_id": { "$ref": "#/$defs/Label" },
+        "tool": { "$ref": "#/$defs/Label" },
+        "outcome": { "enum": ["success", "failure", "blocked"] },
+        "input_hash": { "$ref": "#/$defs/InputHash" },
+        "mandate_ref": { "anyOf": [{ "$ref": "#/$defs/Label" }, { "type": "null" }] }
+      }
+    },
+    "OutOfMandateEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "kind", "occurred_at", "agent_id", "tool", "input_hash"],
+      "properties": {
+        "event_id": { "$ref": "#/$defs/EventId" },
+        "kind": { "const": "out_of_mandate" },
+        "occurred_at": { "$ref": "#/$defs/OccurredAt" },
+        "agent_id": { "$ref": "#/$defs/Label" },
+        "tool": { "$ref": "#/$defs/Label" },
+        "input_hash": { "$ref": "#/$defs/InputHash" },
+        "mandate_ref": { "anyOf": [{ "$ref": "#/$defs/Label" }, { "type": "null" }] }
+      }
+    },
+    "MetricEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "kind", "occurred_at", "name", "value"],
+      "properties": {
+        "event_id": { "$ref": "#/$defs/EventId" },
+        "kind": { "const": "metric" },
+        "occurred_at": { "$ref": "#/$defs/OccurredAt" },
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.]{0,63}$",
+          "not": { "pattern": "[\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u034f\\u0600-\\u0605\\u061c\\u06dd\\u070f\\u08e2\\u115f\\u1160\\u17b4\\u17b5\\u180b-\\u180f\\u200b-\\u200f\\u2028\\u2029\\u202a-\\u202e\\u2060-\\u206f\\u2800\\u3164\\ufe00-\\ufe0f\\ufeff\\uffa0\\ufff9-\\ufffb\ud80d\udc30-\ud80d\udc3f\ud82f\udca0-\ud82f\udca3\ud834\udd73-\ud834\udd7a\udb40\udc00-\udb43\udfff\\ud800-\\udfff]" }
+        },
+        "value": { "type": "number", "minimum": -1000000000000000, "maximum": 1000000000000000 },
+        "unit": {
+          "type": "string",
+          "pattern": "^[a-z%/_]{1,16}$",
+          "not": { "pattern": "[\\x00-\\x1f\\x7f]" }
+        }
+      }
+    },
+    "IncidentEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "kind", "occurred_at", "severity", "incident_class"],
+      "properties": {
+        "event_id": { "$ref": "#/$defs/EventId" },
+        "kind": { "const": "incident" },
+        "occurred_at": { "$ref": "#/$defs/OccurredAt" },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "incident_class": {
+          "enum": [
+            "unclassified",
+            "death",
+            "health_harm",
+            "critical_infrastructure",
+            "fundamental_rights",
+            "property_environment",
+            "widespread_infringement"
+          ]
+        }
+      }
+    }
+  }
+}

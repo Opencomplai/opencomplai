@@ -97,17 +97,16 @@ release never needs it done by hand.
 Both operations below are founder-only. Run them by hand on the founder's machine after a release is on PyPI.
 Nothing in the release tag workflow creates a repository or a secret.
 
-**Homebrew tap** (run the steps in this order; replace `<version>` with the released version)
+**Homebrew tap** (the tap `Opencomplai/homebrew-tap` has existed since 8 Nov 2026 and holds the published formula; run the steps in this order; replace `<version>` with the released version)
 
 1. Confirm the new version's sdist is on PyPI: open `https://pypi.org/project/opencomplai/<version>/#files`.
-2. Create the GitHub repository `Opencomplai/homebrew-tap`. The name is a founder choice and is unverified, as noted in `packaging/homebrew/README.md`.
-3. In a checkout of the release tag, run `bash scripts/homebrew-release.sh <version>`. It reads the sdist sha256 from the PyPI JSON, downloads the sdist and checks that its bytes match that digest, then patches the `url` and `sha256` in `packaging/homebrew/opencomplai.rb`. It refuses a placeholder or all-zero digest and a checksum mismatch, and it patches the formula once the index, digest and download checks pass; the lint step runs after the patch and a failure leaves the patched file for you to review. Exit code 0 means pass, 1 means a named step failed, 2 means bad usage.
-4. Commit the patched formula on its own, a commit that changes only `packaging/homebrew/opencomplai.rb`. Then copy that file to `Formula/opencomplai.rb` in the tap repository.
-5. In the tap checkout, run `brew update-python-resources Formula/opencomplai.rb`, then `brew install --build-from-source Opencomplai/tap/opencomplai` and `brew test Opencomplai/tap/opencomplai`.
-6. Run `brew style` and `brew audit --strict --new Opencomplai/tap/opencomplai`.
-7. Push the tap repository with `git push`.
+2. Copy `packaging/homebrew/opencomplai.rb` to a scratch file and run `bash scripts/homebrew-release.sh <version> --formula <copy>`. It reads the sdist sha256 and the hashed source url from the PyPI JSON, downloads the sdist and checks that its bytes match that digest, then patches the copy's `url` and `sha256`. It refuses a placeholder or all-zero digest, a checksum mismatch, and a url that is not a PyPI files url for this sdist or that disagrees with the JSON's blake2b_256 digest, and it patches the formula once the index, digest and download checks pass; the lint step runs after the patch and a failure leaves the patched file for you to review. Exit code 0 means pass, 1 means a named step failed, 2 means bad usage. The committed template keeps its placeholder hash, so this step changes no file in the repository.
+3. Add the dependency resource blocks to the copy. `brew update-python-resources` ignores releases under 24 hours old, so on release day it fails; run it the next day, or use the formula's Python (3.12) to run `python -m pip install --dry-run --ignore-installed --report report.json opencomplai==<version>` and then `python packaging/homebrew/resources.py report.json <copy>`, which refuses any third-party package under 24 hours old.
+4. Build and test the copy in a throwaway `homebrew/brew` container, as described in `packaging/homebrew/README.md`: `brew style`, `brew audit --strict --new`, `brew install --build-from-source`, `brew test` and a real `opencomplai check`.
+5. Copy the copy to `Formula/opencomplai.rb` in the tap repository and push it with `git push`. On a Windows machine the push can open a Git Credential Manager "Select an account" window: choose the account that has write access to the organisation.
+6. In a clean container, run `brew tap Opencomplai/tap` and then `brew install Opencomplai/tap/opencomplai` once, and run `brew test` on it.
 
-**What flips planned to live**: only after step 7 is pushed and `brew install Opencomplai/tap/opencomplai` works from a clean machine, edit the "Homebrew (planned)" block in `docs/src/getting-started/installation.md` and the matching assertion in `packages/cli/tests/test_homebrew_formula.py` in one commit. Until then the installation page stays "planned".
+**What flips planned to live**: only after the tap is pushed (step 5) and step 6 works on the platforms the page names (on 8 Nov 2026 it was proven on Linux only; macOS is untested), edit the "Homebrew (planned)" block in `docs/src/getting-started/installation.md` and the matching assertion in `packages/cli/tests/test_homebrew_formula.py` in one commit. Until then the installation page stays "planned".
 
 **Signing secret** (independent of the tap, and may be done at any time)
 
@@ -118,8 +117,8 @@ For how the secret is used in CI, see [Attach the artifact to a release](../guid
 **Order of steps**
 
 1. Release on PyPI through the tag workflow.
-2. Create the tap repository.
-3. Run `scripts/homebrew-release.sh <version>`, then push the tap.
+2. The tap repository exists (created 8 Nov 2026).
+3. Run the Homebrew steps above (`scripts/homebrew-release.sh`, the resource blocks, the container test), then push the tap.
 4. Flip the installation page to live after `brew install` works from a clean machine.
 5. Create the signing secret with `scripts/signing-secret.sh` (independent of the tap).
 

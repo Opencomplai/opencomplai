@@ -1,0 +1,20 @@
+{
+  "framework": "ISO_IEC_27001",
+  "outcome": "voluntary",
+  "reason": "",
+  "scope": {
+    "has_physical_premises": false
+  },
+  "scoped_out": {
+    "ISO_IEC_27001:A.7.1": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.2": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.3": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.4": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.5": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.6": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.8": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.11": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.12": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).",
+    "ISO_IEC_27001:A.7.13": "Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false)."
+  }
+}

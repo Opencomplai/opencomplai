@@ -1,0 +1,31 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "develops_or_uses_ai",
+      "text": "Does the organisation develop, provide or use AI systems?",
+      "false_means": "no AI systems"
+    },
+    {
+      "key": "contract_commitment",
+      "text": "Does a customer contract or internal policy commit you to this framework?",
+      "false_means": "no commitment"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {
+        "develops_or_uses_ai": false
+      },
+      "outcome": "not_applicable",
+      "reason": "The guidance addresses organisations that develop, provide or use AI. Confirm with your adviser."
+    },
+    {
+      "when": {
+        "contract_commitment": true
+      },
+      "outcome": "applies",
+      "reason": "A contract or internal policy commits the organisation to this framework."
+    }
+  ]
+}

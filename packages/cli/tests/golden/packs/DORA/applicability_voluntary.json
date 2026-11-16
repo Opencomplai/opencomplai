@@ -1,0 +1,10 @@
+{
+  "framework": "DORA",
+  "outcome": "voluntary",
+  "reason": "Financial customers pass the contract terms of Art. 28 to 30 on to their providers.",
+  "scope": {
+    "financial_entity": false,
+    "ict_provider_to_financial_entities": true
+  },
+  "scoped_out": {}
+}

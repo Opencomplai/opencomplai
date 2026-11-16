@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate the JSON Schemas for ScanStatusArtifact, GapReport,
-EvidencePackage and AttestationBundle into packages/core/src/opencomplai_core/data/.
+EvidencePackage, AttestationBundle and the custom pack file into
+packages/core/src/opencomplai_core/data/.
 
 Run after editing ScanStatusArtifact, GapReport, EvidencePackage,
-AttestationBundle or any model they embed:
+AttestationBundle, CustomPackDocument or any model they embed:
     python scripts/generate_artifact_schemas.py
 
 packages/core/tests/test_artifact_schema_drift.py fails if the committed files
@@ -25,6 +26,7 @@ def main() -> None:
     from opencomplai_core.json_schemas import (
         build_artifact_schema,
         build_attestation_bundle_schema,
+        build_custom_pack_schema,
         build_evidence_package_schema,
         build_gap_report_schema,
     )
@@ -34,10 +36,14 @@ def main() -> None:
         ("gap_report.schema.json", build_gap_report_schema()),
         ("evidence_package.schema.json", build_evidence_package_schema()),
         ("attestation_bundle.schema.json", build_attestation_bundle_schema()),
+        ("custom_pack.schema.json", build_custom_pack_schema()),
     ):
         path = DATA_DIR / name
+        # LF on every platform: the repo keeps these files with LF endings.
         path.write_text(
-            json.dumps(schema, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            json.dumps(schema, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+            newline="\n",
         )
         print(f"Wrote {path}")
 

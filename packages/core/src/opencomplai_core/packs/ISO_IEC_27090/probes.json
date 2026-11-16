@@ -1,0 +1,103 @@
+{
+  "family": "iso_iec_27090",
+  "probes": {
+    "iso_iec_27090.input_validation_config": {
+      "patterns": [
+        "**/guardrails*.yml",
+        "**/guardrails*.yaml",
+        "**/guardrails*.json",
+        "**/guardrails*.toml",
+        "**/input-validation*.yml",
+        "**/input-validation*.yaml",
+        "**/input-validation*.json",
+        "**/input-validation*.toml",
+        "**/input_validation*.yml",
+        "**/input_validation*.yaml",
+        "**/input_validation*.json",
+        "**/input_validation*.toml",
+        "**/input-filter*.yml",
+        "**/input-filter*.yaml",
+        "**/input-filter*.json",
+        "**/input-filter*.toml",
+        "**/input_filter*.yml",
+        "**/input_filter*.yaml",
+        "**/input_filter*.json",
+        "**/input_filter*.toml",
+        "**/prompt-filter*.yml",
+        "**/prompt-filter*.yaml",
+        "**/prompt-filter*.json",
+        "**/prompt-filter*.toml",
+        "**/prompt_filter*.yml",
+        "**/prompt_filter*.yaml",
+        "**/prompt_filter*.json",
+        "**/prompt_filter*.toml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:deny|denylist|blocklist|block|blocked|filters?|schema|max[_-]?length|maxLength|max[_-]?tokens|max[_-]?input[_a-z]*)\\b['\\x22]?\\s*[:=]",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a deny, block, filter, schema or maximum-length setting",
+        "lacks_label": "deny, block, filter, schema or maximum-length setting",
+        "noun": "input validation configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 input filtering configuration; ids and own-wording titles only; a setting named deny, block, filter, schema or maximum length",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "iso_iec_27090.model_access_control": {
+      "patterns": [
+        "**/model-access*.yml",
+        "**/model-access*.yaml",
+        "**/model-access*.json",
+        "**/model-access*.toml",
+        "**/model_access*.yml",
+        "**/model_access*.yaml",
+        "**/model_access*.json",
+        "**/model_access*.toml",
+        "**/access-policy*.yml",
+        "**/access-policy*.yaml",
+        "**/access-policy*.json",
+        "**/access-policy*.toml",
+        "**/access_policy*.yml",
+        "**/access_policy*.yaml",
+        "**/access_policy*.json",
+        "**/access_policy*.toml",
+        "**/model-registry-policy*.yml",
+        "**/model-registry-policy*.yaml",
+        "**/model-registry-policy*.json",
+        "**/model-registry-policy*.toml",
+        "**/model_registry_policy*.yml",
+        "**/model_registry_policy*.yaml",
+        "**/model_registry_policy*.json",
+        "**/model_registry_policy*.toml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:roles?|principals?|groups?|users?|service[_-]?accounts?|subjects?)\\b['\\x22]?\\s*[:=\\[]",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:allow|allowed|allowlist|deny|denied|denylist|permit|effect)\\b['\\x22]?\\s*[:=\\[]",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a role or principal with an allow or deny rule",
+        "lacks_label": "role or principal, and allow or deny rule",
+        "noun": "model access rules",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 model access rules; ids and own-wording titles only; a role or principal with an allow or deny rule",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

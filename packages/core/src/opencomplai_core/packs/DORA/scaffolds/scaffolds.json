@@ -1,0 +1,14 @@
+{
+  "register_of_information": {
+    "title": "Register of information on ICT third-party arrangements",
+    "target": "docs/ict/register-of-information.md",
+    "probe": "dora.register_of_information",
+    "file": "register_of_information.md"
+  },
+  "major_incident_report": {
+    "title": "Major ICT-related incident classification and report outline",
+    "target": "docs/incidents/major-incident-report.md",
+    "probe": "dora.incident_report",
+    "file": "major_incident_report.md"
+  }
+}

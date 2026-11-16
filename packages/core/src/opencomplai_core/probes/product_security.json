@@ -1,0 +1,183 @@
+{
+  "family": "product_security",
+  "probes": {
+    "sbom_file": {
+      "patterns": [
+        "**/sbom*.json",
+        "**/bom.json",
+        "**/*.spdx.json",
+        "**/*.cdx.json"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\\"(?:spdxVersion|bomFormat)\\\"",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an SPDX or CycloneDX header key",
+        "lacks_label": "SPDX or CycloneDX header key",
+        "noun": "software bill of materials",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): SBOM file names and SPDX or CycloneDX header keys, by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "security_policy_file": {
+      "patterns": [
+        "SECURITY.md",
+        ".github/SECURITY.md",
+        "docs/**/security-policy*",
+        "docs/**/security_policy*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "report(?:ing)?\\s+(?:a\\s+|any\\s+|security\\s+)*(?:vulnerabilit|issue|bug)|how\\s+to\\s+report|disclos",
+            "flags": "i"
+          },
+          {
+            "re": "mailto:|https?://|\\b[\\w.+-]+@[\\w-]+\\.[\\w.-]+|security\\s+advisor",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a how-to-report section and a contact or advisory link",
+        "lacks_label": "how-to-report section, contact or advisory link",
+        "noun": "security policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): SECURITY.md convention; how to report and a contact or advisory link",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "vulnerability_handling_policy": {
+      "patterns": [
+        "docs/**/vulnerability-handling*",
+        "docs/**/vulnerability_handling*",
+        "**/vulnerability-management*",
+        "**/vulnerability_management*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\btriage\\b|\\bseverity\\b|\\bcvss\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bfix(?:es|ed)?\\b|\\bpatch(?:es|ed|ing)?\\b|\\bremediat\\w*",
+            "flags": "i"
+          },
+          {
+            "re": "\\b\\d+\\s*(?:business\\s+|working\\s+|calendar\\s+)?(?:hours?|days?|weeks?)\\b|\\bwithin\\b[^.\\n]{0,30}\\b(?:hours?|days?|weeks?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "triage or severity, fix or patch, and a time limit",
+        "lacks_label": "triage or severity, fix or patch, time limit",
+        "noun": "vulnerability handling policy",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): general vulnerability-handling practice; triage, fix and a time limit",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "signed_release_config": {
+      "patterns": [
+        ".github/workflows/*.y*ml",
+        ".goreleaser.y*ml",
+        "**/cosign*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bcosign\\b|\\bsigstore\\b|slsa-github-generator|attest-build-provenance|^[ \\t-]*signs\\s*:|\\bgpg\\b[^\\n]{0,20}--(?:detach-)?sign|\\bminisign\\b|\\bprovenance\\s*:",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a signing or provenance step",
+        "lacks_label": "signing or provenance step",
+        "noun": "signed release configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): release workflow conventions; a signing or provenance step, by tool name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "update_mechanism_note": {
+      "patterns": [
+        "UPDATES.md",
+        "docs/**/update-policy*",
+        "docs/**/update_policy*",
+        "docs/**/security-updates*",
+        "docs/**/security_updates*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bupdates?\\b|\\bpatch(?:es)?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bdownload|\\binstall|\\bupgrade|\\bpackage\\s+manager|\\bauto(?:matic(?:ally)?)?[ -]?updat|\\brelease\\s+notes?|\\bnotif(?:y|ied|ication)",
+            "flags": "i"
+          },
+          {
+            "re": "\\bsupport(?:ed)?\\s+(?:period|window|lifetime)|\\bsupported\\s+(?:for|until)|\\bend[- ]of[- ](?:life|support)|\\beol\\b|\\b\\d+\\s*(?:years?|months?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "update or patch, how users get it, and a support period",
+        "lacks_label": "update or patch, delivery route, support period",
+        "noun": "update mechanism note",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): general update-policy practice; update, delivery and support period",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "secure_defaults_config": {
+      "patterns": [
+        "HARDENING.md",
+        "docs/**/secure-default*",
+        "docs/**/secure_default*",
+        "docs/**/hardening*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bdefaults?\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\bdisabled\\b|\\bturned\\s+off\\b|\\boff\\s+by\\s+default\\b|\\brequired\\b|\\brequires?\\b|\\bopt-in\\b|\\bnot\\s+enabled\\b|\\bmust\\s+be\\s+(?:set|changed|configured)",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a default and what is off or required out of the box",
+        "lacks_label": "default, what is off or required out of the box",
+        "noun": "secure defaults note",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): general hardening practice; defaults and what is off or required",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

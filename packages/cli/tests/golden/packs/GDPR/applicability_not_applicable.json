@@ -1,0 +1,31 @@
+{
+  "framework": "GDPR",
+  "outcome": "not_applicable",
+  "reason": "The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+  "scope": {
+    "processes_personal_data": false
+  },
+  "scoped_out": {
+    "GDPR:Art. 5": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 6": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 9": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 12": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 13": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 14": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 15": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 17": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 21": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 22": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 24": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 25": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 28": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 30": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 32": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 33": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 34": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 35": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 36": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Art. 37-39": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser.",
+    "GDPR:Chapter V": "Not applicable: The regulation covers the processing of personal data, and this system processes none. Confirm with your adviser."
+  }
+}

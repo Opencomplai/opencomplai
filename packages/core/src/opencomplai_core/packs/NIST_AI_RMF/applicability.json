@@ -1,0 +1,32 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "develops_or_deploys_ai",
+      "text": "Does the organisation develop or deploy AI systems?",
+      "false_means": "no AI systems"
+    },
+    {
+      "key": "contract_commitment",
+      "text": "Does a customer contract, procurement rule or internal policy commit you to this framework?",
+      "false_means": "no commitment"
+    },
+    {
+      "key": "uses_third_party_models",
+      "text": "Does the system rely on models, data or AI services from another party?",
+      "false_means": "no third-party AI"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": { "develops_or_deploys_ai": false },
+      "outcome": "not_applicable",
+      "reason": "The framework addresses those who develop or deploy AI. Confirm with your adviser."
+    },
+    {
+      "when": { "contract_commitment": true },
+      "outcome": "applies",
+      "reason": "A contract, procurement rule or policy commits the organisation to this framework."
+    }
+  ]
+}

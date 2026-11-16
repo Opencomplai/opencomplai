@@ -1,0 +1,91 @@
+{
+  "family": "nist_ai_rmf",
+  "probes": {
+    "nist_ai_rmf.profile": {
+      "type": "clause_document",
+      "patterns": [
+        "AI_RMF_PROFILE.md",
+        "docs/**/ai-rmf-profile*",
+        "docs/**/ai_rmf_profile*",
+        "**/ai-rmf-profile*",
+        "**/ai_rmf_profile*"
+      ],
+      "noun": "AI RMF profile",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "govern": {
+          "title": "Govern function: policies, roles and oversight",
+          "markers": [
+            {
+              "re": "\\b(?:govern(?:ance)?|polic(?:y|ies)|oversight|accountab\\w+)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:current(?:ly)?|today|at\\s+present|as[\\s-]+is)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:target|goal|desired|planned|future|to[\\s-]+be)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "map": {
+          "title": "Map function: context and intended use of the AI system",
+          "markers": [
+            {
+              "re": "\\b(?:map|context|intended\\s+use|purpose|stakeholders?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:current(?:ly)?|today|at\\s+present|as[\\s-]+is)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:target|goal|desired|planned|future|to[\\s-]+be)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "measure": {
+          "title": "Measure function: metrics and testing",
+          "markers": [
+            {
+              "re": "\\b(?:measure(?:s|ment)?|metrics?|test(?:s|ing)?|evaluat\\w+)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:current(?:ly)?|today|at\\s+present|as[\\s-]+is)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:target|goal|desired|planned|future|to[\\s-]+be)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "manage": {
+          "title": "Manage function: risk response and monitoring",
+          "markers": [
+            {
+              "re": "\\b(?:manage(?:ment)?|respon(?:d|se)|treat(?:ment)?|mitigat\\w+|monitor\\w*)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:current(?:ly)?|today|at\\s+present|as[\\s-]+is)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:target|goal|desired|planned|future|to[\\s-]+be)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

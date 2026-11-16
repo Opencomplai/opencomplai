@@ -1,0 +1,143 @@
+{
+  "entries": [
+    {
+      "id": "cra.reporting_duties",
+      "title": "Reporting duties start to apply",
+      "applies_from": "2026-09-11",
+      "requirements": [
+        "CRA:Art. 14(1)",
+        "CRA:Art. 14(3)",
+        "CRA:Art. 14(8)"
+      ],
+      "scope_note": "Reporting of actively exploited vulnerabilities and severe incidents applies earlier than the rest of the Regulation.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 71(2)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "cra.general_application",
+      "title": "General application of the Regulation",
+      "applies_from": "2027-12-11",
+      "requirements": [
+        "CRA:Art. 13(2)",
+        "CRA:Art. 13(3)",
+        "CRA:Art. 13(5)",
+        "CRA:Art. 13(6)",
+        "CRA:Art. 13(7)",
+        "CRA:Art. 13(8)",
+        "CRA:Art. 13(9)",
+        "CRA:Art. 13(12)",
+        "CRA:Art. 13(13)",
+        "CRA:Art. 13(14)",
+        "CRA:Art. 13(15)",
+        "CRA:Art. 13(16)",
+        "CRA:Art. 13(17)",
+        "CRA:Art. 13(18)",
+        "CRA:Art. 13(19)",
+        "CRA:Art. 13(20)",
+        "CRA:Art. 13(21)",
+        "CRA:Art. 13(22)",
+        "CRA:Art. 13(23)",
+        "CRA:Art. 28",
+        "CRA:Art. 30",
+        "CRA:Annex I Part I (1)",
+        "CRA:Annex I Part I (2)(a)",
+        "CRA:Annex I Part I (2)(b)",
+        "CRA:Annex I Part I (2)(c)",
+        "CRA:Annex I Part I (2)(d)",
+        "CRA:Annex I Part I (2)(e)",
+        "CRA:Annex I Part I (2)(f)",
+        "CRA:Annex I Part I (2)(g)",
+        "CRA:Annex I Part I (2)(h)",
+        "CRA:Annex I Part I (2)(i)",
+        "CRA:Annex I Part I (2)(j)",
+        "CRA:Annex I Part I (2)(k)",
+        "CRA:Annex I Part I (2)(l)",
+        "CRA:Annex I Part I (2)(m)",
+        "CRA:Annex I Part II (1)",
+        "CRA:Annex I Part II (2)",
+        "CRA:Annex I Part II (3)",
+        "CRA:Annex I Part II (4)",
+        "CRA:Annex I Part II (5)",
+        "CRA:Annex I Part II (6)",
+        "CRA:Annex I Part II (7)",
+        "CRA:Annex I Part II (8)",
+        "CRA:Annex II (1)",
+        "CRA:Annex II (2)",
+        "CRA:Annex II (3)",
+        "CRA:Annex II (4)",
+        "CRA:Annex II (5)",
+        "CRA:Annex II (6)",
+        "CRA:Annex II (7)",
+        "CRA:Annex II (8)",
+        "CRA:Annex II (9)",
+        "CRA:Annex VII (1)",
+        "CRA:Annex VII (2)",
+        "CRA:Annex VII (3)",
+        "CRA:Annex VII (4)",
+        "CRA:Annex VII (5)",
+        "CRA:Annex VII (6)",
+        "CRA:Annex VII (7)",
+        "CRA:Annex VII (8)"
+      ],
+      "scope_note": "Rows other than the reporting duties apply from the general application date.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 71(2)",
+      "confidence": "low",
+      "needs_founder_review": true
+    },
+    {
+      "id": "cra.early_warning",
+      "title": "Early warning notification",
+      "applies_from": null,
+      "requirements": [
+        "CRA:Art. 14(1)",
+        "CRA:Art. 14(3)"
+      ],
+      "scope_note": "Period runs from when the manufacturer becomes aware.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 14(2)(a), (4)(a)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "24 hours after becoming aware"
+    },
+    {
+      "id": "cra.notification",
+      "title": "Vulnerability or incident notification",
+      "applies_from": null,
+      "requirements": [
+        "CRA:Art. 14(1)",
+        "CRA:Art. 14(3)"
+      ],
+      "scope_note": "Period runs from when the manufacturer becomes aware.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 14(2)(b), (4)(b)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "72 hours after becoming aware"
+    },
+    {
+      "id": "cra.final_report_vulnerability",
+      "title": "Final report on an actively exploited vulnerability",
+      "applies_from": null,
+      "requirements": [
+        "CRA:Art. 14(1)"
+      ],
+      "scope_note": "Period runs from when a corrective or mitigating measure is available.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 14(2)(c)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "14 days after a corrective measure is available"
+    },
+    {
+      "id": "cra.final_report_incident",
+      "title": "Final report on a severe incident",
+      "applies_from": null,
+      "requirements": [
+        "CRA:Art. 14(3)"
+      ],
+      "scope_note": "Period runs from the submission of the incident notification.",
+      "source": "Regulation (EU) 2024/2847, CELEX 32024R2847, Art. 14(4)(c)",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "duration": "one month after the notification"
+    }
+  ]
+}

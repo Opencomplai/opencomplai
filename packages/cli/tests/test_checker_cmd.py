@@ -314,3 +314,67 @@ def test_checker_results_show_timeline_dates(monkeypatch) -> None:
         ComplianceCheckerResult(in_scope=False), today=date(2026, 10, 5)
     )
     assert "Regulatory timeline" not in buf.getvalue()
+
+
+def _timeline_out(monkeypatch, answers: dict) -> str:
+    import io
+    from datetime import date
+
+    from opencomplai_cli.commands import checker as checker_cmd
+    from opencomplai_core.compliance_checker.models import (
+        ComplianceCheckerResult,
+        ObligationItem,
+    )
+    from rich.console import Console
+
+    buf = io.StringIO()
+    monkeypatch.setattr(checker_cmd, "console", Console(file=buf, width=200))
+    result = ComplianceCheckerResult(
+        in_scope=True,
+        is_high_risk=True,
+        answers=answers,
+        obligations=[
+            ObligationItem(id="hr", title="High risk", body="b", article_ref="Art. 9")
+        ],
+    )
+    checker_cmd.display_results(result, today=date(2026, 10, 5))
+    return buf.getvalue()
+
+
+def test_checker_timeline_without_annex_answers_shows_both_high_risk_dates(
+    monkeypatch,
+) -> None:
+    out = _timeline_out(monkeypatch, {})
+    assert "2027-12-02" in out
+    assert "2028-08-02" in out
+
+
+def test_checker_timeline_annex_i_answers_show_only_the_annex_i_date(
+    monkeypatch,
+) -> None:
+    out = _timeline_out(
+        monkeypatch, {"hr1_annex_i": True, "hr8_conformity_assessment": True}
+    )
+    assert "2028-08-02" in out
+    assert "2027-12-02" not in out
+
+
+def test_checker_timeline_annex_iii_answer_shows_only_the_annex_iii_date(
+    monkeypatch,
+) -> None:
+    out = _timeline_out(monkeypatch, {"hr2_annex_iii": True})
+    assert "2027-12-02" in out
+    assert "2028-08-02" not in out
+
+
+def test_checker_timeline_both_annex_answers_show_both_dates(monkeypatch) -> None:
+    out = _timeline_out(
+        monkeypatch,
+        {
+            "hr1_annex_i": True,
+            "hr8_conformity_assessment": True,
+            "hr2_annex_iii": True,
+        },
+    )
+    assert "2027-12-02" in out
+    assert "2028-08-02" in out

@@ -1,0 +1,14 @@
+{
+  "dpia": {
+    "title": "Data protection impact assessment",
+    "target": "DPIA.md",
+    "probe": "gdpr.dpia",
+    "file": "dpia.md"
+  },
+  "record_of_processing": {
+    "title": "Record of processing",
+    "target": "docs/ropa.md",
+    "probe": "record_of_processing",
+    "shared": "privacy_records/record_of_processing.md"
+  }
+}

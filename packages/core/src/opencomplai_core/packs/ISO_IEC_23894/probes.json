@@ -1,0 +1,166 @@
+{
+  "family": "iso_iec_23894",
+  "probes": {
+    "iso_iec_23894.risk_process": {
+      "type": "clause_document",
+      "patterns": [
+        "AI_RISK_MANAGEMENT.md",
+        "docs/**/ai-risk-management*",
+        "docs/**/ai_risk_management*",
+        "**/ai-risk-management*",
+        "**/ai_risk_management*"
+      ],
+      "noun": "AI risk management procedure",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "6.2": {
+          "title": "Communication and consultation",
+          "markers": [
+            {
+              "re": "\\b(?:communicat\\w*|consult\\w*)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:stakeholders?|parties|interested|recorded|record)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.3.2": {
+          "title": "Defining the scope",
+          "markers": [
+            {
+              "re": "\\bscope\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:before|start|boundar\\w*|covers?|in\\s+scope|out\\s+of\\s+scope)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.3.3": {
+          "title": "External and internal context",
+          "markers": [
+            {
+              "re": "\\b(?:external|internal)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bcontext\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.3.4": {
+          "title": "Defining risk criteria",
+          "markers": [
+            {
+              "re": "\\bcriteria\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:approved|approval|level|threshold|scale|tolerance|appetite)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.4.2": {
+          "title": "Risk identification",
+          "markers": [
+            {
+              "re": "\\bidentif\\w+\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:sources?|consequences?|register|list(?:ed)?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.4.3": {
+          "title": "Risk analysis",
+          "markers": [
+            {
+              "re": "\\banalys\\w+\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:likelihood|level|nature|probability|severity)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.4.4": {
+          "title": "Risk evaluation",
+          "markers": [
+            {
+              "re": "\\bevaluat\\w+\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:criteria|compar\\w+|treatment|prioriti[sz]\\w*)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.5.2": {
+          "title": "Selection of risk treatment options",
+          "markers": [
+            {
+              "re": "\\btreatment\\s+options?\\b|\\boptions?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:avoid|reduce|share|accept|retain|mitigat\\w+|reasons?|chosen|selected)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.5.3": {
+          "title": "Preparing and implementing risk treatment plans",
+          "markers": [
+            {
+              "re": "\\btreatment\\s+plans?\\b|\\bplans?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:residual|implement\\w*|carried\\s+out|owner|deadline)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.6": {
+          "title": "Monitoring and review",
+          "markers": [
+            {
+              "re": "\\b(?:monitor\\w*|review\\w*)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:regular\\w*|quarterly|monthly|annual\\w*|feedback|findings|schedule)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.7": {
+          "title": "Recording and reporting",
+          "markers": [
+            {
+              "re": "\\b(?:record\\w*|report\\w*)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:channels?|outcomes?|documented|board|management)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

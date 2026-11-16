@@ -1,0 +1,1850 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "opencomplai",
+          "informationUri": "https://opencomplai.com",
+          "rules": [
+            {
+              "id": "CRA:Art. 13(2)",
+              "name": "CRA:Art. 13(2)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(2)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(3)",
+              "name": "CRA:Art. 13(3)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(3)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(5)",
+              "name": "CRA:Art. 13(5)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(5)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(6)",
+              "name": "CRA:Art. 13(6)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(6)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(7)",
+              "name": "CRA:Art. 13(7)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(7)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(8)",
+              "name": "CRA:Art. 13(8)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(8)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(9)",
+              "name": "CRA:Art. 13(9)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(9)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(17)",
+              "name": "CRA:Art. 13(17)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(17)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(18)",
+              "name": "CRA:Art. 13(18)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(18)"
+              }
+            },
+            {
+              "id": "CRA:Art. 13(19)",
+              "name": "CRA:Art. 13(19)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 13(19)"
+              }
+            },
+            {
+              "id": "CRA:Art. 14(1)",
+              "name": "CRA:Art. 14(1)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 14(1)"
+              }
+            },
+            {
+              "id": "CRA:Art. 14(3)",
+              "name": "CRA:Art. 14(3)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 14(3)"
+              }
+            },
+            {
+              "id": "CRA:Art. 14(8)",
+              "name": "CRA:Art. 14(8)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Art. 14(8)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (1)",
+              "name": "CRA:Annex I Part I (1)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (1)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(a)",
+              "name": "CRA:Annex I Part I (2)(a)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(a)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(b)",
+              "name": "CRA:Annex I Part I (2)(b)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(b)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(c)",
+              "name": "CRA:Annex I Part I (2)(c)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(c)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(d)",
+              "name": "CRA:Annex I Part I (2)(d)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(d)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(e)",
+              "name": "CRA:Annex I Part I (2)(e)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(e)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(f)",
+              "name": "CRA:Annex I Part I (2)(f)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(f)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(h)",
+              "name": "CRA:Annex I Part I (2)(h)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(h)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(j)",
+              "name": "CRA:Annex I Part I (2)(j)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(j)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(k)",
+              "name": "CRA:Annex I Part I (2)(k)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(k)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part I (2)(l)",
+              "name": "CRA:Annex I Part I (2)(l)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part I (2)(l)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (1)",
+              "name": "CRA:Annex I Part II (1)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (1)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (2)",
+              "name": "CRA:Annex I Part II (2)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (2)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (3)",
+              "name": "CRA:Annex I Part II (3)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (3)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (4)",
+              "name": "CRA:Annex I Part II (4)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (4)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (5)",
+              "name": "CRA:Annex I Part II (5)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (5)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (6)",
+              "name": "CRA:Annex I Part II (6)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (6)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (7)",
+              "name": "CRA:Annex I Part II (7)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (7)"
+              }
+            },
+            {
+              "id": "CRA:Annex I Part II (8)",
+              "name": "CRA:Annex I Part II (8)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex I Part II (8)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (1)",
+              "name": "CRA:Annex II (1)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (1)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (2)",
+              "name": "CRA:Annex II (2)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (2)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (3)",
+              "name": "CRA:Annex II (3)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (3)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (4)",
+              "name": "CRA:Annex II (4)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (4)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (5)",
+              "name": "CRA:Annex II (5)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (5)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (6)",
+              "name": "CRA:Annex II (6)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (6)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (7)",
+              "name": "CRA:Annex II (7)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (7)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (8)",
+              "name": "CRA:Annex II (8)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (8)"
+              }
+            },
+            {
+              "id": "CRA:Annex II (9)",
+              "name": "CRA:Annex II (9)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex II (9)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (1)",
+              "name": "CRA:Annex VII (1)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (1)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (2)",
+              "name": "CRA:Annex VII (2)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (2)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (3)",
+              "name": "CRA:Annex VII (3)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (3)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (4)",
+              "name": "CRA:Annex VII (4)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (4)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (5)",
+              "name": "CRA:Annex VII (5)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (5)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (6)",
+              "name": "CRA:Annex VII (6)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (6)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (7)",
+              "name": "CRA:Annex VII (7)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (7)"
+              }
+            },
+            {
+              "id": "CRA:Annex VII (8)",
+              "name": "CRA:Annex VII (8)",
+              "shortDescription": {
+                "text": "Failed requirement CRA:Annex VII (8)"
+              }
+            },
+            {
+              "id": "gap/none",
+              "name": "gap/none",
+              "shortDescription": {
+                "text": "Gap row for evidence none"
+              }
+            },
+            {
+              "id": "gap/prohibited",
+              "name": "gap/prohibited",
+              "shortDescription": {
+                "text": "Gap row for evidence prohibited"
+              }
+            },
+            {
+              "id": "gap/risk_register",
+              "name": "gap/risk_register",
+              "shortDescription": {
+                "text": "Gap row for evidence risk_register"
+              }
+            },
+            {
+              "id": "gap/technical_documentation_dossier",
+              "name": "gap/technical_documentation_dossier",
+              "shortDescription": {
+                "text": "Gap row for evidence technical_documentation_dossier"
+              }
+            },
+            {
+              "id": "gap/event_log_evidence",
+              "name": "gap/event_log_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence event_log_evidence"
+              }
+            },
+            {
+              "id": "gap/deployer_instructions",
+              "name": "gap/deployer_instructions",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_instructions"
+              }
+            },
+            {
+              "id": "gap/human_oversight_construct",
+              "name": "gap/human_oversight_construct",
+              "shortDescription": {
+                "text": "Gap row for evidence human_oversight_construct"
+              }
+            },
+            {
+              "id": "gap/provider_qms_bundle",
+              "name": "gap/provider_qms_bundle",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms_bundle"
+              }
+            },
+            {
+              "id": "gap/provider_qms",
+              "name": "gap/provider_qms",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms"
+              }
+            },
+            {
+              "id": "gap/distributor_conformity",
+              "name": "gap/distributor_conformity",
+              "shortDescription": {
+                "text": "Gap row for evidence distributor_conformity"
+              }
+            },
+            {
+              "id": "gap/deployer_use_records",
+              "name": "gap/deployer_use_records",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_use_records"
+              }
+            },
+            {
+              "id": "gap/provider_fria",
+              "name": "gap/provider_fria",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_fria"
+              }
+            },
+            {
+              "id": "gap/conformity_assessment_docs",
+              "name": "gap/conformity_assessment_docs",
+              "shortDescription": {
+                "text": "Gap row for evidence conformity_assessment_docs"
+              }
+            },
+            {
+              "id": "gap/eu_database_registration_evidence",
+              "name": "gap/eu_database_registration_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence eu_database_registration_evidence"
+              }
+            },
+            {
+              "id": "gap/transparency_notice_evidence",
+              "name": "gap/transparency_notice_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence transparency_notice_evidence"
+              }
+            },
+            {
+              "id": "gap/gpai_provider",
+              "name": "gap/gpai_provider",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_provider"
+              }
+            },
+            {
+              "id": "gap/gpai_systemic_risk",
+              "name": "gap/gpai_systemic_risk",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_systemic_risk"
+              }
+            },
+            {
+              "id": "gap/post_market_monitoring_plan",
+              "name": "gap/post_market_monitoring_plan",
+              "shortDescription": {
+                "text": "Gap row for evidence post_market_monitoring_plan"
+              }
+            },
+            {
+              "id": "gap/serious_incident_log",
+              "name": "gap/serious_incident_log",
+              "shortDescription": {
+                "text": "Gap row for evidence serious_incident_log"
+              }
+            }
+          ],
+          "version": "0.16.0"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "CRA:Art. 13(2)",
+          "level": "error",
+          "message": {
+            "text": "Cybersecurity risk assessment: No conventional documentation/code probe matched for 'ai_threat_model'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(3)",
+          "level": "error",
+          "message": {
+            "text": "Documented, updated risk assessment: No conventional documentation/code probe matched for 'cra.technical_documentation#3'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(5)",
+          "level": "error",
+          "message": {
+            "text": "Due diligence on third-party components: No conventional documentation/code probe matched for 'sbom_file'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(6)",
+          "level": "error",
+          "message": {
+            "text": "Component flaws reported upstream and fixed: No conventional documentation/code probe matched for 'vulnerability_handling_policy'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(7)",
+          "level": "error",
+          "message": {
+            "text": "Systematic cybersecurity documentation: No conventional documentation/code probe matched for 'cra.technical_documentation#2'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(8)",
+          "level": "error",
+          "message": {
+            "text": "Support period and vulnerability handling: No conventional documentation/code probe matched for 'cra.support_period_statement'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(9)",
+          "level": "error",
+          "message": {
+            "text": "Security updates kept available: No conventional documentation/code probe matched for 'update_mechanism_note'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(17)",
+          "level": "error",
+          "message": {
+            "text": "Single point of contact: No conventional documentation/code probe matched for 'security_policy_file'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(18)",
+          "level": "error",
+          "message": {
+            "text": "User information and instructions supplied: No conventional documentation/code probe matched for 'cra.user_information#8'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 13(19)",
+          "level": "error",
+          "message": {
+            "text": "Support period end date stated: No conventional documentation/code probe matched for 'cra.support_period_statement'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 14(1)",
+          "level": "error",
+          "message": {
+            "text": "Actively exploited vulnerability reporting: No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#early-warning'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 14(3)",
+          "level": "error",
+          "message": {
+            "text": "Severe incident reporting: No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#notification'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Art. 14(8)",
+          "level": "error",
+          "message": {
+            "text": "Users informed of exploited flaws and incidents: No conventional documentation/code probe matched for 'cra.vulnerability_notification_record#user-information'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (1)",
+          "level": "error",
+          "message": {
+            "text": "Risk-based level of cybersecurity by design: No conventional documentation/code probe matched for 'ai_threat_model'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(a)",
+          "level": "error",
+          "message": {
+            "text": "No known exploitable vulnerabilities at release: No conventional documentation/code probe matched for 'sast_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(b)",
+          "level": "error",
+          "message": {
+            "text": "Secure by default configuration: No conventional documentation/code probe matched for 'secure_defaults_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(c)",
+          "level": "error",
+          "message": {
+            "text": "Vulnerabilities fixable by security updates: No conventional documentation/code probe matched for 'update_mechanism_note'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(d)",
+          "level": "error",
+          "message": {
+            "text": "Protection from unauthorised access: No conventional documentation/code probe matched for 'policy_access_control'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(e)",
+          "level": "error",
+          "message": {
+            "text": "Confidentiality of data: No conventional documentation/code probe matched for 'policy_cryptography'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(f)",
+          "level": "error",
+          "message": {
+            "text": "Integrity of data, commands and programs: No conventional documentation/code probe matched for 'signed_release_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(h)",
+          "level": "error",
+          "message": {
+            "text": "Availability of essential functions: No conventional documentation/code probe matched for 'rate_limiting_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(j)",
+          "level": "error",
+          "message": {
+            "text": "Limited attack surface: No conventional documentation/code probe matched for 'iac_definitions'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(k)",
+          "level": "error",
+          "message": {
+            "text": "Exploitation mitigation: No conventional documentation/code probe matched for 'sast_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part I (2)(l)",
+          "level": "error",
+          "message": {
+            "text": "Security logging and monitoring: No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (1)",
+          "level": "error",
+          "message": {
+            "text": "Vulnerabilities and components documented, SBOM: No conventional documentation/code probe matched for 'ai_supply_chain_pins'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (2)",
+          "level": "error",
+          "message": {
+            "text": "Vulnerabilities remediated without delay: No conventional documentation/code probe matched for 'vulnerability_handling_policy'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (3)",
+          "level": "error",
+          "message": {
+            "text": "Regular security tests and reviews: No conventional documentation/code probe matched for 'ci_test_workflow'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (4)",
+          "level": "error",
+          "message": {
+            "text": "Public disclosure of fixed vulnerabilities: No conventional documentation/code probe matched for 'vulnerability_handling_policy'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (5)",
+          "level": "error",
+          "message": {
+            "text": "Coordinated vulnerability disclosure policy: No conventional documentation/code probe matched for 'vulnerability_handling_policy'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (6)",
+          "level": "error",
+          "message": {
+            "text": "Vulnerability information sharing and contact: No conventional documentation/code probe matched for 'security_policy_file'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (7)",
+          "level": "error",
+          "message": {
+            "text": "Secure distribution of updates: No conventional documentation/code probe matched for 'signed_release_config'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex I Part II (8)",
+          "level": "error",
+          "message": {
+            "text": "Updates disseminated without delay: No conventional documentation/code probe matched for 'update_mechanism_note'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (1)",
+          "level": "error",
+          "message": {
+            "text": "Manufacturer identity and contact: No conventional documentation/code probe matched for 'cra.user_information#1'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (2)",
+          "level": "error",
+          "message": {
+            "text": "Vulnerability reporting contact: No conventional documentation/code probe matched for 'cra.user_information#2'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (3)",
+          "level": "error",
+          "message": {
+            "text": "Product identification: No conventional documentation/code probe matched for 'cra.user_information#3'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (4)",
+          "level": "error",
+          "message": {
+            "text": "Intended purpose and security properties: No conventional documentation/code probe matched for 'cra.user_information#4'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (5)",
+          "level": "error",
+          "message": {
+            "text": "Known risk circumstances and foreseeable misuse: No conventional documentation/code probe matched for 'cra.user_information#5'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (6)",
+          "level": "error",
+          "message": {
+            "text": "Web address of declaration of conformity: No conventional documentation/code probe matched for 'cra.user_information#6'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (7)",
+          "level": "error",
+          "message": {
+            "text": "Security support offered and end date: No conventional documentation/code probe matched for 'cra.user_information#7'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (8)",
+          "level": "error",
+          "message": {
+            "text": "Instructions for secure use through to decommissioning: No conventional documentation/code probe matched for 'cra.user_information#8'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex II (9)",
+          "level": "error",
+          "message": {
+            "text": "Location of the SBOM if offered: No conventional documentation/code probe matched for 'cra.user_information#9'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (1)",
+          "level": "error",
+          "message": {
+            "text": "General description of the product: No conventional documentation/code probe matched for 'cra.technical_documentation#1'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (2)",
+          "level": "error",
+          "message": {
+            "text": "Design, development, production, vulnerability handling: No conventional documentation/code probe matched for 'cra.technical_documentation#2'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (3)",
+          "level": "error",
+          "message": {
+            "text": "Cybersecurity risk assessment in the file: No conventional documentation/code probe matched for 'cra.technical_documentation#3'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (4)",
+          "level": "error",
+          "message": {
+            "text": "Basis for the support period: No conventional documentation/code probe matched for 'cra.technical_documentation#4'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (5)",
+          "level": "error",
+          "message": {
+            "text": "Standards and solutions applied: No conventional documentation/code probe matched for 'cra.technical_documentation#5'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (6)",
+          "level": "error",
+          "message": {
+            "text": "Test reports: No conventional documentation/code probe matched for 'cra.technical_documentation#6'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (7)",
+          "level": "error",
+          "message": {
+            "text": "Copy of the declaration of conformity: No conventional documentation/code probe matched for 'cra.technical_documentation#7'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "CRA:Annex VII (8)",
+          "level": "error",
+          "message": {
+            "text": "SBOM available on authority request: No conventional documentation/code probe matched for 'cra.technical_documentation#8'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 4: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/prohibited",
+          "level": "note",
+          "message": {
+            "text": "Art. 5: Obligation 'Prohibited AI practices' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/risk_register",
+          "level": "error",
+          "message": {
+            "text": "Art. 9: No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 10: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/technical_documentation_dossier",
+          "level": "error",
+          "message": {
+            "text": "Art. 11: No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/event_log_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 12: No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_instructions",
+          "level": "error",
+          "message": {
+            "text": "Art. 13: No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/human_oversight_construct",
+          "level": "error",
+          "message": {
+            "text": "Art. 14: No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 15: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms_bundle",
+          "level": "error",
+          "message": {
+            "text": "Art. 16: No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms",
+          "level": "error",
+          "message": {
+            "text": "Art. 17: No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 20: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/distributor_conformity",
+          "level": "error",
+          "message": {
+            "text": "Art. 24: No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_use_records",
+          "level": "error",
+          "message": {
+            "text": "Art. 26: No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_fria",
+          "level": "error",
+          "message": {
+            "text": "Art. 27: No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/conformity_assessment_docs",
+          "level": "error",
+          "message": {
+            "text": "Art. 43: No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/eu_database_registration_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 49: No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/transparency_notice_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 50: No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_provider",
+          "level": "note",
+          "message": {
+            "text": "Art. 53: Obligation 'General-purpose AI model provider obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_systemic_risk",
+          "level": "note",
+          "message": {
+            "text": "Art. 55: Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/post_market_monitoring_plan",
+          "level": "error",
+          "message": {
+            "text": "Art. 72: No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/serious_incident_log",
+          "level": "error",
+          "message": {
+            "text": "Art. 73: No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "opencomplai_result": "control_fail",
+        "system_id": "example-ltd-cra",
+        "commit_ref": "unresolved",
+        "signed": false
+      }
+    }
+  ]
+}

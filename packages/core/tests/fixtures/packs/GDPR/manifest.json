@@ -1,0 +1,20 @@
+{
+  "system_id": "pack-golden-sys",
+  "intended_purpose": "ticket ranking for the Example Ltd service desk",
+  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": [
+    "GDPR"
+  ],
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "GDPR": {
+      "scope": {
+        "processes_personal_data": true,
+        "eu_establishment_or_subjects": true,
+        "acts_as_controller": true,
+        "transfers_outside_eea": false
+      }
+    }
+  }
+}

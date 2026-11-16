@@ -98,6 +98,82 @@ def test_patches_url_and_sha256_from_pypi_json(tmp_path: Path) -> None:
     assert new == expect
 
 
+# A synthetic blake2b_256 digest and the PyPI path derived from it (2/2/60 split).
+_B2 = "aabb" + "cc" * 30
+_HASHED = (
+    f"https://files.pythonhosted.org/packages/aa/bb/{'cc' * 30}/opencomplai-{_V}.tar.gz"
+)
+
+
+def _hashed_entry(**over: object) -> list[dict]:
+    entry = {
+        "packagetype": "sdist",
+        "filename": f"opencomplai-{_V}.tar.gz",
+        "url": _HASHED,
+        "digests": {"sha256": _GOOD, "blake2b_256": _B2},
+    }
+    entry.update(over)
+    return [entry]
+
+
+def test_uses_the_hashed_source_url_from_the_release_json(tmp_path: Path) -> None:
+    proc, formula, _ = _run(tmp_path, entries=_hashed_entry())
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert f'  url "{_HASHED}"\n' in formula.read_text(encoding="utf-8")
+
+
+def test_second_run_with_a_hashed_url_is_idempotent(tmp_path: Path) -> None:
+    proc, formula, _ = _run(tmp_path, entries=_hashed_entry())
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    first = formula.read_bytes()
+    proc, formula, before = _run(tmp_path, entries=_hashed_entry())
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert before == first
+    assert formula.read_bytes() == first
+
+
+def test_refuses_a_url_whose_path_disagrees_with_blake2b_256(tmp_path: Path) -> None:
+    other = _HASHED.replace("/aa/bb/", "/aa/bc/")
+    _refused(*_run(tmp_path, entries=_hashed_entry(url=other)), "index")
+
+
+def test_a_url_with_no_blake2b_digest_still_passes_the_shape_check(
+    tmp_path: Path,
+) -> None:
+    entries = _hashed_entry(digests={"sha256": _GOOD})
+    proc, formula, _ = _run(tmp_path, entries=entries)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert f'  url "{_HASHED}"\n' in formula.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    "bad_url",
+    [
+        "https://example.com/packages/30/f9/abc123/opencomplai-9.9.9.tar.gz",
+        "https://files.pythonhosted.org/packages/30/f9/abc123/other-9.9.9.tar.gz",
+        'https://files.pythonhosted.org/packages/30/f9/abc123/opencomplai-9.9.9.tar.gz"\n',
+        "http://files.pythonhosted.org/packages/30/f9/abc123/opencomplai-9.9.9.tar.gz",
+        "https://files.pythonhosted.org/packages/30/F9/abc123/opencomplai-9.9.9.tar.gz",
+        "https://files.pythonhosted.org/packages/30/f9/abc123/opencomplai-9.9.9.tar.gz?x=1",
+        "https://files.pythonhosted.org/packages/30/f9/abc123/opencomplai-9.9.9.tar.gz#frag",
+        "https://files.pythonhosted.org/packages/30/f9/abc/123/opencomplai-9.9.9.tar.gz",
+        "https://files.pythonhosted.org/packages/30/f9/abc123/../opencomplai-9.9.9.tar.gz",
+    ],
+)
+def test_refuses_an_sdist_url_that_is_not_a_pypi_files_url(
+    tmp_path: Path, bad_url: str
+) -> None:
+    entries = [
+        {
+            "packagetype": "sdist",
+            "filename": f"opencomplai-{_V}.tar.gz",
+            "url": bad_url,
+            "digests": {"sha256": _GOOD},
+        }
+    ]
+    _refused(*_run(tmp_path, entries=entries), "index")
+
+
 def test_refuses_download_that_does_not_match_digest(tmp_path: Path) -> None:
     other = hashlib.sha256(b"different bytes").hexdigest()
     _refused(*_run(tmp_path, digest=other), "download")

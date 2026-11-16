@@ -160,7 +160,7 @@ MODEL_CATALOG: dict[str, ModelSpec] = {
     ),
     "qwen2.5-coder-1.5b": ModelSpec(
         model_id="qwen2.5-coder-1.5b",
-        display_name="Qwen2.5-Coder-1.5B-Instruct (recommended)",
+        display_name="Qwen2.5-Coder-1.5B-Instruct",
         size_mb=1000,
         license="Apache-2.0",
         runtime="llama-cpp",

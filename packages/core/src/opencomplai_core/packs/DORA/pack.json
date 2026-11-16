@@ -1,0 +1,18 @@
+{
+  "id": "DORA",
+  "order": 8,
+  "kind": "native",
+  "name": "DORA Regulation (EU) 2022/2554 digital operational resilience",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "DORA",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "dora.json",
+  "data_files": ["applicability.json", "probes.json", "timeline.json"],
+  "copyright": "eu_law",
+  "row_count": 37,
+  "target_machine_share": 11,
+  "timeline": "file",
+  "catalogue": true
+}

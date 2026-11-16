@@ -13,6 +13,7 @@ import pytest
 from opencomplai_core.gap_probes import (
     _PROBE_PATTERNS,
     PROBE_PROVENANCE,
+    SCAFFOLD_PLACEHOLDER,
     STUB_SOURCE_REFS,
     artifact_gap_status,
     run_artifact_probe,
@@ -276,6 +277,22 @@ def test_red_team_look_alikes_are_not_evidence(tmp_path: Path, text: str):
         _found(_write(tmp_path, {"docs/red-team.md": text}), "ai_red_team_report")
         is None
     )
+
+
+@pytest.mark.parametrize(
+    ("ref", "rel", "text"),
+    [
+        ("ai_threat_model", "docs/threat-model.md", THREAT_MODEL),
+        ("ai_red_team_report", "docs/red-team-2026-10.md", RED_TEAM),
+    ],
+)
+def test_an_unfilled_scaffold_is_not_evidence(
+    tmp_path: Path, ref: str, rel: str, text: str
+):
+    filled = _write(tmp_path / "filled", {rel: text})
+    assert _found(filled, ref) == [rel]
+    scaffold = _write(tmp_path / "scaffold", {rel: f"{text}\n{SCAFFOLD_PLACEHOLDER}\n"})
+    assert _found(scaffold, ref) is None
 
 
 def test_the_event_log_probe_is_the_one_row_7_5_uses(tmp_path: Path):

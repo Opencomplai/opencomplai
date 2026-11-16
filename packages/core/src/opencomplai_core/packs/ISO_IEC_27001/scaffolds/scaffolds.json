@@ -1,0 +1,20 @@
+{
+  "statement_of_applicability": {
+    "title": "Statement of applicability",
+    "target": "docs/isms/statement-of-applicability.md",
+    "probe": "iso_iec_27001.soa_annex_a",
+    "file": "statement_of_applicability.md"
+  },
+  "isms_policy_set": {
+    "title": "Information security policy",
+    "target": "docs/policies/information-security.md",
+    "probe": "policy_information_security",
+    "file": "isms_policy_set.md"
+  },
+  "risk_treatment_plan": {
+    "title": "Risk treatment plan",
+    "target": "docs/isms/risk-treatment-plan.md",
+    "probe": "iso_iec_27001.risk_treatment_plan",
+    "file": "risk_treatment_plan.md"
+  }
+}

@@ -40,10 +40,41 @@
           "$ref": "#/$defs/ConfidenceLabel",
           "default": "heuristic_estimate"
         },
+        "corroborated": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set on a row decided by an attestation next to a corroborating source: true when evidence was found, false when it was not; omitted when None",
+          "title": "Corroborated"
+        },
         "disclaimer_ref": {
           "default": "DISCLAIMER_V1",
           "title": "Disclaimer Ref",
           "type": "string"
+        },
+        "evidence_class": {
+          "anyOf": [
+            {
+              "enum": [
+                "machine",
+                "hybrid",
+                "organisational"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "How the row can be decided, from pack data: machine (a source other than an attestation can decide it), hybrid (a probe corroborates an attestation) or organisational (attestation by nature); omitted when None",
+          "title": "Evidence Class"
         },
         "evidence_ref": {
           "description": "Rule id, obligation id, evaluator id, or scan finding reference",

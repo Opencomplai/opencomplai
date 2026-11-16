@@ -21,8 +21,15 @@ import pytest
 from opencomplai_cli import main
 from opencomplai_core.frameworks import FRAMEWORKS, FrameworkPack
 from opencomplai_core.models import DISCLAIMER_V1, DISCLAIMER_V2
+from opencomplai_core.pack_registry import load_pack_meta
 from rich.console import Console
 from typer.testing import CliRunner
+
+# The status word comes from the engine's pack metadata, never a typed word.
+NIST_TITLE = (
+    f"NIST AI RMF 1.0 ({load_pack_meta('NIST_AI_RMF')['status']}, "
+    "own evidence plus EU AI Act evidence, not a certification)"
+)
 
 FIXTURE_PACK = FrameworkPack(
     "FIXTURE",
@@ -155,7 +162,7 @@ def test_eu_and_nist_human_prints_one_block_per_target_in_order(cli):
     )
     assert code == 0, stderr
 
-    nist_at = stdout.index("NIST AI RMF 1.0 (derived from EU AI Act evidence)")
+    nist_at = stdout.index(NIST_TITLE)
     eu_at = stdout.index("Opencomplai Gap Report")
     assert nist_at < eu_at
     assert "NIST_AI_RMF:GOVERN 1.1" in stdout[nist_at:eu_at]
@@ -387,7 +394,7 @@ def test_report_from_gaps_json_renders_one_section_per_other_framework(
     headings = re.findall(r"<h2>([^<]*)</h2>", page)
     gap_at = headings.index("Gap report")
     assert headings[gap_at + 1 : gap_at + 5] == [
-        "NIST AI RMF 1.0 (derived from EU AI Act evidence)",
+        NIST_TITLE,
         "Fixture framework",
         "Regulatory timeline",
         "Eval summary",
@@ -417,7 +424,7 @@ def test_eu_and_nist_human_title_column_has_no_dash_for_known_rows(cli):
         "gaps", "--target", "EU_AI_ACT", "--target", "NIST_AI_RMF"
     )
     assert code == 0, stderr
-    nist_at = stdout.index("NIST AI RMF 1.0 (derived from EU AI Act evidence)")
+    nist_at = stdout.index(NIST_TITLE)
     eu_at = stdout.index("Opencomplai Gap Report")
     block = _one_line(stdout[nist_at:] if nist_at > eu_at else stdout[nist_at:eu_at])
     row = block[block.index("NIST_AI_RMF:GOVERN 1.1") :].split("NIST_AI_RMF:", 2)[1]

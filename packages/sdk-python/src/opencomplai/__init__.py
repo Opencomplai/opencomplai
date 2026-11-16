@@ -27,6 +27,13 @@ hashed, never stored):
     log.record(agent_id="a1", tool="search", intent="look up a policy",
                tool_input={"q": "retention"}, outcome="success")
     assert log.verify().ok
+
+To report runtime signals (decisions, out-of-mandate actions, metrics, incidents)
+as hashes and metadata only, buffered locally and sent in batches:
+    from opencomplai import RuntimeReporter
+
+    with RuntimeReporter("support-bot") as reporter:
+        reporter.metric("latency_ms", 182, unit="ms")
 """
 
 from opencomplai_core.engine import assess
@@ -50,8 +57,9 @@ from opencomplai_core.models import (
 )
 
 from opencomplai.agent_log import AgentDecisionLog
+from opencomplai.runtime import RuntimeReporter
 
-__version__ = "0.15.0"
+__version__ = "0.16.0"
 __all__ = [
     "FRAMEWORKS",
     "AgentDecisionLog",
@@ -63,6 +71,7 @@ __all__ = [
     "RiskLevel",
     "RiskResult",
     "RuleResult",
+    "RuntimeReporter",
     "ScanResult",
     "ScanStatusArtifact",
     "SystemManifest",

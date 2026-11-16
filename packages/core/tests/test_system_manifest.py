@@ -290,11 +290,11 @@ def test_scope_round_trips_and_leaves_unanswered_questions_out():
     assert scope.uses_retrieval is None
 
 
-@pytest.mark.parametrize(
-    "scope",
-    [{"trains_model": False}, {"trains_models": "maybe"}],
-    ids=["unknown-question", "not-a-boolean"],
-)
-def test_scope_rejects_unknown_questions_and_non_booleans(scope):
+def test_scope_accepts_unknown_questions_and_keeps_them_readable():
+    inputs = FrameworkInputs.model_validate({"scope": {"trains_model": False}})
+    assert inputs.scope.model_dump()["trains_model"] is False
+
+
+def test_scope_rejects_non_booleans():
     with pytest.raises(ValidationError):
-        FrameworkInputs.model_validate({"scope": scope})
+        FrameworkInputs.model_validate({"scope": {"trains_models": "maybe"}})

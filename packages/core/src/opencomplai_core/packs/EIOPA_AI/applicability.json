@@ -1,0 +1,27 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "insurance_undertaking",
+      "text": "Is the organisation an insurance or reinsurance undertaking, or does it supply AI to one?",
+      "false_means": "not an insurance undertaking or its supplier"
+    },
+    {
+      "key": "eu_high_risk_system",
+      "text": "Is the AI system high-risk under the EU AI Act?",
+      "false_means": "not a high-risk system"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {"insurance_undertaking": false},
+      "outcome": "not_applicable",
+      "reason": "The Opinion addresses insurance and reinsurance undertakings. Confirm with your adviser."
+    },
+    {
+      "when": {"eu_high_risk_system": true},
+      "outcome": "not_applicable",
+      "reason": "The Opinion leaves high-risk systems to the EU AI Act, so use that framework. Confirm with your adviser."
+    }
+  ]
+}

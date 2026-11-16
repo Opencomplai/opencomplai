@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import date, timedelta
 from pathlib import Path
 
 import opencomplai_cli.summaries_emit as emit
@@ -248,6 +249,106 @@ def test_agents_log_adds_chain_and_out_of_mandate(tmp_path):
 def test_agents_without_inventory_is_none_even_with_log(tmp_path):
     log = _agent_log(tmp_path / "a.jsonl", ["search"])
     assert emit.build_agents(_manifest(), log, None) == (None, [])
+
+
+def _expiring(*days: str | None) -> SystemManifest:
+    """One agent per entry; None means a mandate without an expiry."""
+    agents = []
+    for i, day in enumerate(days):
+        agent = _agent(f"a{i}")
+        if day is not None:
+            agent["mandate"]["expires_at"] = day
+        agents.append(agent)
+    return _manifest(agents)
+
+
+def test_agents_earliest_expiry_and_expiring_soon_count():
+    m = _expiring("2026-12-31", "2026-10-01")
+    s, _ = emit.build_agents(m, None, None, date(2026, 12, 15))
+    assert s.earliest_mandate_expiry == "2026-10-01"  # past days count here
+    assert s.expiring_soon == 1  # an expired mandate is not expiring soon
+
+
+def test_agents_expiring_soon_window_boundaries():
+    today = date(2026, 11, 15)
+    cases = {
+        today - timedelta(days=1): 0,
+        today: 1,
+        today + timedelta(days=30): 1,
+        today + timedelta(days=31): 0,
+    }
+    for day, want in cases.items():
+        s, _ = emit.build_agents(_expiring(day.isoformat()), None, None, today)
+        assert s.expiring_soon == want, day
+
+
+def test_agents_without_reference_day_has_earliest_only():
+    s, _ = emit.build_agents(_expiring("2026-12-31", "2027-01-31"), None, None)
+    assert s.earliest_mandate_expiry == "2026-12-31"
+    assert s.expiring_soon is None
+
+
+def test_agents_without_a_dated_mandate_has_neither_field():
+    s, _ = emit.build_agents(_expiring(None, None), None, None, date(2026, 11, 15))
+    assert (s.earliest_mandate_expiry, s.expiring_soon) == (None, None)
+    s, _ = emit.build_agents(
+        _manifest([_agent(mandate=False)]), None, None, date(2026, 11, 15)
+    )
+    assert (s.earliest_mandate_expiry, s.expiring_soon) == (None, None)
+
+
+def test_with_summaries_takes_the_reference_day_from_the_artifact_timestamp(tmp_path):
+    m = _expiring("2026-12-31")
+    stamped = _run(
+        _artifact(timestamp="2026-12-01T08:00:00Z"), manifest=m, tmp_path=tmp_path
+    )[0]
+    assert stamped.summaries.agents.expiring_soon == 1  # 30 days out
+    later = _run(
+        _artifact(timestamp="2026-11-30T08:00:00Z"), manifest=m, tmp_path=tmp_path
+    )[0]
+    assert later.summaries.agents.expiring_soon == 0  # 31 days out
+    unstamped = _run(_artifact(), manifest=m, tmp_path=tmp_path)[0]
+    assert unstamped.summaries.agents.earliest_mandate_expiry == "2026-12-31"
+    assert unstamped.summaries.agents.expiring_soon is None
+
+
+def test_with_summaries_reads_an_offset_timestamp_as_its_utc_day(tmp_path):
+    m = _expiring("2026-12-31")
+    # 01:00 at +05:00 on 12-01 is 20:00 UTC on 11-30: the day is 11-30, 31 days out.
+    ahead = _run(
+        _artifact(timestamp="2026-12-01T01:00:00+05:00"), manifest=m, tmp_path=tmp_path
+    )[0]
+    assert ahead.summaries.agents.expiring_soon == 0
+    # 22:00 at -05:00 on 11-30 is 03:00 UTC on 12-01: the day is 12-01, 30 days out.
+    behind = _run(
+        _artifact(timestamp="2026-11-30T22:00:00-05:00"), manifest=m, tmp_path=tmp_path
+    )[0]
+    assert behind.summaries.agents.expiring_soon == 1
+
+
+def test_an_expiry_the_utc_conversion_cannot_hold_is_skipped(tmp_path):
+    extreme = ("0001-01-01T00:00:00+05:00", "9999-12-31T23:59:59-05:00")
+    for value in extreme:
+        s, _ = emit.build_agents(_expiring(value), None, None, date(2026, 11, 15))
+        assert (s.earliest_mandate_expiry, s.expiring_soon) == (None, None)
+    # Next to a valid expiry, only the valid one counts, also through with_summaries.
+    m = _expiring(extreme[0], "2026-12-01", extreme[1])
+    out = _run(
+        _artifact(timestamp="2026-11-15T08:00:00Z"), manifest=m, tmp_path=tmp_path
+    )[0]
+    assert out.summaries.agents.earliest_mandate_expiry == "2026-12-01"
+    assert out.summaries.agents.expiring_soon == 1
+
+
+def test_expiry_summary_carries_days_and_counts_only(tmp_path):
+    m = _expiring("2026-12-31T10:30:00+02:00")
+    out = _run(
+        _artifact(timestamp="2026-12-01T00:00:00Z"), manifest=m, tmp_path=tmp_path
+    )[0]
+    dumped = out.summaries.agents.model_dump()
+    assert dumped["earliest_mandate_expiry"] == "2026-12-31"
+    assert "a0" not in json.dumps(dumped)
+    assert "10:30" not in json.dumps(dumped)
 
 
 # --- qms ---------------------------------------------------------------------

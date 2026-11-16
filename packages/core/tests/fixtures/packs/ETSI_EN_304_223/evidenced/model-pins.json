@@ -1,0 +1,6 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {"name": "ticket-ranker", "version": "1.4.0", "hashes": [{"alg": "SHA-256", "content": "3f9a1c07b2d84e5f6a7b8c9d0e1f2a3b4c5d6e7f8091a2b3c4d5e6f708192a3b"}]}
+  ]
+}

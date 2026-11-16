@@ -1,0 +1,193 @@
+
+ISO/IEC 42001:2023 AI management system (evaluated, not a certification) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement                ┃ Title                                            ┃ Status     ┃ Source      ┃ Evidence                              ┃ Rationale                                         ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ISO_IEC_42001:Clause 4.1   │ Understanding the organization and its context   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 4.2   │ Understanding the needs and expectations of      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ interested parties                               │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 4.3   │ Determining the scope of the AI management       │ MISSING    │ artifact    │ scope_statement                       │ No conventional documentation/code probe matched  │
+│                            │ system                                           │            │             │                                       │ for 'scope_statement'. Add the expected file or   │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 4.4   │ AI management system                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 5.1   │ Leadership and commitment                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 5.2   │ AI policy                                        │ MISSING    │ artifact    │ policy_ai                             │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'policy_ai'. Add the expected file or         │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 5.3   │ Roles, responsibilities and authorities          │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 6.1.1 │ General                                          │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 6.1.2 │ AI risk assessment                               │ MISSING    │ artifact    │ risk_register                         │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'risk_register'. Add the expected file or     │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 6.1.3 │ AI risk treatment                                │ MISSING    │ artifact    │ risk_register                         │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'risk_register'. Add the expected file or     │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 6.1.4 │ AI system impact assessment                      │ MISSING    │ artifact    │ ai_impact_assessment#impacts          │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'ai_impact_assessment#impacts'. Add the       │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:Clause 6.2   │ AI objectives and planning to achieve them       │ MISSING    │ artifact    │ objectives_record                     │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'objectives_record'. Add the expected file or │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 6.3   │ Planning of changes                              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 7.1   │ Resources                                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 7.2   │ Competence                                       │ MISSING    │ artifact    │ competence_training_record            │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'competence_training_record'. Add the         │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:Clause 7.3   │ Awareness                                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 7.4   │ Communication                                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 7.5   │ Documented information                           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 8.1   │ Operational planning and control                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 8.2   │ AI risk assessment                               │ MISSING    │ artifact    │ risk_register                         │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'risk_register'. Add the expected file or     │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 8.3   │ AI risk treatment                                │ MISSING    │ artifact    │ risk_register                         │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'risk_register'. Add the expected file or     │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:Clause 8.4   │ AI system impact assessment                      │ MISSING    │ artifact    │ ai_impact_assessment#mitigations      │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'ai_impact_assessment#mitigations'. Add the   │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:Clause 9.1   │ Monitoring, measurement, analysis and evaluation │ MISSING    │ artifact    │ post_market_monitoring_plan           │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'post_market_monitoring_plan'. Add the        │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:Clause 9.2   │ Internal audit                                   │ MISSING    │ artifact    │ internal_audit_report                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'internal_audit_report'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:Clause 9.3   │ Management review                                │ MISSING    │ artifact    │ management_review_minutes             │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'management_review_minutes'. Add the expected │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:Clause 10.1  │ Continual improvement                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:Clause 10.2  │ Nonconformity and corrective action              │ MISSING    │ artifact    │ corrective_action_log                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'corrective_action_log'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.2.2        │ AI policy                                        │ MISSING    │ artifact    │ policy_ai                             │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'policy_ai'. Add the expected file or         │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:A.2.3        │ Alignment with other organizational policies     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.2.4        │ Review of the AI policy                          │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.3.2        │ AI roles and responsibilities                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.3.3        │ Reporting of concerns                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.4.2        │ Resource documentation                           │ MISSING    │ artifact    │ technical_documentation_dossier       │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'technical_documentation_dossier'. Add the    │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.4.3        │ Data resources                                   │ MISSING    │ artifact    │ data_provenance_sheet                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'data_provenance_sheet'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.4.4        │ Tooling resources                                │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.4.5        │ System and computing resources                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.4.6        │ Human resources                                  │ MISSING    │ artifact    │ competence_training_record            │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'competence_training_record'. Add the         │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.5.2        │ AI system impact assessment process              │ MISSING    │ artifact    │ ai_impact_assessment#purpose          │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'ai_impact_assessment#purpose'. Add the       │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.5.3        │ Documentation of AI system impact assessments    │ MISSING    │ artifact    │ ai_impact_assessment#review           │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'ai_impact_assessment#review'. Add the        │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.5.4        │ Assessing AI system impact on individuals or     │ MISSING    │ artifact    │ ai_impact_assessment#affected parties │ No conventional documentation/code probe matched  │
+│                            │ groups of individuals                            │            │             │                                       │ for 'ai_impact_assessment#affected parties'. Add  │
+│                            │                                                  │            │             │                                       │ the expected file or construct, then re-run gaps. │
+│ ISO_IEC_42001:A.5.5        │ Assessing societal impacts of AI systems         │ MISSING    │ artifact    │ ai_impact_assessment#impacts          │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'ai_impact_assessment#impacts'. Add the       │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.6.2.6      │ AI system operation and monitoring               │ MISSING    │ artifact    │ post_market_monitoring_plan           │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'post_market_monitoring_plan'. Add the        │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.6.2.7      │ AI system technical documentation                │ MISSING    │ artifact    │ provider_qms_bundle                   │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'provider_qms_bundle'. Add the expected file  │
+│                            │                                                  │            │             │                                       │ or construct, then re-run gaps.                   │
+│ ISO_IEC_42001:A.6.2.8      │ AI system recording of event logs                │ MISSING    │ artifact    │ event_log_evidence                    │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'event_log_evidence'. Add the expected file   │
+│                            │                                                  │            │             │                                       │ or construct, then re-run gaps.                   │
+│ ISO_IEC_42001:A.7.2        │ Data for development and enhancement of AI       │ MISSING    │ artifact    │ data_provenance_sheet                 │ No conventional documentation/code probe matched  │
+│                            │ system                                           │            │             │                                       │ for 'data_provenance_sheet'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.7.3        │ Acquisition of data                              │ MISSING    │ artifact    │ data_provenance_sheet                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'data_provenance_sheet'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.7.4        │ Quality of data for AI systems                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.7.5        │ Data provenance                                  │ MISSING    │ artifact    │ data_provenance_sheet                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'data_provenance_sheet'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.7.6        │ Data preparation                                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.8.2        │ System documentation and information for users   │ MISSING    │ artifact    │ deployer_instructions                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'deployer_instructions'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.8.3        │ External reporting                               │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.8.4        │ Communication of incidents                       │ MISSING    │ artifact    │ incident_notification_template        │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'incident_notification_template'. Add the     │
+│                            │                                                  │            │             │                                       │ expected file or construct, then re-run gaps.     │
+│ ISO_IEC_42001:A.8.5        │ Information for interested parties               │ MISSING    │ artifact    │ model_card                            │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'model_card'. Add the expected file or        │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+│ ISO_IEC_42001:A.9.2        │ Processes for responsible use of AI systems      │ MISSING    │ artifact    │ human_oversight_construct             │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'human_oversight_construct'. Add the expected │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.9.3        │ Objectives for responsible use of AI system      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.9.4        │ Intended use of the AI system                    │ MISSING    │ artifact    │ deployer_instructions                 │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'deployer_instructions'. Add the expected     │
+│                            │                                                  │            │             │                                       │ file or construct, then re-run gaps.              │
+│ ISO_IEC_42001:A.10.2       │ Allocating responsibilities                      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_42001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_42001:A.10.3       │ Suppliers                                        │ MISSING    │ artifact    │ vendor_register                       │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'vendor_register'. Add the expected file or   │
+│                            │                                                  │            │             │                                       │ construct, then re-run gaps.                      │
+└────────────────────────────┴──────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────┴───────────────────────────────────────────────────┘
+
+Excluded
+  ISO_IEC_42001:A.6.1.2: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.6.1.3: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.6.2.2: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.6.2.3: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.6.2.4: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.6.2.5: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+  ISO_IEC_42001:A.10.4: Not applicable: the manifest's scope says the system not an AI provider (framework_inputs.ISO_IEC_42001.scope.ai_provider = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

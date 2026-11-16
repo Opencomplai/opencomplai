@@ -1,0 +1,367 @@
+{
+  "family": "cra",
+  "probes": {
+    "cra.technical_documentation": {
+      "type": "clause_document",
+      "patterns": [
+        "CRA_TECHNICAL_DOCUMENTATION.md",
+        "docs/**/cra-technical-documentation*",
+        "docs/**/cra_technical_documentation*",
+        "**/cra-technical-documentation*",
+        "**/cra_technical_documentation*"
+      ],
+      "noun": "technical documentation",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "1": {
+          "title": "General description of the product",
+          "markers": [
+            {
+              "re": "\\b(?:product|description|overview|intended\\s+purpose)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:versions?|hardware|software|firmware|components?|users?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "2": {
+          "title": "Design, development and vulnerability handling",
+          "markers": [
+            {
+              "re": "\\b(?:design|architecture|development|secure\\s+development)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:vulnerabilit(?:y|ies)|disclosure|patch(?:es|ing)?|updates?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "3": {
+          "title": "Cybersecurity risk assessment",
+          "markers": [
+            {
+              "re": "\\b(?:risk\\s+assessment|risks?|threats?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:mitigat\\w*|controls?|measures?|likelihood|severity)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "4": {
+          "title": "Basis for the support period",
+          "markers": [
+            {
+              "re": "\\bsupport\\s+period\\b|\\bsupport\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:years?|months?|expected\\s+use|lifetime|end\\s+of\\s+support)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5": {
+          "title": "Standards and solutions applied",
+          "markers": [
+            {
+              "re": "\\b(?:standards?|specifications?|harmoni[sz]ed|certification\\s+scheme)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:applied|used|followed|adopted|solutions?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6": {
+          "title": "Test reports",
+          "markers": [
+            {
+              "re": "\\b(?:test|tests|testing|penetration)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:reports?|results?|findings?|verified|passed)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "7": {
+          "title": "Copy of the declaration of conformity",
+          "markers": [
+            {
+              "re": "\\bdeclaration\\s+of\\s+conformity\\b|\\bdeclaration\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:copy|attached|signed|issued|dated|enclosed)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "8": {
+          "title": "Software bill of materials",
+          "markers": [
+            {
+              "re": "\\b(?:software\\s+bill\\s+of\\s+materials|sbom|bill\\s+of\\s+materials)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:cyclonedx|spdx|components?|dependenc(?:y|ies)|machine[\\s-]readable)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    },
+    "cra.user_information": {
+      "type": "clause_document",
+      "patterns": [
+        "docs/**/security-information*",
+        "docs/**/security_information*",
+        "**/cra-user-information*",
+        "**/cra_user_information*"
+      ],
+      "noun": "user information",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "1": {
+          "title": "Manufacturer identity and contact",
+          "markers": [
+            {
+              "re": "\\b(?:manufacturer|company|organi[sz]ation|trading\\s+name)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:contact|e-?mail|phone|postal|address|website)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "2": {
+          "title": "Contact point for vulnerability reports",
+          "markers": [
+            {
+              "re": "\\b(?:vulnerabilit(?:y|ies)|report(?:ing)?|disclosure)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:contact|e-?mail|security@|url|web\\s*form|address)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "3": {
+          "title": "Product identification",
+          "markers": [
+            {
+              "re": "\\b(?:product|model|type|batch|serial)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:identif\\w*|name|number|version|release)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "4": {
+          "title": "Intended purpose",
+          "markers": [
+            {
+              "re": "\\b(?:intended\\s+(?:purpose|use)|purpose)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:security\\s+environment|functions?|designed|operating\\s+conditions)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5": {
+          "title": "Known risks and misuse",
+          "markers": [
+            {
+              "re": "\\b(?:risks?|hazards?|misuse)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:known|foreseeable|circumstances|conditions)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6": {
+          "title": "Where the declaration of conformity can be found",
+          "markers": [
+            {
+              "re": "\\bdeclaration\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:https?://|link|address|available|published|url)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "7": {
+          "title": "Support and end date",
+          "markers": [
+            {
+              "re": "\\bsupport\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:end\\s+date|until|ends?|years?|months?|\\d{4})\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "8": {
+          "title": "Secure use from set-up to decommissioning",
+          "markers": [
+            {
+              "re": "\\b(?:install\\w*|set-?up|commission\\w*|secure\\s+use|configur\\w*)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:decommission\\w*|dispos\\w*|updates?|remov\\w*|reset)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "9": {
+          "title": "Location of the bill of materials",
+          "markers": [
+            {
+              "re": "\\b(?:software\\s+bill\\s+of\\s+materials|sbom|bill\\s+of\\s+materials)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:location|available|link|repository|file|path|https?://)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    },
+    "cra.support_period_statement": {
+      "patterns": [
+        "SUPPORT.md",
+        "**/support-period*",
+        "**/support_period*",
+        "**/end-of-support*",
+        "**/end_of_support*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bsupport\\s+period\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:end\\s+date|until|ends?\\s+on|\\d+\\s*(?:years?|months?)|\\d{4}-\\d{2}-\\d{2})",
+            "flags": "i"
+          },
+          {
+            "re": "\\bsecurity\\s+(?:updates?|patch(?:es)?|fix(?:es)?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a support period, an end date or duration and security updates",
+        "lacks_label": "support period, end date or duration, or security updates",
+        "noun": "support period statement",
+        "body_only": true,
+        "forbid_scaffold": true,
+        "select": false,
+        "note": ""
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "cra.vulnerability_notification_record": {
+      "type": "clause_document",
+      "patterns": [
+        "**/vulnerability-notification*",
+        "**/vulnerability_notification*",
+        "docs/**/cra-notification*",
+        "docs/**/cra_notification*"
+      ],
+      "noun": "vulnerability notification record",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "early-warning": {
+          "title": "Early warning",
+          "markers": [
+            {
+              "re": "\\b(?:early\\s+warning|actively\\s+exploited)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:24\\s*hours?|hours?|csirt|coordinator|platform|member\\s+states?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "notification": {
+          "title": "Notification",
+          "markers": [
+            {
+              "re": "\\b(?:notification|notif(?:y|ied))\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:72\\s*hours?|severity|corrective|mitigat\\w*|affected)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "final-report": {
+          "title": "Final report",
+          "markers": [
+            {
+              "re": "\\bfinal\\s+report\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:description|root\\s+cause|severity|patch\\w*|corrective|mitigat\\w*|days)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "user-information": {
+          "title": "Information to users",
+          "markers": [
+            {
+              "re": "\\b(?:users?|customers?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:inform\\w*|advis\\w*|notif\\w*|mitigat\\w*|corrective)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ISO_IEC_27090",
+  "order": 4,
+  "kind": "native",
+  "name": "ISO/IEC 27090:2026 AI security guidance",
+  "caveat": "guidance, not a certification",
+  "status": "evaluated",
+  "short_name": "ISO/IEC 27090",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "iso_27090.json",
+  "docs_page": "concepts/iso-27090.md",
+  "data_files": ["applicability.json", "probes.json"],
+  "copyright": "restricted",
+  "row_count": 31,
+  "target_machine_share": 20,
+  "timeline": "none",
+  "timeline_reason": "a standard without legal application dates",
+  "catalogue": true
+}

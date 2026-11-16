@@ -20,7 +20,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from datetime import UTC, date, datetime
 from enum import StrEnum
 from pathlib import Path
@@ -37,6 +37,7 @@ from opencomplai_core.acceptance import (
     trusted_key_ids_from_env,
 )
 from opencomplai_core.agent_inventory import check_inventory
+from opencomplai_core.agent_report import plain_text
 from opencomplai_core.backlog import SortOrder, build_backlog, sort_rows
 from opencomplai_core.compliance_checker import CHECKER_VERDICTS
 from opencomplai_core.compliance_checker.models import (
@@ -46,13 +47,16 @@ from opencomplai_core.compliance_checker.models import (
 from opencomplai_core.control_assessment import build_controls_block, derive_controls
 from opencomplai_core.control_catalog import get_catalog
 from opencomplai_core.control_identity import fingerprint_manifest
+from opencomplai_core.custom_pack import load_custom_pack, register_custom_pack
 from opencomplai_core.deployer_pack import with_pack_summary
 from opencomplai_core.engine import assess
 from opencomplai_core.eval_engine import eval_summary_from_report, run_evals
 from opencomplai_core.evaluators.seed_corpus import seed_sample_set
 from opencomplai_core.exemption_gap import apply_exemption_gate
 from opencomplai_core.frameworks import (
+    CUSTOM_FRAMEWORK_PREFIX,
     EU_AI_ACT,
+    FRAMEWORKS,
     ISO_27090,
     evaluate_targets,
     gate_failures,
@@ -193,6 +197,7 @@ from opencomplai_cli.commands.deployer_pack import (  # noqa: E402
 )
 from opencomplai_cli.commands.diff import diff_cmd  # noqa: E402
 from opencomplai_cli.commands.export import export_cmd  # noqa: E402
+from opencomplai_cli.commands.generate import app as generate_app  # noqa: E402
 from opencomplai_cli.commands.halt import approve_cmd, resume_cmd  # noqa: E402
 from opencomplai_cli.commands.incident import app as incident_app  # noqa: E402
 from opencomplai_cli.commands.instructions import app as instructions_app  # noqa: E402
@@ -200,6 +205,8 @@ from opencomplai_cli.commands.interactive_init import run_interactive_init  # no
 from opencomplai_cli.commands.push import run_push, run_push_dossier  # noqa: E402
 from opencomplai_cli.commands.qms import app as qms_app  # noqa: E402
 from opencomplai_cli.commands.rules import app as rules_app  # noqa: E402
+from opencomplai_cli.commands.scaffold import scaffold_cmd  # noqa: E402
+from opencomplai_cli.commands.scope import scope_cmd  # noqa: E402
 from opencomplai_cli.commands.serve import run_serve  # noqa: E402
 from opencomplai_cli.commands.snippet import read_display_snippet  # noqa: E402
 from opencomplai_cli.commands.verify import verify_cmd  # noqa: E402
@@ -234,6 +241,7 @@ app.add_typer(agents_app, name="agents")
 app.add_typer(instructions_app, name="instructions")
 app.add_typer(deployer_pack_app, name="deployer-pack")
 app.add_typer(attestations_app, name="attestations")
+app.add_typer(generate_app, name="generate")
 # HALT-WIRE: `approve`/`resume` are top-level commands (not a sub-typer),
 # implemented in commands/halt.py and registered here to avoid a circular
 # import (halt.py needs `console`/`_emit_event` from this module, lazily).
@@ -241,6 +249,8 @@ app.command("approve")(approve_cmd)
 app.command("resume")(resume_cmd)
 app.command("accept")(accept_cmd)
 app.command("diff")(diff_cmd)
+app.command("scope")(scope_cmd)
+app.command("scaffold")(scaffold_cmd)
 app.command("verify")(verify_cmd)
 app.command("export")(export_cmd)
 
@@ -1492,6 +1502,12 @@ _ATTESTATIONS_REMOTE_HELP = (
     "merge it into the manifest's framework_inputs for this run. Off by default; "
     "if the fetch fails the run goes on with the manifest alone."
 )
+_CUSTOM_PACK_HELP = (
+    "A custom controls pack (JSON or YAML) to assess as a further framework, "
+    "CUSTOM_<key>. Attestation-led: a control is Unverified until attested. "
+    "The file is data; no code in it runs. It gates only when listed in --gate "
+    "or gate.frameworks."
+)
 _WITHOUT_GAP_REPORT = " Only used when --gap-report is not supplied."
 _ONLY_WITH_ISO_27090 = (
     " Local mode only, and only when the manifest's compliance_targets include "
@@ -1562,6 +1578,9 @@ def gaps_cmd(
     attestations_remote: bool = typer.Option(
         False, "--attestations-remote", help=_ATTESTATIONS_REMOTE_HELP
     ),
+    custom_pack: Path | None = typer.Option(
+        None, "--custom-pack", help=_CUSTOM_PACK_HELP
+    ),
     output: OutputFormat = typer.Option(OutputFormat.human, "--output", "-o"),
     sort: SortOrder = typer.Option(
         SortOrder.article,
@@ -1595,7 +1614,9 @@ def gaps_cmd(
         err_console.print(f"[red]Validation error:[/red] {e}")
         sys.exit(2)
 
-    targets = _resolve_targets_or_exit(manifest, target)
+    targets = _resolve_targets_or_exit(
+        manifest, target, _load_custom_pack_or_exit(custom_pack)
+    )
     today = datetime.now(UTC).date()
     manifest, _ = _with_attestations(
         manifest,
@@ -1604,6 +1625,11 @@ def gaps_cmd(
         remote_flag=attestations_remote,
         repo_root=repo_root,
         today=today,
+    )
+    gate_config = _project_config(repo_root)
+    _warn_custom_gate_never_fails(
+        [fw for fw in gate_config.gate_frameworks if fw in targets],
+        gate_config.gate_fail_on or "missing",
     )
     try:
         regimes = parse_map_to(map_to)
@@ -1673,8 +1699,8 @@ def gaps_cmd(
         if "NIST_AI_RMF" in targets
         else None
     )
-    # Exactly one EU AI Act or NIST AI RMF target keeps today's output.
-    legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
+    # Exactly one EU AI Act target keeps today's output.
+    legacy = targets == [EU_AI_ACT]
 
     if output == OutputFormat.json:
         envelope_payload = json.loads(report.model_dump_json())
@@ -1721,14 +1747,45 @@ def gaps_cmd(
         )
 
 
-def _resolve_targets_or_exit(
-    manifest: SystemManifest, cli_targets: list[str] | None
-) -> list[str]:
+# Custom packs registered in this process, by resolved path: a run over several
+# manifests (`check -m a -m b`) loads the same file once.
+_CUSTOM_PACKS_LOADED: dict[Path, str] = {}
+
+
+def _load_custom_pack_or_exit(path: Path | None) -> str | None:
+    """Register the custom controls pack at `path` and return its framework key;
+    None when no pack is given. A pack that cannot be used exits 2."""
+    if path is None:
+        return None
+    resolved = path.resolve()
+    key = _CUSTOM_PACKS_LOADED.get(resolved)
+    if key is not None and key in FRAMEWORKS:
+        return key
     try:
-        return resolve_targets(manifest, cli_targets)
+        pack = load_custom_pack(path)
+        register_custom_pack(pack)
     except ValueError as e:
-        err_console.print(f"[red]Error:[/red] {e}")
+        err_console.print(f"[red]Error:[/red] custom pack: {escape(str(e))}")
         sys.exit(2)
+    _CUSTOM_PACKS_LOADED[resolved] = pack.id
+    return pack.id
+
+
+def _resolve_targets_or_exit(
+    manifest: SystemManifest,
+    cli_targets: list[str] | None,
+    custom_pack_key: str | None = None,
+) -> list[str]:
+    """The frameworks to assess; a loaded custom pack is always one of them."""
+    try:
+        targets = resolve_targets(manifest, cli_targets)
+    except ValueError as e:
+        # the unknown names come from the manifest or the command line
+        err_console.print(f"[red]Error:[/red] {escape(plain_text(str(e)))}")
+        sys.exit(2)
+    if custom_pack_key is not None and custom_pack_key not in targets:
+        targets.append(custom_pack_key)
+    return targets
 
 
 def _project_config(repo_root: Path) -> ProjectConfig:
@@ -1740,7 +1797,8 @@ def _project_config(repo_root: Path) -> ProjectConfig:
     try:
         return load_project_config(path)
     except ValueError as e:
-        err_console.print(f"[red]Error:[/red] {e}")
+        # a YAML error quotes the file
+        err_console.print(f"[red]Error:[/red] {escape(plain_text(str(e)))}")
         sys.exit(2)
 
 
@@ -1758,9 +1816,25 @@ def _resolve_gate(
     try:
         validate_gate(frameworks, fail_on, targets)
     except ValueError as e:
-        err_console.print(f"[red]Error:[/red] gate: {e}")
+        err_console.print(f"[red]Error:[/red] gate: {escape(plain_text(str(e)))}")
         sys.exit(2)
+    _warn_custom_gate_never_fails(frameworks, fail_on)
     return frameworks, fail_on
+
+
+def _warn_custom_gate_never_fails(frameworks: Sequence[str], fail_on: str) -> None:
+    """Say so when a gated custom pack cannot fail the gate. Its rows are only
+    Unverified or Met, so only `fail_on: unverified` can fail on them. `gaps` passes
+    a `fail_on` read from the project file that nothing has checked: only the two
+    levels that cannot fail are named, so no file text is ever printed."""
+    custom = [fw for fw in frameworks if fw.startswith(CUSTOM_FRAMEWORK_PREFIX)]
+    if custom and fail_on in ("missing", "partial"):
+        err_console.print(
+            f"[yellow]WARN:[/yellow] gated custom pack {escape(', '.join(custom))} "
+            f"cannot fail the gate at fail_on '{fail_on}': its rows are "
+            "Unverified or Met. Use fail_on 'unverified' to fail on a control "
+            "with no current attestation."
+        )
 
 
 def _with_attestations(
@@ -2220,7 +2294,8 @@ def fria_generate_cmd(
             except Exception as exc:
                 err_console.print(
                     f"[yellow]Warning:[/yellow] failed to parse checker report "
-                    f"{resolved_checker_path}: {exc}"
+                    f"{escape(plain_text(str(resolved_checker_path)))}: "
+                    f"{escape(plain_text(str(exc)))}"
                 )
         else:
             console.print(
@@ -3028,12 +3103,18 @@ def scan_cmd(
     ai_intent: bool = typer.Option(
         False,
         "--ai-intent",
-        help="Enable AI intent classification (requires opencomplai-ai)",
+        help=(
+            "Enable AI intent classification (requires opencomplai-ai; "
+            "default model codebert-onnx, the deterministic matcher)"
+        ),
     ),
     ai_model: str | None = typer.Option(
         None,
         "--ai-model",
-        help="AI model to use (overrides ~/.opencomplai/ai-config.yaml)",
+        help=(
+            "AI model to use (default codebert-onnx; overrides "
+            "~/.opencomplai/ai-config.yaml)"
+        ),
     ),
     ai_deep: bool = typer.Option(
         False,
@@ -3472,6 +3553,9 @@ def check_cmd(
     attestations_remote: bool = typer.Option(
         False, "--attestations-remote", help=_ATTESTATIONS_REMOTE_HELP
     ),
+    custom_pack: Path | None = typer.Option(
+        None, "--custom-pack", help=_CUSTOM_PACK_HELP
+    ),
     require_exemption_record: bool = typer.Option(
         False,
         "--require-exemption-record",
@@ -3557,7 +3641,9 @@ def check_cmd(
         )
         sign_if_available = False
 
-    targets = _resolve_targets_or_exit(manifest, target)
+    targets = _resolve_targets_or_exit(
+        manifest, target, _load_custom_pack_or_exit(custom_pack)
+    )
     gate_frameworks, gate_fail_on = _resolve_gate(
         targets, gate, gate_fail_on, repo_root
     )
@@ -3824,8 +3910,8 @@ def check_cmd(
                 if "NIST_AI_RMF" in targets
                 else None
             )
-            # Exactly one EU AI Act or NIST AI RMF target keeps today's artifact.
-            legacy = targets in ([EU_AI_ACT], ["NIST_AI_RMF"])
+            # Exactly one EU AI Act target keeps today's artifact.
+            legacy = targets == [EU_AI_ACT]
             artifact = artifact.model_copy(
                 update={
                     "gap_report": gap_report,
@@ -4889,7 +4975,8 @@ def docs_generate_cmd(
             )
         except Exception as exc:
             err_console.print(
-                f"[yellow]Warning:[/yellow] failed to parse {scan_report_file}: {exc}"
+                f"[yellow]Warning:[/yellow] failed to parse {scan_report_file}: "
+                f"{escape(plain_text(str(exc)))}"
             )
     else:
         console.print(
@@ -4905,7 +4992,8 @@ def docs_generate_cmd(
             )
         except Exception as exc:
             err_console.print(
-                f"[yellow]Warning:[/yellow] failed to parse {eval_report_file}: {exc}"
+                f"[yellow]Warning:[/yellow] failed to parse {eval_report_file}: "
+                f"{escape(plain_text(str(exc)))}"
             )
     else:
         console.print(
@@ -5404,15 +5492,15 @@ def ai_configure_cmd(
         for mid, spec in MODEL_CATALOG.items():
             label = f"{mid:<28} [{spec_size_label(spec.size_mb)},  {spec.license},  {spec.runtime}]"
             if mid == "qwen2.5-coder-1.5b":
-                label += "  ← recommended"
+                label += "  ← local LLM, needs [deep]"
             if mid == "codebert-onnx":
-                label += "  ← fastest, no llama-cpp"
+                label += "  ← default, no download"
             choices.append(questionary.Choice(title=label, value=mid))
 
         chosen = questionary.select(
             "Choose an AI intent model:",
             choices=choices,
-            default="qwen2.5-coder-1.5b",
+            default="codebert-onnx",
         ).ask()
         if chosen is None:
             sys.exit(0)

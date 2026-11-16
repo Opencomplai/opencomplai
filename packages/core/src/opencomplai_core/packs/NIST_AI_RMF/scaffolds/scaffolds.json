@@ -1,0 +1,8 @@
+{
+  "ai_rmf_profile": {
+    "title": "AI RMF profile",
+    "target": "AI_RMF_PROFILE.md",
+    "probe": "nist_ai_rmf.profile",
+    "file": "ai_rmf_profile.md"
+  }
+}

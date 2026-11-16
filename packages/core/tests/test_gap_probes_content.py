@@ -6,8 +6,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from opencomplai_core.control_catalog import get_catalog
-from opencomplai_core.gap_probes import artifact_gap_status
+from opencomplai_core.gap_probes import SCAFFOLD_PLACEHOLDER, artifact_gap_status
 from opencomplai_core.gap_report import build_gap_report, load_gap_article_map
 from opencomplai_core.models import (
     ArticleGapSource,
@@ -94,3 +95,46 @@ def test_art17_template_mapping_renders(tmp_path: Path):
 def test_catalog_covers_art17():
     catalog = get_catalog()
     assert "Art. 17" in catalog
+
+
+_SCAFFOLD_EXAMPLES = {
+    "risk_register": (
+        "docs/isms/risk-treatment-plan.md",
+        "Risk assessment: identified risks and hazard list.\n"
+        "Treatment: mitigation and control measure per risk.\n",
+    ),
+    "deployer_instructions": (
+        "docs/instructions.md",
+        "Intended purpose of the system.\nHuman oversight and known limitation.\n",
+    ),
+    "technical_documentation_dossier": (
+        "dossier_abc.json",
+        '{"dossier_id": "abc", "bundle_checksum": "sha256:00"}\n',
+    ),
+    "serious_incident_log": (
+        "incident-log.json",
+        '{"prev_hash": "sha256:00", "event": "example"}\n',
+    ),
+}
+
+
+@pytest.mark.parametrize("ref", sorted(_SCAFFOLD_EXAMPLES))
+def test_eu_artifact_probe_found_when_filled(tmp_path: Path, ref: str):
+    rel, text = _SCAFFOLD_EXAMPLES[ref]
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
+    row = artifact_gap_status(ref, tmp_path)
+    assert row.status == GapStatus.PARTIAL
+    assert row.confidence == pytest.approx(0.6)
+
+
+@pytest.mark.parametrize("ref", sorted(_SCAFFOLD_EXAMPLES))
+def test_eu_artifact_probe_unfilled_scaffold_reads_035(tmp_path: Path, ref: str):
+    rel, text = _SCAFFOLD_EXAMPLES[ref]
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text + "\n" + SCAFFOLD_PLACEHOLDER + "\n", encoding="utf-8")
+    row = artifact_gap_status(ref, tmp_path)
+    assert row.status == GapStatus.PARTIAL
+    assert row.confidence == pytest.approx(0.35)

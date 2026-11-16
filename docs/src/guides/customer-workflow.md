@@ -144,7 +144,7 @@ The **code corroboration scanner** cross-checks your `intended_purpose` against 
 
 Add `--ai-intent` to layer intent classification on top of signature detection. Each extracted callsite is classified locally by the backends below (the opt-in `saas` backend is the exception: it sends redacted snippets to the hosted API after consent) across three EU AI Act dimensions — `decision_autonomy`, `subject_type`, and `consequential` — and mapped to a per-callsite `eu_obligation` list.
 
-Install the AI plugin first. The `codebert-onnx` backend is a deterministic code-signal matcher: it runs on the base install, with no download and no extra packages. (The built-in default model is a local GGUF LLM, which needs the optional `[deep]` extra and a download; the commands below select `codebert-onnx` instead.)
+Install the AI plugin first. The `codebert-onnx` backend is a deterministic code-signal matcher: it runs on the base install, with no download and no extra packages. (From 0.16.0 this matcher is the built-in default; 0.15.0 and earlier default to a local GGUF LLM, which needs the optional `[deep]` extra and a download. The commands below select `codebert-onnx` explicitly, so they work on every release.)
 
 === "macOS / Linux"
     ```bash

@@ -337,7 +337,7 @@ class FrameworkScope(BaseModel):
     None means not answered; only an answer of False can take a row out.
     """
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="allow")
 
     trains_models: bool | None = Field(
         default=None, description="The system trains or fine-tunes models"
@@ -349,13 +349,29 @@ class FrameworkScope(BaseModel):
         default=None, description="The model is reachable through a public API"
     )
 
+    @model_validator(mode="after")
+    def _extras_are_answers(self) -> FrameworkScope:
+        for key, value in (self.model_extra or {}).items():
+            if value is not None and not isinstance(value, bool):
+                raise ValueError(f"scope answer {key!r} must be true, false or null")
+        return self
+
+    def answer(self, key: str) -> bool | None:
+        """The answer for `key`, or None when it is not answered."""
+        value = getattr(self, key, None)
+        return value if isinstance(value, bool) else None
+
+    def answers(self) -> dict[str, bool]:
+        """Every answered key (declared fields and extras) with its answer."""
+        keys = [*type(self).model_fields, *(self.model_extra or {})]
+        return {k: v for k in keys if (v := self.answer(k)) is not None}
+
     @model_serializer(mode="wrap")
     def _omit_unanswered(
         self, handler: SerializerFunctionWrapHandler
     ) -> dict[str, Any]:
-        return omit_by_table(
-            self, handler(self), dict.fromkeys(type(self).model_fields, OMIT_NONE)
-        )
+        data = handler(self)
+        return {k: v for k, v in data.items() if v is not None}
 
 
 class FrameworkInputs(BaseModel):
@@ -1652,6 +1668,10 @@ class ConfidenceLabel(StrEnum):
     ATTESTED = "attested"
 
 
+# Add a row here to omit a new optional field when it is unset.
+_ARTICLE_GAP_STATUS_OMIT = {"corroborated": OMIT_NONE, "evidence_class": OMIT_NONE}
+
+
 class ArticleGapStatus(BaseModel):
     """Met/Partial/Missing/Unverified status for a single EU AI Act article."""
 
@@ -1668,6 +1688,29 @@ class ArticleGapStatus(BaseModel):
     )
     confidence_label: ConfidenceLabel = ConfidenceLabel.HEURISTIC_ESTIMATE
     disclaimer_ref: str = "DISCLAIMER_V1"
+    corroborated: bool | None = Field(
+        default=None,
+        description=(
+            "Set on a row decided by an attestation next to a corroborating "
+            "source: true when evidence was found, false when it was not; "
+            "omitted when None"
+        ),
+    )
+    evidence_class: Literal["machine", "hybrid", "organisational"] | None = Field(
+        default=None,
+        description=(
+            "How the row can be decided, from pack data: machine (a source other "
+            "than an attestation can decide it), hybrid (a probe corroborates an "
+            "attestation) or organisational (attestation by nature); omitted "
+            "when None"
+        ),
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_corroborated(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), _ARTICLE_GAP_STATUS_OMIT)
 
 
 class PrincipleStatus(BaseModel):
@@ -1798,4 +1841,18 @@ class FrameworkReport(BaseModel):
         default_factory=dict,
         description="Requirement id -> reason, as declared in framework_inputs",
     )
+    applicability: dict[str, str] | None = Field(
+        default=None,
+        description=(
+            "Framework-level outcome ('outcome': applies, voluntary or "
+            "not_applicable) and its 'reason', from the pack's applicability "
+            "file; left out when the pack has none"
+        ),
+    )
     report: GapReport
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_applicability(
+        self, handler: SerializerFunctionWrapHandler
+    ) -> dict[str, Any]:
+        return omit_by_table(self, handler(self), {"applicability": OMIT_NONE})

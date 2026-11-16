@@ -1,25 +1,44 @@
 # Frameworks
 
 Opencomplai can assess one AI system against several frameworks side by side. The EU
-AI Act is the framework it evaluates natively and the default target; the table below
-says exactly how each other framework is assessed.
+AI Act is the default target; the table below gives each framework's status, its row
+count and how many rows are checked from evidence.
 
-Standing line: EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
+Standing line: 15 frameworks by status, evaluated: EU AI Act, NIST AI RMF 1.0, ISO/IEC 42001:2023 AI management system, ISO/IEC 27090:2026 AI security guidance, ISO/IEC 27001:2022 information security management, SOC 2 Trust Services Criteria (not a SOC 2 report), NIS2 Directive (EU) 2022/2555 cybersecurity measures, DORA Regulation (EU) 2022/2554 digital operational resilience, EBA Guidelines on ICT, outsourcing and loan origination, EIOPA Opinion on AI governance and risk management, GDPR Regulation (EU) 2016/679, duties relevant to AI systems, Cyber Resilience Act Regulation (EU) 2024/2847, ETSI EN 304 223 baseline cyber security for AI, ISO/IEC 42005:2025 AI system impact assessment, ISO/IEC 23894:2023 AI risk management guidance.
 
 ## What each framework gets
 
-| Framework | Key | Status | How verdicts are produced |
-|---|---|---|---|
-| EU AI Act (Regulation (EU) 2024/1689) | `EU_AI_ACT` | **Evaluated** | Natively, per article: rules, obligations, the code scan, pipeline evaluators and documentation probes. The default target, and the only framework whose controls always gate `check`. |
-| NIST AI RMF 1.0 (NIST AI 100-1) | `NIST_AI_RMF` | **Derived, per subcategory** | Each of the 72 subcategories lists the EU AI Act articles whose evidence is re-projected onto it. There is no NIST scanner. 15 subcategories have nothing in the EU AI Act evidence; they read **Unverified** until you record an attestation under `framework_inputs`. Every mapping is flagged for founder review. See [NIST AI RMF](../concepts/nist-ai-rmf.md). |
-| ISO/IEC 42001:2023 | `ISO_IEC_42001` | **Attestation-led, partial** | Native rows per clause and Annex A control. Most rows are provider attestations that read **Unverified** until you record one under `framework_inputs`; four rows also look for a matching document, and the worse of the two wins. Nothing here certifies ISO/IEC 42001 conformity. Every row is flagged for founder review at low confidence. Each row links to the EU AI Act articles, NIST AI RMF subcategories and ISO/IEC 27090 clauses it relates to; see [Framework mappings](mappings.md). A clause is also still cited per EU AI Act article (the `Mapped` column of `opencomplai gaps`). |
-| ISO/IEC 27090:2026 | `ISO_IEC_27090` | **Attestation-led guidance** | Native rows for the 31 guidance clauses on security threats to AI systems: practices, threats and mitigations. Every row takes a provider attestation. Four rows also take an output evaluator (prompt injection, injected output, sensitive output, red teaming), which can overrule the attestation when you supply an eval. Eight rows also look for supporting evidence in the repository (an SBOM or model pins, rate-limit code, a threat model, a red-team report, an event log): it never lowers a row, and an unattested row with such evidence stays **Unverified** (and names the file) rather than reading Met or failing a gate. ISO/IEC 27090 is guidance, so nothing here is a certification. Every row is flagged for founder review at low confidence. See [ISO/IEC 27090](../concepts/iso-27090.md). |
-| ISO/IEC 27001:2022, SOC 2, NIS2, DORA, EBA guidelines, EIOPA AI Opinion, GDPR, Cyber Resilience Act, ETSI EN 304 223, ISO/IEC 42005:2025, ISO/IEC 23894:2023 | `ISO_IEC_27001`, `SOC_2`, `NIS2`, `DORA`, `EBA`, `EIOPA_AI`, `GDPR`, `CRA`, `ETSI_EN_304_223`, `ISO_IEC_42005`, `ISO_IEC_23894` | **Attestation-led** | Native rows per requirement, article, control or criterion. Every row takes a provider attestation and reads **Unverified** until you record one; a few also look for supporting evidence in the repository. Each row links to the EU AI Act articles and, for the security frameworks, the ISO/IEC 27001 Annex A controls it relates to. None of this is an audit, a certification or a legal assessment. Every row is flagged for founder review at low confidence. See [More framework packs](more-packs.md). |
-| DORA and EBA citations | none | **Mapped only** | `gaps --map-to DORA\|EBA` still adds a low-confidence citation per EU AI Act article to the EU table. No status is computed. Flagged for founder review. See [Mapped regimes](../concepts/mapped-regimes.md). |
+<!-- status-table:start -->
+| Framework | Key | Status | Rows | Checked from evidence | Unreviewed rows |
+| --- | --- | --- | --- | --- | --- |
+| EU AI Act | EU_AI_ACT | evaluated | 24 | 22 | 5 |
+| NIST AI RMF 1.0 | NIST_AI_RMF | evaluated | 72 | 56 | 72 |
+| ISO/IEC 42001:2023 AI management system | ISO_IEC_42001 | evaluated | 65 | 39 | 65 |
+| ISO/IEC 27090:2026 AI security guidance | ISO_IEC_27090 | evaluated | 31 | 25 | 31 |
+| ISO/IEC 27001:2022 information security management | ISO_IEC_27001 | evaluated | 118 | 43 | 118 |
+| SOC 2 Trust Services Criteria (not a SOC 2 report) | SOC_2 | evaluated | 61 | 32 | 61 |
+| NIS2 Directive (EU) 2022/2555 cybersecurity measures | NIS2 | evaluated | 21 | 16 | 21 |
+| DORA Regulation (EU) 2022/2554 digital operational resilience | DORA | evaluated | 37 | 24 | 37 |
+| EBA Guidelines on ICT, outsourcing and loan origination | EBA | evaluated | 25 | 7 | 25 |
+| EIOPA Opinion on AI governance and risk management | EIOPA_AI | evaluated | 8 | 7 | 8 |
+| GDPR Regulation (EU) 2016/679, duties relevant to AI systems | GDPR | evaluated | 21 | 18 | 21 |
+| Cyber Resilience Act Regulation (EU) 2024/2847 | CRA | evaluated | 63 | 50 | 63 |
+| ETSI EN 304 223 baseline cyber security for AI | ETSI_EN_304_223 | evaluated | 72 | 49 | 72 |
+| ISO/IEC 42005:2025 AI system impact assessment | ISO_IEC_42005 | evaluated | 20 | 17 | 20 |
+| ISO/IEC 23894:2023 AI risk management guidance | ISO_IEC_23894 | evaluated | 23 | 15 | 23 |
+<!-- status-table:end -->
 
-`EU_AI_ACT`, `NIST_AI_RMF`, `ISO_IEC_42001`, `ISO_IEC_27090` and the eleven keys above are the only targets this
-release accepts. Any other key is an error: `gaps`, `check` and `validate-manifest` exit `2`. None of these verdicts
-is a legal determination or a certification.
+The status words and counts above come from the framework data, not from this page. The last
+column counts rows flagged for founder review. Evaluated does not mean certified: nothing here is an audit, a
+certification or a legal assessment. How a framework's rows are decided is on its own page,
+linked under [Framework pages](#framework-pages).
+
+`gaps --map-to DORA|EBA` is a separate, mapped-only feature: it adds a low-confidence citation per EU AI
+Act article to the EU table and computes no status. See [Mapped regimes](../concepts/mapped-regimes.md).
+
+The keys in the table are the only targets this release accepts. Any other key is an error: `gaps`,
+`check` and `validate-manifest` exit `2`. None of these verdicts is a legal determination or a
+certification.
 
 ## Targeting several frameworks
 
@@ -137,8 +156,14 @@ framework data takes an attestation accept one. `ISO_IEC_42001` and `ISO_IEC_270
 take attestations on their requirements, with ids such as `ISO_IEC_42001:Clause 5.2` and
 `ISO_IEC_27090:6.9`. `NIST_AI_RMF` takes attestations only on the subcategories the EU AI
 Act evidence holds nothing for (for example `NIST_AI_RMF:MANAGE 2.1`); the others are
-decided by that evidence alone. `EU_AI_ACT` takes attestations only for the articles no code can
-show, which is Art. 4 (AI literacy) today, under the unprefixed id `Art. 4`.
+decided by that evidence alone. From 0.16.0 that also covers a subcategory whose
+mapped articles all do not apply in the run, according to a recorded checker session: such a row
+reads Unverified until it is attested, and an attestation on a row that evidence decides is not
+used (see [NIST AI RMF](../concepts/nist-ai-rmf.md)). `EU_AI_ACT` takes attestations only for the articles no code can
+show: Art. 4 (AI literacy) and, from 0.16.0, Art. 20 (corrective actions and the duty
+of information), under the unprefixed ids `Art. 4` and `Art. 20`. Art. 20 binds the provider of a
+high-risk system, so a recorded checker session that did not record the provider high-risk
+obligation moves it out of the gap table as not applicable.
 
 Attestations can also come from an attestation bundle, merged in for the run; see
 [Attestation bundles](more-packs.md#attestation-bundles).
@@ -147,8 +172,9 @@ Attestations can also come from an attestation bundle, merged in for the run; se
 when `framework_inputs` names an unknown framework, an id is not a requirement of that
 framework, an exclusion reason is blank, an attestation is not accepted for that
 requirement, or `framework_inputs` names `EU_AI_ACT` with an `excluded` or `scope` entry
-or an attestation for any article other than Art. 4. An unknown field or an empty string
-inside a `framework_inputs` entry fails manifest validation (exit `2`) for every command.
+or an attestation for any article other than Art. 4 (and, from 0.16.0, Art. 20).
+An unknown field or an empty string inside a `framework_inputs` entry fails manifest
+validation (exit `2`) for every command.
 
 ## Gating CI on another framework
 
@@ -166,17 +192,35 @@ row) adds its prefixed id to `failed_controls` and turns `PASS` into `CONTROL_FA
 (exit `1`). Excluded, Unverified and Met rows never fail, except that `fail_on: unverified`
 also fails a row that only an attestation can decide while it has no current attestation. Because NIST AI RMF rows are
 re-projected from EU AI Act evidence, gating on it fails on the same underlying gaps,
-expressed per subcategory. See [Gating other frameworks](../cli/check.md#gating-other-frameworks)
-for the full rules.
+expressed per subcategory. From 0.16.0 it does so only through links at `medium`
+confidence or better: an article linked at `low` confidence that reads Missing or Partial
+makes the subcategory Unverified instead. See
+[Gating other frameworks](../cli/check.md#gating-other-frameworks) for the full rules.
 
 ## Framework pages
+
+- [EU AI Act](eu-ai-act.md), 24 rows.
+- [NIST AI RMF 1.0](../concepts/nist-ai-rmf.md), 72 rows.
+- [ISO/IEC 42001:2023 AI management system](iso-iec-42001.md), 65 rows.
+- [ISO/IEC 27090:2026 AI security guidance](../concepts/iso-27090.md), 31 rows.
+- [ISO/IEC 27001:2022 information security management](iso-iec-27001.md), 118 rows.
+- [SOC 2 Trust Services Criteria (not a SOC 2 report)](soc-2.md), 61 rows.
+- [NIS2 Directive (EU) 2022/2555 cybersecurity measures](nis2.md), 21 rows.
+- [DORA Regulation (EU) 2022/2554 digital operational resilience](dora.md), 37 rows.
+- [EBA Guidelines on ICT, outsourcing and loan origination](eba.md), 25 rows.
+- [EIOPA Opinion on AI governance and risk management](eiopa-ai.md), 8 rows.
+- [GDPR Regulation (EU) 2016/679, duties relevant to AI systems](gdpr.md), 21 rows.
+- [Cyber Resilience Act Regulation (EU) 2024/2847](cra.md), 63 rows.
+- [ETSI EN 304 223 baseline cyber security for AI](etsi-en-304-223.md), 72 rows.
+- [ISO/IEC 42005:2025 AI system impact assessment](iso-iec-42005.md), 20 rows.
+- [ISO/IEC 23894:2023 AI risk management guidance](iso-iec-23894.md), 23 rows.
+
+Also:
 
 - **EU AI Act:** the [applicability checker](../getting-started/eu-ai-act-checker.md),
   the [article-to-principle map](../concepts/eu-ai-act-principles.md), the
   [Annex IV coverage ledger](../concepts/annex-iv-coverage.md) and the
   [control codes](../concepts/control-codes.md).
-- **NIST AI RMF:** [how the re-projection works](../concepts/nist-ai-rmf.md).
-- **ISO/IEC 27090:** [the AI security guidance pack](../concepts/iso-27090.md).
 - **All of them:** [Framework mappings](mappings.md), every requirement with its links to
-  the other frameworks.
+  the other frameworks, and [More framework packs](more-packs.md).
 - **Adding a framework:** [Adding framework packs](../contributing/adding-framework-packs.md).

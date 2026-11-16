@@ -5,8 +5,8 @@ Health endpoint tests for egress-proxy.
 ``GATEWAY_API_URL`` and mirrors the gateway's answer. The previous version of
 this file called it with no mocking, so it made an actual network request and
 returned 503 whenever a gateway was not running — a permanent failure in the
-documented baseline (see PLAN/execution/BLOCKERS.md) that said nothing about
-the code under test.
+documented baseline of known failures that said nothing about the code under
+test.
 
 The outbound call is now mocked, the way ``test_dlp.py`` already avoids real
 egress, and both branches are covered. ``/egress-health`` — the endpoint that

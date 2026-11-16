@@ -1,0 +1,74 @@
+{
+  "family": "nis2",
+  "probes": {
+    "nis2.incident_notification_record": {
+      "type": "clause_document",
+      "patterns": [
+        "**/incident-notification*",
+        "**/incident_notification*",
+        "docs/**/nis2-notification*",
+        "docs/**/nis2_notification*"
+      ],
+      "noun": "incident notification record",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus stage names and sending times from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "early-warning": {
+          "title": "Early warning to the authority",
+          "markers": [
+            {
+              "re": "early[\\s_-]*warning",
+              "flags": "i"
+            },
+            {
+              "re": "(?:\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b\\d{1,2}:\\d{2}\\b|\\b(?:sent|submitted|filed)\\b)",
+              "flags": "i"
+            }
+          ]
+        },
+        "notification": {
+          "title": "Incident notification to the authority",
+          "markers": [
+            {
+              "re": "\\bincident\\s+notification\\b",
+              "flags": "i"
+            },
+            {
+              "re": "(?:\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b\\d{1,2}:\\d{2}\\b|\\b(?:sent|submitted|filed)\\b)",
+              "flags": "i"
+            }
+          ]
+        },
+        "intermediate-report": {
+          "title": "Intermediate report on request",
+          "markers": [
+            {
+              "re": "intermediate[\\s_-]*report",
+              "flags": "i"
+            },
+            {
+              "re": "(?:\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b\\d{1,2}:\\d{2}\\b|\\b(?:sent|submitted|filed)\\b)",
+              "flags": "i"
+            }
+          ]
+        },
+        "final-report": {
+          "title": "Final report after the notification",
+          "markers": [
+            {
+              "re": "final[\\s_-]*report",
+              "flags": "i"
+            },
+            {
+              "re": "(?:\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b\\d{1,2}:\\d{2}\\b|\\b(?:sent|submitted|filed)\\b)",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

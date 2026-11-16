@@ -106,3 +106,36 @@ def test_artifact_without_summaries_serialises_identically() -> None:
 
 def test_empty_summaries_members_are_omitted() -> None:
     assert ArtifactSummaries().model_dump_json() == "{}"
+
+
+def test_agents_expiry_fields_default_none_and_stay_out_of_the_bytes() -> None:
+    summary = AgentsSummary(agents=1, with_mandate=1, with_guardrails=0)
+    assert summary.earliest_mandate_expiry is None
+    assert summary.expiring_soon is None
+    dumped = summary.model_dump()
+    assert "earliest_mandate_expiry" not in dumped
+    assert "expiring_soon" not in dumped
+    dated = AgentsSummary(
+        agents=1,
+        with_mandate=1,
+        with_guardrails=0,
+        earliest_mandate_expiry="2027-01-31",
+        expiring_soon=0,
+    )
+    assert dated.model_dump()["earliest_mandate_expiry"] == "2027-01-31"
+    assert dated.model_dump()["expiring_soon"] == 0
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        {"earliest_mandate_expiry": "2027-1-31"},
+        {"earliest_mandate_expiry": "2027-01-31T00:00:00Z"},
+        {"expiring_soon": -1},
+        {"mandate_note": "x"},
+    ],
+    ids=["short-day", "timestamp", "negative", "extra-key"],
+)
+def test_agents_expiry_fields_reject_bad_values(bad: dict[str, object]) -> None:
+    with pytest.raises(ValidationError):
+        AgentsSummary(agents=1, with_mandate=1, with_guardrails=0, **bad)  # type: ignore[arg-type]

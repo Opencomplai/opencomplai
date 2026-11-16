@@ -69,6 +69,7 @@ after editing either data file.
 | Art. 14 | `artifact:human_oversight_construct`, `scan:agent_framework` (detection only, never Met), `scan:mcp_server` (detection only, never Met), `manifest:human_oversight_declaration`, `manifest:agent_declarations` |
 | Art. 16 | `artifact:provider_qms_bundle` |
 | Art. 17 | `artifact:provider_qms` |
+| Art. 20 | `attestation:Art. 20` |
 | Art. 24 | `artifact:distributor_conformity` |
 | Art. 26 | `artifact:deployer_use_records`, `manifest:agent_declarations`, `manifest:imported_provider_pack` |
 | Art. 43 | `artifact:conformity_assessment_docs` |

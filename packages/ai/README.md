@@ -27,15 +27,16 @@ pip install opencomplai-core   # or the opencomplai / opencomplai-cli suite
 # Base install — only the deterministic codebert-onnx matcher, no download
 pip install opencomplai-ai
 
-# Deep install — required for the default model (qwen2.5-coder-1.5b) and
-# every other generative GGUF model
+# Deep install — required for the local LLMs (for example qwen2.5-coder-1.5b)
+# and every other generative GGUF model
 pip install "opencomplai-ai[deep]"
 ```
 
-The base install alone can only run `codebert-onnx`. `opencomplai scan --ai-intent`
-resolves `qwen2.5-coder-1.5b` by default, which needs `[deep]` — without it the scan
-fails fast with an actionable message instead of downloading the ~1 GB model first and
-only then discovering it can't be run.
+The base install runs `codebert-onnx`, and `opencomplai scan --ai-intent` uses it by
+default. A local LLM such as `qwen2.5-coder-1.5b` needs `[deep]` and is chosen with
+`--ai-model` or `opencomplai ai configure` — without `[deep]` that scan fails fast with
+an actionable message instead of downloading the ~1 GB model first and only then
+discovering it can't be run.
 
 ## Usage
 
@@ -58,32 +59,30 @@ Useful flags:
 | Flag | Effect |
 |---|---|
 | `--ai-intent` | Enable AI intent classification |
-| `--ai-model <id>` | Choose a model (see catalog below) |
+| `--ai-model <id>` | Choose a model (see catalog below; default `codebert-onnx`) |
 | `--ai-deep` | Annotate every callsite, not just those near lexical findings |
 | `--ai-verbose` | Show all callsite annotations (default: top 10 by risk tier) |
 
 ## Supported models
 
-The **default model is `qwen2.5-coder-1.5b`** and requires the `[deep]` extra. GGUF
-models are downloaded from the Hugging Face Hub on first use and cached locally under
-`~/.cache/opencomplai/models/`.
-
-`codebert-onnx` is a **deterministic Annex III / prohibited-practice / limited-risk
-code-signal matcher** — no model weights, no download, runs on the base install. It
-trades recall for speed and zero setup; it is not the default.
+The **default model is `codebert-onnx`**, a **deterministic Annex III / prohibited-practice /
+limited-risk code-signal matcher** — no model weights, no download, runs on the base
+install. It trades recall for speed and zero setup. The GGUF models need the `[deep]`
+extra; they are downloaded from the Hugging Face Hub on first use and cached locally
+under `~/.cache/opencomplai/models/`.
 
 | Model ID | Runtime | Size | Needs `[deep]` |
 |---|---|---|---|
-| `codebert-onnx` | deterministic matcher | no download | no |
+| `codebert-onnx` *(default)* | deterministic matcher | no download | no |
 | `qwen2.5-coder-0.5b` | llama.cpp | ~400 MB | yes |
-| `qwen2.5-coder-1.5b` *(default)* | llama.cpp | ~1.0 GB | yes |
+| `qwen2.5-coder-1.5b` | llama.cpp | ~1.0 GB | yes |
 | `smollm2-1.7b` | llama.cpp | ~1.1 GB | yes |
 | `phi-3.5-mini` | llama.cpp | ~2.2 GB | yes |
 | `mistral-7b` | llama.cpp | ~4.1 GB | yes |
 
 ```bash
-opencomplai scan --ai-intent                              # default: qwen2.5-coder-1.5b, needs [deep]
-opencomplai scan --ai-intent --ai-model codebert-onnx     # no download, no [deep] extra
+opencomplai scan --ai-intent                              # default: codebert-onnx, no download, no [deep] extra
+opencomplai scan --ai-intent --ai-model qwen2.5-coder-1.5b  # local LLM, needs [deep]
 ```
 
 ### Model download flow
@@ -103,7 +102,7 @@ only saves your model choice), nothing reads the exported file, and it is not us
 
 | Extra | Adds | Needed for |
 |---|---|---|
-| `[deep]` | `llama-cpp-python` | every GGUF model, including the default `qwen2.5-coder-1.5b` |
+| `[deep]` | `llama-cpp-python` | every GGUF model, such as `qwen2.5-coder-1.5b` |
 | `[onnx]` | `optimum[onnxruntime]` | only the Python-API `ensure_model("codebert-onnx")` export — not classification, not any CLI command |
 
 ## Configuration

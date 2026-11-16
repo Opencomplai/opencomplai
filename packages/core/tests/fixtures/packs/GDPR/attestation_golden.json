@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "GDPR": [
+      "GDPR:Art. 24",
+      "GDPR:Art. 37-39",
+      "GDPR:Art. 6"
+    ]
+  },
+  "mixed_attestable": {
+    "GDPR": [
+      "GDPR:Art. 12",
+      "GDPR:Art. 13",
+      "GDPR:Art. 14",
+      "GDPR:Art. 15",
+      "GDPR:Art. 17",
+      "GDPR:Art. 21",
+      "GDPR:Art. 22",
+      "GDPR:Art. 25",
+      "GDPR:Art. 28",
+      "GDPR:Art. 30",
+      "GDPR:Art. 32",
+      "GDPR:Art. 33",
+      "GDPR:Art. 34",
+      "GDPR:Art. 35",
+      "GDPR:Art. 36",
+      "GDPR:Art. 5",
+      "GDPR:Art. 9",
+      "GDPR:Chapter V"
+    ]
+  },
+  "records": [],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": []
+}

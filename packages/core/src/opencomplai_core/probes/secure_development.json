@@ -1,0 +1,158 @@
+{
+  "family": "secure_development",
+  "probes": {
+    "sast_config": {
+      "patterns": [
+        ".github/workflows/*.y*ml",
+        "**/.gitlab-ci.yml",
+        "**/.gitlab_ci.yml",
+        ".semgrep*",
+        "**/sonar-project.properties",
+        "**/sonar_project.properties"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "(?:\\b(?:semgrep|codeql|bandit|sonarqube|sonarcloud|sonar-scanner|brakeman|gosec|eslint-plugin-security|snyk\\s+code|checkmarx|veracode|pylint)\\b|github/codeql-action|\\bsonar\\.projectKey\\b|^[ \\t]*rules:[ \\t]*$)",
+            "flags": "im"
+          }
+        ],
+        "found_label": "a static-analysis tool name",
+        "lacks_label": "static-analysis tool name",
+        "noun": "static-analysis configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): static-analysis tool name used as a step or config key, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "secret_scanning_config": {
+      "patterns": [
+        ".github/workflows/*.y*ml",
+        "**/.gitleaks.toml",
+        "**/.pre-commit-config.yaml",
+        "**/.pre_commit_config.yaml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:gitleaks|trufflehog|detect-secrets|git-secrets|ggshield|secretlint|talisman)\\b",
+            "flags": "im"
+          }
+        ],
+        "found_label": "a secret-scanning tool name",
+        "lacks_label": "secret-scanning tool name",
+        "noun": "secret-scanning configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): secret-scanning tool name, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "code_review_rules": {
+      "patterns": [
+        "**/CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".github/settings.y*ml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "^[ \\t]*[^\\s#][^\\s]*[ \\t]+(?:@[\\w./-]+|[\\w.+-]+@[\\w-]+\\.[\\w.-]+)|\\brequired_approving_review_count\\b|\\brequired_pull_request_reviews\\b|\\brequire_code_owner_reviews?\\b",
+            "flags": "im"
+          }
+        ],
+        "found_label": "an owner line or a required-review setting",
+        "lacks_label": "owner line or required-review setting",
+        "noun": "code-review rules",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): owner line or required-review setting, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "ci_test_workflow": {
+      "patterns": [
+        ".github/workflows/*.y*ml",
+        "**/.gitlab-ci.yml",
+        "**/.gitlab_ci.yml",
+        "azure-pipelines.y*ml",
+        "azure_pipelines.y*ml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:pytest|unittest|tox|nox|jest|vitest|mocha|go\\s+test|cargo\\s+test|mvn\\s+test|gradle\\s+test|dotnet\\s+test|rspec|phpunit|(?:npm|pnpm|yarn)\\s+(?:run\\s+)?test|ctest|make\\s+test)\\b",
+            "flags": "im"
+          }
+        ],
+        "found_label": "a test runner command",
+        "lacks_label": "test runner command",
+        "noun": "CI test workflow",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): test runner command, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "dependency_update_config": {
+      "patterns": [
+        ".github/dependabot.y*ml",
+        "**/renovate.json",
+        ".renovaterc*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\bpackage-ecosystem\\b|\\bschedule\\b|\\\"extends\\\"\\s*:|\\bextends\\b\\s*:",
+            "flags": "im"
+          }
+        ],
+        "found_label": "an ecosystem, schedule or extends key",
+        "lacks_label": "ecosystem, schedule or extends key",
+        "noun": "dependency-update configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ecosystem, schedule or extends key, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "iac_definitions": {
+      "patterns": [
+        "**/*.tf",
+        "**/Dockerfile",
+        "**/docker-compose*.y*ml",
+        "**/docker_compose*.y*ml",
+        "**/Pulumi.yaml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "^[ \\t]*(?:resource|module|provider)[ \\t]+\\\"|^[ \\t]*FROM[ \\t]+\\S+|^[ \\t]*services:[ \\t]*$|^[ \\t]*apiVersion:[ \\t]*\\S+|^[ \\t]*runtime:[ \\t]*\\S+",
+            "flags": "im"
+          }
+        ],
+        "found_label": "a resource, base image, service or API version line",
+        "lacks_label": "resource, base image, service or API version line",
+        "noun": "infrastructure definition",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): resource, base image, service or API version line, matched by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

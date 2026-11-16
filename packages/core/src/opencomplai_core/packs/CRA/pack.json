@@ -1,0 +1,18 @@
+{
+  "id": "CRA",
+  "order": 12,
+  "kind": "native",
+  "name": "Cyber Resilience Act Regulation (EU) 2024/2847",
+  "caveat": "not an audit, certification or legal assessment",
+  "status": "evaluated",
+  "short_name": "Cyber Resilience Act",
+  "disclaimer_ref": "DISCLAIMER_V2",
+  "requirements": "requirements.json",
+  "legacy_file": "cra.json",
+  "data_files": ["applicability.json", "probes.json", "timeline.json"],
+  "copyright": "eu_law",
+  "row_count": 63,
+  "target_machine_share": 36,
+  "timeline": "file",
+  "catalogue": true
+}

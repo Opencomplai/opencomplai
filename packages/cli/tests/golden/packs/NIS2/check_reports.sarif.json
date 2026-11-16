@@ -1,0 +1,992 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "opencomplai",
+          "informationUri": "https://opencomplai.com",
+          "rules": [
+            {
+              "id": "NIS2:Art. 21(2)(a)",
+              "name": "NIS2:Art. 21(2)(a)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(a)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(b)",
+              "name": "NIS2:Art. 21(2)(b)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(b)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(c)",
+              "name": "NIS2:Art. 21(2)(c)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(c)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(d)",
+              "name": "NIS2:Art. 21(2)(d)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(d)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(e)",
+              "name": "NIS2:Art. 21(2)(e)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(e)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(f)",
+              "name": "NIS2:Art. 21(2)(f)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(f)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(g)",
+              "name": "NIS2:Art. 21(2)(g)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(g)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(h)",
+              "name": "NIS2:Art. 21(2)(h)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(h)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(2)(i)",
+              "name": "NIS2:Art. 21(2)(i)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(2)(i)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(3)",
+              "name": "NIS2:Art. 21(3)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(3)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 21(4)",
+              "name": "NIS2:Art. 21(4)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 21(4)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 23(1)",
+              "name": "NIS2:Art. 23(1)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 23(1)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 23(4)(a)",
+              "name": "NIS2:Art. 23(4)(a)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 23(4)(a)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 23(4)(b)",
+              "name": "NIS2:Art. 23(4)(b)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 23(4)(b)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 23(4)(c)",
+              "name": "NIS2:Art. 23(4)(c)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 23(4)(c)"
+              }
+            },
+            {
+              "id": "NIS2:Art. 23(4)(d)",
+              "name": "NIS2:Art. 23(4)(d)",
+              "shortDescription": {
+                "text": "Failed requirement NIS2:Art. 23(4)(d)"
+              }
+            },
+            {
+              "id": "gap/none",
+              "name": "gap/none",
+              "shortDescription": {
+                "text": "Gap row for evidence none"
+              }
+            },
+            {
+              "id": "gap/prohibited",
+              "name": "gap/prohibited",
+              "shortDescription": {
+                "text": "Gap row for evidence prohibited"
+              }
+            },
+            {
+              "id": "gap/risk_register",
+              "name": "gap/risk_register",
+              "shortDescription": {
+                "text": "Gap row for evidence risk_register"
+              }
+            },
+            {
+              "id": "gap/technical_documentation_dossier",
+              "name": "gap/technical_documentation_dossier",
+              "shortDescription": {
+                "text": "Gap row for evidence technical_documentation_dossier"
+              }
+            },
+            {
+              "id": "gap/event_log_evidence",
+              "name": "gap/event_log_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence event_log_evidence"
+              }
+            },
+            {
+              "id": "gap/deployer_instructions",
+              "name": "gap/deployer_instructions",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_instructions"
+              }
+            },
+            {
+              "id": "gap/human_oversight_construct",
+              "name": "gap/human_oversight_construct",
+              "shortDescription": {
+                "text": "Gap row for evidence human_oversight_construct"
+              }
+            },
+            {
+              "id": "gap/provider_qms_bundle",
+              "name": "gap/provider_qms_bundle",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms_bundle"
+              }
+            },
+            {
+              "id": "gap/provider_qms",
+              "name": "gap/provider_qms",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms"
+              }
+            },
+            {
+              "id": "gap/distributor_conformity",
+              "name": "gap/distributor_conformity",
+              "shortDescription": {
+                "text": "Gap row for evidence distributor_conformity"
+              }
+            },
+            {
+              "id": "gap/deployer_use_records",
+              "name": "gap/deployer_use_records",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_use_records"
+              }
+            },
+            {
+              "id": "gap/provider_fria",
+              "name": "gap/provider_fria",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_fria"
+              }
+            },
+            {
+              "id": "gap/conformity_assessment_docs",
+              "name": "gap/conformity_assessment_docs",
+              "shortDescription": {
+                "text": "Gap row for evidence conformity_assessment_docs"
+              }
+            },
+            {
+              "id": "gap/eu_database_registration_evidence",
+              "name": "gap/eu_database_registration_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence eu_database_registration_evidence"
+              }
+            },
+            {
+              "id": "gap/transparency_notice_evidence",
+              "name": "gap/transparency_notice_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence transparency_notice_evidence"
+              }
+            },
+            {
+              "id": "gap/gpai_provider",
+              "name": "gap/gpai_provider",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_provider"
+              }
+            },
+            {
+              "id": "gap/gpai_systemic_risk",
+              "name": "gap/gpai_systemic_risk",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_systemic_risk"
+              }
+            },
+            {
+              "id": "gap/post_market_monitoring_plan",
+              "name": "gap/post_market_monitoring_plan",
+              "shortDescription": {
+                "text": "Gap row for evidence post_market_monitoring_plan"
+              }
+            },
+            {
+              "id": "gap/serious_incident_log",
+              "name": "gap/serious_incident_log",
+              "shortDescription": {
+                "text": "Gap row for evidence serious_incident_log"
+              }
+            }
+          ],
+          "version": "0.16.0"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "NIS2:Art. 21(2)(a)",
+          "level": "error",
+          "message": {
+            "text": "Policies on risk analysis and information system security: No conventional documentation/code probe matched for 'policy_information_security'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(b)",
+          "level": "error",
+          "message": {
+            "text": "Incident handling: No conventional documentation/code probe matched for 'incident_response_plan'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(c)",
+          "level": "error",
+          "message": {
+            "text": "Business continuity, backup, disaster recovery and crisis management: No conventional documentation/code probe matched for 'continuity_plan'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(d)",
+          "level": "error",
+          "message": {
+            "text": "Supply chain security, including direct suppliers and service providers: No conventional documentation/code probe matched for 'vendor_register'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(e)",
+          "level": "error",
+          "message": {
+            "text": "Security in systems acquisition, development, maintenance and vulnerabilities: No conventional documentation/code probe matched for 'vulnerability_handling_policy'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(f)",
+          "level": "error",
+          "message": {
+            "text": "Assessing the effectiveness of cybersecurity risk-management measures: No conventional documentation/code probe matched for 'internal_audit_report'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(g)",
+          "level": "error",
+          "message": {
+            "text": "Basic cyber hygiene practices and cybersecurity training: No conventional documentation/code probe matched for 'competence_training_record'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(h)",
+          "level": "error",
+          "message": {
+            "text": "Cryptography and, where appropriate, encryption: No conventional documentation/code probe matched for 'policy_cryptography'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(2)(i)",
+          "level": "error",
+          "message": {
+            "text": "Human resources security, access control and asset management: No conventional documentation/code probe matched for 'policy_access_control'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(3)",
+          "level": "error",
+          "message": {
+            "text": "Supplier vulnerabilities and quality when choosing supply chain measures: No conventional documentation/code probe matched for 'vendor_register'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 21(4)",
+          "level": "error",
+          "message": {
+            "text": "Corrective measures when the Art. 21(2) measures are not met: No conventional documentation/code probe matched for 'corrective_action_log'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 23(1)",
+          "level": "error",
+          "message": {
+            "text": "Notifying the CSIRT or authority of significant incidents: No conventional documentation/code probe matched for 'incident_notification_template'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 23(4)(a)",
+          "level": "error",
+          "message": {
+            "text": "Early warning within 24 hours: No conventional documentation/code probe matched for 'nis2.incident_notification_record#early-warning'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 23(4)(b)",
+          "level": "error",
+          "message": {
+            "text": "Incident notification within 72 hours: No conventional documentation/code probe matched for 'nis2.incident_notification_record#notification'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 23(4)(c)",
+          "level": "error",
+          "message": {
+            "text": "Intermediate report on request: No conventional documentation/code probe matched for 'nis2.incident_notification_record#intermediate-report'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "NIS2:Art. 23(4)(d)",
+          "level": "error",
+          "message": {
+            "text": "Final report within one month: No conventional documentation/code probe matched for 'nis2.incident_notification_record#final-report'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 4: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/prohibited",
+          "level": "note",
+          "message": {
+            "text": "Art. 5: Obligation 'Prohibited AI practices' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/risk_register",
+          "level": "error",
+          "message": {
+            "text": "Art. 9: No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 10: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/technical_documentation_dossier",
+          "level": "error",
+          "message": {
+            "text": "Art. 11: No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/event_log_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 12: No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_instructions",
+          "level": "error",
+          "message": {
+            "text": "Art. 13: No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/human_oversight_construct",
+          "level": "error",
+          "message": {
+            "text": "Art. 14: No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 15: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms_bundle",
+          "level": "error",
+          "message": {
+            "text": "Art. 16: No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms",
+          "level": "error",
+          "message": {
+            "text": "Art. 17: No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 20: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/distributor_conformity",
+          "level": "error",
+          "message": {
+            "text": "Art. 24: No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_use_records",
+          "level": "error",
+          "message": {
+            "text": "Art. 26: No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_fria",
+          "level": "error",
+          "message": {
+            "text": "Art. 27: No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/conformity_assessment_docs",
+          "level": "error",
+          "message": {
+            "text": "Art. 43: No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/eu_database_registration_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 49: No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/transparency_notice_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 50: No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_provider",
+          "level": "note",
+          "message": {
+            "text": "Art. 53: Obligation 'General-purpose AI model provider obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_systemic_risk",
+          "level": "note",
+          "message": {
+            "text": "Art. 55: Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/post_market_monitoring_plan",
+          "level": "error",
+          "message": {
+            "text": "Art. 72: No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/serious_incident_log",
+          "level": "error",
+          "message": {
+            "text": "Art. 73: No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "opencomplai_result": "control_fail",
+        "system_id": "pack-golden-sys",
+        "commit_ref": "unresolved",
+        "signed": false
+      }
+    }
+  ]
+}

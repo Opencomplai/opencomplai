@@ -282,7 +282,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install OpenComplAI CLI
-        run: pip install "opencomplai==0.15.0"
+        run: pip install "opencomplai==0.16.0"
 
       - name: Check and attach the artifact
         env:

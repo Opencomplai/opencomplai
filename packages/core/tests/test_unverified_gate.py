@@ -11,10 +11,13 @@ from __future__ import annotations
 from datetime import date
 
 import pytest
+from opencomplai_core import frameworks
 from opencomplai_core.frameworks import (
     EU_AI_ACT,
+    FRAMEWORKS,
     evaluate_targets,
     gate_failures,
+    load_requirements_map,
     validate_gate,
 )
 from opencomplai_core.models import (
@@ -27,7 +30,12 @@ from opencomplai_core.models import (
 TODAY = date(2026, 11, 3)
 ISO = "ISO_IEC_27001"
 NIST = "NIST_AI_RMF"
-ROW = f"{ISO}:A.6.3"
+# A row only an attestation decides: the first "organisational" row of the pack data
+# (ISO 27001 rows with a probe are decided by it and no longer fail on being Unverified).
+_ISO_REQS = load_requirements_map(FRAMEWORKS[ISO].requirements)
+ROW = next(
+    rid for rid, row in _ISO_REQS.items() if row["evidence_class"] == "organisational"
+)
 
 
 def _att(**over: object) -> Attestation:
@@ -72,8 +80,14 @@ def test_the_levels_below_it_never_fail_an_unattested_row() -> None:
 
 def test_every_iso_27001_row_fails_until_attested() -> None:
     reports = _iso_reports()
-    every_row = [r.article for r in reports[ISO].report.articles]
-    assert gate_failures(reports, [ISO], "unverified") == every_row
+    # Rows decided by a probe are not failed for being Unverified; the rest all are.
+    attestation_only = [
+        r.article
+        for r in reports[ISO].report.articles
+        if _ISO_REQS[r.article]["evidence_class"] == "organisational"
+    ]
+    assert attestation_only
+    assert gate_failures(reports, [ISO], "unverified") == attestation_only
 
 
 def test_a_mixed_row_is_not_failed_for_being_unverified() -> None:
@@ -90,15 +104,52 @@ def test_a_mixed_row_is_not_failed_for_being_unverified() -> None:
     assert "ISO_IEC_42001:Clause 4.1" in failing  # attestation-only
 
 
-def test_a_row_with_a_supporting_probe_is_still_attestation_only() -> None:
-    # 27090:5.5 also has a supporting artifact probe (it only points at a file);
-    # 27090:5.7 has an evaluator, so it can be decided by something else.
+def test_a_row_with_a_supporting_probe_is_still_attestation_only(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A supporting artifact probe only points at a file, so a row with an attestation
+    # plus supporting probes only is still attestation-only. No native pack holds such
+    # a row any more (ISO 27001 probes are corroborating), so the rule is checked on
+    # rows of the pack data shape; ISO 27090 rows with a deciding evaluator can be
+    # decided by something else.
+    att = {"kind": "attestation"}
+    rows = {
+        "ISO_IEC_27001:supp": {
+            "sources": [att, {"kind": "artifact", "role": "supporting"}]
+        },
+        "ISO_IEC_27001:corr": {
+            "sources": [att, {"kind": "artifact", "role": "corroborating"}]
+        },
+    }
+    monkeypatch.setattr(frameworks, "pack_requirements", lambda pack: rows)
+    assert frameworks.attestation_only_ids(ISO) == {"ISO_IEC_27001:supp"}
+    monkeypatch.undo()
+
+    attestation_only = [
+        rid
+        for rid, row in _ISO_REQS.items()
+        if row["evidence_class"] == "organisational"
+    ]
+    failing = gate_failures(_iso_reports(), [ISO], "unverified")
+    for rid in attestation_only:
+        assert rid in failing
+
+    reqs27 = load_requirements_map(FRAMEWORKS["ISO_IEC_27090"].requirements)
+    decided_elsewhere = [
+        rid
+        for rid, row in reqs27.items()
+        if any(
+            s["kind"] == "evaluator" and s.get("role") != "corroborating"
+            for s in row["sources"]
+        )
+    ]
+    assert "ISO_IEC_27090:5.7" in decided_elsewhere
     reports = evaluate_targets(
         _manifest(), ["ISO_IEC_27090"], commit_ref="abc", today=TODAY
     )
-    failing = gate_failures(reports, ["ISO_IEC_27090"], "unverified")
-    assert "ISO_IEC_27090:5.5" in failing
-    assert "ISO_IEC_27090:5.7" not in failing
+    failing27 = gate_failures(reports, ["ISO_IEC_27090"], "unverified")
+    for rid in decided_elsewhere:
+        assert rid not in failing27
 
 
 def test_nist_is_never_failed_for_being_unverified() -> None:

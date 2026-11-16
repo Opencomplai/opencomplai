@@ -1,0 +1,240 @@
+{
+  "family": "iso_iec_42005",
+  "probes": {
+    "iso_iec_42005.impact_assessment": {
+      "type": "clause_document",
+      "patterns": [
+        "AI_IMPACT_ASSESSMENT.md",
+        "docs/**/ai-impact-assessment*",
+        "docs/**/ai_impact_assessment*",
+        "**/ai-impact-assessment*",
+        "**/ai_impact_assessment*"
+      ],
+      "noun": "AI system impact assessment",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus section keywords from general practice and this pack's own-wording row titles",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "5.2": {
+          "title": "Documenting the process",
+          "markers": [
+            {
+              "re": "\\b(?:process|procedure)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:documented|written|maintained|kept\\s+current|up\\s+to\\s+date)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.4": {
+          "title": "Timing of AI system impact assessment",
+          "markers": [
+            {
+              "re": "\\b(?:timing|life[\\s_-]*cycle|stage|trigger(?:s|ed)?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:change|changes|before|after|whenever)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.5": {
+          "title": "Scope of the AI system impact assessment",
+          "markers": [
+            {
+              "re": "\\b(?:scope|boundar(?:y|ies)|in\\s+scope|out\\s+of\\s+scope)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:system|uses?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.6": {
+          "title": "Allocating responsibilities",
+          "markers": [
+            {
+              "re": "\\b(?:roles?|responsib\\w+|owner|accountab\\w+)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:review(?:s|er|ers)?|sign[\\s_-]*off|authority)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.7": {
+          "title": "Establishing thresholds for sensitive uses, restricted uses and impact scales",
+          "markers": [
+            {
+              "re": "\\b(?:thresholds?|sensitive|restricted)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:scale|rating|rated|levels?|severity)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.10": {
+          "title": "Recording and reporting",
+          "markers": [
+            {
+              "re": "\\b(?:record(?:ed|s|ing)?|report(?:ed|s|ing)?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:audiences?|stakeholders?|shared\\s+with|circulat\\w+)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.11": {
+          "title": "Approval process",
+          "markers": [
+            {
+              "re": "\\b(?:approv(?:al|ed|er|es))\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:sign(?:ed)?[\\s_-]*off|signatory|approved\\s+by)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "5.12": {
+          "title": "Monitoring and review",
+          "markers": [
+            {
+              "re": "\\b(?:monitor(?:ed|ing)?|revisit(?:ed)?|review(?:ed|s)?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:schedule|quarterly|annual(?:ly)?|every|after\\s+each|changes?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.2": {
+          "title": "Scope of the AI system impact assessment",
+          "markers": [
+            {
+              "re": "\\b(?:scope|covers?|covered)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:system|uses?|period|dates?|version)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.3": {
+          "title": "AI system information",
+          "markers": [
+            {
+              "re": "\\b(?:purpose|what\\s+(?:it|the\\s+system)\\s+does|description)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:intended|unintended|misuses?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.4": {
+          "title": "Data information and quality",
+          "markers": [
+            {
+              "re": "\\b(?:data|datasets?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:quality|representative\\w*|bias|accuracy|completeness|checks?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.5": {
+          "title": "Algorithm and model information",
+          "markers": [
+            {
+              "re": "\\b(?:algorithms?|models?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:developed|trained|training|built|architecture|vendor|supplied)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.6": {
+          "title": "Deployment environment",
+          "markers": [
+            {
+              "re": "\\b(?:deploy(?:ed|ment)?|environment)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:regions?|countr(?:y|ies)|languages?|constraints?|conditions?)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.7": {
+          "title": "Relevant interested parties",
+          "markers": [
+            {
+              "re": "\\b(?:interested\\s+part(?:y|ies)|stakeholders?|affected\\s+(?:people|groups?|parties|individuals))\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.8.2": {
+          "title": "Benefits and harms",
+          "markers": [
+            {
+              "re": "\\b(?:benefits?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:harms?|risks?|adverse)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.8.3": {
+          "title": "AI system failures and reasonably foreseeable misuse",
+          "markers": [
+            {
+              "re": "\\b(?:fail(?:s|ure|ures)?|errors?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:misuse|abuse|foreseeable)\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "6.9": {
+          "title": "Measures to address harms and benefits",
+          "markers": [
+            {
+              "re": "\\b(?:measures?|mitigat\\w+|controls?|actions?)\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\b(?:track(?:ed|ing)?|owner|due|reduce[sd]?|preserve[sd]?)\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

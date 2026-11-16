@@ -12,10 +12,16 @@ from __future__ import annotations
 import html
 import json
 from pathlib import Path
+from typing import Any
 
 from opencomplai_core import __version__ as _core_version
 from opencomplai_core.backlog import SortOrder, sort_rows
-from opencomplai_core.frameworks import EU_AI_ACT, requirement_title
+from opencomplai_core.frameworks import (
+    EU_AI_ACT,
+    FRAMEWORKS,
+    pack_requirements,
+    requirement_title,
+)
 from opencomplai_core.models import (
     DISCLAIMER_V1,
     DISCLAIMER_V2,
@@ -32,6 +38,7 @@ from opencomplai_core.regulatory_timeline import (
     date_text,
     format_entry,
     timeline_for_articles,
+    timeline_for_requirements,
 )
 
 _TEMPLATE_PATH = (
@@ -86,33 +93,88 @@ def _render_gap_report_table(
     )
 
 
-def _render_framework_section(
+def _row_data(framework_report: FrameworkReport) -> dict[str, Any]:
+    """The pack's requirements map, or {} for a derived or unknown pack."""
+    pack = FRAMEWORKS.get(framework_report.framework)
+    if pack is None:
+        return {}
+    try:
+        return dict(pack_requirements(pack) or {})
+    except (OSError, ValueError):
+        return {}
+
+
+def _sources_text(data: object) -> str:
+    """`artifact: risk_register (corroborating)`, sources joined by `; `."""
+    sources = data.get("sources") if isinstance(data, dict) else None
+    parts = []
+    for source in sources if isinstance(sources, list) else []:
+        if not isinstance(source, dict):
+            continue
+        text = f"{source.get('kind', '')}: {source.get('ref', '')}"
+        if source.get("role"):
+            text += f" ({source['role']})"
+        parts.append(text)
+    return "; ".join(parts)
+
+
+def render_framework_section(
     framework_report: FrameworkReport, sort: SortOrder = SortOrder.article
 ) -> str:
-    """One non-EU framework's heading, rows, exclusions and disclaimer."""
-    rows = "\n".join(
-        f"<tr><td>{_esc(row.article)}</td>"
-        f"<td>{_esc(requirement_title(row.article) or '—')}</td>"
-        f'<td class="{_STATUS_CLASS[row.status.value]}">{_esc(row.status.value.upper())}</td>'
-        f"<td>{_esc(row.source.value)}</td>"
-        f"<td>{_esc(row.evidence_ref)}</td>"
-        f"<td>{_esc(row.rationale)}</td></tr>"
-        for row in sort_rows(framework_report.report.articles, sort)
-    )
+    """One non-EU framework's section: heading, applicability, rows with
+    evidence class and sources, exclusions, timeline and disclaimer."""
+    data = _row_data(framework_report)
+    articles = framework_report.report.articles
+    cells = []
+    for row in sort_rows(articles, sort):
+        row_data = data.get(row.article)
+        title = _esc(requirement_title(row.article) or "—")
+        if isinstance(row_data, dict) and row_data.get("needs_founder_review") is True:
+            title += "<br><em>mapping not yet reviewed</em>"
+        status = _esc(row.status.value.upper())
+        if row.status.value == "met" and row.corroborated:
+            status += " <em>corroborated</em>"
+        cells.append(
+            f"<tr><td>{_esc(row.article)}</td>"
+            f"<td>{title}</td>"
+            f'<td class="{_STATUS_CLASS[row.status.value]}">{status}</td>'
+            f"<td>{_esc(row.evidence_class or '')}</td>"
+            f"<td>{_esc(row.source.value)}</td>"
+            f"<td>{_esc(_sources_text(row_data))}</td>"
+            f"<td>{_esc(row.evidence_ref)}</td>"
+            f"<td>{_esc(row.rationale)}</td></tr>"
+        )
+    rows = "\n".join(cells)
     meta = f"Data version {_esc(framework_report.data_version)}"
     if framework_report.derived_from:
         meta += f" &middot; derived from {_esc(framework_report.derived_from)}"
+    applicability = framework_report.applicability
+    scope = ""
+    if applicability:
+        scope = f"<p>Applicability: {_esc(applicability.get('outcome', ''))}"
+        if applicability.get("reason"):
+            scope += f" &mdash; {_esc(applicability['reason'])}"
+        scope += "</p>\n"
+    checked = ""
+    if any(row.evidence_class for row in articles):
+        n = sum(1 for row in articles if row.evidence_class in ("machine", "hybrid"))
+        checked = f"<p>{n} of {len(articles)} requirements checked from evidence</p>\n"
     excluded = "".join(
         f"<li>{_esc(rid)}: {_esc(reason)}</li>"
         for rid, reason in framework_report.excluded.items()
     )
+    entries = timeline_for_requirements(row.article for row in articles)
+    timeline = "".join(f"<li>{_esc(format_entry(e))}</li>" for e in entries)
     return (
         f"\n\n<h2>{_esc(framework_report.label)}</h2>\n"
         f'<p class="meta">{meta}</p>\n'
+        f"{scope}{checked}"
         '<table class="gap-table"><thead><tr><th>Requirement</th><th>Title</th><th>Status</th>'
-        "<th>Source</th><th>Evidence</th><th>Rationale</th></tr></thead>"
+        "<th>Evidence class</th><th>Source</th><th>Sources</th>"
+        "<th>Evidence</th><th>Rationale</th></tr></thead>"
         f"<tbody>{rows}</tbody></table>\n"
         + (f"<p>Excluded</p><ul>{excluded}</ul>\n" if excluded else "")
+        + (f"<p>Timeline</p><ul>{timeline}</ul>\n" if timeline else "")
         + f'<p class="meta">{_esc(DISCLAIMER_V2)}</p>'
     )
 
@@ -246,7 +308,7 @@ def render_report(
         "{{rule_results_table}}": _render_rule_results_table(risk_result),
         "{{gap_report_table}}": _render_gap_report_table(gap_report, sort),
         "{{framework_reports_section}}": "".join(
-            _render_framework_section(framework_report, sort)
+            render_framework_section(framework_report, sort)
             for framework_report in sections
         ),
         "{{regulatory_timeline_section}}": _render_timeline_section(gap_report),

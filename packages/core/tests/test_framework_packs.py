@@ -14,10 +14,10 @@ from pathlib import Path
 
 import pytest
 from opencomplai_core.agent_sources import AGENT_SOURCE_REF
+from opencomplai_core.applicability import declared_scope_keys
 from opencomplai_core.compliance_checker.catalog import load_obligations
 from opencomplai_core.evaluators.registry import EVALUATOR_REGISTRY
 from opencomplai_core.frameworks import (
-    _SCOPE_FALSE,
     EU_AI_ACT,
     FRAMEWORKS,
     FrameworkPack,
@@ -26,7 +26,7 @@ from opencomplai_core.frameworks import (
     load_requirements_map,
     resolve_targets,
 )
-from opencomplai_core.gap_probes import _PROBE_PATTERNS, STUB_SOURCE_REFS
+from opencomplai_core.gap_probes import _PROBE_PATTERNS, STUB_SOURCE_REFS, probe_exists
 from opencomplai_core.gap_report import build_gap_report
 from opencomplai_core.manifest_sources import MANIFEST_SOURCE_REFS
 from opencomplai_core.models import (
@@ -46,10 +46,12 @@ FIXTURE_PACK = FrameworkPack(
 
 ALL_PACKS = [*FRAMEWORKS.values(), FIXTURE_PACK]
 
-EU_ONLY_KINDS = {"rule", "obligation", "manifest", "record"}
+EU_ONLY_KINDS = {"rule", "obligation"}
 # The only EU AI Act articles that take an attestation (ADR-framework-packs 2026-11c).
-EU_ATTESTABLE = {"Art. 4"}
-NATIVE_KINDS = {"artifact", "attestation", "scan", "evaluator"}
+EU_ATTESTABLE = {"Art. 4", "Art. 20"}
+NATIVE_KINDS = {"artifact", "attestation", "scan", "evaluator", "manifest", "record"}
+ROLES = {"supporting", "corroborating"}
+CORROBORATING_KINDS = {"artifact", "evaluator", "scan"}
 
 
 def _known_refs() -> dict[str, set[str]]:
@@ -77,12 +79,19 @@ def test_manifest_refs_do_not_overlap_stub_refs():
 
 def test_manifest_is_a_known_source_kind():
     assert ArticleGapSource("manifest") is ArticleGapSource.MANIFEST
-    assert "manifest" in EU_ONLY_KINDS
+    assert "manifest" in NATIVE_KINDS
 
 
 @pytest.mark.parametrize("pack", ALL_PACKS, ids=lambda p: p.id)
 def test_pack_is_native_or_derived_not_both(pack: FrameworkPack):
-    assert (pack.requirements is None) != (pack.derive is None)
+    native = pack.requirements is not None or pack.requirements_data is not None
+    if pack.hybrid:
+        # A hybrid pack is native and keeps the EU re-projection as its crosswalk.
+        assert native
+        assert pack.derive is not None
+    else:
+        assert native != (pack.derive is not None)
+    assert not (pack.requirements is not None and pack.requirements_data is not None)
     assert pack.label.strip()
 
 
@@ -117,18 +126,32 @@ def test_native_requirements_are_well_formed(pack: FrameworkPack):
         for source in config["sources"]:
             kind, ref = source["kind"], source["ref"]
             allowed = NATIVE_KINDS | EU_ONLY_KINDS if is_eu else NATIVE_KINDS
+            if pack.hybrid:
+                allowed = allowed | {"crosswalk"}
             assert kind in allowed, f"{rid}: kind {kind!r}"
             if is_eu and kind == "attestation":
                 assert rid in EU_ATTESTABLE, rid
             if "role" in source:
-                # Supporting evidence: only an artifact probe, never the sole source.
-                assert (kind, source["role"]) == ("artifact", "supporting"), rid
+                role = source["role"]
+                assert role in ROLES, f"{rid}: role {role!r}"
+                if role == "corroborating":
+                    assert kind in CORROBORATING_KINDS, f"{rid}: {kind!r}"
+                else:
+                    # Supporting evidence: only an artifact probe.
+                    assert kind == "artifact", rid
+                # Never the sole source: a deciding source sits beside it.
                 assert any("role" not in s for s in config["sources"]), rid
-            if kind == "attestation":
-                # The attestation is looked up by the requirement's own id.
+            if kind in ("attestation", "crosswalk"):
+                # Looked up by the requirement's own id.
                 assert ref == rid
             else:
-                assert ref in known[kind], f"{rid}: unknown {kind} ref {ref!r}"
+                assert ref in known[kind] or (
+                    kind == "artifact" and probe_exists(ref)
+                ), f"{rid}: unknown {kind} ref {ref!r}"
+
+
+def test_an_unknown_artifact_ref_is_not_accepted():
+    assert not probe_exists("no_such_probe.x#1")
 
 
 def test_the_eu_rows_that_take_an_attestation_are_exactly_the_listed_ones():
@@ -140,7 +163,7 @@ def test_the_eu_rows_that_take_an_attestation_are_exactly_the_listed_ones():
     }
     assert taking == EU_ATTESTABLE
     for rid in taking:
-        # Art. 4 is decided by an attestation alone, and goes stale after a year.
+        # Art. 4 and Art. 20 are decided by an attestation alone, and go stale after a year.
         assert [s["kind"] for s in eu[rid]["sources"]] == ["attestation"]
         assert eu[rid]["default_ttl_days"] == 365
 
@@ -149,8 +172,8 @@ def test_the_eu_rows_that_take_an_attestation_are_exactly_the_listed_ones():
     "pack", [p for p in ALL_PACKS if p.requirements is not None], ids=lambda p: p.id
 )
 def test_scope_out_uses_only_known_answers(pack: FrameworkPack):
-    known = set(FrameworkScope.model_fields)
-    assert set(_SCOPE_FALSE) == known
+    known = set(declared_scope_keys(pack.id))
+    assert set(FrameworkScope.model_fields) <= known
     for rid, config in load_requirements_map(pack.requirements).items():
         groups = config.get("scope_out", [])
         assert isinstance(groups, list), rid
@@ -281,9 +304,10 @@ def test_resolve_targets_accepts_a_registered_fixture_pack(monkeypatch):
 def test_attestable_ids_are_the_keys_framework_inputs_accepts():
     from opencomplai_core.frameworks import attestable_ids
 
-    assert attestable_ids(EU_AI_ACT) == {"Art. 4"}
+    assert attestable_ids(EU_AI_ACT) == {"Art. 4", "Art. 20"}
     assert "NIST_AI_RMF:GOVERN 2.2" in attestable_ids("NIST_AI_RMF")
-    assert "NIST_AI_RMF:MAP 3.4" not in attestable_ids("NIST_AI_RMF")
+    assert "NIST_AI_RMF:MAP 3.4" in attestable_ids("NIST_AI_RMF")
+    assert "NIST_AI_RMF:GOVERN 1.1" not in attestable_ids("NIST_AI_RMF")
     assert "ISO_IEC_27001:A.6.3" in attestable_ids("ISO_IEC_27001")
     assert attestable_ids("NOT_A_FRAMEWORK") == frozenset()
 

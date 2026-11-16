@@ -1,0 +1,18 @@
+{
+  "incident_response_plan": {
+    "title": "Incident response plan",
+    "target": "INCIDENT_RESPONSE.md"
+  },
+  "incident_notification_template": {
+    "title": "Incident notification template",
+    "target": "docs/incident-notification.md"
+  },
+  "continuity_plan": {
+    "title": "Continuity plan",
+    "target": "docs/business-continuity.md"
+  },
+  "restore_test_report": {
+    "title": "Restore test report",
+    "target": "docs/restore-test.md"
+  }
+}

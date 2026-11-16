@@ -9,7 +9,7 @@ from opencomplai_ai.models import MODEL_CATALOG
 
 def test_get_active_model_default(tmp_path):
     with patch("opencomplai_ai.config._AI_CONFIG_FILE", tmp_path / "ai-config.yaml"):
-        assert get_active_model() == "qwen2.5-coder-1.5b"
+        assert get_active_model() == "codebert-onnx"
 
 
 def test_get_active_model_reads_file(tmp_path):
@@ -23,7 +23,7 @@ def test_get_active_model_unknown_falls_back(tmp_path):
     cfg = tmp_path / "ai-config.yaml"
     cfg.write_text("model_id: nonexistent-model\n", encoding="utf-8")
     with patch("opencomplai_ai.config._AI_CONFIG_FILE", cfg):
-        assert get_active_model() == "qwen2.5-coder-1.5b"
+        assert get_active_model() == "codebert-onnx"
 
 
 def test_set_active_model_writes_file(tmp_path):
@@ -36,6 +36,16 @@ def test_set_active_model_writes_file(tmp_path):
         assert cfg.exists()
         with patch("opencomplai_ai.config._AI_CONFIG_FILE", cfg):
             assert get_active_model() == "codebert-onnx"
+
+
+def test_set_active_model_keeps_a_local_llm_choice(tmp_path):
+    cfg = tmp_path / "ai-config.yaml"
+    with (
+        patch("opencomplai_ai.config._AI_CONFIG_FILE", cfg),
+        patch("opencomplai_ai.config._CONFIG_DIR", tmp_path),
+    ):
+        set_active_model("qwen2.5-coder-1.5b")
+        assert get_active_model() == "qwen2.5-coder-1.5b"
 
 
 def test_set_active_model_rejects_unknown():

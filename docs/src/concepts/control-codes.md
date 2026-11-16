@@ -8,7 +8,7 @@ This page defines every code the tool can emit, what triggers it, and how to cle
 All of them are EU AI Act codes. When `check` gates another framework (see
 [Gating other frameworks](../cli/check.md#gating-other-frameworks)), its failing rows
 follow these codes in `failed_controls` as prefixed requirement ids, for example
-`NIST_AI_RMF:GOVERN 1.1`. To clear one, close the gap its row reports (for NIST AI
+`NIST_AI_RMF:MANAGE 1.3`. To clear one, close the gap its row reports (for NIST AI
 RMF, the EU AI Act gap the row is derived from), or exclude the requirement, with a
 reason, in the manifest's `framework_inputs` (see [Frameworks](../frameworks/index.md)).
 

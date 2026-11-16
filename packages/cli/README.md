@@ -7,10 +7,12 @@
 The `opencomplai` command-line tool for AI compliance assessment. It scans your
 repository, classifies your AI system against the EU AI Act, reports gaps for every
 framework your manifest targets (NIST AI RMF 1.0 is derived from the EU AI Act evidence),
-and produces an auditable, CI-gateable compliance artifact. EU AI Act evaluated; NIST AI RMF derived per subcategory, attested where EU AI Act evidence is silent (unreviewed); ISO 42001, ISO 27090, ISO 27001, ISO 42005, ISO 23894, SOC 2, NIS2, DORA, EBA, EIOPA, GDPR, CRA and ETSI EN 304 223 native packs, attestation-led (unreviewed).
+and produces an auditable, CI-gateable compliance artifact. 15 frameworks by status, evaluated: EU AI Act, NIST AI RMF 1.0, ISO/IEC 42001:2023 AI management system, ISO/IEC 27090:2026 AI security guidance, ISO/IEC 27001:2022 information security management, SOC 2 Trust Services Criteria (not a SOC 2 report), NIS2 Directive (EU) 2022/2555 cybersecurity measures, DORA Regulation (EU) 2022/2554 digital operational resilience, EBA Guidelines on ICT, outsourcing and loan origination, EIOPA Opinion on AI governance and risk management, GDPR Regulation (EU) 2016/679, duties relevant to AI systems, Cyber Resilience Act Regulation (EU) 2024/2847, ETSI EN 304 223 baseline cyber security for AI, ISO/IEC 42005:2025 AI system impact assessment, ISO/IEC 23894:2023 AI risk management guidance.
 
 Built on [`opencomplai-core`](https://pypi.org/project/opencomplai-core/) — the same
 deterministic, rule-based risk engine, with a rich terminal UX.
+
+Not sure whether the EU AI Act applies to your AI system? [Try the free EU AI Act checker](https://opencomplai.com/resources/eu-ai-act-checker?utm_source=pypi&utm_medium=description&utm_campaign=checker-launch): rules-based, a few minutes, not legal advice.
 
 ## Install
 
@@ -33,6 +35,8 @@ meta-package instead.
 | `opencomplai checker` | Run the interactive EU AI Act applicability checker |
 | `opencomplai gaps` | Print a gap report for every target framework, the EU AI Act by default (informational — never gates CI) |
 | `opencomplai diff` | Compare two artifacts or gap reports: added, removed and changed verdicts and the rule-set version delta (`--fail-on-regression` exits 1 on a worse status) |
+| `opencomplai scope` | Answer a framework pack's scope questions and list the requirements the answers take out |
+| `opencomplai scaffold` | Write a framework pack's fill-in documents (`--list` shows them) |
 | `opencomplai recommend` | Write copy-paste remediation templates for Missing/Partial gap-report rows |
 | `opencomplai report` | Render a single shareable HTML/PDF compliance report |
 | `opencomplai eval` | Run safety, bias, and data-leakage pipeline evaluators |
@@ -53,7 +57,8 @@ Also available as command groups (`opencomplai <group> --help` for their own sub
 (control-register status), `fria` (fundamental rights impact assessment), `qms` (Art. 17 quality-management-system documents), `dashboard` (Premium Dashboard connection management),
 `incident` (incident records and deadline clocks),
 `agents` (declared agent inventory: list, cross-check against a scan, report; `agents attest` signs an agent mandate attestation),
-`attestations` (`attestations pull` writes the attestation bundle `check --attestations-file` reads)
+`attestations` (`attestations pull` writes the attestation bundle `check --attestations-file` reads),
+`generate` (`generate model-card`, `impact-assessment`, `oscal` and `common-controls`: documents and exports from the manifest and the artifact)
 and `rules` (rule-set history: `opencomplai rules changelog`).
 Per-command pages are at <https://docs.opencomplai.com/cli/>.
 
@@ -125,11 +130,12 @@ the `--ai-intent` flag, which classifies how each AI callsite is actually used:
 
 ```bash
 pip install opencomplai-ai
-opencomplai scan --ai-intent --ai-model codebert-onnx   # deterministic matcher, no download
+opencomplai scan --ai-intent   # deterministic matcher (codebert-onnx), no download
 ```
 
-The default model is a local GGUF LLM and needs `pip install 'opencomplai-ai[deep]'`;
-without it a bare `--ai-intent` prints `AI intent skipped`.
+The default model is the deterministic `codebert-onnx` matcher. A local GGUF LLM is
+opt-in (`--ai-model qwen2.5-coder-1.5b` or `opencomplai ai configure`) and needs
+`pip install 'opencomplai-ai[deep]'`; without it that scan prints `AI intent skipped`.
 
 ## Documentation
 

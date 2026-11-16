@@ -1,0 +1,13 @@
+{
+  "framework": "SOC_2",
+  "outcome": "applies",
+  "reason": "A customer or contract asks for it; this pack prepares evidence and is not the auditor's work.",
+  "scope": {
+    "assurance_requested": true,
+    "availability_in_scope": true,
+    "confidentiality_in_scope": true,
+    "processing_integrity_in_scope": true,
+    "privacy_in_scope": true
+  },
+  "scoped_out": {}
+}

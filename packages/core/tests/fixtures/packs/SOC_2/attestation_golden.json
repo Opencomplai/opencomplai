@@ -1,0 +1,117 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "SOC_2": [
+      "SOC_2:A1.1",
+      "SOC_2:C1.1",
+      "SOC_2:C1.2",
+      "SOC_2:CC1.1",
+      "SOC_2:CC1.2",
+      "SOC_2:CC1.3",
+      "SOC_2:CC1.5",
+      "SOC_2:CC3.3",
+      "SOC_2:CC3.4",
+      "SOC_2:CC5.2",
+      "SOC_2:CC6.2",
+      "SOC_2:CC6.3",
+      "SOC_2:CC6.4",
+      "SOC_2:CC6.5",
+      "SOC_2:CC6.6",
+      "SOC_2:CC6.8",
+      "SOC_2:P2.1",
+      "SOC_2:P3.2",
+      "SOC_2:P4.2",
+      "SOC_2:P4.3",
+      "SOC_2:P6.1",
+      "SOC_2:P6.2",
+      "SOC_2:P6.7",
+      "SOC_2:P7.1",
+      "SOC_2:PI1.1",
+      "SOC_2:PI1.2",
+      "SOC_2:PI1.3",
+      "SOC_2:PI1.4",
+      "SOC_2:PI1.5"
+    ]
+  },
+  "mixed_attestable": {
+    "SOC_2": [
+      "SOC_2:A1.2",
+      "SOC_2:A1.3",
+      "SOC_2:CC1.4",
+      "SOC_2:CC2.1",
+      "SOC_2:CC2.2",
+      "SOC_2:CC2.3",
+      "SOC_2:CC3.1",
+      "SOC_2:CC3.2",
+      "SOC_2:CC4.1",
+      "SOC_2:CC4.2",
+      "SOC_2:CC5.1",
+      "SOC_2:CC5.3",
+      "SOC_2:CC6.1",
+      "SOC_2:CC6.7",
+      "SOC_2:CC7.1",
+      "SOC_2:CC7.2",
+      "SOC_2:CC7.3",
+      "SOC_2:CC7.4",
+      "SOC_2:CC7.5",
+      "SOC_2:CC8.1",
+      "SOC_2:CC9.1",
+      "SOC_2:CC9.2",
+      "SOC_2:P1.1",
+      "SOC_2:P3.1",
+      "SOC_2:P4.1",
+      "SOC_2:P5.1",
+      "SOC_2:P5.2",
+      "SOC_2:P6.3",
+      "SOC_2:P6.4",
+      "SOC_2:P6.5",
+      "SOC_2:P6.6",
+      "SOC_2:P8.1"
+    ]
+  },
+  "records": [
+    {
+      "id": "rec-not-applicable",
+      "requirement_id": "SOC_2:CC1.1",
+      "system_id": null,
+      "kind": "not_applicable",
+      "status": "active",
+      "statement": "The company has no office.",
+      "attested_by": "Jane Doe",
+      "attested_at": "2026-06-01",
+      "valid_until": null
+    }
+  ],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {},
+    "excluded": {
+      "SOC_2": {
+        "SOC_2:CC1.1": "The company has no office."
+      }
+    },
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": [
+    {
+      "case": "not-applicable",
+      "requirement_id": "SOC_2:CC1.1",
+      "framework": "SOC_2",
+      "bundle_id": "SOC_2:CC1.1",
+      "attestation_only": true,
+      "engine_status": "excluded",
+      "engine_record_id": null
+    }
+  ]
+}

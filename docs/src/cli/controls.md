@@ -142,7 +142,7 @@ system's real state.
 |---|---|---|
 | `--system-id` | *(required)* | System identifier. |
 | `--fail-on-missing` / `--no-fail-on-missing` | `--fail-on-missing` (on) | Whether `evidence_missing` controls also gate exit code `1`. Turn off to only gate on `evidence_stale` / `pending_review` / TTL-expired. |
-| `--framework` | `EU_AI_ACT` plus gated frameworks | Count only this framework's controls; repeat for several. Controls of other frameworks have requirement ids prefixed `<FW>:`. Without the flag, the frameworks listed under `gate.frameworks` in `./opencomplai.yaml` (see [`check`](check.md#gating-other-frameworks)) are counted too. An unknown framework exits `2`. |
+| `--framework` | `EU_AI_ACT` plus gated frameworks | Count only this framework's controls; repeat for several. Controls of other frameworks have requirement ids prefixed `<FW>:`. Without the flag, the frameworks listed under `gate.frameworks` in `./opencomplai.yaml` (see [`check`](check.md#gating-other-frameworks)) are counted too. An unknown framework exits `2`, except that a custom pack key (`CUSTOM_<KEY>`) listed under `gate.frameworks` is counted without loading the pack file, from 0.16.0. Only rows already in the register are counted: a key with no row there, such as a mistyped one, counts zero and prints one `NOTE` line on stderr. |
 | `--output` / `-o` | `human` | `human` or `json`. |
 
 Machine-readable form:

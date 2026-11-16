@@ -158,9 +158,10 @@ numbers are the ones to read for generalisation, and they are still measured on
 synthetic programs, not on real repositories.
 
 **Labelling status.** Every held-out label comes from a single author, and the
-labeller field is `author` throughout. No second pass has happened: the author's
-own check is not a second review, and a person must confirm each label before
-it is relied on. The set carries `needs_founder_review: true`, source "Annex
+labeller field is `author` throughout. No second pass has happened on this set
+(only the areas 3 to 8 set below had one, and that was by automated labellers):
+the author's own check is not a second review, and a person must confirm each
+label before it is relied on. The set carries `needs_founder_review: true`, source "Annex
 III and Article 5(1) as encoded in the knowledge pack (names, sub-points and
 titles only)" and confidence medium. Each program was written from those titles
 only, as a real project would name things; the keyword and code-signal fields of
@@ -607,8 +608,10 @@ manifest talking back, and is not a lead.
 This section measures those leads on three labelled sets: the training set and
 the held-out set above, and a separate set of programs for areas 3 to 8 that was
 recorded before any lead tier existed and is never tuned against. All three sets
-are synthetic and were labelled by a single author, with confidence low and
-`needs_founder_review: true`. A program counts as led for an area when at least
+are synthetic, with confidence low and `needs_founder_review: true`. The training
+and held-out sets were labelled by a single author; the areas 3 to 8 set also had
+a blind second pass by two automated labellers, not by a person (see "Labels"
+below). A program counts as led for an area when at least
 one of its call sites is a lead for that area. TP, FP and FN read as above, over
 areas 3 to 8 only: areas 1 and 2 never produce a lead and are not scored. The
 `Programs` column counts the programs labelled with the area.
@@ -719,8 +722,22 @@ lead.
 ## Labels
 
 Source: Annex III as encoded in the Annex III knowledge pack (area names and
-sub-points). Confidence: medium. Review status: needs review (single labeller,
-not legally reviewed).
+sub-points). Confidence: medium. Review status: needs review (not legally
+reviewed).
+
+The areas 3 to 8 set had a blind second pass by two independent automated
+labellers (language models), not by people. Each labelled all 28 programs from
+the declared purpose and the program files, without seeing the author's labels,
+and a label would have changed only where both labellers agreed on a different
+one. Both confirmed every label: 0 labels changed and there were no
+disagreements, so the lead tables and the policy above are the numbers measured
+before and after the pass, and they are identical. The `labeller` field of each
+of the 28 programs is `second_pass`, which here means that automated pass. A
+disagreement between the two labellers would have left the label as it was and
+been listed for the maintainer to decide; there were none. No label in any of the
+three sets has been reviewed by a person. The training and held-out sets are
+still labelled by a single author, and the labels of all three sets are data,
+not a legal determination.
 
 ## Re-run it
 

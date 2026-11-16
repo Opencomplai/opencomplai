@@ -73,6 +73,71 @@ def test_committed_fixture_is_what_the_engine_gives_now(golden: dict[str, Any]) 
     )
 
 
+PACKS = sorted(json.loads(FIXTURE.read_text(encoding="utf-8"))["attestation_only"])
+
+
+def _pack_file(key: str) -> Path:
+    return (
+        Path(__file__).resolve().parent
+        / "fixtures"
+        / "packs"
+        / key
+        / "attestation_golden.json"
+    )
+
+
+@pytest.mark.parametrize("key", PACKS)
+def test_committed_pack_fixture_is_what_the_engine_gives_now(key: str) -> None:
+    committed = _pack_file(key).read_text(encoding="utf-8")
+    assert committed == generator.render_all()[generator.pack_path(key)], (
+        f"packs/{key}/attestation_golden.json is stale: run "
+        f"`python scripts/generate_attestation_golden.py --pack {key}` and commit the result"
+    )
+
+
+def test_per_pack_sections_together_equal_the_combined_file(
+    golden: dict[str, Any],
+) -> None:
+    parts = {k: json.loads(_pack_file(k).read_text(encoding="utf-8")) for k in PACKS}
+    sections = ("attestation_only", "mixed_attestable")
+    merged: dict[str, Any] = {
+        name: {k: v for p in parts.values() for k, v in p[name].items()}
+        for name in sections
+    }
+    for key, part in parts.items():
+        header = {
+            k: part[k] for k in ("_meta", "today", "bundle_issued_on", "system_id")
+        }
+        assert header == {k: golden[k] for k in header}, key
+        assert {
+            k: v
+            for k, v in part["bundle"].items()
+            if k not in ("attestations", "excluded")
+        } == {
+            k: v
+            for k, v in golden["bundle"].items()
+            if k not in ("attestations", "excluded")
+        }, key
+    merged["bundle_attestations"] = {
+        k: v for p in parts.values() for k, v in p["bundle"]["attestations"].items()
+    }
+    merged["bundle_excluded"] = {
+        k: v for p in parts.values() for k, v in p["bundle"]["excluded"].items()
+    }
+    assert merged["attestation_only"] == golden["attestation_only"]
+    assert merged["mixed_attestable"] == golden["mixed_attestable"]
+    assert merged["bundle_attestations"] == golden["bundle"]["attestations"]
+    assert merged["bundle_excluded"] == golden["bundle"]["excluded"]
+    key_of = {r["id"]: None for r in golden["records"]}
+    records = {r["id"] for p in parts.values() for r in p["records"]}
+    assert records == set(key_of)
+    assert sorted(r["case"] for p in parts.values() for r in p["rows"]) == sorted(
+        r["case"] for r in golden["rows"]
+    )
+    by_case = {r["case"]: r for r in golden["rows"]}
+    assert all(by_case[r["case"]] == r for p in parts.values() for r in p["rows"])
+
+
 def test_generating_twice_gives_the_same_bytes() -> None:
     assert generator.render() == generator.render()
 
@@ -131,18 +196,27 @@ def test_attestation_only_ids_are_the_engines_for_every_pack(
     assert list(golden["attestation_only"]) == native
     for fw in native:
         assert golden["attestation_only"][fw] == sorted(attestation_only_ids(fw)), fw
-    assert golden["attestation_only"]["EU_AI_ACT"] == ["Art. 4"]
+    assert golden["attestation_only"]["EU_AI_ACT"] == ["Art. 20", "Art. 4"]
     packs = sum(
         len(v) for fw, v in golden["attestation_only"].items() if fw != "EU_AI_ACT"
     )
-    assert packs == 557
+    # totals are computed because pack cards move rows between the groups
+    assert packs == sum(
+        len(attestation_only_ids(fw)) for fw in native if fw != "EU_AI_ACT"
+    )
 
 
 def test_mixed_rows_are_attestable_but_not_attestation_only(
     golden: dict[str, Any],
 ) -> None:
     mixed = golden["mixed_attestable"]
-    assert sum(len(v) for v in mixed.values()) == 8
+    expected = {
+        fw: sorted(attestable_ids(fw) - attestation_only_ids(fw))
+        for fw, pack in FRAMEWORKS.items()
+        if pack.requirements is not None
+    }
+    # totals are computed because pack cards move rows between the groups
+    assert mixed == {fw: ids for fw, ids in expected.items() if ids}
     assert "EU_AI_ACT" not in mixed  # an EU article but Art. 4 takes no attestation
     for fw, ids in mixed.items():
         assert ids == sorted(attestable_ids(fw) - attestation_only_ids(fw)), fw

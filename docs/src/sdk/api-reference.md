@@ -6,6 +6,7 @@
 from opencomplai import (
     assess,
     AgentDecisionLog,
+    RuntimeReporter,  # from 0.16.0
     AssessmentInput,
     ModelMetadata,
     RiskLevel,
@@ -163,8 +164,8 @@ that its `scope` answers rule out (see [ISO/IEC 27090](../concepts/iso-27090.md#
 move to `FrameworkReport.excluded`. An attestation is Unverified once its `valid_until`
 is before `today` (default: the current UTC date). Raises `ValueError` on an unknown
 framework, on `excluded` or `scope` for `EU_AI_ACT` (it takes `attested` for Art. 4
-only), on an excluded or attested id the framework does not accept, or on a blank
-exclusion reason.
+only, and for Art. 20 from 0.16.0), on an excluded or attested id the framework
+does not accept, or on a blank exclusion reason.
 
 ```python
 from pathlib import Path
@@ -280,6 +281,117 @@ and `expected_count` to catch truncation.
 The same log is checked from the command line with
 [`opencomplai agents verify-log`](../cli/agents.md) and
 [`opencomplai verify --kind agent-log`](../cli/verify.md).
+
+---
+
+## Runtime events (from 0.16.0)
+
+`RuntimeReporter` records what a running AI system does as small events, keeps them in a
+local buffer file and sends them in batches. Only hashes and metadata are sent: ids, tool
+names, outcomes, metric values and a SHA-256 of each tool input. The tool input itself,
+free text and tool output are never recorded.
+
+```python
+from opencomplai import RuntimeReporter
+
+with RuntimeReporter("support-bot") as reporter:
+    reporter.decision(
+        "support-bot", "refund_order", "success",
+        {"order_ref": "ord_7Hq2xK9mWb4vTz1L", "amount": 19.99}, mandate_ref="MANDATE-7",
+    )
+    reporter.out_of_mandate(
+        "support-bot", "delete_account", {"account_ref": "acct_Zk3pQ8vN2xR7wLd4"}
+    )
+    reporter.metric("latency_ms", 182.5, unit="ms")
+    reporter.incident("high", "health_harm")
+# leaving the block sends what was buffered
+```
+
+**Constructor:** `RuntimeReporter(system_id, *, api_key=None, base_url=None,
+buffer_path=".opencomplai/runtime-events.jsonl", batch_size=100, max_buffered=10_000,
+max_retries=3, backoff_s=0.5, timeout_s=10.0, total_timeout_s=30.0, transport=None,
+clock=None, sleep=time.sleep)`. `system_id` is 1 to 200 characters. `batch_size` is 1 to 100.
+`transport` and `clock` exist for tests: a transport takes `(url, headers, body,
+timeout_s)` and returns the HTTP status, and a clock returns a `datetime`.
+
+`api_key` and `base_url` default to the `OPENCOMPLAI_API_KEY` and
+`OPENCOMPLAI_DASHBOARD_URL` environment variables, the same pair
+[`opencomplai push`](../cli/push.md) uses. A URL must be `https`, or `http` to `localhost`,
+`127.0.0.1` or `::1`, and a key may contain only printable ASCII characters; anything else
+raises `ValueError` when the reporter is built. A request to an `http` address on this
+machine never goes through a proxy set in the environment, so the key stays on the machine;
+an `https` request follows the environment's proxy settings. With the key or the URL
+missing the reporter is local-only: it keeps buffering and `flush()` reports
+`not_configured`.
+
+| Method | Description |
+|---|---|
+| `decision(agent_id, tool, outcome, tool_input, mandate_ref=None)` | One agent decision. `outcome` is `success`, `failure` or `blocked`. |
+| `out_of_mandate(agent_id, tool, tool_input, mandate_ref=None)` | An action outside the agent's mandate. |
+| `metric(name, value, unit=None)` | A number. `name` matches `[a-z][a-z0-9_.]{0,63}`, `value` is finite and between -1e15 and 1e15, `unit` matches `[a-z%/_]{1,16}`. |
+| `incident(severity, incident_class)` | `severity` is `low`, `medium`, `high` or `critical`. `incident_class` is one of `unclassified`, `death`, `health_harm`, `critical_infrastructure`, `fundamental_rights`, `property_environment` or `widespread_infringement`. |
+| `flush()` | Sends the buffer and returns a `FlushResult`. |
+| `stats()` | `{"buffered", "dropped", "configured"}`. |
+| `close()` | Flushes with a single attempt and no waiting between attempts. The context manager calls it on exit. |
+
+`agent_id`, `tool` and `mandate_ref` are 1 to 128 characters. These and `system_id` hold no
+control characters (C0 or C1), none of the characters that hide or reorder text (the same set a
+[custom pack](../reference/custom-pack-format.md) refuses in its text, such as zero-width
+characters, direction marks and line separators) and no unpaired surrogates (a character that has
+no UTF-8 form). A label made only of white space is refused too.
+Each recording method checks its arguments (`ValueError` on bad input or a metric value
+that is not finite or is out of range), hashes `tool_input` the way `AgentDecisionLog` does, and appends one line to
+the buffer. It makes no network call and starts no thread.
+
+**What is sent.** `flush()` posts JSON to `{base_url}/v1/runtime-events` with an
+`Authorization: Bearer` header, in batches of at most `batch_size` events and at most
+200 000 bytes of UTF-8 text, whichever comes first. A batch holds
+the `system_id`, the SDK version and the events; each event has a random `event_id` that
+lets the receiver ignore a repeat, a `kind` (`decision_log`, `out_of_mandate`, `metric` or
+`incident`), an `occurred_at` time in UTC, and only the fields listed above. The format is
+the packaged JSON Schema `opencomplai/data/runtime_event.schema.json`, listed under
+[Published schemas](../concepts/published-schemas.md). A receiver that stores a batch
+answers `202` with `{"accepted": n, "duplicates": n}`.
+
+**Buffering and retries.**
+
+- The buffer is a JSON Lines file. It survives a restart, and a later `flush()` sends what
+  an earlier run left behind. Use one buffer file per system and one process per file: a
+  second reporter for another system on the same file raises `ValueError` in the same
+  process, but nothing checks across processes. The buffer folder is created readable by
+  its owner only (mode `0o700`) and the buffer, rejected and temporary files likewise
+  (`0o600`); where the platform allows it, a symbolic link in place of one of them is
+  refused rather than followed. Keep the buffer files
+  (`.opencomplai/runtime-events.jsonl*`, including the `.rejected.jsonl` and `.tmp` files)
+  out of version control. The same folder holds signed records that are meant to be
+  committed, so do not ignore all of `.opencomplai/`.
+- At `max_buffered` events, new events are dropped, counted in `stats()["dropped"]` and
+  logged once as a warning.
+- A sent batch leaves the buffer. On `408`, `429`, `5xx` or a network error `flush()`
+  retries up to `max_retries` times, waiting `backoff_s * 2**attempt` seconds (never more
+  than 60), then stops with `unreachable` and keeps the events. A single `flush()` also has
+  a soft time limit: it gives up once `total_timeout_s` seconds have passed, across
+  attempts and batches, and each network step waits at most the time that is left. The limit
+  is soft: a slow name lookup or a peer that sends very slowly can run past it. `close()`
+  makes one attempt, so closing a reporter never waits on a receiver that is down. `404`,
+  `405` and `410` are handled the same way, because they usually mean a wrong address rather
+  than a bad batch, and so is any other unexpected status. Redirects are never followed.
+- On `401` or `403` it stops with `unauthorized` and keeps the events.
+- A buffer line that is not a valid event is dropped, and counted in `rejected` once, when
+  it leaves the buffer.
+- On any other `4xx` the batch moves to `<buffer_path>.rejected.jsonl` (the newest
+  `max_buffered` lines are kept), counts as rejected, and sending continues.
+
+**`FlushResult` fields:** `sent` (events the receiver took), `rejected`, `remaining` and
+`error`. `error` is `None` or one of `not_configured`, `unreachable`, `unauthorized` or
+`buffer_error`. These are fixed codes: no exception text, response body or API key is ever
+put in them, and `flush()` does not raise for a network problem. The reporter writes to
+the `opencomplai.runtime` logger and never prints.
+
+**Choose inputs with care.** A hash of a short or guessable tool input can be reversed by
+trying candidates. Do not pass low-entropy inputs you consider sensitive, such as a
+yes/no answer or a small numeric id, as `tool_input`. Pass something with enough free
+content to resist guessing, such as a long opaque reference.
 
 ---
 

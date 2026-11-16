@@ -1,0 +1,10 @@
+{
+  "framework": "NIS2",
+  "outcome": "voluntary",
+  "reason": "In-scope customers pass security duties down to their suppliers by contract.",
+  "scope": {
+    "annex_sector": false,
+    "supplier_to_in_scope_entity": true
+  },
+  "scoped_out": {}
+}

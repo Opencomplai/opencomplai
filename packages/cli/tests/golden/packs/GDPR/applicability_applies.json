@@ -1,0 +1,14 @@
+{
+  "framework": "GDPR",
+  "outcome": "applies",
+  "reason": "",
+  "scope": {
+    "processes_personal_data": true,
+    "eu_establishment_or_subjects": true,
+    "acts_as_controller": true,
+    "transfers_outside_eea": false
+  },
+  "scoped_out": {
+    "GDPR:Chapter V": "Not applicable: the manifest's scope says the system no transfers outside the EEA (framework_inputs.GDPR.scope.transfers_outside_eea = false)."
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "entries": [
+    {
+      "id": "eba.gl_2019_04_sections_withdrawn",
+      "title": "Sections 3.1 to 3.7 of the 2019/04 guideline reported as deleted",
+      "applies_from": null,
+      "requirements": [
+        "EBA:GL/2019/04 3.8"
+      ],
+      "scope_note": "Only section 3.8 of EBA/GL/2019/04 remains in this pack.",
+      "source": "EBA/GL/2019/04; EBA/GL/2025/02",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "Sections 3.1 to 3.7 of that guideline are reported as deleted upstream since DORA applies. Status to be confirmed on the authority's website."
+    },
+    {
+      "id": "eba.gl_2019_02_repeal_pending",
+      "title": "Repeal of the 2019/02 outsourcing guideline reported as pending",
+      "applies_from": null,
+      "requirements": [
+        "EBA:GL/2019/02 Section 3",
+        "EBA:GL/2019/02 Section 4",
+        "EBA:GL/2019/02 Section 5",
+        "EBA:GL/2019/02 Section 6",
+        "EBA:GL/2019/02 Section 7",
+        "EBA:GL/2019/02 Section 8",
+        "EBA:GL/2019/02 Section 9",
+        "EBA:GL/2019/02 Section 10",
+        "EBA:GL/2019/02 Section 11",
+        "EBA:GL/2019/02 Section 12.1",
+        "EBA:GL/2019/02 Section 12.2",
+        "EBA:GL/2019/02 Section 12.3",
+        "EBA:GL/2019/02 Section 13",
+        "EBA:GL/2019/02 Section 13.1",
+        "EBA:GL/2019/02 Section 13.2",
+        "EBA:GL/2019/02 Section 13.3",
+        "EBA:GL/2019/02 Section 13.4",
+        "EBA:GL/2019/02 Section 14",
+        "EBA:GL/2019/02 Section 15"
+      ],
+      "scope_note": "Covers the GL/2019/02 rows in this pack.",
+      "source": "EBA/GL/2019/02",
+      "confidence": "low",
+      "needs_founder_review": true,
+      "note": "Repeal of that guideline is reported as pending. Status to be confirmed on the authority's website."
+    }
+  ]
+}

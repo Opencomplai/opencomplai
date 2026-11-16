@@ -9,6 +9,8 @@ The `opencomplai` command comes from the `opencomplai-cli` package; each command
 - [accept](accept.md): record that a person has accepted a system's high-risk classification.
 - [scan](scan.md): cross-check the declared intended purpose against AI capability signals in the repository.
 - [gaps](gaps.md): print a gap report for every target framework.
+- [scope](scope.md): answer a framework pack's scope questions and see which requirements they take out.
+- [scaffold](scaffold.md): write a framework pack's fill-in documents.
 - [diff](diff.md): compare two compliance artifacts or gap reports.
 - [rules changelog](rules.md): show the rule-set history.
 - [controls](controls.md): operate the persistent control register.
@@ -22,6 +24,7 @@ The `opencomplai` command comes from the `opencomplai-cli` package; each command
 - [verify-output](verify-output.md): verify an AI output claim against ground-truth sources.
 - [verify](verify.md): check that a signed file is intact.
 - [export](export.md): write one neutral evidence package, as JSON or CSV, for a governance tool to read.
+- [generate](generate.md): write a model card, an impact assessment draft, an OSCAL document or a common-controls list.
 - [docs generate](docs-generate.md): generate an Annex IV technical documentation dossier.
 - [instructions generate](instructions-generate.md): draft the Art. 13(3) instructions for use.
 - [sync metadata](sync-metadata.md): sync allowlisted compliance metadata to the Premium Dashboard.

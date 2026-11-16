@@ -1,0 +1,5 @@
+# Gate example for EU_AI_ACT.
+# The EU AI Act is refused as a gate framework: its rules gate already.
+# Copy this file to the repository root as opencomplai.yaml.
+scan:
+  fail_on: major

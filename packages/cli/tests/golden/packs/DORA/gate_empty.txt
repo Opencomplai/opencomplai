@@ -1,0 +1,25 @@
+exit=1
+DORA:Art. 6(1)-(3)
+DORA:Art. 6(5)
+DORA:Art. 6(6)-(7)
+DORA:Art. 9
+DORA:Art. 10
+DORA:Art. 11
+DORA:Art. 12
+DORA:Art. 13
+DORA:Art. 14
+DORA:Art. 17
+DORA:Art. 18
+DORA:Art. 19(1), (4)
+DORA:Art. 19(3)
+DORA:Art. 24
+DORA:Art. 25
+DORA:Art. 28(2)
+DORA:Art. 28(3)
+DORA:Art. 28(4)
+DORA:Art. 28(5)
+DORA:Art. 28(6)
+DORA:Art. 28(7)
+DORA:Art. 28(8)
+DORA:Art. 30(1)-(2)
+DORA:Art. 30(3)

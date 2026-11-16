@@ -1,0 +1,26 @@
+{
+  "ai_threat_model": {
+    "title": "AI threat model",
+    "target": "docs/threat-model.md",
+    "probe": "ai_threat_model",
+    "file": "ai_threat_model.md"
+  },
+  "ai_red_team_report": {
+    "title": "Red-team report",
+    "target": "docs/red-team-report.md",
+    "probe": "ai_red_team_report",
+    "file": "ai_red_team_report.md"
+  },
+  "ai_asset_inventory": {
+    "title": "AI asset inventory",
+    "target": "docs/ai-asset-inventory.md",
+    "probe": "etsi_en_304_223.ai_asset_inventory",
+    "file": "ai_asset_inventory.md"
+  },
+  "end_of_life_note": {
+    "title": "End-of-life note",
+    "target": "docs/end-of-life.md",
+    "probe": "etsi_en_304_223.end_of_life_note",
+    "file": "end_of_life_note.md"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "family": "incident_continuity",
+  "probes": {
+    "incident_response_plan": {
+      "patterns": [
+        "INCIDENT_RESPONSE.md",
+        "docs/**/incident-response*",
+        "docs/**/incident_response*",
+        "**/incident_response*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:detect\\w*|classif\\w+|triage\\w*|severity)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:contain\\w*|recover\\w*|eradicat\\w+|mitigat\\w+)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:roles?|responsib\\w+|escalat\\w+|on-call|incident (?:commander|lead|manager))\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "detection, containment and roles or escalation topics",
+        "lacks_label": "detection or classification, containment or recovery, and roles or escalation",
+        "noun": "incident response plan",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus incident-handling topic words from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "incident_notification_template": {
+      "patterns": [
+        "docs/**/incident-notification*",
+        "docs/**/incident_notification*",
+        "**/breach-notification*",
+        "**/breach_notification*",
+        "**/notification-template*",
+        "**/notification_template*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:early warning|initial|intermediate|final|follow-up|update)\\s+(?:notification|report|warning)\\b|\\bnotification stage\\b|\\bstage\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:authority|authorities|regulator|supervisory|csirt|customers?|affected (?:users|parties|clients))\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b\\d+\\s*(?:hours?|hrs?|days?)\\b|\\bwithin\\s+\\w+\\s+(?:hours?|days?)\\b|\\bdeadline\\b|\\btime limit\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a notification stage, a recipient and a time limit",
+        "lacks_label": "notification stage, recipient (authority or customer) and time limit",
+        "noun": "incident notification template",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus notification topic words from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "continuity_plan": {
+      "patterns": [
+        "docs/**/business-continuity*",
+        "docs/**/business_continuity*",
+        "**/continuity-plan*",
+        "**/continuity_plan*",
+        "**/disaster-recovery*",
+        "**/disaster_recovery*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:RTO|RPO|recovery (?:time|point) objective\\w*)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:critical (?:services?|systems?|functions?|processes)|essential services?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:tests?|testing|exercises?|drills?|simulations?)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "recovery objectives, critical services and tests or exercises",
+        "lacks_label": "recovery time or point objective, critical services and tests or exercises",
+        "noun": "continuity plan",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus continuity topic words from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "restore_test_report": {
+      "patterns": [
+        "docs/**/restore-test*",
+        "docs/**/restore_test*",
+        "**/backup-test*",
+        "**/backup_test*",
+        "**/recovery-test*",
+        "**/recovery_test*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\brestor\\w+\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:results?|passed|failed|succe\\w+|duration|took|elapsed|minutes?|hours?)\\b",
+            "flags": "i"
+          },
+          {
+            "re": "\\b\\d{4}-\\d{2}-\\d{2}\\b|\\b\\d{1,2}[/.]\\d{1,2}[/.]\\d{2,4}\\b|\\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\\.?\\s+\\d{1,2},?\\s+\\d{4}|\\b\\d{1,2}\\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\\.?\\s+\\d{4}",
+            "flags": "i"
+          }
+        ],
+        "found_label": "a restore, a result or duration and a date",
+        "lacks_label": "restore, result or duration, and date",
+        "noun": "restore test report",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus restore-test topic words from general practice",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

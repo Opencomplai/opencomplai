@@ -10,7 +10,8 @@ links.
 
 ## Index
 
-The schemas under `packages/core/src/opencomplai_core/data/` ship with the CLI. The ones under
+The schemas under `packages/core/src/opencomplai_core/data/` ship with the CLI, and the runtime event
+schema under `packages/sdk-python/src/opencomplai/data/` ships with the SDK. The ones under
 `dashboard-saas/schemas/` are vendored by the dashboard and pinned (see [Pin and re-pin
 rules](#pin-and-re-pin-rules)).
 
@@ -21,6 +22,8 @@ rules](#pin-and-re-pin-rules)).
 | `annex_iv_dossier.schema.json` | `https://schemas.opencomplai.dev/annex_iv_dossier/v1` | Core. Generated from the `AnnexIVDossier` model through the same builder by `scripts/generate_dossier_schema.py`. | `opencomplai docs generate` | Auditors and CI that validate a dossier | Published, v1. A drift test keeps it in step with the model. |
 | `evidence_package.schema.json` | `https://schemas.opencomplai.dev/evidence_package/v1` | Core. Generated from the `EvidencePackage` model by `scripts/generate_artifact_schemas.py`. | `opencomplai export` | Governance and GRC tools that read the package | Published, v1. |
 | `attestation_bundle.schema.json` | `https://schemas.opencomplai.dev/attestation_bundle/v1` | Core. Generated from the `AttestationBundle` model by `scripts/generate_artifact_schemas.py`. | An attestation endpoint, such as the one `OPENCOMPLAI_DASHBOARD_URL` names | Tools that merge an organisation's attestations into a scan; the scan artifact records only the bundle's hash and signature | Published, v1. Signed with Ed25519 over the hex SHA-256 of the canonical payload, under the `attestation-bundle` signing domain. |
+| `custom_pack.schema.json` | `https://schemas.opencomplai.dev/custom_pack/v1` | Core. Generated from the `CustomPackDocument` model by `scripts/generate_artifact_schemas.py`. | The organisation that defines its own controls, in a JSON or YAML file | `opencomplai gaps --custom-pack` and `opencomplai check --custom-pack` | Published, v1, from 0.16.0. See [Custom controls pack](../reference/custom-pack-format.md). |
+| `runtime_event.schema.json` | `https://schemas.opencomplai.dev/runtime_event_batch/v1` | SDK. Written by hand in `packages/sdk-python/src/opencomplai/data/`. | `opencomplai.RuntimeReporter` | A server that accepts runtime events, `POST /v1/runtime-events` | Published, v1, from 0.16.0. A closed batch of up to 100 events with hashes and metadata only. See [Runtime events](../sdk/api-reference.md#runtime-events-from-0160). |
 | `deployer_pack.schema.json` | `https://schemas.opencomplai.dev/deployer_pack/v1` | Core. Generated from the `DeployerPack` model. | `opencomplai deployer-pack build` | `opencomplai verify --kind deployer-pack` | Published, v1. |
 | `agent_attestation_v1.schema.json` | none; the document fixes `schema_version` to `agent_attestation/v1` | Core. Mirrors the signed attestation record. | `opencomplai agents attest` | `opencomplai verify --kind agent-attestation` | Published, versioned by its file name and `schema_version`. |
 | `first_scan_status.schema.json` | `https://schemas.opencomplai.dev/first_scan_status/v1` | Dashboard, vendored. Source: the PRD's section on the status artifact. | `opencomplai push` (maps a scan artifact onto it) | Dashboard ingest, `POST /v1/ingest/scan-status` | Published, v1. The effective allowlist of what the dashboard may store. |
@@ -47,7 +50,9 @@ Other files in `dashboard-saas/schemas/` are not JSON Schemas but are part of th
 A published schema's `$id` is `https://schemas.opencomplai.dev/<name>/v<major>`, where `<name>` is the
 file name without `.schema.json` and `<major>` is a single integer. The artifact also carries a
 `schema_version` string that matches the major (`1`); it lives in the schema document, not on the model, so
-it never changes signed bytes. The host is an identifier, not a promise that the URL resolves.
+it never changes signed bytes. The host is an identifier, not a promise that the URL resolves. The one
+exception to the file-name rule is the runtime event schema: its `$id` names the batch it describes
+(`runtime_event_batch`), not its file.
 
 A schema without an `$id` (the attestation) is identified by its file name.
 

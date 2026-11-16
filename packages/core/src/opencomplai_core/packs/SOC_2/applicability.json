@@ -1,0 +1,39 @@
+{
+  "default": "voluntary",
+  "questions": [
+    {
+      "key": "assurance_requested",
+      "text": "Do customers or contracts ask for an independent assurance engagement on these criteria?",
+      "false_means": "no assurance requested"
+    },
+    {
+      "key": "availability_in_scope",
+      "text": "Is the availability category part of the engagement?",
+      "false_means": "availability not in scope"
+    },
+    {
+      "key": "confidentiality_in_scope",
+      "text": "Is the confidentiality category part of it?",
+      "false_means": "confidentiality not in scope"
+    },
+    {
+      "key": "processing_integrity_in_scope",
+      "text": "Is the processing integrity category part of it?",
+      "false_means": "processing integrity not in scope"
+    },
+    {
+      "key": "privacy_in_scope",
+      "text": "Is the privacy category part of it?",
+      "false_means": "privacy not in scope"
+    }
+  ],
+  "outcomes": [
+    {
+      "when": {
+        "assurance_requested": true
+      },
+      "outcome": "applies",
+      "reason": "A customer or contract asks for it; this pack prepares evidence and is not the auditor's work."
+    }
+  ]
+}

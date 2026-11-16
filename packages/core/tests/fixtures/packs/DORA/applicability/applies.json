@@ -1,0 +1,18 @@
+{
+  "system_id": "pack-golden-sys",
+  "intended_purpose": "payment processing for Example Ltd customers",
+  "compliance_target": "EU_AI_ACT",
+  "compliance_targets": [
+    "DORA"
+  ],
+  "high_risk_presumption": false,
+  "commit_ref": "HEAD",
+  "framework_inputs": {
+    "DORA": {
+      "scope": {
+        "financial_entity": true,
+        "simplified_regime": false
+      }
+    }
+  }
+}

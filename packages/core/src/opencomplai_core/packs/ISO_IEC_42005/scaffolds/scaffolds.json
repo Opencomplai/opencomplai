@@ -1,0 +1,8 @@
+{
+  "impact_assessment": {
+    "title": "AI system impact assessment",
+    "target": "AI_IMPACT_ASSESSMENT.md",
+    "probe": "iso_iec_42005.impact_assessment",
+    "file": "impact_assessment.md"
+  }
+}

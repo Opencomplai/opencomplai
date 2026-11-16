@@ -2,9 +2,12 @@
 
 The numbers in ``LEADS_PINNED`` and ``LEADS_TOP1_PINNED`` are as measured once at
 the commit that added this set, before any lead tier or matcher change. They move
-only by a deliberate re-pin that edits no program and no label. The set is never to
-be tuned against: a zero here is the recorded result, not a defect to fix by
-editing a program, a label or the signal dictionary. The training and held-out
+only by a deliberate re-pin that edits no program. The one approved relabel is the
+blind second pass by two independent automated labellers: it confirmed every label, so no
+label changed, the benchmark output was identical before and after, and only the
+``labeller`` field and ``LEADS_META`` moved. The set is never to be tuned
+against: a zero here is the recorded result, not a defect to fix by editing a
+program, a label or the signal dictionary. The training and held-out
 pins stay in ``test_annex_iii_benchmark.py`` and
 ``test_annex_iii_heldout_benchmark.py``, which are untouched.
 """
@@ -165,7 +168,10 @@ def test_leads_set_shape():
     assert leads_mod.LEADS_META["needs_founder_review"] is True
     assert leads_mod.LEADS_META["confidence"] == "low"
     assert leads_mod.LEADS_META["source"]
-    assert leads_mod.LEADS_META["labelled_by"]
+    labelled_by = leads_mod.LEADS_META["labelled_by"]
+    assert "automated" in labelled_by
+    assert "not reviewed by a person" in labelled_by
+    assert "reviewers" not in labelled_by
 
 
 def test_leads_numbers_are_pinned(leads_measured):

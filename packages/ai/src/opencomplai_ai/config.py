@@ -10,7 +10,7 @@ from opencomplai_ai.models import MODEL_CATALOG
 
 _CONFIG_DIR = Path.home() / ".opencomplai"
 _AI_CONFIG_FILE = _CONFIG_DIR / "ai-config.yaml"
-_DEFAULT_MODEL = "qwen2.5-coder-1.5b"
+_DEFAULT_MODEL = "codebert-onnx"
 
 
 def get_active_model() -> str:

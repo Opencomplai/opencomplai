@@ -19,7 +19,7 @@ from typing import Any
 
 from opencomplai_core.gap_report import STATUS_SEVERITY
 from opencomplai_core.models import ArticleGapStatus, GapStatus
-from opencomplai_core.regulatory_timeline import timeline_for_articles
+from opencomplai_core.regulatory_timeline import timeline_for_requirements
 
 EFFORT_RANK = {"S": 0, "M": 1, "L": 2}
 
@@ -37,14 +37,14 @@ def effort_for(article: str) -> str | None:
 
 
 def deadline_for(article: str) -> date | None:
-    """The one known `applies_from` for an EU article, else None.
+    """The one known `applies_from` for an EU article or pack row, else None.
 
     Null-dated entries are ignored; entries that disagree (for example an
     Annex III and an Annex I entry) give no single date.
     """
-    if not article.startswith("Art. "):
-        return None
-    known = {e.applies_from for e in timeline_for_articles([article]) if e.applies_from}
+    known = {
+        e.applies_from for e in timeline_for_requirements([article]) if e.applies_from
+    }
     return date.fromisoformat(next(iter(known))) if len(known) == 1 else None
 
 

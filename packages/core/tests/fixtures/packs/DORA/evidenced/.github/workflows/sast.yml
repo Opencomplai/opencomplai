@@ -1,0 +1,5 @@
+name: sast
+jobs:
+  scan:
+    steps:
+      - uses: github/codeql-action/analyze@v3

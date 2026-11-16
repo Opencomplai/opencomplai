@@ -7,6 +7,7 @@ Forbidden literals are built at runtime so this file passes its own gate.
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -16,6 +17,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 VERIFY = ROOT / "scripts" / "verify-oss.sh"
 CONFIG = ROOT / "scripts" / "oss-config.sh"
+ALLOWLIST = ROOT / "scripts" / "oss-public-path-allowlist.txt"
 
 pytestmark = pytest.mark.skipif(
     not VERIFY.exists(), reason="sync tooling is private-repo only"
@@ -222,3 +224,156 @@ def test_private_path_in_build_manifest_fails(tmp_path, manifest):
     (out / manifest).write_text("link: packages/cli\n")
     r = _verify(out)
     assert "referenced in build manifest" not in r.stderr
+
+
+# Runtime-built so the gate's own tests do not rely on being allowlisted for these.
+PRIV_TEXT = "dashboard" + "-saas/"
+PLAN_TEXT = "PLA" + "N/"
+ALLOWLISTED = "packages/cli/tests/test_publish.py"
+
+
+def _out(root: Path, name: str, files: dict[str, str]) -> Path:
+    base = root / name
+    base.mkdir()
+    out = _tree(base)
+    for rel, text in files.items():
+        f = out / rel
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_text(text)
+    return out
+
+
+@pytest.mark.parametrize("text", [PRIV_TEXT + "services/web", PLAN_TEXT + "x.md"])
+def test_private_path_text_fails(tmp_path, text):
+    r = _verify(_out(tmp_path, "t", {"notes.md": f"see {text}\n"}))
+    assert r.returncode != 0
+    assert "private path text" in r.stderr
+    assert "in: notes.md" in r.stderr
+
+
+def test_private_path_text_in_allowlisted_file_passes(tmp_path):
+    text = f"see {PRIV_TEXT}x and {PLAN_TEXT}y\n"
+    r = _verify(_out(tmp_path, "t", {ALLOWLISTED: text}))
+    assert "private path text" not in r.stderr
+
+
+def test_plan_text_needs_a_non_name_character_before_it(tmp_path):
+    near = "DOCS-UPDATE-" + PLAN_TEXT + "x"
+    r = _verify(_out(tmp_path, "near", {"notes.md": f"see {near}\n"}))
+    assert "private path text" not in r.stderr
+    for i, before in enumerate(("", "(", " ", "docs/")):
+        out = _out(tmp_path, f"hit{i}", {"n.md": f"{before}{PLAN_TEXT}x\n"})
+        r = _verify(out)
+        assert "private path text" in r.stderr, repr(before)
+
+
+def test_missing_allowlist_fails(tmp_path):
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    for name in ("verify-oss.sh", "oss-config.sh", "gitleaks.toml"):
+        shutil.copyfile(ROOT / "scripts" / name, scripts / name)
+    r = subprocess.run(
+        [BASH, (scripts / "verify-oss.sh").as_posix(), _tree(tmp_path).as_posix()],
+        capture_output=True,
+        text=True,
+    )
+    assert r.returncode != 0
+    assert "allowlist missing" in r.stderr
+
+
+def _scripts_copy(root: Path, allowlist: str | None, setting: str | None = None):
+    scripts = root / "scripts"
+    scripts.mkdir()
+    for name in ("verify-oss.sh", "oss-config.sh", "gitleaks.toml"):
+        shutil.copyfile(ROOT / "scripts" / name, scripts / name)
+    if setting is not None:
+        config = scripts / "oss-config.sh"
+        config.write_text(
+            config.read_text().replace(
+                'PUBLIC_PATH_ALLOWLIST="oss-public-path-allowlist.txt"',
+                f'PUBLIC_PATH_ALLOWLIST="{setting}"',
+            )
+        )
+    if allowlist is not None:
+        (scripts / "oss-public-path-allowlist.txt").write_text(allowlist)
+    return scripts
+
+
+def _run_copy(scripts: Path, out: Path) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [BASH, (scripts / "verify-oss.sh").as_posix(), out.as_posix()],
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_an_empty_allowlist_setting_prints_the_missing_allowlist_failure(tmp_path):
+    scripts = _scripts_copy(tmp_path, allowlist=None, setting="")
+    r = _run_copy(scripts, _tree(tmp_path))
+    assert r.returncode != 0
+    assert "allowlist missing" in r.stderr
+
+
+def test_a_stale_allowlist_entry_is_warned_about(tmp_path):
+    scripts = _scripts_copy(tmp_path, "docs/gone.md  # no longer there\n")
+    r = _run_copy(scripts, _tree(tmp_path))
+    assert "stale public-path allowlist entry (no hit): docs/gone.md" in r.stderr
+
+
+def test_a_live_allowlist_entry_is_not_stale(tmp_path):
+    scripts = _scripts_copy(tmp_path, "notes.md  # kept on purpose\n")
+    out = _tree(tmp_path)
+    (out / "notes.md").write_text(f"see {PRIV_TEXT}x\n")
+    r = _run_copy(scripts, out)
+    assert "stale" not in r.stderr
+    assert "private path text" not in r.stderr
+
+
+def test_a_utf16_text_file_cannot_pass_the_private_path_scan(tmp_path):
+    out = _tree(tmp_path)
+    (out / "notes.md").write_bytes(f"see {PRIV_TEXT}x\n".encode("utf-16"))
+    r = _verify(out)
+    assert r.returncode != 0
+    assert "UTF-16 text file cannot be scanned" in r.stderr
+    assert "notes.md" in r.stderr
+
+
+def test_a_binary_looking_file_is_still_scanned(tmp_path):
+    out = _tree(tmp_path)
+    (out / "data.bin").write_bytes(b"\x00\x01" + f"see {PRIV_TEXT}x".encode() + b"\x00")
+    r = _verify(out)
+    assert "private path text" in r.stderr
+    assert "in: data.bin" in r.stderr
+
+
+def test_allowlist_and_handoff_scanner_test_are_private():
+    assert _private("scripts/oss-public-path-allowlist.txt") == 0
+    assert _private("packages/core/tests/test_handoff_flag_scanner.py") == 0
+
+
+def test_every_allowlist_entry_exists_and_names_a_private_path():
+    patterns = [
+        re.compile(re.escape(PRIV_TEXT)),
+        re.compile("(^|[^A-Za-z0-9_-])" + PLAN_TEXT, re.M),
+    ]
+    lines = [
+        line
+        for line in ALLOWLIST.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    for line in lines:
+        assert re.fullmatch(r"\S+  # \S.*", line), f"needs '  # <reason>': {line!r}"
+    entries = [line.split()[0] for line in lines]
+    assert entries == sorted(entries)
+    assert len(entries) == len(set(entries))
+    for rel in entries:
+        f = ROOT / rel
+        assert f.is_file(), rel
+        text = f.read_text(encoding="utf-8")
+        assert any(p.search(text) for p in patterns), f"{rel}: no private path text"
+
+
+def test_hermes_context_file_is_private():
+    text = CONFIG.read_text(encoding="utf-8")
+    block = text.split("PRIVATE_FILES=(", 1)[1].split("\n)", 1)[0]
+    assert ".hermes.md" in block

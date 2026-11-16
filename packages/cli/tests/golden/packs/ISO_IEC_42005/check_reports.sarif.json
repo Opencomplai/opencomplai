@@ -1,0 +1,966 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "opencomplai",
+          "informationUri": "https://opencomplai.com",
+          "rules": [
+            {
+              "id": "ISO_IEC_42005:Clause 5.2",
+              "name": "ISO_IEC_42005:Clause 5.2",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.2"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.4",
+              "name": "ISO_IEC_42005:Clause 5.4",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.4"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.5",
+              "name": "ISO_IEC_42005:Clause 5.5",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.5"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.6",
+              "name": "ISO_IEC_42005:Clause 5.6",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.6"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.7",
+              "name": "ISO_IEC_42005:Clause 5.7",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.7"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.10",
+              "name": "ISO_IEC_42005:Clause 5.10",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.10"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.11",
+              "name": "ISO_IEC_42005:Clause 5.11",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.11"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 5.12",
+              "name": "ISO_IEC_42005:Clause 5.12",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 5.12"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.2",
+              "name": "ISO_IEC_42005:Clause 6.2",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.2"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.3",
+              "name": "ISO_IEC_42005:Clause 6.3",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.3"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.4",
+              "name": "ISO_IEC_42005:Clause 6.4",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.4"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.5",
+              "name": "ISO_IEC_42005:Clause 6.5",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.5"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.6",
+              "name": "ISO_IEC_42005:Clause 6.6",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.6"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.8.3",
+              "name": "ISO_IEC_42005:Clause 6.8.3",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.8.3"
+              }
+            },
+            {
+              "id": "ISO_IEC_42005:Clause 6.9",
+              "name": "ISO_IEC_42005:Clause 6.9",
+              "shortDescription": {
+                "text": "Failed requirement ISO_IEC_42005:Clause 6.9"
+              }
+            },
+            {
+              "id": "gap/none",
+              "name": "gap/none",
+              "shortDescription": {
+                "text": "Gap row for evidence none"
+              }
+            },
+            {
+              "id": "gap/prohibited",
+              "name": "gap/prohibited",
+              "shortDescription": {
+                "text": "Gap row for evidence prohibited"
+              }
+            },
+            {
+              "id": "gap/risk_register",
+              "name": "gap/risk_register",
+              "shortDescription": {
+                "text": "Gap row for evidence risk_register"
+              }
+            },
+            {
+              "id": "gap/technical_documentation_dossier",
+              "name": "gap/technical_documentation_dossier",
+              "shortDescription": {
+                "text": "Gap row for evidence technical_documentation_dossier"
+              }
+            },
+            {
+              "id": "gap/event_log_evidence",
+              "name": "gap/event_log_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence event_log_evidence"
+              }
+            },
+            {
+              "id": "gap/deployer_instructions",
+              "name": "gap/deployer_instructions",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_instructions"
+              }
+            },
+            {
+              "id": "gap/human_oversight_construct",
+              "name": "gap/human_oversight_construct",
+              "shortDescription": {
+                "text": "Gap row for evidence human_oversight_construct"
+              }
+            },
+            {
+              "id": "gap/provider_qms_bundle",
+              "name": "gap/provider_qms_bundle",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms_bundle"
+              }
+            },
+            {
+              "id": "gap/provider_qms",
+              "name": "gap/provider_qms",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_qms"
+              }
+            },
+            {
+              "id": "gap/distributor_conformity",
+              "name": "gap/distributor_conformity",
+              "shortDescription": {
+                "text": "Gap row for evidence distributor_conformity"
+              }
+            },
+            {
+              "id": "gap/deployer_use_records",
+              "name": "gap/deployer_use_records",
+              "shortDescription": {
+                "text": "Gap row for evidence deployer_use_records"
+              }
+            },
+            {
+              "id": "gap/provider_fria",
+              "name": "gap/provider_fria",
+              "shortDescription": {
+                "text": "Gap row for evidence provider_fria"
+              }
+            },
+            {
+              "id": "gap/conformity_assessment_docs",
+              "name": "gap/conformity_assessment_docs",
+              "shortDescription": {
+                "text": "Gap row for evidence conformity_assessment_docs"
+              }
+            },
+            {
+              "id": "gap/eu_database_registration_evidence",
+              "name": "gap/eu_database_registration_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence eu_database_registration_evidence"
+              }
+            },
+            {
+              "id": "gap/transparency_notice_evidence",
+              "name": "gap/transparency_notice_evidence",
+              "shortDescription": {
+                "text": "Gap row for evidence transparency_notice_evidence"
+              }
+            },
+            {
+              "id": "gap/gpai_provider",
+              "name": "gap/gpai_provider",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_provider"
+              }
+            },
+            {
+              "id": "gap/gpai_systemic_risk",
+              "name": "gap/gpai_systemic_risk",
+              "shortDescription": {
+                "text": "Gap row for evidence gpai_systemic_risk"
+              }
+            },
+            {
+              "id": "gap/post_market_monitoring_plan",
+              "name": "gap/post_market_monitoring_plan",
+              "shortDescription": {
+                "text": "Gap row for evidence post_market_monitoring_plan"
+              }
+            },
+            {
+              "id": "gap/serious_incident_log",
+              "name": "gap/serious_incident_log",
+              "shortDescription": {
+                "text": "Gap row for evidence serious_incident_log"
+              }
+            }
+          ],
+          "version": "0.16.0"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.2",
+          "level": "error",
+          "message": {
+            "text": "Documenting the process: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.2'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.4",
+          "level": "error",
+          "message": {
+            "text": "Timing of AI system impact assessment: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.4'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.5",
+          "level": "error",
+          "message": {
+            "text": "Scope of the AI system impact assessment: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.5'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.6",
+          "level": "error",
+          "message": {
+            "text": "Allocating responsibilities: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.6'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.7",
+          "level": "error",
+          "message": {
+            "text": "Establishing thresholds for sensitive uses, restricted uses and impact scales: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.7'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.10",
+          "level": "error",
+          "message": {
+            "text": "Recording and reporting: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.10'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.11",
+          "level": "error",
+          "message": {
+            "text": "Approval process: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.11'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 5.12",
+          "level": "error",
+          "message": {
+            "text": "Monitoring and review: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#5.12'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.2",
+          "level": "error",
+          "message": {
+            "text": "Scope of the AI system impact assessment: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.2'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.3",
+          "level": "error",
+          "message": {
+            "text": "AI system information: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.3'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.4",
+          "level": "error",
+          "message": {
+            "text": "Data information and quality: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.4'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.5",
+          "level": "error",
+          "message": {
+            "text": "Algorithm and model information: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.5'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.6",
+          "level": "error",
+          "message": {
+            "text": "Deployment environment: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.6'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.8.3",
+          "level": "error",
+          "message": {
+            "text": "AI system failures and reasonably foreseeable misuse: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.8.3'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "ISO_IEC_42005:Clause 6.9",
+          "level": "error",
+          "message": {
+            "text": "Measures to address harms and benefits: No conventional documentation/code probe matched for 'iso_iec_42005.impact_assessment#6.9'. Add the expected file or construct, then re-run gaps."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 4: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/prohibited",
+          "level": "note",
+          "message": {
+            "text": "Art. 5: Obligation 'Prohibited AI practices' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/risk_register",
+          "level": "error",
+          "message": {
+            "text": "Art. 9: No conventional documentation/code probe matched for 'risk_register'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 10: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/technical_documentation_dossier",
+          "level": "error",
+          "message": {
+            "text": "Art. 11: No conventional documentation/code probe matched for 'technical_documentation_dossier'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/event_log_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 12: No conventional documentation/code probe matched for 'event_log_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_instructions",
+          "level": "error",
+          "message": {
+            "text": "Art. 13: No conventional documentation/code probe matched for 'deployer_instructions'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/human_oversight_construct",
+          "level": "error",
+          "message": {
+            "text": "Art. 14: No conventional documentation/code probe matched for 'human_oversight_construct'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 15: No source data supplied for this article in this run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms_bundle",
+          "level": "error",
+          "message": {
+            "text": "Art. 16: No conventional documentation/code probe matched for 'provider_qms_bundle'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_qms",
+          "level": "error",
+          "message": {
+            "text": "Art. 17: No conventional documentation/code probe matched for 'provider_qms'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/none",
+          "level": "note",
+          "message": {
+            "text": "Art. 20: No attestation recorded. Add one under framework_inputs.EU_AI_ACT.attested in the manifest. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/distributor_conformity",
+          "level": "error",
+          "message": {
+            "text": "Art. 24: No conventional documentation/code probe matched for 'distributor_conformity'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/deployer_use_records",
+          "level": "error",
+          "message": {
+            "text": "Art. 26: No conventional documentation/code probe matched for 'deployer_use_records'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/provider_fria",
+          "level": "error",
+          "message": {
+            "text": "Art. 27: No conventional documentation/code probe matched for 'provider_fria'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/conformity_assessment_docs",
+          "level": "error",
+          "message": {
+            "text": "Art. 43: No conventional documentation/code probe matched for 'conformity_assessment_docs'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/eu_database_registration_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 49: No conventional documentation/code probe matched for 'eu_database_registration_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/transparency_notice_evidence",
+          "level": "error",
+          "message": {
+            "text": "Art. 50: No conventional documentation/code probe matched for 'transparency_notice_evidence'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_provider",
+          "level": "note",
+          "message": {
+            "text": "Art. 53: Obligation 'General-purpose AI model provider obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/gpai_systemic_risk",
+          "level": "note",
+          "message": {
+            "text": "Art. 55: Obligation 'GPAI model with systemic risk obligations' applies; no automated verification run. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/post_market_monitoring_plan",
+          "level": "error",
+          "message": {
+            "text": "Art. 72: No conventional documentation/code probe matched for 'post_market_monitoring_plan'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "gap/serious_incident_log",
+          "level": "error",
+          "message": {
+            "text": "Art. 73: No conventional documentation/code probe matched for 'serious_incident_log'. Add the expected file or construct, then re-run gaps. Heuristic projection, not a compliance verdict."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "system-manifest.json"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "opencomplai_result": "control_fail",
+        "system_id": "pack-golden-sys",
+        "commit_ref": "unresolved",
+        "signed": false
+      }
+    }
+  ]
+}

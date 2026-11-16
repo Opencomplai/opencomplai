@@ -40,9 +40,9 @@ def _smtp_config() -> dict[str, str | int | bool]:
     }
 
 
-# Brand values mirrored from the dashboard's mail templates
-# (dashboard-saas/services/web/src/lib/mail/provider.ts): inline styles on a
-# table layout, the only structure every mail client renders the same way.
+# Brand values kept in step with the other transactional mail templates:
+# inline styles on a table layout, the only structure every mail client
+# renders the same way.
 _FONT = "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
 _INK = "#21283b"
 _MUTED = "#4b5563"

@@ -1,0 +1,15 @@
+{
+  "framework": "ETSI_EN_304_223",
+  "outcome": "applies",
+  "reason": "A contract or policy commits the organisation to this baseline.",
+  "scope": {
+    "trains_models": false,
+    "builds_or_operates_ai": true,
+    "contract_commitment": true
+  },
+  "scoped_out": {
+    "ETSI_EN_304_223:5.2.1-4": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false).",
+    "ETSI_EN_304_223:5.2.4-2": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false).",
+    "ETSI_EN_304_223:5.2.4-2.1": "Not applicable: the manifest's scope says the system does not train or fine-tune models (framework_inputs.ETSI_EN_304_223.scope.trains_models = false)."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "framework": "NIS2",
+  "outcome": "applies",
+  "reason": "",
+  "scope": {
+    "annex_sector": true,
+    "medium_or_larger": true
+  },
+  "scoped_out": {}
+}

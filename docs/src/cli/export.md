@@ -127,6 +127,16 @@ The key must come from the signer, never from the package. An unsigned artifact 
 | `scan-report.json` (from `scan` and `check --scan`), `scan --output json` | `eu_ai_scan.proposal_leads` (with the `opencomplai-ai` plugin installed) |
 | `scan-report.json` (from `scan` and `check --scan`), `scan --output json` | the `eu_ai_scan` block on a default scan: non-null only when the plugin is installed and at least one lead was found, otherwise `null` as before |
 
+## Upgrading to 0.16.0
+
+From 0.16.0, mandate expiry and custom packs add fields to existing JSON output. They are additive; nothing is renamed or removed, but a reader that rejects unknown keys must accept them:
+
+| Where | New field |
+|---|---|
+| `agents check --output json` | `expiring_mandates` |
+| `compliance-artifact.json`, in `summaries.agents` | `earliest_mandate_expiry` and `expiring_soon` (both omitted while no mandate has an expiry) |
+| `compliance-artifact.json`, in `framework_reports` | a `CUSTOM_<key>` entry (only with `--custom-pack`) |
+
 ## Exit codes
 
 | Code | Meaning |

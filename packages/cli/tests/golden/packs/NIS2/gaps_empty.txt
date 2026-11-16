@@ -1,0 +1,76 @@
+
+NIS2 Directive (EU) 2022/2555 cybersecurity measures (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement        ┃ Title                                           ┃ Status     ┃ Source      ┃ Evidence                                        ┃ Rationale                                        ┃
+┡━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ NIS2:Art. 20(1)    │ Governance: management approves and oversees    │ UNVERIFIED │ attestation │ none                                            │ No attestation recorded. Add one under           │
+│                    │ the security measures                           │            │             │                                                 │ framework_inputs.NIS2.attested in the manifest.  │
+│ NIS2:Art. 20(2)    │ Governance: cybersecurity training for          │ UNVERIFIED │ attestation │ none                                            │ No attestation recorded. Add one under           │
+│                    │ management bodies                               │            │             │                                                 │ framework_inputs.NIS2.attested in the manifest.  │
+│ NIS2:Art. 21(1)    │ Appropriate and proportionate cybersecurity     │ UNVERIFIED │ attestation │ none                                            │ No attestation recorded. Add one under           │
+│                    │ risk-management measures                        │            │             │                                                 │ framework_inputs.NIS2.attested in the manifest.  │
+│ NIS2:Art. 21(2)(a) │ Policies on risk analysis and information       │ MISSING    │ artifact    │ policy_information_security                     │ No conventional documentation/code probe matched │
+│                    │ system security                                 │            │             │                                                 │ for 'policy_information_security'. Add the       │
+│                    │                                                 │            │             │                                                 │ expected file or construct, then re-run gaps.    │
+│ NIS2:Art. 21(2)(b) │ Incident handling                               │ MISSING    │ artifact    │ incident_response_plan                          │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for 'incident_response_plan'. Add the expected   │
+│                    │                                                 │            │             │                                                 │ file or construct, then re-run gaps.             │
+│ NIS2:Art. 21(2)(c) │ Business continuity, backup, disaster recovery  │ MISSING    │ artifact    │ continuity_plan                                 │ No conventional documentation/code probe matched │
+│                    │ and crisis management                           │            │             │                                                 │ for 'continuity_plan'. Add the expected file or  │
+│                    │                                                 │            │             │                                                 │ construct, then re-run gaps.                     │
+│ NIS2:Art. 21(2)(d) │ Supply chain security, including direct         │ MISSING    │ artifact    │ vendor_register                                 │ No conventional documentation/code probe matched │
+│                    │ suppliers and service providers                 │            │             │                                                 │ for 'vendor_register'. Add the expected file or  │
+│                    │                                                 │            │             │                                                 │ construct, then re-run gaps.                     │
+│ NIS2:Art. 21(2)(e) │ Security in systems acquisition, development,   │ MISSING    │ artifact    │ vulnerability_handling_policy                   │ No conventional documentation/code probe matched │
+│                    │ maintenance and vulnerabilities                 │            │             │                                                 │ for 'vulnerability_handling_policy'. Add the     │
+│                    │                                                 │            │             │                                                 │ expected file or construct, then re-run gaps.    │
+│ NIS2:Art. 21(2)(f) │ Assessing the effectiveness of cybersecurity    │ MISSING    │ artifact    │ internal_audit_report                           │ No conventional documentation/code probe matched │
+│                    │ risk-management measures                        │            │             │                                                 │ for 'internal_audit_report'. Add the expected    │
+│                    │                                                 │            │             │                                                 │ file or construct, then re-run gaps.             │
+│ NIS2:Art. 21(2)(g) │ Basic cyber hygiene practices and cybersecurity │ MISSING    │ artifact    │ competence_training_record                      │ No conventional documentation/code probe matched │
+│                    │ training                                        │            │             │                                                 │ for 'competence_training_record'. Add the        │
+│                    │                                                 │            │             │                                                 │ expected file or construct, then re-run gaps.    │
+│ NIS2:Art. 21(2)(h) │ Cryptography and, where appropriate, encryption │ MISSING    │ artifact    │ policy_cryptography                             │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for 'policy_cryptography'. Add the expected file │
+│                    │                                                 │            │             │                                                 │ or construct, then re-run gaps.                  │
+│ NIS2:Art. 21(2)(i) │ Human resources security, access control and    │ MISSING    │ artifact    │ policy_access_control                           │ No conventional documentation/code probe matched │
+│                    │ asset management                                │            │             │                                                 │ for 'policy_access_control'. Add the expected    │
+│                    │                                                 │            │             │                                                 │ file or construct, then re-run gaps.             │
+│ NIS2:Art. 21(2)(j) │ Multi-factor authentication and secured         │ UNVERIFIED │ attestation │ none                                            │ No attestation recorded. Add one under           │
+│                    │ communications                                  │            │             │                                                 │ framework_inputs.NIS2.attested in the manifest.  │
+│ NIS2:Art. 21(3)    │ Supplier vulnerabilities and quality when       │ MISSING    │ artifact    │ vendor_register                                 │ No conventional documentation/code probe matched │
+│                    │ choosing supply chain measures                  │            │             │                                                 │ for 'vendor_register'. Add the expected file or  │
+│                    │                                                 │            │             │                                                 │ construct, then re-run gaps.                     │
+│ NIS2:Art. 21(4)    │ Corrective measures when the Art. 21(2)         │ MISSING    │ artifact    │ corrective_action_log                           │ No conventional documentation/code probe matched │
+│                    │ measures are not met                            │            │             │                                                 │ for 'corrective_action_log'. Add the expected    │
+│                    │                                                 │            │             │                                                 │ file or construct, then re-run gaps.             │
+│ NIS2:Art. 23(1)    │ Notifying the CSIRT or authority of significant │ MISSING    │ artifact    │ incident_notification_template                  │ No conventional documentation/code probe matched │
+│                    │ incidents                                       │            │             │                                                 │ for 'incident_notification_template'. Add the    │
+│                    │                                                 │            │             │                                                 │ expected file or construct, then re-run gaps.    │
+│ NIS2:Art. 23(2)    │ Informing service recipients of significant     │ UNVERIFIED │ attestation │ none                                            │ No attestation recorded. Add one under           │
+│                    │ cyber threats                                   │            │             │                                                 │ framework_inputs.NIS2.attested in the manifest.  │
+│ NIS2:Art. 23(4)(a) │ Early warning within 24 hours                   │ MISSING    │ artifact    │ nis2.incident_notification_record#early-warning │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for                                              │
+│                    │                                                 │            │             │                                                 │ 'nis2.incident_notification_record#early-warnin… │
+│                    │                                                 │            │             │                                                 │ Add the expected file or construct, then re-run  │
+│                    │                                                 │            │             │                                                 │ gaps.                                            │
+│ NIS2:Art. 23(4)(b) │ Incident notification within 72 hours           │ MISSING    │ artifact    │ nis2.incident_notification_record#notification  │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for                                              │
+│                    │                                                 │            │             │                                                 │ 'nis2.incident_notification_record#notification… │
+│                    │                                                 │            │             │                                                 │ Add the expected file or construct, then re-run  │
+│                    │                                                 │            │             │                                                 │ gaps.                                            │
+│ NIS2:Art. 23(4)(c) │ Intermediate report on request                  │ MISSING    │ artifact    │ nis2.incident_notification_record#intermediate… │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for                                              │
+│                    │                                                 │            │             │                                                 │ 'nis2.incident_notification_record#intermediate… │
+│                    │                                                 │            │             │                                                 │ Add the expected file or construct, then re-run  │
+│                    │                                                 │            │             │                                                 │ gaps.                                            │
+│ NIS2:Art. 23(4)(d) │ Final report within one month                   │ MISSING    │ artifact    │ nis2.incident_notification_record#final-report  │ No conventional documentation/code probe matched │
+│                    │                                                 │            │             │                                                 │ for                                              │
+│                    │                                                 │            │             │                                                 │ 'nis2.incident_notification_record#final-report… │
+│                    │                                                 │            │             │                                                 │ Add the expected file or construct, then re-run  │
+│                    │                                                 │            │             │                                                 │ gaps.                                            │
+└────────────────────┴─────────────────────────────────────────────────┴────────────┴─────────────┴─────────────────────────────────────────────────┴──────────────────────────────────────────────────┘
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

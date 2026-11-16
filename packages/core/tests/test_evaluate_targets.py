@@ -25,6 +25,7 @@ from opencomplai_core.frameworks import (
     data_version,
     evaluate_targets,
     gate_failures,
+    load_requirements_map,
     validate_gate,
 )
 from opencomplai_core.gap_report import build_gap_report
@@ -331,7 +332,15 @@ def test_nist_rows_are_derived_and_prefixed():
     assert [row.article for row in nist.report.articles] == [
         f"NIST_AI_RMF:{row.subcategory}" for row in legacy.subcategories
     ]
+    # Hybrid rows add artifact or evaluator sources of their own; only the rows
+    # still decided by the projection must equal the legacy report.
+    nist_pack = load_requirements_map(FRAMEWORKS["NIST_AI_RMF"].requirements)
+    checked = 0
     for row, legacy_row in zip(nist.report.articles, legacy.subcategories, strict=True):
+        kinds = {s["kind"] for s in nist_pack[row.article]["sources"]}
+        if not kinds <= {"crosswalk", "attestation"}:
+            continue
+        checked += 1
         assert row.source == ArticleGapSource.CROSSWALK
         assert row.status == legacy_row.status
         assert row.confidence is None
@@ -340,6 +349,7 @@ def test_nist_rows_are_derived_and_prefixed():
         assert row.evidence_ref == (
             ", ".join(legacy_row.source_eu_ai_act_articles) or "none"
         )
+    assert checked
     assert any(row.evidence_ref != "none" for row in nist.report.articles)
     assert any(row.evidence_ref == "none" for row in nist.report.articles)
 
@@ -389,7 +399,7 @@ def test_today_is_resolved_once_for_the_whole_run(monkeypatch):
         [EU_AI_ACT, "ISO_IEC_27001", "ISO_IEC_42001", "NIST_AI_RMF"],
         commit_ref="abc",
     )
-    assert len(seen) == 3  # EU AI Act and the two native packs
+    assert len(seen) == 4  # EU AI Act, the two native packs and hybrid NIST
     assert set(seen) == {date(2026, 9, 1)}
     assert _Clock.calls == 1
 

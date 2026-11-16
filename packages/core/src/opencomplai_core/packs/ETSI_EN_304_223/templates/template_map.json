@@ -1,0 +1,247 @@
+{
+  "ETSI_EN_304_223:5.1.1-1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.1-1.1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.1-2.2": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.2-1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.2-2": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.2-3": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.2-4": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.2-7": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.3-1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.3-1.1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.3-1.3": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.3-4": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.4-1": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.4-3": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.1.4-5": {
+    "template_id": "secure_design",
+    "kind": "markdown",
+    "file": "secure_design.md"
+  },
+  "ETSI_EN_304_223:5.2.1-1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.1-2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.1-3": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.1-3.1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.1-4.2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.2-2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.2-3": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.2-4": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.2-5": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.2-6": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.3-1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.3-2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.3-3": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-1.1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-1.2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-2.1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.4-3": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.5-1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.5-2": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.5-2.1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.5-4": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.2.5-4.1": {
+    "template_id": "secure_development",
+    "kind": "markdown",
+    "file": "secure_development.md"
+  },
+  "ETSI_EN_304_223:5.3.1-1": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.3.1-2": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.3.1-2.1": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.4.1-1": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.4.1-2": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.4.2-1": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.4.2-2": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.4.2-4": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.5.1-1": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  },
+  "ETSI_EN_304_223:5.5.1-2": {
+    "template_id": "secure_operation",
+    "kind": "markdown",
+    "file": "secure_operation.md"
+  }
+}

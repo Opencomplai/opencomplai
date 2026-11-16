@@ -1,0 +1,118 @@
+{
+  "_meta": {
+    "description": "Statuses the engine gives a fixed set of recorded attestations, and the requirement ids only an attestation can decide. Generated; do not edit.",
+    "regenerate": "python scripts/generate_attestation_golden.py",
+    "bundle": "the bundle an issuer ships for the system on bundle_issued_on; key_id and signature are placeholders (the CLI copies them without checking)",
+    "ids": "requirement_id is the catalogue spelling (EU AI Act articles prefixed with EU_AI_ACT:); bundle_id and the id lists use the engine's spelling"
+  },
+  "today": "2026-11-03",
+  "bundle_issued_on": "2026-11-01",
+  "system_id": "golden-system",
+  "attestation_only": {
+    "ISO_IEC_27090": [
+      "ISO_IEC_27090:5.1",
+      "ISO_IEC_27090:6.11",
+      "ISO_IEC_27090:7.2",
+      "ISO_IEC_27090:7.3",
+      "ISO_IEC_27090:7.9",
+      "ISO_IEC_27090:B.7"
+    ]
+  },
+  "mixed_attestable": {
+    "ISO_IEC_27090": [
+      "ISO_IEC_27090:5.2",
+      "ISO_IEC_27090:5.3",
+      "ISO_IEC_27090:5.4",
+      "ISO_IEC_27090:5.5",
+      "ISO_IEC_27090:5.6",
+      "ISO_IEC_27090:5.7",
+      "ISO_IEC_27090:6.10",
+      "ISO_IEC_27090:6.2",
+      "ISO_IEC_27090:6.3",
+      "ISO_IEC_27090:6.4",
+      "ISO_IEC_27090:6.5",
+      "ISO_IEC_27090:6.6",
+      "ISO_IEC_27090:6.7",
+      "ISO_IEC_27090:6.8",
+      "ISO_IEC_27090:6.9",
+      "ISO_IEC_27090:7.4",
+      "ISO_IEC_27090:7.5",
+      "ISO_IEC_27090:7.6",
+      "ISO_IEC_27090:7.7",
+      "ISO_IEC_27090:7.8",
+      "ISO_IEC_27090:B.2",
+      "ISO_IEC_27090:B.3",
+      "ISO_IEC_27090:B.4",
+      "ISO_IEC_27090:B.5",
+      "ISO_IEC_27090:B.6"
+    ]
+  },
+  "records": [
+    {
+      "id": "rec-evaluator-fails",
+      "requirement_id": "ISO_IEC_27090:6.9",
+      "system_id": null,
+      "kind": "attested",
+      "status": "active",
+      "statement": "In place (rec-evaluator-fails).",
+      "attested_by": "Jane Doe",
+      "attested_at": "2026-06-01",
+      "valid_until": null
+    },
+    {
+      "id": "rec-evaluator-silent",
+      "requirement_id": "ISO_IEC_27090:6.8",
+      "system_id": null,
+      "kind": "attested",
+      "status": "active",
+      "statement": "In place (rec-evaluator-silent).",
+      "attested_by": "Jane Doe",
+      "attested_at": "2026-06-01",
+      "valid_until": null
+    }
+  ],
+  "bundle": {
+    "schema_version": "attestation_bundle/v1",
+    "system_id": "golden-system",
+    "issued_at": "2026-11-01T09:30:00+00:00",
+    "attestations": {
+      "ISO_IEC_27090": {
+        "ISO_IEC_27090:6.8": {
+          "statement": "In place (rec-evaluator-silent).",
+          "attested_by": "Jane Doe",
+          "attested_at": "2026-06-01",
+          "record_id": "rec-evaluator-silent"
+        },
+        "ISO_IEC_27090:6.9": {
+          "statement": "In place (rec-evaluator-fails).",
+          "attested_by": "Jane Doe",
+          "attested_at": "2026-06-01",
+          "record_id": "rec-evaluator-fails"
+        }
+      }
+    },
+    "excluded": {},
+    "key_id": "golden-key",
+    "signature": "AAAA"
+  },
+  "rows": [
+    {
+      "case": "mixed-evaluator-fails",
+      "requirement_id": "ISO_IEC_27090:6.9",
+      "framework": "ISO_IEC_27090",
+      "bundle_id": "ISO_IEC_27090:6.9",
+      "attestation_only": false,
+      "engine_status": "missing",
+      "engine_record_id": null
+    },
+    {
+      "case": "mixed-evaluator-silent",
+      "requirement_id": "ISO_IEC_27090:6.8",
+      "framework": "ISO_IEC_27090",
+      "bundle_id": "ISO_IEC_27090:6.8",
+      "attestation_only": false,
+      "engine_status": "met",
+      "engine_record_id": "rec-evaluator-silent"
+    }
+  ]
+}

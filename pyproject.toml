@@ -70,7 +70,7 @@ dev = [
     # `uv sync --all-packages` -- CI's test-cli job never passes
     # --extra dev, so packages/cli's own [project.optional-dependencies]
     # dev group is not what supplies this workspace-wide dev venv; this
-    # root dependency-group is. Same floor packages/cli/pyproject.toml
-    # and dashboard-saas/services/ingest-api/pyproject.toml both declare.
+    # root dependency-group is. Same floor as packages/cli/pyproject.toml
+    # and the other services that validate against the vendored schemas.
     "jsonschema>=4.21",
 ]

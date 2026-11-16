@@ -52,10 +52,13 @@ is evidence you recorded, not something the tool infers.
 The manifest's `framework_inputs` can exclude requirements of other frameworks (see
 [Frameworks](../frameworks/index.md)). For `EU_AI_ACT` it takes `attested` and nothing
 else, and only for the articles that no code can show. That is Art. 4 (AI literacy)
-today: with an attestation under `framework_inputs.EU_AI_ACT.attested` its row reads
+and, from 0.16.0, Art. 20 (corrective actions and the duty of information):
+with an attestation under `framework_inputs.EU_AI_ACT.attested` the row reads
 Met, without one it reads Unverified, and an attestation past its `valid_until` reads
-Unverified again. An attestation for any other article, and any `excluded` or `scope`
-entry, makes `gaps` and `check` exit `2`. A declared exclusion is a statement you
+Unverified again. Art. 20 also carries `applies_when_any` (the provider high-risk
+obligation), so a recorded session without it moves the article to `not_applicable`;
+Art. 4 has no such condition. An attestation for any other article, and any `excluded` or
+`scope` entry, makes `gaps` and `check` exit `2`. A declared exclusion is a statement you
 typed; applicability is derived from a recorded checker session. Letting the first
 stand in for the second would let a manifest edit remove an obligation without the
 checker ever saying it did not apply, so the two stay separate.

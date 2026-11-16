@@ -27,6 +27,7 @@ from opencomplai_core.compliance_checker.catalog import (
     load_help_content,
     load_questions,
 )
+from opencomplai_core.compliance_checker.engine import _answer_bool
 from opencomplai_core.compliance_checker.merge import (
     MergedCheckerResult,
     merge_role_results,
@@ -291,6 +292,20 @@ def run_interactive_wizard(
     return CheckerSession(answers=answers)
 
 
+def _timeline_bases(answers: dict[str, Any]) -> frozenset[str] | None:
+    """High-risk timeline dates the answers point to; None when none were given."""
+    if "hr1_annex_i" not in answers and "hr2_annex_iii" not in answers:
+        return None
+    bases: set[str] = set()
+    if _answer_bool(answers, "hr1_annex_i") and _answer_bool(
+        answers, "hr8_conformity_assessment"
+    ):
+        bases.add("annex_i")
+    if _answer_bool(answers, "hr2_annex_iii"):
+        bases.add("annex_iii")
+    return frozenset(bases)
+
+
 def display_results(result: ComplianceCheckerResult, today: date | None = None) -> None:
     """Render human-readable results with glossary.
 
@@ -342,7 +357,9 @@ def display_results(result: ComplianceCheckerResult, today: date | None = None) 
         ]
         if result.is_prohibited:
             articles.append("Art. 5")
-        entries = timeline_for_articles(articles)
+        entries = timeline_for_articles(
+            articles, bases=_timeline_bases(result.answers or {})
+        )
         if entries:
             now = today or today_utc()
             tt = Table(title="Regulatory timeline")

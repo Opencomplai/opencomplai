@@ -1,0 +1,10 @@
+{
+  "framework": "ISO_IEC_23894",
+  "outcome": "applies",
+  "reason": "A contract or internal policy commits the organisation to this framework.",
+  "scope": {
+    "develops_or_uses_ai": true,
+    "contract_commitment": true
+  },
+  "scoped_out": {}
+}

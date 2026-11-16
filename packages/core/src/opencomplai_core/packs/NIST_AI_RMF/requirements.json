@@ -1,0 +1,1777 @@
+{
+  "NIST_AI_RMF:GOVERN 1.1": {
+    "title": "Legal and regulatory requirements involving AI are understood, managed, and documented.",
+    "note": "Knowing which legal duties apply: prohibited-practice screening, risk classification and the provider duties.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 5", "Art. 6", "Art. 16"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.1", "ISO_IEC_42001:Clause 6.2", "ISO_IEC_42001:A.2.2", "ISO_IEC_42001:A.2.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 1.2": {
+    "title": "The characteristics of trustworthy AI are integrated into organizational policies, processes, procedures, and practices.",
+    "note": "The quality management system is where trustworthiness goals become policy.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "policy_ai",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.4", "ISO_IEC_42001:Clause 5.2", "ISO_IEC_42001:A.2.2", "ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.9.3", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 1.3": {
+    "title": "Processes, procedures, and practices are in place to determine the needed level of risk management activities based on the organization's risk tolerance.",
+    "note": "The risk management system sets how much risk work a system needs.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.1", "ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 1.4": {
+    "title": "The risk management process and its outcomes are established through transparent policies, procedures, and other controls based on organizational risk priorities.",
+    "note": "Risk management system and its documented procedures.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.4"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "nist_ai_rmf.profile#govern",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:Clause 8.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 1.5": {
+    "title": "Ongoing monitoring and periodic review of the risk management process and its outcomes are planned and organizational roles and responsibilities clearly defined, including determining the frequency of periodic review.",
+    "note": "Art. 9 requires regular review of the risk process; post-market monitoring feeds it.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.5"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "management_review_minutes",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.2", "ISO_IEC_42001:Clause 8.3", "ISO_IEC_42001:Clause 8.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 1.6": {
+    "title": "Mechanisms are in place to inventory AI systems and are resourced according to organizational risk priorities.",
+    "note": "Registration under Art. 49 binds only Annex III high-risk systems, and only when they are placed on the market, so it is no evidence of an inventory. The row takes an attestation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.6"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.6"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.4.2", "ISO_IEC_42001:A.4.3", "ISO_IEC_42001:A.4.4", "ISO_IEC_42001:A.4.5", "ISO_IEC_42001:A.4.6"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether the organisation keeps a current inventory of its AI systems and decides what is in scope."
+  },
+  "NIST_AI_RMF:GOVERN 1.7": {
+    "title": "Processes and procedures are in place for decommissioning and phasing out AI systems safely and in a manner that does not increase risks or decrease the organization's trustworthiness.",
+    "note": "The EU AI Act evidence the tool gathers has no decommissioning record.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 1.7"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 1.7"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.6"],
+    "iso_27090": ["ISO_IEC_27090:7.3"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether decommissioning and phase-out of AI systems is planned so that it is safe and keeps accountability."
+  },
+  "NIST_AI_RMF:GOVERN 2.1": {
+    "title": "Roles and responsibilities and lines of communication related to mapping, measuring, and managing AI risks are documented and are clear to individuals and teams throughout the organization.",
+    "note": "The quality management system includes an accountability framework.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 2.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 2.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:Clause 5.3", "ISO_IEC_42001:Clause 7.1", "ISO_IEC_42001:Clause 7.2", "ISO_IEC_42001:Clause 7.3", "ISO_IEC_42001:Clause 7.4", "ISO_IEC_42001:Clause 9.1", "ISO_IEC_42001:A.3.2"],
+    "iso_27090": ["ISO_IEC_27090:5.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 2.2": {
+    "title": "The organization's personnel and partners receive AI risk management training to enable them to perform their duties and responsibilities consistent with related policies, procedures, and agreements.",
+    "note": "AI literacy measures for staff and others operating the system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 2.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 2.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "competence_training_record",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 4"],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 2.3": {
+    "title": "Executive leadership of the organization takes responsibility for decisions about risks associated with AI system development and deployment.",
+    "note": "Management responsibility is part of the accountability framework of the QMS.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 2.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 2.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:Clause 5.1", "ISO_IEC_42001:Clause 5.2", "ISO_IEC_42001:Clause 9.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 3.1": {
+    "title": "Decision-making related to mapping, measuring, and managing AI risks throughout the lifecycle is informed by a diverse team (e.g., diversity of demographics, disciplines, experience, expertise, and backgrounds).",
+    "note": "No EU AI Act evidence covers team diversity.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 3.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 3.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.4.6", "ISO_IEC_42001:A.5.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether decisions about AI risk are taken by a diverse group with the right mix of roles and backgrounds."
+  },
+  "NIST_AI_RMF:GOVERN 3.2": {
+    "title": "Policies and procedures are in place to define and differentiate roles and responsibilities for human-AI configurations and oversight of AI systems.",
+    "note": "Human oversight design (provider) and assigning oversight to competent people (deployer).",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 3.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "human_oversight_construct"
+      }
+    ],
+    "eu_ai_act": ["Art. 14", "Art. 26"],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.2", "ISO_IEC_42001:Clause 9.3", "ISO_IEC_42001:A.4.6", "ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.9.3"],
+    "iso_27090": ["ISO_IEC_27090:6.11"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 4.1": {
+    "title": "Organizational policies and practices are in place to foster a critical thinking and safety-first mindset in the design, development, deployment, and uses of AI systems to minimize potential negative impacts.",
+    "note": "Organisational culture is outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 4.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 4.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.9.2", "ISO_IEC_42001:A.9.3", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.4"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether the culture of the organisation encourages critical thinking and a safety-first mindset in design and use."
+  },
+  "NIST_AI_RMF:GOVERN 4.2": {
+    "title": "Organizational teams document the risks and potential impacts of the AI technology they design, develop, deploy, evaluate, and use, and they communicate about the impacts more broadly.",
+    "note": "Documented risks, information to deployers and the fundamental rights impact assessment.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 4.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#impacts",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 13", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:Clause 7.4", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.8.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 4.3": {
+    "title": "Organizational practices are in place to enable AI testing, identification of incidents, and information sharing.",
+    "note": "Testing within risk management and serious-incident handling.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 4.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 4.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "serious_incident_log",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 73"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.8.3", "ISO_IEC_42001:A.8.4", "ISO_IEC_42001:A.8.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 5.1": {
+    "title": "Organizational policies and practices are in place to collect, consider, prioritize, and integrate feedback from those external to the team that developed or deployed the AI system regarding the potential individual and societal impacts related to AI risks.",
+    "note": "Post-market monitoring collects experience from deployers; wider external feedback is not covered.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 5.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 5.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.8.3", "ISO_IEC_42001:A.10.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 5.2": {
+    "title": "Mechanisms are established to enable the team that developed or deployed AI systems to regularly incorporate adjudicated feedback from relevant AI actors into system design and implementation.",
+    "note": "Post-market monitoring results feed back into the system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 5.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:GOVERN 5.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.8.3", "ISO_IEC_42001:A.10.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:GOVERN 6.1": {
+    "title": "Policies and procedures are in place that address AI risks associated with third-party entities, including risks of infringement of a third-party's intellectual property or other rights.",
+    "note": "Written agreements with suppliers (Art. 25(4)) are the core link. Art. 53 counts only for providers of general-purpose AI models. Distributor duties do not describe a provider checking its own suppliers and are not linked.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 6.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "policy_supplier",
+        "role": "supporting"
+      },
+      {
+        "kind": "artifact",
+        "ref": "vendor_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25", "Art. 53"],
+    "iso_42001": ["ISO_IEC_42001:A.10.2", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:B.3"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine",
+    "scope_out": [
+      ["uses_third_party_models"]
+    ]
+  },
+  "NIST_AI_RMF:GOVERN 6.2": {
+    "title": "Contingency processes are in place to handle failures or incidents in third-party data or AI systems deemed to be high-risk.",
+    "note": "Written agreements with suppliers along the value chain.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:GOVERN 6.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "exit_plan",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_42001": ["ISO_IEC_42001:A.10.2", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine",
+    "scope_out": [
+      ["uses_third_party_models"]
+    ]
+  },
+  "NIST_AI_RMF:MAP 1.1": {
+    "title": "Intended purposes, potentially beneficial uses, context-specific laws, norms and expectations, and prospective settings in which the AI system will be deployed are understood and documented. Considerations include: the specific set or types of users along with their expectations; potential positive and negative impacts of system uses to individuals, communities, organizations, society, and the planet; assumptions and related limitations about AI system purposes, uses, and risks across the development or product AI lifecycle; and related TEVV and system metrics.",
+    "note": "Intended purpose drives classification and is stated in the documentation and instructions.",
+    "default_ttl_days": 730,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#purpose",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 6", "Art. 11", "Art. 13"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 1.2": {
+    "title": "Interdisciplinary AI actors, competencies, skills, and capacities for establishing context reflect demographic diversity and broad domain and user experience expertise, and their participation is documented. Opportunities for interdisciplinary collaboration are prioritized.",
+    "note": "Team composition is outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 1.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.2", "ISO_IEC_42001:A.4.6"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether the organisation weighs context and risk tolerance when it decides how a system is framed."
+  },
+  "NIST_AI_RMF:MAP 1.3": {
+    "title": "The organization's mission and relevant goals for AI technology are understood and documented.",
+    "note": "Mission and goals are outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 1.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.1", "ISO_IEC_42001:Clause 5.2", "ISO_IEC_42001:Clause 6.2", "ISO_IEC_42001:Clause 7.3", "ISO_IEC_42001:Clause 7.4", "ISO_IEC_42001:Clause 7.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can confirm that stakeholders and domain experts were consulted when the system was framed."
+  },
+  "NIST_AI_RMF:MAP 1.4": {
+    "title": "The business value or context of business use has been clearly defined or – in the case of assessing existing AI systems – re-evaluated.",
+    "note": "Business value is outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.4"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 1.4"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.1", "ISO_IEC_42001:Clause 5.1", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.6.2.2", "ISO_IEC_42001:A.9.4", "ISO_IEC_42001:A.10.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can confirm that business value and the intended context of use were reviewed and agreed with stakeholders."
+  },
+  "NIST_AI_RMF:MAP 1.5": {
+    "title": "Organizational risk tolerances are determined and documented.",
+    "note": "Art. 9 requires residual risk to be judged acceptable.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.5"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 1.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.1"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 1.6": {
+    "title": "System requirements (e.g., “the system shall respect the privacy of its users”) are elicited from and understood by relevant AI actors. Design decisions take socio-technical implications into account to address AI risks.",
+    "note": "Design control procedures in the QMS.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 1.6"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 1.6"
+      },
+      {
+        "kind": "artifact",
+        "ref": "technical_documentation_dossier",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 17"],
+    "iso_42001": ["ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.6.2.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 2.1": {
+    "title": "The specific tasks and methods used to implement the tasks that the AI system will support are defined (e.g., classifiers, generative models, recommenders).",
+    "note": "The technical documentation describes the system's tasks and methods.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 2.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 2.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "model_card",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 11"],
+    "iso_42001": ["ISO_IEC_42001:A.4.2", "ISO_IEC_42001:A.4.3", "ISO_IEC_42001:A.4.4", "ISO_IEC_42001:A.4.5", "ISO_IEC_42001:A.4.6", "ISO_IEC_42001:A.6.2.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 2.2": {
+    "title": "Information about the AI system’s knowledge limits and how system output may be utilized and overseen by humans is documented. Documentation provides sufficient information to assist relevant AI actors when making decisions and taking subsequent actions.",
+    "note": "Instructions state limitations and how output is used and overseen.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 2.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "model_card",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 14"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.9.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 2.3": {
+    "title": "Scientific integrity and TEVV considerations are identified and documented, including those related to experimental design, data collection and selection (e.g., availability, representativeness, suitability), system trustworthiness, and construct validation.",
+    "note": "Data governance covers collection, selection and representativeness.",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 2.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 2.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.7.2", "ISO_IEC_42001:A.7.3", "ISO_IEC_42001:A.7.4", "ISO_IEC_42001:A.7.5", "ISO_IEC_42001:A.7.6"],
+    "iso_27090": ["ISO_IEC_27090:6.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 3.1": {
+    "title": "Potential benefits of intended AI system functionality and performance are examined and documented.",
+    "note": "Benefits are outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 3.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 3.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only a person can say whether the benefits and costs of the system were weighed against what the organisation expects of it."
+  },
+  "NIST_AI_RMF:MAP 3.2": {
+    "title": "Potential costs, including non-monetary costs, which result from expected or realized AI errors or system functionality and trustworthiness – as connected to organizational risk tolerance – are examined and documented.",
+    "note": "Risk estimation covers the costs of errors.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 3.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 3.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#impacts",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.2", "ISO_IEC_42001:Clause 8.3", "ISO_IEC_42001:Clause 8.4", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 3.3": {
+    "title": "Targeted application scope is specified and documented based on the system's capability, established context, and AI system categorization.",
+    "note": "Scope follows from classification and the stated intended purpose.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 3.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "deployer_instructions",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 6", "Art. 13"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.3", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 3.4": {
+    "title": "Processes for operator and practitioner proficiency with AI system performance and trustworthiness – and relevant technical standards and certifications – are defined, assessed, and documented.",
+    "note": "AI literacy and deployers' competent operators.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 3.4"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 3.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 4", "Art. 26"],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.2", "ISO_IEC_42001:A.4.6"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 3.5": {
+    "title": "Processes for human oversight are defined, assessed, and documented in accordance with organizational policies from the GOVERN function.",
+    "note": "Human oversight measures.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 3.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "human_oversight_construct",
+        "role": "corroborating"
+      }
+    ],
+    "eu_ai_act": ["Art. 14"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 4.1": {
+    "title": "Approaches for mapping AI technology and legal risks of its components – including the use of third-party data or software – are in place, followed, and documented, as are risks of infringement of a third party’s intellectual property or other rights.",
+    "note": "Third-party components along the value chain; GPAI copyright policy.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 4.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "vendor_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25", "Art. 53"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.1", "ISO_IEC_42001:A.2.2", "ISO_IEC_42001:A.9.2", "ISO_IEC_42001:A.9.4"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:B.3"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "scope_out": [
+      ["uses_third_party_models"]
+    ],
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 4.2": {
+    "title": "Internal risk controls for components of the AI system, including third-party AI technologies, are identified and documented.",
+    "note": "Risk controls including those for supplied components.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 4.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 25"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "scope_out": [
+      ["uses_third_party_models"]
+    ],
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 5.1": {
+    "title": "Likelihood and magnitude of each identified impact (both potentially beneficial and harmful) based on expected use, past uses of AI systems in similar contexts, public incident reports, feedback from those external to the team that developed or deployed the AI system, or other data are identified and documented.",
+    "note": "Risk estimation and the fundamental rights impact assessment.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 5.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 5.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#impacts",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 27"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:A.5.2"],
+    "iso_27090": ["ISO_IEC_27090:5.6"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MAP 5.2": {
+    "title": "Practices and personnel for supporting regular engagement with relevant AI actors and integrating feedback about positive, negative, and unanticipated impacts are in place and documented.",
+    "note": "Post-market monitoring gathers experience from users of the system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MAP 5.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MAP 5.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_impact_assessment#affected parties",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.8.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 1.1": {
+    "title": "Approaches and metrics for measurement of AI risks enumerated during the MAP function are selected for implementation starting with the most significant AI risks. The risks or trustworthiness characteristics that will not – or cannot – be measured are properly documented.",
+    "note": "Risk management selects measures; Art. 15 requires declared accuracy metrics.",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 1.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.1", "ISO_IEC_42001:Clause 6.1.2"],
+    "iso_27090": ["ISO_IEC_27090:5.6"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 1.2": {
+    "title": "Appropriateness of AI metrics and effectiveness of existing controls are regularly assessed and updated, including reports of errors and potential impacts on affected communities.",
+    "note": "Review of measures and post-market evaluation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 1.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 1.2"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.6.2.4"],
+    "iso_27090": ["ISO_IEC_27090:7.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 1.3": {
+    "title": "Internal experts who did not serve as front-line developers for the system and/or independent assessors are involved in regular assessments and updates. Domain experts, users, AI actors external to the team that developed or deployed the AI system, and affected communities are consulted in support of assessments as necessary per organizational risk tolerance.",
+    "note": "For Annex III points 2 to 8 the conformity route is internal control (Annex VI), not an independent assessment, so Art. 43 is no evidence for this subcategory. The row takes an attestation.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 1.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 1.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 9.2", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": ["ISO_IEC_27090:5.7"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Whether assessors are independent of the build team is an organisational fact that files cannot show."
+  },
+  "NIST_AI_RMF:MEASURE 2.1": {
+    "title": "Test sets, metrics, and details about the tools used during TEVV are documented.",
+    "note": "Testing under risk management, documented in the technical documentation.",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 11"],
+    "iso_42001": ["ISO_IEC_42001:A.4.2", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.2": {
+    "title": "Evaluations involving human subjects meet applicable requirements (including human subject protection) and are representative of the relevant population.",
+    "note": "Human-subject evaluation is outside the EU AI Act evidence the tool gathers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Only the organisation can confirm that human subject testing is representative and follows its own ethics rules."
+  },
+  "NIST_AI_RMF:MEASURE 2.3": {
+    "title": "AI system performance or assurance criteria are measured qualitatively or quantitatively and demonstrated for conditions similar to deployment setting(s). Measures are documented.",
+    "note": "Accuracy levels and metrics.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.3"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_CALIBRATION_V1"
+      }
+    ],
+    "eu_ai_act": ["Art. 15"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.7.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.4": {
+    "title": "The functionality and behavior of the AI system and its components – as identified in the MAP function – are monitored when in production.",
+    "note": "Logs, deployer monitoring and post-market monitoring.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "artifact",
+        "ref": "post_market_monitoring_plan"
+      },
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.4"
+      }
+    ],
+    "eu_ai_act": ["Art. 12", "Art. 26", "Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.1", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.8"],
+    "iso_27090": ["ISO_IEC_27090:7.4", "ISO_IEC_27090:7.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.5": {
+    "title": "The AI system to be deployed is demonstrated to be valid and reliable. Limitations of the generalizability beyond the conditions under which the technology was developed are documented.",
+    "note": "Robustness and the documented limits of the system.",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.5"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 15"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.5", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2"],
+    "iso_27090": ["ISO_IEC_27090:6.3"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.6": {
+    "title": "The AI system is evaluated regularly for safety risks – as identified in the MAP function. The AI system to be deployed is demonstrated to be safe, its residual negative risk does not exceed the risk tolerance, and it can fail safely, particularly if made to operate beyond its knowledge limits. Safety metrics reflect system reliability and robustness, real-time monitoring, and response times for AI system failures.",
+    "note": "Risk management and resilience to errors and faults (fail-safe plans).",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.6"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_SAFETY_LEXICAL_V1"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 15"],
+    "iso_42001": ["ISO_IEC_42001:Clause 8.2", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.8"],
+    "iso_27090": ["ISO_IEC_27090:5.7", "ISO_IEC_27090:6.3"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.7": {
+    "title": "AI system security and resilience – as identified in the MAP function – are evaluated and documented.",
+    "note": "Cybersecurity of high-risk systems; adversarial testing and cybersecurity for GPAI with systemic risk.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.7"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_ADVERSARIAL_V1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_red_team_report",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 15", "Art. 55"],
+    "iso_42001": ["ISO_IEC_42001:A.2.3", "ISO_IEC_42001:A.3.2", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.6.2.3", "ISO_IEC_42001:A.7.2", "ISO_IEC_42001:A.9.3"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:5.3", "ISO_IEC_27090:5.4", "ISO_IEC_27090:5.6", "ISO_IEC_27090:5.7", "ISO_IEC_27090:6.2", "ISO_IEC_27090:6.3", "ISO_IEC_27090:6.4", "ISO_IEC_27090:6.5", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.7", "ISO_IEC_27090:6.8", "ISO_IEC_27090:6.9", "ISO_IEC_27090:6.10", "ISO_IEC_27090:6.11", "ISO_IEC_27090:7.6", "ISO_IEC_27090:7.7", "ISO_IEC_27090:7.8", "ISO_IEC_27090:7.9", "ISO_IEC_27090:B.2", "ISO_IEC_27090:B.4", "ISO_IEC_27090:B.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.8": {
+    "title": "Risks associated with transparency and accountability – as identified in the MAP function – are examined and documented.",
+    "note": "Transparency to deployers and to people interacting with the system.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.8"
+      },
+      {
+        "kind": "artifact",
+        "ref": "model_card",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 50"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.7.2", "ISO_IEC_42001:A.9.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.9": {
+    "title": "The AI model is explained, validated, and documented, and AI system output is interpreted within its context – as identified in the MAP function – to inform responsible use and governance.",
+    "note": "Instructions and oversight measures help interpret output.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.9"
+      },
+      {
+        "kind": "artifact",
+        "ref": "model_card",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 13", "Art. 14"],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.5", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.7.5", "ISO_IEC_42001:A.8.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.10": {
+    "title": "Privacy risk of the AI system – as identified in the MAP function – is examined and documented.",
+    "note": "Safeguards for special categories of personal data in data governance.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.10"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.10"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_DATA_LEAKAGE_V1",
+        "role": "corroborating"
+      },
+      {
+        "kind": "artifact",
+        "ref": "dpia_document",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_42001": ["ISO_IEC_42001:A.2.3", "ISO_IEC_42001:A.5.2", "ISO_IEC_42001:A.7.2", "ISO_IEC_42001:A.7.3"],
+    "iso_27090": ["ISO_IEC_27090:6.4", "ISO_IEC_27090:6.6", "ISO_IEC_27090:6.8", "ISO_IEC_27090:B.6", "ISO_IEC_27090:B.7"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.11": {
+    "title": "Fairness and bias – as identified in the MAP function – are evaluated and results are documented.",
+    "note": "Data governance requires examination of possible biases.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.11"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.11"
+      },
+      {
+        "kind": "evaluator",
+        "ref": "EVAL_BIAS_FAIRNESS_V1",
+        "role": "corroborating"
+      }
+    ],
+    "eu_ai_act": ["Art. 10"],
+    "iso_42001": ["ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 2.12": {
+    "title": "Environmental impact and sustainability of AI model training and management activities – as identified in the MAP function – are assessed and documented.",
+    "note": "The energy disclosure in Annex XI binds providers of general-purpose AI models only. For every other system the row takes an attestation and never reads Met or Missing by default.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.12"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.12"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.4.5", "ISO_IEC_42001:A.5.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Environmental impact judgement is an organisational assessment; no scanner or artifact in this pack shows it."
+  },
+  "NIST_AI_RMF:MEASURE 2.13": {
+    "title": "Effectiveness of the employed TEVV metrics and processes in the MEASURE function are evaluated and documented.",
+    "note": "Evaluating the test process itself is outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 2.13"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 2.13"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Whether the evaluation process itself is reviewed for effectiveness is a management decision only a person can vouch for."
+  },
+  "NIST_AI_RMF:MEASURE 3.1": {
+    "title": "Approaches, personnel, and documentation are in place to regularly identify and track existing, unanticipated, and emergent AI risks based on factors such as intended and actual performance in deployed contexts.",
+    "note": "Ongoing risk identification, logs and post-market monitoring.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 3.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 12", "Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 4.4", "ISO_IEC_42001:Clause 8.2", "ISO_IEC_42001:Clause 8.4"],
+    "iso_27090": ["ISO_IEC_27090:7.4"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MEASURE 3.2": {
+    "title": "Risk tracking approaches are considered for settings where AI risks are difficult to assess using currently available measurement techniques or where metrics are not yet available.",
+    "note": "No EU AI Act evidence for risks that cannot yet be measured.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 3.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 3.2"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 10.1", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.8"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Tracking risks that are hard to assess needs a person's judgement of where measurement is infeasible."
+  },
+  "NIST_AI_RMF:MEASURE 3.3": {
+    "title": "Feedback processes for end users and impacted communities to report problems and appeal system outcomes are established and integrated into AI system evaluation metrics.",
+    "note": "End-user appeal channels are outside the EU AI Act evidence the tool gathers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 3.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 3.3"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.8.3", "ISO_IEC_42001:A.8.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "How end-user and community feedback is gathered and acted on is an organisational process only a person can vouch for."
+  },
+  "NIST_AI_RMF:MEASURE 4.1": {
+    "title": "Measurement approaches for identifying AI risks are connected to deployment context(s) and informed through consultation with domain experts and other end users. Approaches are documented.",
+    "note": "Consulting domain experts is outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 4.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 4.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.1", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.5.5", "ISO_IEC_42001:A.6.2.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Whether measurement results are checked with domain experts and end users is an organisational practice only a person can vouch for."
+  },
+  "NIST_AI_RMF:MEASURE 4.2": {
+    "title": "Measurement results regarding AI system trustworthiness in deployment context(s) and across the AI lifecycle are informed by input from domain experts and relevant AI actors to validate whether the system is performing consistently as intended. Results are documented.",
+    "note": "Expert validation of results is outside the EU AI Act evidence.",
+    "default_ttl_days": 180,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 4.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 4.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "evaluation_evidence",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.1", "ISO_IEC_42001:Clause 9.2", "ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.8.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "hybrid"
+  },
+  "NIST_AI_RMF:MEASURE 4.3": {
+    "title": "Measurable performance improvements or declines based on consultations with relevant AI actors, including affected communities, and field data about context-relevant risks and trustworthiness characteristics are identified and documented.",
+    "note": "Post-market monitoring uses field data on performance.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MEASURE 4.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MEASURE 4.3"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.6.2.7"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 1.1": {
+    "title": "A determination is made as to whether the AI system achieves its intended purposes and stated objectives and whether its development or deployment should proceed.",
+    "note": "Risk acceptance and conformity assessment before placing on the market.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 1.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 1.1"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 43"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.9.2", "ISO_IEC_42001:A.9.3", "ISO_IEC_42001:A.9.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 1.2": {
+    "title": "Treatment of documented AI risks is prioritized based on impact, likelihood, and available resources or methods.",
+    "note": "Risk management prioritises measures.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 1.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 1.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:Clause 6.1.4", "ISO_IEC_42001:Clause 9.3"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 1.3": {
+    "title": "Responses to the AI risks deemed high priority, as identified by the MAP function, are developed, planned, and documented. Risk response options can include mitigating, transferring, avoiding, or accepting.",
+    "note": "Risk management measures for identified risks.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 1.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 1.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "corroborating"
+      }
+    ],
+    "eu_ai_act": ["Art. 9"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.1", "ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:Clause 6.1.4"],
+    "iso_27090": ["ISO_IEC_27090:5.1", "ISO_IEC_27090:7.2"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 1.4": {
+    "title": "Negative residual risks (defined as the sum of all unmitigated risks) to both downstream acquirers of AI systems and end users are documented.",
+    "note": "Residual risks are judged and communicated to deployers.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 1.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "risk_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 9", "Art. 13"],
+    "iso_42001": ["ISO_IEC_42001:A.5.3", "ISO_IEC_42001:A.5.4", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 2.1": {
+    "title": "Resources required to manage AI risks are taken into account – along with viable non-AI alternative systems, approaches, or methods – to reduce the magnitude or likelihood of potential impacts.",
+    "note": "Resourcing and non-AI alternatives are outside the EU AI Act evidence.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 2.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 2.1"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.1", "ISO_IEC_42001:A.4.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "organisational",
+    "why_attestation": "Whether non-AI alternatives and resources were weighed in the response plan is a management decision only a person can vouch for."
+  },
+  "NIST_AI_RMF:MANAGE 2.2": {
+    "title": "Mechanisms are in place and applied to sustain the value of deployed AI systems.",
+    "note": "Post-market monitoring keeps the system performing as intended.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 2.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 2.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "post_market_monitoring_plan",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 7.1", "ISO_IEC_42001:Clause 10.1", "ISO_IEC_42001:A.3.3", "ISO_IEC_42001:A.6.1.2", "ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.7.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 2.3": {
+    "title": "Procedures are followed to respond to and recover from a previously unknown risk when it is identified.",
+    "note": "Corrective action and the duty to inform when a new risk is found, post-market monitoring and serious-incident handling.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 2.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 2.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "incident_response_plan",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 20", "Art. 72", "Art. 73"],
+    "iso_42001": ["ISO_IEC_42001:Clause 6.1.1", "ISO_IEC_42001:Clause 6.1.2", "ISO_IEC_42001:Clause 6.1.3", "ISO_IEC_42001:Clause 10.2"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 2.4": {
+    "title": "Mechanisms are in place and applied, and responsibilities are assigned and understood, to supersede, disengage, or deactivate AI systems that demonstrate performance or outcomes inconsistent with intended use.",
+    "note": "Oversight includes the ability to stop or override the system (Art. 14(4)(e)); Art. 20 covers corrective action, including withdrawal and recall.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 2.4"
+      },
+      {
+        "kind": "artifact",
+        "ref": "human_oversight_construct"
+      }
+    ],
+    "eu_ai_act": ["Art. 14", "Art. 20"],
+    "iso_42001": ["ISO_IEC_42001:A.6.1.3", "ISO_IEC_42001:A.6.2.7", "ISO_IEC_42001:A.8.2", "ISO_IEC_42001:A.9.4"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 3.1": {
+    "title": "AI risks and benefits from third-party resources are regularly monitored, and risk controls are applied and documented.",
+    "note": "Duties shared with third parties along the value chain.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 3.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "vendor_register",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 25"],
+    "iso_42001": ["ISO_IEC_42001:A.10.2", "ISO_IEC_42001:A.10.3"],
+    "iso_27090": ["ISO_IEC_27090:5.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine",
+    "scope_out": [
+      ["uses_third_party_models"]
+    ]
+  },
+  "NIST_AI_RMF:MANAGE 3.2": {
+    "title": "Pre-trained models which are used for development are monitored as part of AI system regular monitoring and maintenance.",
+    "note": "The duty to inform downstream providers (Art. 53(1)(b)) binds the upstream provider of a general-purpose AI model, so it is no evidence for a downstream provider. Supplier agreements sit under GOVERN 6.1 and 6.2. The row takes an attestation.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 3.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 3.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "ai_supply_chain_pins",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": [],
+    "iso_42001": ["ISO_IEC_42001:A.4.4", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27090": ["ISO_IEC_27090:5.5", "ISO_IEC_27090:6.7", "ISO_IEC_27090:B.3", "ISO_IEC_27090:B.4"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "hybrid",
+    "scope_out": [
+      ["uses_third_party_models"]
+    ]
+  },
+  "NIST_AI_RMF:MANAGE 4.1": {
+    "title": "Post-deployment AI system monitoring plans are implemented, including mechanisms for capturing and evaluating input from users and other relevant AI actors, appeal and override, decommissioning, incident response, recovery, and change management.",
+    "note": "Post-market monitoring plan and incident reporting.",
+    "default_ttl_days": 365,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 4.1"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 4.1"
+      },
+      {
+        "kind": "artifact",
+        "ref": "post_market_monitoring_plan",
+        "role": "corroborating"
+      }
+    ],
+    "eu_ai_act": ["Art. 72", "Art. 73"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.2", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.8.3", "ISO_IEC_42001:A.10.4"],
+    "iso_27090": ["ISO_IEC_27090:7.3", "ISO_IEC_27090:7.5"],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 4.2": {
+    "title": "Measurable activities for continual improvements are integrated into AI system updates and include regular engagement with interested parties, including relevant AI actors.",
+    "note": "QMS improvement and post-market monitoring.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 4.2"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 4.2"
+      },
+      {
+        "kind": "artifact",
+        "ref": "corrective_action_log",
+        "role": "supporting"
+      }
+    ],
+    "eu_ai_act": ["Art. 17", "Art. 72"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.3", "ISO_IEC_42001:A.6.2.4", "ISO_IEC_42001:A.6.2.6"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  },
+  "NIST_AI_RMF:MANAGE 4.3": {
+    "title": "Incidents and errors are communicated to relevant AI actors, including affected communities. Processes for tracking, responding to, and recovering from incidents and errors are followed and documented.",
+    "note": "Reporting of serious incidents.",
+    "default_ttl_days": 90,
+    "sources": [
+      {
+        "kind": "crosswalk",
+        "ref": "NIST_AI_RMF:MANAGE 4.3"
+      },
+      {
+        "kind": "attestation",
+        "ref": "NIST_AI_RMF:MANAGE 4.3"
+      },
+      {
+        "kind": "artifact",
+        "ref": "serious_incident_log",
+        "role": "corroborating"
+      },
+      {
+        "kind": "artifact",
+        "ref": "incident_notification_template",
+        "role": "corroborating"
+      }
+    ],
+    "eu_ai_act": ["Art. 73"],
+    "iso_42001": ["ISO_IEC_42001:Clause 9.3", "ISO_IEC_42001:A.6.2.6", "ISO_IEC_42001:A.8.5"],
+    "iso_27090": [],
+    "source": "NIST AI 100-1, AI RMF 1.0 core, Tables 1-4 (public domain)",
+    "confidence": "low",
+    "needs_founder_review": true,
+    "evidence_class": "machine"
+  }
+}

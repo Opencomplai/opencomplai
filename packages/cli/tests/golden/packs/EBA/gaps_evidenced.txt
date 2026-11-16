@@ -1,0 +1,70 @@
+
+EBA Guidelines on ICT, outsourcing and loan origination (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement                 ┃ Title                                              ┃ Status     ┃ Source      ┃ Evidence                   ┃ Rationale                                                 ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ EBA:GL/2019/04 3.8          │ Payment service user relationship management       │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 3    │ Outsourcing (Title II, assessment of arrangements) │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 4    │ Critical or important functions                    │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 5    │ Sound governance arrangements and third-party risk │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 6    │ Sound governance arrangements and outsourcing      │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 7    │ Outsourcing policy                                 │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 8    │ Conflicts of interests                             │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 9    │ Business continuity plans                          │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 10   │ Internal audit function                            │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 11   │ Documentation requirements                         │ PARTIAL    │ artifact    │ docs/vendor-register.md    │ Found candidate artifact/signal for 'vendor_register' (1  │
+│                             │                                                    │            │             │                            │ path(s), 0 code hint(s)) with content markers found       │
+│                             │                                                    │            │             │                            │ (provider, service and criticality entries). Heuristic    │
+│                             │                                                    │            │             │                            │ only — not a full obligation assessment.                  │
+│ EBA:GL/2019/02 Section 12.1 │ Supervisory conditions for outsourcing             │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 12.2 │ Risk assessment of outsourcing arrangements        │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 12.3 │ Due diligence                                      │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 13   │ Contractual phase                                  │ PARTIAL    │ artifact    │ docs/contract-checklist.md │ Found candidate artifact/signal for 'contract_checklist'  │
+│                             │                                                    │            │             │                            │ (1 path(s), 0 code hint(s)) with content markers found    │
+│                             │                                                    │            │             │                            │ (audit or access, termination and security or             │
+│                             │                                                    │            │             │                            │ service-level terms). Heuristic only — not a full         │
+│                             │                                                    │            │             │                            │ obligation assessment.                                    │
+│ EBA:GL/2019/02 Section 13.1 │ Sub-outsourcing of critical or important functions │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 13.2 │ Security of data and systems                       │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 13.3 │ Access, information and audit rights               │ PARTIAL    │ artifact    │ docs/contract-checklist.md │ Found candidate artifact/signal for 'contract_checklist'  │
+│                             │                                                    │            │             │                            │ (1 path(s), 0 code hint(s)) with content markers found    │
+│                             │                                                    │            │             │                            │ (audit or access, termination and security or             │
+│                             │                                                    │            │             │                            │ service-level terms). Heuristic only — not a full         │
+│                             │                                                    │            │             │                            │ obligation assessment.                                    │
+│ EBA:GL/2019/02 Section 13.4 │ Termination rights                                 │ PARTIAL    │ artifact    │ docs/contract-checklist.md │ Found candidate artifact/signal for 'contract_checklist'  │
+│                             │                                                    │            │             │                            │ (1 path(s), 0 code hint(s)) with content markers found    │
+│                             │                                                    │            │             │                            │ (audit or access, termination and security or             │
+│                             │                                                    │            │             │                            │ service-level terms). Heuristic only — not a full         │
+│                             │                                                    │            │             │                            │ obligation assessment.                                    │
+│ EBA:GL/2019/02 Section 14   │ Oversight of outsourced functions                  │ UNVERIFIED │ attestation │ none                       │ No attestation recorded. Add one under                    │
+│                             │                                                    │            │             │                            │ framework_inputs.EBA.attested in the manifest.            │
+│ EBA:GL/2019/02 Section 15   │ Exit strategies                                    │ PARTIAL    │ artifact    │ docs/exit-plan.md          │ Found candidate artifact/signal for 'exit_plan' (1        │
+│                             │                                                    │            │             │                            │ path(s), 0 code hint(s)) with content markers found       │
+│                             │                                                    │            │             │                            │ (exit, alternative and trigger or timeline entries).      │
+│                             │                                                    │            │             │                            │ Heuristic only — not a full obligation assessment.        │
+└─────────────────────────────┴────────────────────────────────────────────────────┴────────────┴─────────────┴────────────────────────────┴───────────────────────────────────────────────────────────┘
+
+Excluded
+  EBA:GL/2020/06 4.3: Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).
+  EBA:GL/2020/06 4.3.3: Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).
+  EBA:GL/2020/06 4.3.4: Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).
+  EBA:GL/2020/06 4.3.7: Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).
+  EBA:GL/2020/06 5.1: Not applicable: the manifest's scope says the system no lending (framework_inputs.EBA.scope.grants_credit = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

@@ -32,7 +32,7 @@ from opencomplai_core.frameworks import (
     FRAMEWORKS,
     attestable_ids,
     attestation_only_ids,
-    load_requirements_map,
+    pack_requirements,
 )
 from opencomplai_core.gap_report import stale_attestation_warnings
 from opencomplai_core.models import (
@@ -307,9 +307,7 @@ def merge_into_manifest(
 
 def _requirements(framework: str) -> Mapping[str, object]:
     pack = FRAMEWORKS.get(framework)
-    if pack is None or pack.requirements is None:
-        return {}
-    return load_requirements_map(pack.requirements)
+    return (pack_requirements(pack) if pack is not None else None) or {}
 
 
 def staleness_warnings(

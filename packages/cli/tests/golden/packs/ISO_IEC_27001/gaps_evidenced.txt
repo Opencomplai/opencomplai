@@ -1,0 +1,448 @@
+
+ISO/IEC 27001:2022 information security management (evaluated, not an audit, certification or legal assessment) — pack-golden-sys
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Requirement                ┃ Title                                            ┃ Status     ┃ Source      ┃ Evidence                              ┃ Rationale                                         ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ISO_IEC_27001:Clause 4.1   │ Understanding the organization and its context   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 4.2   │ Understanding the needs and expectations of      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ interested parties                               │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 4.3   │ Determining the scope of the information         │ PARTIAL    │ artifact    │ docs/scope-statement.md               │ Found candidate artifact/signal for               │
+│                            │ security management system                       │            │             │                                       │ 'scope_statement' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (a scope or boundary   │
+│                            │                                                  │            │             │                                       │ statement and what is in or out). Heuristic only  │
+│                            │                                                  │            │             │                                       │ — not a full obligation assessment.               │
+│ ISO_IEC_27001:Clause 4.4   │ Information security management system           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 5.1   │ Leadership and commitment                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 5.2   │ Policy                                           │ PARTIAL    │ artifact    │ docs/policies/information-security.md │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_information_security' (1 path(s), 0 code  │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (the words    │
+│                            │                                                  │            │             │                                       │ information security). Heuristic only — not a     │
+│                            │                                                  │            │             │                                       │ full obligation assessment.                       │
+│ ISO_IEC_27001:Clause 5.3   │ Organizational roles, responsibilities and       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ authorities                                      │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 6.1.1 │ General                                          │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 6.1.2 │ Information security risk assessment             │ PARTIAL    │ artifact    │ docs/isms/risk-treatment-plan.md      │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'risk_register' (1 path(s), 0 code hint(s)) with  │
+│                            │                                                  │            │             │                                       │ content markers found (risk identification +      │
+│                            │                                                  │            │             │                                       │ mitigation). Heuristic only — not a full          │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:Clause 6.1.3 │ Information security risk treatment              │ PARTIAL    │ artifact    │ docs/isms/risk-treatment-plan.md      │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'iso_iec_27001.risk_treatment_plan' (1 path(s), 0 │
+│                            │                                                  │            │             │                                       │ code hint(s)) with content markers found (a risk, │
+│                            │                                                  │            │             │                                       │ a treatment decision, an owner and a due date).   │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 6.2   │ Information security objectives and planning to  │ PARTIAL    │ artifact    │ docs/objectives.md                    │ Found candidate artifact/signal for               │
+│                            │ achieve them                                     │            │             │                                       │ 'objectives_record' (1 path(s), 0 code hint(s))   │
+│                            │                                                  │            │             │                                       │ with content markers found (objectives with a     │
+│                            │                                                  │            │             │                                       │ measure or target and an owner or due date).      │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 6.3   │ Planning of changes                              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 7.1   │ Resources                                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 7.2   │ Competence                                       │ PARTIAL    │ artifact    │ docs/training-record.md               │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'competence_training_record' (1 path(s), 0 code   │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (training or  │
+│                            │                                                  │            │             │                                       │ competence with a completion date and a role or   │
+│                            │                                                  │            │             │                                       │ attendee). Heuristic only — not a full obligation │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 7.3   │ Awareness                                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 7.4   │ Communication                                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 7.5   │ Documented information                           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 8.1   │ Operational planning and control                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 8.2   │ Information security risk assessment             │ PARTIAL    │ artifact    │ docs/isms/risk-treatment-plan.md      │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'risk_register' (1 path(s), 0 code hint(s)) with  │
+│                            │                                                  │            │             │                                       │ content markers found (risk identification +      │
+│                            │                                                  │            │             │                                       │ mitigation). Heuristic only — not a full          │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:Clause 8.3   │ Information security risk treatment              │ PARTIAL    │ artifact    │ docs/isms/risk-treatment-plan.md      │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'iso_iec_27001.risk_treatment_plan' (1 path(s), 0 │
+│                            │                                                  │            │             │                                       │ code hint(s)) with content markers found (a risk, │
+│                            │                                                  │            │             │                                       │ a treatment decision, an owner and a due date).   │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 9.1   │ Monitoring, measurement, analysis and evaluation │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 9.2   │ Internal audit                                   │ PARTIAL    │ artifact    │ docs/internal-audit.md                │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'internal_audit_report' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (an audit     │
+│                            │                                                  │            │             │                                       │ with findings and an auditor, scope or date).     │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 9.3   │ Management review                                │ PARTIAL    │ artifact    │ docs/management-review.md             │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'management_review_minutes' (1 path(s), 0 code    │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a management │
+│                            │                                                  │            │             │                                       │ review with decisions or actions and attendees or │
+│                            │                                                  │            │             │                                       │ a date). Heuristic only — not a full obligation   │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:Clause 10.1  │ Continual improvement                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:Clause 10.2  │ Nonconformity and corrective action              │ PARTIAL    │ artifact    │ docs/corrective-action-log.md         │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'corrective_action_log' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a            │
+│                            │                                                  │            │             │                                       │ nonconformity with its root cause and corrective  │
+│                            │                                                  │            │             │                                       │ action). Heuristic only — not a full obligation   │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.1        │ Policies for information security                │ PARTIAL    │ artifact    │ docs/policies/information-security.md │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_information_security' (1 path(s), 0 code  │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (the words    │
+│                            │                                                  │            │             │                                       │ information security). Heuristic only — not a     │
+│                            │                                                  │            │             │                                       │ full obligation assessment.                       │
+│ ISO_IEC_27001:A.5.2        │ Information security roles and responsibilities  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.3        │ Segregation of duties                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.4        │ Management responsibilities                      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.5        │ Contact with authorities                         │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.6        │ Contact with special interest groups             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.7        │ Threat intelligence                              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.8        │ Information security in project management       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.9        │ Inventory of information and other associated    │ PARTIAL    │ artifact    │ docs/asset-inventory.md               │ Found candidate artifact/signal for               │
+│                            │ assets                                           │            │             │                                       │ 'iso_iec_27001.asset_inventory' (1 path(s), 0     │
+│                            │                                                  │            │             │                                       │ code hint(s)) with content markers found (an      │
+│                            │                                                  │            │             │                                       │ asset, an owner and a classification). Heuristic  │
+│                            │                                                  │            │             │                                       │ only — not a full obligation assessment.          │
+│ ISO_IEC_27001:A.5.10       │ Acceptable use of information and other          │ PARTIAL    │ artifact    │ docs/policies/acceptable-use.md       │ Found candidate artifact/signal for               │
+│                            │ associated assets                                │            │             │                                       │ 'policy_acceptable_use' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (an           │
+│                            │                                                  │            │             │                                       │ acceptable or prohibited use term). Heuristic     │
+│                            │                                                  │            │             │                                       │ only — not a full obligation assessment.          │
+│ ISO_IEC_27001:A.5.11       │ Return of assets                                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.12       │ Classification of information                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.13       │ Labelling of information                         │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.14       │ Information transfer                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.15       │ Access control                                   │ PARTIAL    │ artifact    │ docs/policies/access-control.md       │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_access_control' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (an access    │
+│                            │                                                  │            │             │                                       │ control, least privilege or authorisation term).  │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.16       │ Identity management                              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.17       │ Authentication information                       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.18       │ Access rights                                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.19       │ Information security in supplier relationships   │ PARTIAL    │ artifact    │ docs/policies/supplier.md             │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_supplier' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (a supplier, vendor or │
+│                            │                                                  │            │             │                                       │ third-party term). Heuristic only — not a full    │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:A.5.20       │ Addressing information security within supplier  │ PARTIAL    │ artifact    │ docs/contract-checklist.md            │ Found candidate artifact/signal for               │
+│                            │ agreements                                       │            │             │                                       │ 'contract_checklist' (1 path(s), 0 code hint(s))  │
+│                            │                                                  │            │             │                                       │ with content markers found (audit or access,      │
+│                            │                                                  │            │             │                                       │ termination and security or service-level terms). │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.21       │ Managing information security in the ICT supply  │ PARTIAL    │ artifact    │ sbom.json                             │ Found candidate artifact/signal for               │
+│                            │ chain                                            │            │             │                                       │ 'ai_supply_chain_pins' (1 path(s), 0 code         │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (an SBOM      │
+│                            │                                                  │            │             │                                       │ header, a hash pin or a hub revision pinned to a  │
+│                            │                                                  │            │             │                                       │ commit). Heuristic only — not a full obligation   │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.22       │ Monitoring, review and change management of      │ PARTIAL    │ artifact    │ docs/vendor-register.md               │ Found candidate artifact/signal for               │
+│                            │ supplier services                                │            │             │                                       │ 'vendor_register' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (provider, service and │
+│                            │                                                  │            │             │                                       │ criticality entries). Heuristic only — not a full │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:A.5.23       │ Information security for use of cloud services   │ PARTIAL    │ artifact    │ docs/exit-plan.md                     │ Found candidate artifact/signal for 'exit_plan'   │
+│                            │                                                  │            │             │                                       │ (1 path(s), 0 code hint(s)) with content markers  │
+│                            │                                                  │            │             │                                       │ found (exit, alternative and trigger or timeline  │
+│                            │                                                  │            │             │                                       │ entries). Heuristic only — not a full obligation  │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.24       │ Information security incident management         │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                  │ Found candidate artifact/signal for               │
+│                            │ planning and preparation                         │            │             │                                       │ 'incident_response_plan' (1 path(s), 0 code       │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (detection,   │
+│                            │                                                  │            │             │                                       │ containment and roles or escalation topics).      │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.25       │ Assessment and decision on information security  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ events                                           │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.26       │ Response to information security incidents       │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                  │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'incident_response_plan' (1 path(s), 0 code       │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (detection,   │
+│                            │                                                  │            │             │                                       │ containment and roles or escalation topics).      │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.27       │ Learning from information security incidents     │ PARTIAL    │ artifact    │ docs/corrective-action-log.md         │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'corrective_action_log' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a            │
+│                            │                                                  │            │             │                                       │ nonconformity with its root cause and corrective  │
+│                            │                                                  │            │             │                                       │ action). Heuristic only — not a full obligation   │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.28       │ Collection of evidence                           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.29       │ Information security during disruption           │ PARTIAL    │ artifact    │ docs/business-continuity.md           │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'continuity_plan' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (recovery objectives,  │
+│                            │                                                  │            │             │                                       │ critical services and tests or exercises).        │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.30       │ ICT readiness for business continuity            │ PARTIAL    │ artifact    │ docs/business-continuity.md           │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'continuity_plan' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (recovery objectives,  │
+│                            │                                                  │            │             │                                       │ critical services and tests or exercises).        │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.31       │ Legal, statutory, regulatory and contractual     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ requirements                                     │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.32       │ Intellectual property rights                     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.33       │ Protection of records                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.34       │ Privacy and protection of PII                    │ PARTIAL    │ artifact    │ docs/ropa.md                          │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'record_of_processing' (1 path(s), 0 code         │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a purpose,   │
+│                            │                                                  │            │             │                                       │ data categories and recipients or retention).     │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.35       │ Independent review of information security       │ PARTIAL    │ artifact    │ docs/internal-audit.md                │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'internal_audit_report' (1 path(s), 0 code        │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (an audit     │
+│                            │                                                  │            │             │                                       │ with findings and an auditor, scope or date).     │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.5.36       │ Compliance with policies, rules and standards    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ for information security                         │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.5.37       │ Documented operating procedures                  │ PARTIAL    │ artifact    │ docs/operations/runbook-restore.md    │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'iso_iec_27001.operating_procedures' (1 path(s),  │
+│                            │                                                  │            │             │                                       │ 0 code hint(s)) with content markers found (a     │
+│                            │                                                  │            │             │                                       │ step or procedure, an owner or on-call role and a │
+│                            │                                                  │            │             │                                       │ rollback or escalation). Heuristic only — not a   │
+│                            │                                                  │            │             │                                       │ full obligation assessment.                       │
+│ ISO_IEC_27001:A.6.1        │ Screening                                        │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.2        │ Terms and conditions of employment               │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.3        │ Information security awareness, education and    │ PARTIAL    │ artifact    │ docs/training-record.md               │ Found candidate artifact/signal for               │
+│                            │ training                                         │            │             │                                       │ 'competence_training_record' (1 path(s), 0 code   │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (training or  │
+│                            │                                                  │            │             │                                       │ competence with a completion date and a role or   │
+│                            │                                                  │            │             │                                       │ attendee). Heuristic only — not a full obligation │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.6.4        │ Disciplinary process                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.5        │ Responsibilities after termination or change of  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ employment                                       │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.6        │ Confidentiality or non-disclosure agreements     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.7        │ Remote working                                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.6.8        │ Information security event reporting             │ PARTIAL    │ artifact    │ INCIDENT_RESPONSE.md                  │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'incident_response_plan' (1 path(s), 0 code       │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (detection,   │
+│                            │                                                  │            │             │                                       │ containment and roles or escalation topics).      │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.7.7        │ Clear desk and clear screen                      │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.7.9        │ Security of assets off-premises                  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.7.10       │ Storage media                                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.7.14       │ Secure disposal or re-use of equipment           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.1        │ User endpoint devices                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.2        │ Privileged access rights                         │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.3        │ Information access restriction                   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.4        │ Access to source code                            │ PARTIAL    │ artifact    │ .github/CODEOWNERS                    │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'code_review_rules' (1 path(s), 0 code hint(s))   │
+│                            │                                                  │            │             │                                       │ with content markers found (an owner line or a    │
+│                            │                                                  │            │             │                                       │ required-review setting). Heuristic only — not a  │
+│                            │                                                  │            │             │                                       │ full obligation assessment.                       │
+│ ISO_IEC_27001:A.8.5        │ Secure authentication                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.6        │ Capacity management                              │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.7        │ Protection against malware                       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.8        │ Management of technical vulnerabilities          │ PARTIAL    │ artifact    │ docs/vulnerability-handling.md        │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'vulnerability_handling_policy' (1 path(s), 0     │
+│                            │                                                  │            │             │                                       │ code hint(s)) with content markers found (triage  │
+│                            │                                                  │            │             │                                       │ or severity, fix or patch, and a time limit).     │
+│                            │                                                  │            │             │                                       │ Heuristic only — not a full obligation            │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.8.9        │ Configuration management                         │ PARTIAL    │ artifact    │ deploy/Dockerfile                     │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'iac_definitions' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (a resource, base      │
+│                            │                                                  │            │             │                                       │ image, service or API version line). Heuristic    │
+│                            │                                                  │            │             │                                       │ only — not a full obligation assessment.          │
+│ ISO_IEC_27001:A.8.10       │ Information deletion                             │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.11       │ Data masking                                     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.12       │ Data leakage prevention                          │ PARTIAL    │ artifact    │ .pre-commit-config.yaml               │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'secret_scanning_config' (1 path(s), 0 code       │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a            │
+│                            │                                                  │            │             │                                       │ secret-scanning tool name). Heuristic only — not  │
+│                            │                                                  │            │             │                                       │ a full obligation assessment.                     │
+│ ISO_IEC_27001:A.8.13       │ Information backup                               │ PARTIAL    │ artifact    │ docs/policies/backup.md               │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_backup' (1 path(s), 0 code hint(s)) with  │
+│                            │                                                  │            │             │                                       │ content markers found (a backup, restore or       │
+│                            │                                                  │            │             │                                       │ retention term). Heuristic only — not a full      │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:A.8.14       │ Redundancy of information processing facilities  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.15       │ Logging                                          │ MISSING    │ artifact    │ event_log_evidence                    │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'event_log_evidence'. Add the expected file   │
+│                            │                                                  │            │             │                                       │ or construct, then re-run gaps.                   │
+│ ISO_IEC_27001:A.8.16       │ Monitoring activities                            │ MISSING    │ artifact    │ event_log_evidence                    │ No conventional documentation/code probe matched  │
+│                            │                                                  │            │             │                                       │ for 'event_log_evidence'. Add the expected file   │
+│                            │                                                  │            │             │                                       │ or construct, then re-run gaps.                   │
+│ ISO_IEC_27001:A.8.17       │ Clock synchronization                            │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.18       │ Use of privileged utility programs               │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.19       │ Installation of software on operational systems  │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.20       │ Networks security                                │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.21       │ Security of network services                     │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.22       │ Segregation of networks                          │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.23       │ Web filtering                                    │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.24       │ Use of cryptography                              │ PARTIAL    │ artifact    │ docs/policies/cryptography.md         │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_cryptography' (1 path(s), 0 code hint(s)) │
+│                            │                                                  │            │             │                                       │ with content markers found (an encryption or key  │
+│                            │                                                  │            │             │                                       │ management term). Heuristic only — not a full     │
+│                            │                                                  │            │             │                                       │ obligation assessment.                            │
+│ ISO_IEC_27001:A.8.25       │ Secure development life cycle                    │ PARTIAL    │ artifact    │ .github/workflows/ci.yml              │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'ci_test_workflow' (1 path(s), 0 code hint(s))    │
+│                            │                                                  │            │             │                                       │ with content markers found (a test runner         │
+│                            │                                                  │            │             │                                       │ command). Heuristic only — not a full obligation  │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.8.26       │ Application security requirements                │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.27       │ Secure system architecture and engineering       │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ principles                                       │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.28       │ Secure coding                                    │ PARTIAL    │ artifact    │ .github/workflows/sast.yml            │ Found candidate artifact/signal for 'sast_config' │
+│                            │                                                  │            │             │                                       │ (1 path(s), 0 code hint(s)) with content markers  │
+│                            │                                                  │            │             │                                       │ found (a static-analysis tool name). Heuristic    │
+│                            │                                                  │            │             │                                       │ only — not a full obligation assessment.          │
+│ ISO_IEC_27001:A.8.29       │ Security testing in development and acceptance   │ PARTIAL    │ artifact    │ .github/workflows/ci.yml              │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'ci_test_workflow' (1 path(s), 0 code hint(s))    │
+│                            │                                                  │            │             │                                       │ with content markers found (a test runner         │
+│                            │                                                  │            │             │                                       │ command). Heuristic only — not a full obligation  │
+│                            │                                                  │            │             │                                       │ assessment.                                       │
+│ ISO_IEC_27001:A.8.30       │ Outsourced development                           │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.31       │ Separation of development, test and production   │ PARTIAL    │ artifact    │ deploy/Dockerfile                     │ Found candidate artifact/signal for               │
+│                            │ environments                                     │            │             │                                       │ 'iac_definitions' (1 path(s), 0 code hint(s))     │
+│                            │                                                  │            │             │                                       │ with content markers found (a resource, base      │
+│                            │                                                  │            │             │                                       │ image, service or API version line). Heuristic    │
+│                            │                                                  │            │             │                                       │ only — not a full obligation assessment.          │
+│ ISO_IEC_27001:A.8.32       │ Change management                                │ PARTIAL    │ artifact    │ docs/policies/change-management.md    │ Found candidate artifact/signal for               │
+│                            │                                                  │            │             │                                       │ 'policy_change_management' (1 path(s), 0 code     │
+│                            │                                                  │            │             │                                       │ hint(s)) with content markers found (a change     │
+│                            │                                                  │            │             │                                       │ control or approval term). Heuristic only — not a │
+│                            │                                                  │            │             │                                       │ full obligation assessment.                       │
+│ ISO_IEC_27001:A.8.33       │ Test information                                 │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │                                                  │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+│ ISO_IEC_27001:A.8.34       │ Protection of information systems during audit   │ UNVERIFIED │ attestation │ none                                  │ No attestation recorded. Add one under            │
+│                            │ testing                                          │            │             │                                       │ framework_inputs.ISO_IEC_27001.attested in the    │
+│                            │                                                  │            │             │                                       │ manifest.                                         │
+└────────────────────────────┴──────────────────────────────────────────────────┴────────────┴─────────────┴───────────────────────────────────────┴───────────────────────────────────────────────────┘
+
+Excluded
+  ISO_IEC_27001:A.7.1: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.2: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.3: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.4: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.5: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.6: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.8: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.11: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.12: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+  ISO_IEC_27001:A.7.13: Not applicable: the manifest's scope says the system no premises under its control (framework_inputs.ISO_IEC_27001.scope.has_physical_premises = false).
+
+OpenComplAI produces structured compliance evidence and heuristics. It does not certify compliance with any law, regulation or framework, or constitute legal advice.
+

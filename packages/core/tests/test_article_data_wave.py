@@ -61,7 +61,9 @@ def test_existing_rows_are_unchanged_except_the_listed_ones(tmp_path):
     new = build_gap_report("s", "HEAD", repo_root=root).articles
     old = build_gap_report("s", "HEAD", repo_root=root, requirements=old_map).articles
 
-    assert len(old) == 19
+    # The old map is every article but NEW_ARTICLES: 19 rows, and Art. 20, whose only source
+    # is an attestation and so reads the same with or without the stubs filtered out.
+    assert len(old) == 20
     new_by_article = {row.article: row for row in new}
     for old_row in old:
         expected = old_row.model_dump()

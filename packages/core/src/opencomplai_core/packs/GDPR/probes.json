@@ -1,0 +1,113 @@
+{
+  "family": "gdpr",
+  "probes": {
+    "gdpr.dpia": {
+      "type": "clause_document",
+      "patterns": [
+        "DPIA.md",
+        "docs/**/dpia*",
+        "**/data-protection-impact-assessment*",
+        "**/data_protection_impact_assessment*"
+      ],
+      "noun": "data protection impact assessment",
+      "provenance": {
+        "source": "heuristic (no legal source): file-name convention plus general practice, by topic words only; data protection impact assessment read section by section under GDPR Article 35",
+        "confidence": "low",
+        "needs_founder_review": true
+      },
+      "clauses": {
+        "processing": {
+          "title": "Processing and its purpose",
+          "markers": [
+            {
+              "re": "\\bprocess(?:ing)?\\b|\\bcollect\\w*\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bpurposes?\\b|\\bin order to\\b|\\bso that\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "necessity": {
+          "title": "Necessity and proportionality",
+          "markers": [
+            {
+              "re": "\\bnecessar\\w+\\b|\\bnecessity\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bproportionat\\w+\\b|\\bminimi[sz]\\w+\\b|\\bless\\s+intrusive\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "risks": {
+          "title": "Risks to people",
+          "markers": [
+            {
+              "re": "\\brisks?\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bindividuals?\\b|\\bpeople\\b|\\bdata\\s+subjects?\\b|\\bpersons?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "measures": {
+          "title": "Safeguards and measures",
+          "markers": [
+            {
+              "re": "\\bmeasures?\\b|\\bsafeguards?\\b|\\bmitigat\\w+\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bencrypt\\w*\\b|\\baccess\\s+control\\w*\\b|\\bpseudonymi[sz]\\w+\\b|\\bretention\\b|\\bsecurity\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "consultation": {
+          "title": "Consultation or reason not consulted",
+          "markers": [
+            {
+              "re": "\\bconsult\\w*\\b|\\bsupervisory\\s+authorit\\w+\\b|\\bdata\\s+protection\\s+officer\\b|\\bDPO\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bnot\\s+required\\b|\\bno\\s+residual\\b|\\bwas\\s+consulted\\b|\\bwill\\s+consult\\b|\\bnot\\s+consulted\\b|\\bresidual\\b|\\bviews?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "special-categories": {
+          "title": "Special categories of data",
+          "markers": [
+            {
+              "re": "\\bspecial\\s+categor\\w+\\b|\\bsensitive\\s+data\\b|\\bhealth\\b|\\bbiometric\\b|\\bcriminal\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bnone\\b|\\bnot\\s+(?:process|use|involve)\\w*\\b|\\bincluded\\b|\\bprocess\\w*\\b|\\bhandled\\b|\\bcollect\\w*\\b|\\bstored?\\b",
+              "flags": "i"
+            }
+          ]
+        },
+        "automated-decisions": {
+          "title": "Automated decisions and profiling",
+          "markers": [
+            {
+              "re": "\\bautomated\\b|\\bprofiling\\b|\\bsolely\\s+automated\\b",
+              "flags": "i"
+            },
+            {
+              "re": "\\bdecisions?\\b|\\bhuman\\s+(?:review|intervention|oversight)\\b|\\bno\\s+such\\b",
+              "flags": "i"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

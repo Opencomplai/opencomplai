@@ -1,0 +1,122 @@
+{
+  "family": "ai_security",
+  "probes": {
+    "ai_supply_chain_pins": {
+      "patterns": [
+        "**/*.spdx.json",
+        "**/*.cdx.json",
+        "**/sbom*.json",
+        "**/bom.json",
+        "**/dvc.lock",
+        "**/*.dvc",
+        "**/models.lock*",
+        "**/datasets.lock*",
+        "**/model-pins*",
+        "**/dataset-pins*",
+        "**/*.py"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\\"(?:spdxVersion|bomFormat)\\\"|\\b(?:md5|sha1|sha256)\\b[\\\"']?\\s*[:=]\\s*[\\\"']?[0-9a-f]{32,64}\\b|\\b(?:from_pretrained|hf_hub_download|snapshot_download)\\([^)]*\\brevision\\s*=\\s*[\\\"'][0-9a-f]{7,40}[\\\"']",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an SBOM header, a hash pin or a hub revision pinned to a commit",
+        "lacks_label": "SBOM header, hash pin or pinned hub revision",
+        "noun": "supply-chain pin",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 5.5 and B.3 (ids and headings only); SBOM header, hash pin or hub model pinned to a commit hash",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "rate_limiting_config": {
+      "patterns": [
+        "**/*.py",
+        "**/*.js",
+        "**/*.mjs",
+        "**/*.cjs",
+        "**/*.ts",
+        "**/*.conf*",
+        "**/*.yaml",
+        "**/*.yml"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "\\b(?:from|import)\\s+(?:slowapi|fastapi_limiter|flask_limiter|django_ratelimit)\\b|\\b(?:require\\s*\\(|import\\s*\\(?|from)\\s*[\\\"'](?:express-rate-limit|@fastify/rate-limit|rate-limiter-flexible)[\\\"']|^[ \\t]*limit_(?:req|conn)(?:_zone)?[ \\t]+(?:zone=|\\$)|\\benvoy\\.filters\\.http\\.(?:local_)?ratelimit\\b|\\bDEFAULT_THROTTLE_RATES\\b",
+            "flags": "im"
+          }
+        ],
+        "found_label": "a rate-limit library import or directive",
+        "lacks_label": "rate-limit library import or directive",
+        "noun": "rate-limit configuration",
+        "select": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clauses 6.5, 7.8 and B.2 (ids and headings only); rate-limit library imports and nginx or Envoy directives, by name",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "ai_threat_model": {
+      "patterns": [
+        "**/threat-model*",
+        "**/threat_model*",
+        "**/threat-model/**",
+        "docs/**/threat*model*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "prompt[\\s_-]*injection|jailbreak|(?:data|model)[\\s_-]*poisoning|evasion\\s+attack|adversarial\\s+(?:example|input|prompt)|membership[\\s_-]*inference|model[\\s_-]*(?:inversion|extraction|exfiltration)|backdoor\\s+attack|model\\s+backdoor",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an AI-specific attack term",
+        "lacks_label": "AI-specific attack term and minimum body length",
+        "noun": "threat model",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.6 (id and heading only); file-name convention plus AI-attack keywords",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    },
+    "ai_red_team_report": {
+      "patterns": [
+        "**/red-team*",
+        "**/red_team*",
+        "**/red-team/**",
+        "docs/**/adversarial-testing*"
+      ],
+      "markers": {
+        "all": [
+          {
+            "re": "prompt[\\s_-]*injection|jailbreak|(?:data|model)[\\s_-]*poisoning|evasion\\s+attack|adversarial\\s+(?:example|input|prompt)|membership[\\s_-]*inference|model[\\s_-]*(?:inversion|extraction|exfiltration)|backdoor\\s+attack|model\\s+backdoor",
+            "flags": "i"
+          },
+          {
+            "re": "\\b(?:findings?|results?|outcomes?|success\\s+rate|vulnerabilit(?:y|ies)|bypass(?:ed|es)?|passed|failed)\\b",
+            "flags": "i"
+          }
+        ],
+        "found_label": "an AI-specific attack term and a test-result marker",
+        "lacks_label": "AI-specific attack term, test-result marker and minimum body length",
+        "noun": "red-team report",
+        "body_only": true,
+        "forbid_scaffold": true
+      },
+      "provenance": {
+        "source": "heuristic (no legal source): ISO/IEC 27090:2026 clause 5.7 (id and heading only); file-name convention plus AI-attack and test-result keywords",
+        "confidence": "low",
+        "needs_founder_review": true
+      }
+    }
+  }
+}

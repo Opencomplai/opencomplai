@@ -1,0 +1,14 @@
+{
+  "vendor_register": {
+    "title": "Vendor register",
+    "target": "docs/vendor-register.md"
+  },
+  "contract_checklist": {
+    "title": "Third-party contract checklist",
+    "target": "docs/contract-checklist.md"
+  },
+  "exit_plan": {
+    "title": "Third-party exit plan",
+    "target": "docs/exit-plan.md"
+  }
+}

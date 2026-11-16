@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import re
 import shutil
-from functools import lru_cache
+from functools import cache, lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +26,7 @@ from opencomplai_core.gpai_training_pack import (
     render_training_summary_markdown,
 )
 from opencomplai_core.models import ArticleGapStatus, GapReport, GapStatus
+from opencomplai_core.pack_registry import pack_dir
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent / "templates" / "recommend"
 
@@ -81,6 +82,19 @@ def load_template_map() -> dict[str, dict[str, Any]]:
         return json.load(handle)
 
 
+@cache
+def load_pack_template_map(key: str) -> dict[str, dict[str, Any]]:
+    """Row id -> template mapping of `packs/<key>/templates/template_map.json`.
+
+    Empty when the pack ships no map. Files named by the map sit beside it.
+    """
+    path = pack_dir(key) / "templates" / "template_map.json"
+    if not path.is_file():
+        return {}
+    with path.open(encoding="utf-8") as handle:
+        return json.load(handle)
+
+
 def _render(content: str, row: ArticleGapStatus, template_id: str) -> str:
     return (
         content.replace("{{article}}", row.article)
@@ -101,7 +115,8 @@ def render_recommendations(
     """Write one remediation template per Missing/Partial article row.
 
     EU AI Act rows without a template_map.json entry are skipped; rows of
-    other frameworks ("<FW>:<id>") fall back to generic_requirement.md.
+    other frameworks ("<FW>:<id>") use their pack's template map, else
+    generic_requirement.md.
 
     A markdown entry may carry an `also` list of further markdown mappings; each
     is written next to the main file for the same row.
@@ -121,13 +136,18 @@ def render_recommendations(
             continue
         framework = framework_of(row.article)
         mapping = template_map.get(row.article)
+        templates_dir = _TEMPLATES_DIR
         if mapping is None:
             if framework == EU_AI_ACT:
                 continue
-            mapping = _GENERIC_MAPPING
+            mapping = load_pack_template_map(framework).get(row.article)
+            if mapping is not None:
+                templates_dir = pack_dir(framework) / "templates"
+            else:
+                mapping = _GENERIC_MAPPING
 
         kind = mapping.get("kind", "markdown")
-        template_path = _TEMPLATES_DIR / mapping["file"]
+        template_path = templates_dir / mapping["file"]
         # "Art. 9" -> "art9", "FIXTURE:REQ-1" -> "fixture--req-1".
         article_slug = re.sub(
             r"[^a-z0-9_-]", "", row.article.lower().replace(":", "--")
